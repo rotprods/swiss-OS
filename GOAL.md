@@ -25,23 +25,41 @@ G-0001  Verified viable Swiss offer + sustainable relocation [ACTIVE]
 ├── G-0700  Full Swiss Hotel Intelligence L9 OS [ACTIVE_PARALLEL]
 │   └── final progress 0 / 2050 L9 packages
 └── G-0800  Maximum Swiss Employment Acquisition OS [ACTIVE_MAXIMUM]
+    ├── active Graph/Intelligence 673 / 673
+    └── CP-0800-CURRENT-L4 105 / 673 [ACTIVE]
 ```
 
-## Immediate execution gate
+## Active canonical checkpoint
 
-Before adding new canonical entities, reconcile the four physical rows now classified as `SUPERSEDED_DUPLICATE` through Sheets, Intelligence, Graph V2, metrics and checkpoint counters.
+`SV2-058 / CP0750-BATCH04`
 
-Current constrained semantics:
+Current constrained state:
 
 ```text
-physical hotel rows = 677
-superseded duplicate rows = 4
+physical hotel lineage rows = 677
+superseded duplicate aliases = 4
 active canonical entities = 673
+remaining active entities to CP-0750 = 77
+next physical ID = H-0678
 ```
 
-Only **active canonical entities** count toward CP-0750. Physical rows remain preserved for lineage and gap auditing.
+Execute only exact current entity-level promotions through:
 
-After this reconciliation passes, resume the bounded current-T1 discovery lane toward 750.
+```text
+DISCOVER
+→ NORMALIZE
+→ DEDUPE / ALIAS ANTI-JOIN
+→ RECONCILE
+→ STAGE
+→ CANARY
+→ DB COMMIT
+→ SHEETS MIRROR
+→ GRAPH / INTELLIGENCE SYNC
+→ QA / INVARIANTS
+→ OBSERVABILITY / HANDOFF
+```
+
+V11 is the sole constrained parent for the next canonical DB commit.
 
 ## Candidate and outbound gates
 

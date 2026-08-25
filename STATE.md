@@ -1,35 +1,74 @@
 # STATE — LIVE HANDOFF POINTER
 
-Last reconciliation used for this repository state: **2026-08-25**.
+Last material reconciliation: **2026-08-25T17:18:00+02:00**.
 
-## Authoritative state correction
+## Authoritative current state
 
-The latest constrained manifest currently available is newer than the `677 canonical` prose in Sheets/repository bootstrap and distinguishes **physical rows** from **active canonical entities**:
-
-- physical HOTELS rows: **677**
-- `SUPERSEDED_DUPLICATE` IDs: `H-0610`, `H-0624`, `H-0629`, `H-0630`
+- physical HOTELS lineage rows: **677**
+- superseded duplicate IDs: `H-0610`, `H-0624`, `H-0629`, `H-0630`
 - active canonical entities: **673**
 - identity registry rows: **673**
-- SQLite integrity: `ok`
-- foreign-key violations: `0`
-- CP-0650: COMPLETE at 673 active canonical
-- CP-0750: ACTIVE, effective frontier **673 / 750**
-- outbound: `CLOSED`
+- explicit alias merges: **4**
+- CP-0750: **673 / 750 ACTIVE**
+- next physical hotel ID: **H-0678**
+- active Intelligence denominator: **673**
+- active Graph V2 denominator: **673**
+- current L4: **105 / 673**
+- G-0700 L9: **0 / 2050**
+- outbound: **CLOSED**
 - `send_allowed = 0`
 
-## Control-plane drift
+## Operational shadow
 
-`GOAL_STATE`, Graph/Intelligence counters and earlier repository prose still expose `677` as canonical/current coverage. Under the project authority order this is a **drift to reconcile**, not permission to silently prefer the higher counter.
+Current monotonic constrained parent:
 
-Until the superseded IDs are propagated through Sheets/Graph/Intelligence metrics:
+`switzerland_job_os_operational_shadow_v11.sqlite`
+
+Manifest:
+
+`OPERATIONAL_DB_SHADOW_MANIFEST_V11.json`
+
+V11 checks:
 
 ```text
-ACTIVE_CANONICAL = 673
-PHYSICAL_ROWS = 677
-CONTROL_PLANE_CANONICAL_COUNTER = 677  # stale / needs reconciliation
+integrity_check = ok
+foreign_key_violations = 0
+active_canonical_hotels = 673
+identity_registry_rows = 673
+alias_merge_rows = 4
+sheet_physical_hotel_rows = 677
+restore_test = PASS
+next_physical_hotel_id = H-0678
+id_reuse_allowed = false
+send_allowed = 0
 ```
 
-The next safe operational action is therefore **canonical-state reconciliation of the four superseded duplicate IDs**, then resume CP-0750 discovery from the reconciled active frontier.
+SHA-256:
+
+`10157eacf4a180ca2781b9b68bbf605c13b7db89282eab2928cb791ec5b1b283`
+
+## Resolved drift
+
+The previous control plane counted all 677 physical IDs as active canonical. The constrained identity registry proved four physical IDs were duplicate aliases. The system now preserves those IDs for lineage while excluding them from active canonical, Intelligence and Graph metrics.
+
+Alias lineage:
+
+```text
+H-0610 → H-0656
+H-0624 → H-0639
+H-0629 → H-0638
+H-0630 → H-0640
+```
+
+Graph V2 retains the physical alias nodes as blocked/superseded and exposes explicit `ALIASES_TO` edges.
+
+## Active execution frontier
+
+`SV2-058 / CP0750-BATCH04`
+
+Acquire a bounded 10–25 exact-current-T1 entity batch. Anti-join active canonical entities, alias IDs, domains, active tasks and quarantines. Allocate new physical IDs from `H-0678` upward. Never reuse superseded IDs.
+
+77 active entities remain to CP-0750.
 
 ## Source precedence
 
@@ -38,12 +77,7 @@ PHYSICAL + CONSTRAINED DATA
 > live Sheets registries / active control plane
 > latest validated operational manifest
 > repository STATE.md
-> release prose / handoffs
-> legacy documentation
+> release prose / historical handoffs
 ```
 
-Drift must be emitted and repaired; never silently normalized.
-
-## Repository role
-
-This file is a public-safe handoff pointer. Live hotel rows, people, channels, evidence and SQLite payloads remain outside this public repository.
+This repository stores public-safe executable contracts and handoff state only. Operational SQLite payloads, people/channels, candidate private data and raw evidence remain outside GitHub.

@@ -10,17 +10,20 @@ Secure at least one **truthful, legal, verifiable and economically viable Swiss 
 
 | Dimension | Current state |
 |---|---|
-| Physical hotel rows | `677` |
-| Superseded duplicate rows | `4` |
+| Physical hotel lineage rows | `677` |
+| Superseded duplicate aliases | `4` |
 | Active canonical entities | `673` |
 | Active canonical checkpoint | `CP-0750 — 673 / 750` |
-| Control-plane counter | `677` — drift pending reconciliation |
+| Next physical ID | `H-0678` |
+| Active Intelligence / Graph | `673 / 673` |
+| Current L4 | `105 / 673` |
 | G-0700 final L9 | `0 / 2050` |
 | Candidate lanes | `0 / 4 — BLOCKED_USER_INPUT` |
 | Outbound | `CLOSED` |
 | `send_allowed` | `0` |
+| Operational parent | `V11` |
 
-The distinction between physical rows and active canonical entities is executable and tested in `src/swiss_os`.
+The distinction between physical lineage and active canonical entities is executable and tested in `src/swiss_os`.
 
 ## Repository role
 

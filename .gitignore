@@ -1,0 +1,51 @@
+# Secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+credentials/
+secrets/
+
+# Operational databases
+*.sqlite
+*.sqlite3
+*.db
+*.db-wal
+*.db-shm
+operational/
+snapshots/
+backups/
+
+# Private / PII
+candidate_private/
+contacts_private/
+raw_contacts/
+raw_evidence/
+private_exports/
+cv/
+portfolio_private/
+media_private/
+
+# Generated exports
+*.xlsx
+*.xls
+*.csv
+*.zip
+*.bundle
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# JS
+node_modules/
+
+# OS/editor
+.DS_Store
+.idea/
+.vscode/

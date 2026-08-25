@@ -1,28 +1,37 @@
 # STATE — LIVE HANDOFF POINTER
 
-Last Drive reconciliation used for repository bootstrap: **2026-08-25**.
+Last reconciliation used for this repository state: **2026-08-25**.
 
-## Authoritative live state
+## Authoritative state correction
 
-- Release contract: `V6.5-G0800-MAXIMUM-READINESS`
-- `G-0001`: ACTIVE
-- `G-0500`: ACTIVE_SCALE_WAVE_B
-- `CP-0750`: **677 / 750 ACTIVE**
-- Current entity epoch: `HS_ENTITY_EPOCH_2026-08-23_E3`
-- Last canonical batch: `RUN-2026-08-23-1915-CP0750-BATCH03`
-- New canonical IDs in Batch03: `H-0668..H-0677`
-- Next canonical task: `SV2-058 / CP0750-BATCH04`
-- Intelligence coverage: **677 / 677**
-- Graph V2 coverage: **677 / 677**
-- `CP-0800-CURRENT-L4`: **105 / 677 ACTIVE**
-- `G-0700`: **0 / 2050 L9**
-- `G-0600`: `BLOCKED_USER_INPUT`, 0/4 lanes
-- Outbound: `CLOSED`
+The latest constrained manifest currently available is newer than the `677 canonical` prose in Sheets/repository bootstrap and distinguishes **physical rows** from **active canonical entities**:
+
+- physical HOTELS rows: **677**
+- `SUPERSEDED_DUPLICATE` IDs: `H-0610`, `H-0624`, `H-0629`, `H-0630`
+- active canonical entities: **673**
+- identity registry rows: **673**
+- SQLite integrity: `ok`
+- foreign-key violations: `0`
+- CP-0650: COMPLETE at 673 active canonical
+- CP-0750: ACTIVE, effective frontier **673 / 750**
+- outbound: `CLOSED`
 - `send_allowed = 0`
 
-## Source precedence
+## Control-plane drift
 
-When this file conflicts with live operational state, use:
+`GOAL_STATE`, Graph/Intelligence counters and earlier repository prose still expose `677` as canonical/current coverage. Under the project authority order this is a **drift to reconcile**, not permission to silently prefer the higher counter.
+
+Until the superseded IDs are propagated through Sheets/Graph/Intelligence metrics:
+
+```text
+ACTIVE_CANONICAL = 673
+PHYSICAL_ROWS = 677
+CONTROL_PLANE_CANONICAL_COUNTER = 677  # stale / needs reconciliation
+```
+
+The next safe operational action is therefore **canonical-state reconciliation of the four superseded duplicate IDs**, then resume CP-0750 discovery from the reconciled active frontier.
+
+## Source precedence
 
 ```text
 PHYSICAL + CONSTRAINED DATA
@@ -33,16 +42,8 @@ PHYSICAL + CONSTRAINED DATA
 > legacy documentation
 ```
 
-Never silently resolve drift. Record it and repair the stale layer.
+Drift must be emitted and repaired; never silently normalized.
 
-## Known quarantines
+## Repository role
 
-Entity-scoped contaminated routes remain excluded from unsafe downstream promotion until independently reconciled:
-
-- `H-0039`
-- `H-0136`
-- `H-0658`
-
-## Repository note
-
-This file is intentionally a lightweight handoff pointer, not an operational mirror. Live hotel rows, people, channels, evidence and SQLite payloads stay outside this public repository.
+This file is a public-safe handoff pointer. Live hotel rows, people, channels, evidence and SQLite payloads remain outside this public repository.

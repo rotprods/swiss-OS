@@ -6,19 +6,23 @@
   "required": [
     "discovery_id",
     "canonical_name_candidate",
+    "city_candidate",
     "detail_url",
     "directory_page",
     "source_tier",
     "membership_state",
     "entity_resolution_state",
     "country_scope",
+    "accommodation_type_hint",
+    "listing_classification",
+    "classification_basis",
     "observed_at"
   ],
   "properties": {
     "discovery_id": {"type": "string", "pattern": "^U-[0-9a-f]{16}$"},
     "canonical_name_candidate": {"type": "string", "minLength": 1},
     "city_candidate": {"type": "string"},
-    "detail_url": {"type": "string", "format": "uri"},
+    "detail_url": {"type": "string", "format": "uri", "pattern": "/branchenverzeichnis/hotel-"},
     "directory_page": {"type": "integer", "minimum": 1},
     "source_tier": {"const": "T1_OFFICIAL_DIRECTORY_LISTING"},
     "membership_state": {
@@ -43,11 +47,24 @@
         "SWITZERLAND_OR_UNKNOWN",
         "SWITZERLAND_VERIFIED",
         "LIECHTENSTEIN_LIKELY",
+        "LIECHTENSTEIN_VERIFIED",
         "OUT_OF_SCOPE_VERIFIED"
       ]
     },
-    "accommodation_type_hint": {"type": "string"},
-    "classification_basis": {"enum": ["NAME_HEURISTIC", "DETAIL_VERIFIED", "UNKNOWN"]},
+    "accommodation_type_hint": {
+      "enum": [
+        "HOTEL",
+        "HOSTEL",
+        "GUESTHOUSE",
+        "SERVICED_APARTMENTS",
+        "LODGE_OR_SWISS_LODGE",
+        "UNKNOWN_PENDING_DETAIL"
+      ]
+    },
+    "listing_classification": {"type": "string"},
+    "classification_basis": {
+      "enum": ["CARD_STARS_RATING", "NAME_HEURISTIC", "DETAIL_VERIFIED", "UNKNOWN"]
+    },
     "observed_at": {"type": "string"}
   },
   "additionalProperties": true

@@ -1,57 +1,41 @@
 # STATE — LIVE HANDOFF POINTER
 
-Last material reconciliation: **2026-08-25T17:18:00+02:00**.
+Last full control-plane reconciliation: **2026-08-27T17:12:40+02:00**.
 
 ## Authoritative current state
 
-- physical HOTELS lineage rows: **677**
-- superseded duplicate IDs: `H-0610`, `H-0624`, `H-0629`, `H-0630`
-- active canonical entities: **673**
-- identity registry rows: **673**
-- explicit alias merges: **4**
-- CP-0750: **673 / 750 ACTIVE**
-- next physical hotel ID: **H-0678**
-- active Intelligence denominator: **673**
-- active Graph V2 denominator: **673**
-- current L4: **105 / 673**
+- entity epoch: `HS_ENTITY_EPOCH_2026-08-25_E4`
+- physical HOTELS lineage rows: **690**
+- superseded duplicate aliases: **4**
+- active canonical entities: **686**
+- CP-0750: **686 / 750 ACTIVE**
+- remaining to CP-0750: **64**
+- next physical hotel ID: **H-0691**
+- active Intelligence denominator: **686**
+- active Graph V2 denominator: **686**
+- current L4: **105 / 686**
+- hotels below L4: **581**
 - G-0700 L9: **0 / 2050**
 - outbound: **CLOSED**
 - `send_allowed = 0`
 
+## E4 delta
+
+Batch04 admitted `H-0678..H-0690` as 13 current T1 **regional-association-support** entities. Their evidence scope is explicit and is **not** mislabeled as exact member-directory detail.
+
+All thirteen are L1 Intelligence seeds with unresolved non-identity dimensions. They therefore increase canonical/Graph/Intelligence coverage but do not increase L4 or L9 completion.
+
 ## Operational shadow
 
-Current monotonic constrained parent:
+Current constrained parent referenced by the authoritative E4 control plane:
 
-`switzerland_job_os_operational_shadow_v11.sqlite`
+`OPERATIONAL_DB_SHADOW_MANIFEST_V12`
 
-Manifest:
+The E4 snapshot records DB-first canary/restore PASS. Subsequent canonical commits must still independently satisfy integrity, FK, semantic, replay, mirror and active-set reconciliation gates.
 
-`OPERATIONAL_DB_SHADOW_MANIFEST_V11.json`
+## Alias lineage
 
-V11 checks:
-
-```text
-integrity_check = ok
-foreign_key_violations = 0
-active_canonical_hotels = 673
-identity_registry_rows = 673
-alias_merge_rows = 4
-sheet_physical_hotel_rows = 677
-restore_test = PASS
-next_physical_hotel_id = H-0678
-id_reuse_allowed = false
-send_allowed = 0
-```
-
-SHA-256:
-
-`10157eacf4a180ca2781b9b68bbf605c13b7db89282eab2928cb791ec5b1b283`
-
-## Resolved drift
-
-The previous control plane counted all 677 physical IDs as active canonical. The constrained identity registry proved four physical IDs were duplicate aliases. The system now preserves those IDs for lineage while excluding them from active canonical, Intelligence and Graph metrics.
-
-Alias lineage:
+Physical IDs remain immutable and are never reused:
 
 ```text
 H-0610 → H-0656
@@ -60,15 +44,13 @@ H-0629 → H-0638
 H-0630 → H-0640
 ```
 
-Graph V2 retains the physical alias nodes as blocked/superseded and exposes explicit `ALIASES_TO` edges.
-
 ## Active execution frontier
 
-`SV2-058 / CP0750-BATCH04`
+`SV2-059 / CP0750-BATCH05`
 
-Acquire a bounded 10–25 exact-current-T1 entity batch. Anti-join active canonical entities, alias IDs, domains, active tasks and quarantines. Allocate new physical IDs from `H-0678` upward. Never reuse superseded IDs.
+Acquire a bounded 10–25 current T1 entity batch from `H-0691` onward. Prefer exact member/entity detail. Alternate current T1 support may promote only when source scope is explicit and constrained DB + mirror + graph + observability gates pass. Weaker evidence remains staged.
 
-77 active entities remain to CP-0750.
+`SV2-058` is terminalized after the 13-entity E4 Batch04 commit so future batches cannot be absorbed into an unbounded task.
 
 ## Source precedence
 
@@ -80,4 +62,4 @@ PHYSICAL + CONSTRAINED DATA
 > release prose / historical handoffs
 ```
 
-This repository stores public-safe executable contracts and handoff state only. Operational SQLite payloads, people/channels, candidate private data and raw evidence remain outside GitHub.
+GitHub stores public-safe executable contracts and handoff state only. Operational SQLite payloads, people/channels, candidate private data and raw evidence stay outside the public repository.

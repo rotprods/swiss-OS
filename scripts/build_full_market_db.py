@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS discovery_entities (
   entity_resolution_state TEXT NOT NULL,
   country_scope TEXT NOT NULL,
   accommodation_type_hint TEXT NOT NULL,
+  listing_classification TEXT NOT NULL DEFAULT '',
   classification_basis TEXT NOT NULL,
   observed_at TEXT NOT NULL,
   canonical_match_id TEXT NOT NULL DEFAULT '',
@@ -45,6 +46,8 @@ CREATE INDEX IF NOT EXISTS idx_discovery_scope
 ON discovery_entities(country_scope);
 CREATE INDEX IF NOT EXISTS idx_discovery_type
 ON discovery_entities(accommodation_type_hint);
+CREATE INDEX IF NOT EXISTS idx_discovery_listing_classification
+ON discovery_entities(listing_classification);
 
 CREATE TABLE IF NOT EXISTS engine_tasks (
   task_id TEXT PRIMARY KEY,
@@ -82,9 +85,9 @@ CREATE INDEX IF NOT EXISTS idx_discovery_edges_from ON discovery_graph_edges(fro
 CREATE INDEX IF NOT EXISTS idx_discovery_edges_to ON discovery_graph_edges(to_node);
 
 CREATE VIEW IF NOT EXISTS v_market_resolution AS
-SELECT entity_resolution_state, country_scope, accommodation_type_hint, COUNT(*) AS entities
+SELECT entity_resolution_state, country_scope, accommodation_type_hint, listing_classification, COUNT(*) AS entities
 FROM discovery_entities
-GROUP BY entity_resolution_state, country_scope, accommodation_type_hint;
+GROUP BY entity_resolution_state, country_scope, accommodation_type_hint, listing_classification;
 
 CREATE VIEW IF NOT EXISTS v_engine_backlog AS
 SELECT engine, state, priority, COUNT(*) AS tasks
@@ -129,14 +132,16 @@ def main() -> int:
               INSERT INTO discovery_entities(
                 discovery_id, canonical_name_candidate, city_candidate, detail_url,
                 directory_page, source_tier, membership_state, entity_resolution_state,
-                country_scope, accommodation_type_hint, classification_basis, observed_at,
-                canonical_match_id, resolution_reason, resolution_confidence
-              ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                country_scope, accommodation_type_hint, listing_classification,
+                classification_basis, observed_at, canonical_match_id,
+                resolution_reason, resolution_confidence
+              ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
             ''', (
                 r['discovery_id'], r['canonical_name_candidate'], r.get('city_candidate',''), r['detail_url'],
                 int(r['directory_page']), r['source_tier'], r['membership_state'], r['entity_resolution_state'],
-                r['country_scope'], r['accommodation_type_hint'], r['classification_basis'], r['observed_at'],
-                r.get('canonical_match_id',''), r.get('resolution_reason',''),
+                r['country_scope'], r['accommodation_type_hint'], r.get('listing_classification',''),
+                r['classification_basis'], r['observed_at'], r.get('canonical_match_id',''),
+                r.get('resolution_reason',''),
                 float(r['resolution_confidence']) if r.get('resolution_confidence') not in ('', None) else None,
             ))
 
@@ -164,7 +169,7 @@ def main() -> int:
     if args.manifest and Path(args.manifest).exists():
         source_manifest = json.loads(Path(args.manifest).read_text(encoding='utf-8'))
     meta = {
-        'schema': 'SWISS_OS_FULL_MARKET_DB_V1',
+        'schema': 'SWISS_OS_FULL_MARKET_DB_V1_1',
         'generated_at': generated_at,
         'discovery_entities': str(len(discovery)),
         'source_observed_result_count': str(source_manifest.get('observed_result_count','')),
@@ -181,6 +186,7 @@ def main() -> int:
     node_count = con.execute('SELECT COUNT(*) FROM discovery_graph_nodes').fetchone()[0]
     edge_count = con.execute('SELECT COUNT(*) FROM discovery_graph_edges').fetchone()[0]
     outbound_true = con.execute('SELECT COUNT(*) FROM engine_tasks WHERE outbound_allowed=1').fetchone()[0]
+    classified_count = con.execute("SELECT COUNT(*) FROM discovery_entities WHERE listing_classification <> ''").fetchone()[0]
     expected_tasks = entity_count * 22
     errors = []
     if integrity != 'ok': errors.append(f'integrity={integrity}')
@@ -192,13 +198,14 @@ def main() -> int:
 
     digest = sha256(out)
     manifest = {
-        'schema': 'SWISS_OS_FULL_MARKET_DB_MANIFEST_V1',
+        'schema': 'SWISS_OS_FULL_MARKET_DB_MANIFEST_V1_1',
         'generated_at': generated_at,
         'sqlite': out.name,
         'sha256': digest,
         'integrity_check': integrity,
         'foreign_key_violations': fk,
         'discovery_entities': entity_count,
+        'listing_classification_present': classified_count,
         'engine_tasks': task_count,
         'expected_engine_tasks': expected_tasks,
         'graph_nodes': node_count,

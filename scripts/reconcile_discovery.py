@@ -36,6 +36,14 @@ def url_path(value: str | None) -> str:
     return urlparse(value).path.rstrip("/").casefold()
 
 
+def detail_slug(value: str | None) -> str:
+    path = url_path(value)
+    if not path:
+        return ""
+    slug = path.rsplit("/", 1)[-1]
+    return slug if slug.startswith("hotel-") and not slug.startswith("hotel-page-") else ""
+
+
 def load_canonical(db_path: Path):
     con = sqlite3.connect(str(db_path))
     con.row_factory = sqlite3.Row
@@ -48,13 +56,17 @@ def load_canonical(db_path: Path):
 
 def build_indexes(active):
     by_path = defaultdict(list)
+    by_slug = defaultdict(list)
     by_domain = defaultdict(list)
     by_name_city = defaultdict(list)
     by_name = defaultdict(list)
     for h in active:
         hp = url_path(h.get("hotelleriesuisse_url"))
+        hs = detail_slug(h.get("hotelleriesuisse_url"))
         if hp:
             by_path[hp].append(h)
+        if hs:
+            by_slug[hs].append(h)
         d = domain(h.get("canonical_domain") or h.get("official_website"))
         if d:
             by_domain[d].append(h)
@@ -64,11 +76,11 @@ def build_indexes(active):
             by_name[n].append(h)
         if n and c:
             by_name_city[(n, c)].append(h)
-    return by_path, by_domain, by_name_city, by_name
+    return by_path, by_slug, by_domain, by_name_city, by_name
 
 
 def reconcile(row, indexes):
-    by_path, by_domain, by_name_city, by_name = indexes
+    by_path, by_slug, by_domain, by_name_city, by_name = indexes
     name = row.get("canonical_name_candidate", "")
     city = row.get("city_candidate", "")
     detail = row.get("detail_url", "")
@@ -77,8 +89,11 @@ def reconcile(row, indexes):
     reasons = []
 
     p = url_path(detail)
+    s = detail_slug(detail)
     if p and by_path.get(p):
         matches.extend(by_path[p]); reasons.append("EXACT_T1_DETAIL_PATH")
+    if s and by_slug.get(s):
+        matches.extend(by_slug[s]); reasons.append("EXACT_T1_DETAIL_SLUG")
     d = domain(official)
     if d and by_domain.get(d):
         matches.extend(by_domain[d]); reasons.append("EXACT_DOMAIN")
@@ -118,9 +133,12 @@ def main() -> int:
     rows = list(csv.DictReader(discovery_path.open(encoding="utf-8")))
     resolved = []
     counts = Counter()
+    reason_counts = Counter()
     for row in rows:
         state, canonical_id, reason, confidence = reconcile(row, indexes)
         counts[state] += 1
+        for reason_key in reason.split("|") if reason else []:
+            reason_counts[reason_key.split(":",1)[0]] += 1
         resolved.append({
             **row,
             "entity_resolution_state": state,
@@ -134,12 +152,14 @@ def main() -> int:
         w = csv.DictWriter(f, fieldnames=fields); w.writeheader(); w.writerows(resolved)
 
     manifest = {
-        "schema": "SWISS_OS_DISCOVERY_RECONCILIATION_V1",
+        "schema": "SWISS_OS_DISCOVERY_RECONCILIATION_V1_1",
         "discovery_rows": len(rows),
         "active_canonical_rows": len(active),
         "alias_rows": len(aliases),
         "resolution_counts": dict(counts),
+        "resolution_reason_counts": dict(reason_counts),
         "new_entities_are_not_promoted": True,
+        "route_prefix_migration_tolerated_by_detail_slug": True,
         "outbound": "CLOSED",
     }
     (out / "reconciliation_manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")

@@ -1,0 +1,49 @@
+name: directory-card-probe
+
+on:
+  push:
+    branches: [market/full-universe-crawler]
+    paths: [.github/workflows/directory-card-probe.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --disable-pip-version-check requests beautifulsoup4
+      - name: Inspect first listing cards
+        run: |
+          python - <<'PY' > cards.txt
+          import requests,re
+          from bs4 import BeautifulSoup
+          from urllib.parse import urljoin,urlparse
+          U='https://www.hotelleriesuisse.ch/de/branche/branchenverzeichnis'
+          h={'User-Agent':'swiss-os-public-market-research/1.0 (+https://github.com/rotprods/swiss-OS)','Accept-Language':'de-CH,de;q=0.9'}
+          r=requests.get(U,timeout=30,headers=h)
+          print('status',r.status_code,'url',r.url,'bytes',len(r.content))
+          soup=BeautifulSoup(r.text,'html.parser')
+          hits=[]
+          for a in soup.find_all('a',href=True):
+              p=urlparse(urljoin(r.url,a['href'])).path
+              if '/branche/branchenverzeichnis/hotel-' in p and '/hotel-page-' not in p:
+                  hits.append(a)
+          print('hits',len(hits))
+          for i,a in enumerate(hits[:12],1):
+              print('\n###',i,'HREF',urljoin(r.url,a['href']))
+              print('ANCHOR_TEXT',repr(re.sub(r'\s+',' ',a.get_text(' ',strip=True))))
+              print('ANCHOR',a.prettify()[:6000])
+              p=a.parent
+              print('PARENT',p.prettify()[:10000] if p else '')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: directory-card-probe
+          path: cards.txt
+          retention-days: 7

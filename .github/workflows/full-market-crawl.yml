@@ -1,0 +1,54 @@
+name: full-market-crawl
+
+on:
+  push:
+    branches:
+      - market/full-universe-crawler
+    paths:
+      - "scripts/crawl_hotelleriesuisse.py"
+      - ".github/workflows/full-market-crawl.yml"
+      - "schemas/full_market_discovery.schema.json"
+      - "docs/FULL_MARKET_INGESTION.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: full-market-crawl-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  crawl:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install crawler dependencies
+        run: python -m pip install --disable-pip-version-check requests beautifulsoup4
+
+      - name: Run full HotellerieSuisse market crawl
+        run: |
+          mkdir -p artifacts/full_market
+          python scripts/crawl_hotelleriesuisse.py \
+            --out artifacts/full_market \
+            --delay 0.75
+
+      - name: Validate public repository guard
+        run: python scripts/repo_guard.py
+
+      - name: Upload discovery corpus
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: swiss-full-market-discovery
+          path: artifacts/full_market/
+          if-no-files-found: warn
+          retention-days: 14

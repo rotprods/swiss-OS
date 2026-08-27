@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
-import tempfile
+import sys
 import unittest
 from pathlib import Path
 
@@ -10,9 +10,11 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def load_script(name: str):
     path = ROOT / "scripts" / name
-    spec = importlib.util.spec_from_file_location(name.replace(".py", ""), path)
+    module_name = "swiss_os_test_" + name.replace(".py", "")
+    spec = importlib.util.spec_from_file_location(module_name, path)
     module = importlib.util.module_from_spec(spec)
     assert spec.loader is not None
+    sys.modules[module_name] = module
     spec.loader.exec_module(module)
     return module
 

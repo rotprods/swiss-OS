@@ -19,7 +19,7 @@ import requests
 from bs4 import BeautifulSoup
 
 BASE = "https://www.hotelleriesuisse.ch"
-DIRECTORY = f"{BASE}/de/branche-und-politik/branchenverzeichnis"
+DIRECTORY = f"{BASE}/de/branche/branchenverzeichnis"
 PAGE = DIRECTORY + "/hotel-page-{page}"
 ROBOTS = f"{BASE}/robots.txt"
 UA = "swiss-os-public-market-research/1.0 (+https://github.com/rotprods/swiss-OS)"
@@ -39,6 +39,7 @@ LIECHTENSTEIN = {
 }
 
 DETAIL_PATTERNS = (
+    "/branche/branchenverzeichnis/hotel-",
     "/branche-und-politik/branchenverzeichnis/hotel-",
     "/verband-und-geschaeftsstelle/mitglieder/mitgliederverzeichnis/hotel-",
     "/association-et-siege-admin/membres/liste-des-membres/hotel-",
@@ -56,17 +57,17 @@ class Record:
     entity_resolution_state: str
     country_scope: str
     accommodation_type_hint: str
+    listing_classification: str
     classification_basis: str
     observed_at: str
 
 
 def norm(value: str) -> str:
     value = value.casefold().strip()
-    value = re.sub(r"\s+", " ", value)
-    return value
+    return re.sub(r"\s+", " ", value)
 
 
-def clean(value: str) -> str:
+def clean(value: str | None) -> str:
     return re.sub(r"\s+", " ", value or "").strip(" \t\r\n-|•")
 
 
@@ -75,7 +76,18 @@ def discovery_id(name: str, city: str, url: str) -> str:
     return "U-" + hashlib.sha1(raw.encode("utf-8")).hexdigest()[:16]
 
 
-def type_hint(name: str) -> str:
+def type_hint(name: str, listing_classification: str = "") -> str:
+    evidence = norm(listing_classification)
+    if "serviced apartment" in evidence:
+        return "SERVICED_APARTMENTS"
+    if "hostel" in evidence:
+        return "HOSTEL"
+    if "guesthouse" in evidence:
+        return "GUESTHOUSE"
+    if "swiss lodge" in evidence:
+        return "LODGE_OR_SWISS_LODGE"
+    if "hotel" in evidence:
+        return "HOTEL"
     n = norm(name)
     if "hostel" in n or "jugendherberge" in n:
         return "HOSTEL"
@@ -94,19 +106,27 @@ def scope(city: str) -> str:
     return "LIECHTENSTEIN_LIKELY" if norm(city) in LIECHTENSTEIN else "SWITZERLAND_OR_UNKNOWN"
 
 
-def get(session: requests.Session, url: str, retries: int = 4) -> str:
+def get(session: requests.Session, url: str, retries: int = 5) -> str:
     last = None
     for attempt in range(retries):
         try:
-            r = session.get(url, timeout=35, headers={"User-Agent": UA, "Accept-Language": "de-CH,de;q=0.9,en;q=0.7"})
+            r = session.get(
+                url,
+                timeout=35,
+                headers={"User-Agent": UA, "Accept-Language": "de-CH,de;q=0.9,en;q=0.7"},
+            )
             if r.status_code == 200:
                 return r.text
             last = RuntimeError(f"HTTP {r.status_code} for {url}")
             if r.status_code not in {408, 425, 429, 500, 502, 503, 504}:
                 break
+            retry_after = r.headers.get("Retry-After")
+            if retry_after and retry_after.isdigit():
+                time.sleep(min(int(retry_after), 20))
+                continue
         except requests.RequestException as exc:
             last = exc
-        time.sleep(min(2 ** attempt, 8))
+        time.sleep(min(2 ** attempt, 12))
     raise RuntimeError(str(last or f"failed {url}"))
 
 
@@ -120,16 +140,23 @@ def robots_ok(session: requests.Session) -> None:
 
 
 def observed_counts(html: str) -> tuple[int | None, int | None]:
-    text = clean(BeautifulSoup(html, "html.parser").get_text(" ", strip=True))
+    soup = BeautifulSoup(html, "html.parser")
+    text = clean(soup.get_text(" ", strip=True))
     result_count = None
     page_count = None
-    for pat in (r"([0-9][0-9.'’\s]{2,})\s+(?:Ergebnisse|Resultate|results)", r"(?:Ergebnisse|Resultate|results)\s*[:\-]?\s*([0-9][0-9.'’\s]{2,})"):
+    patterns = (
+        r"([0-9][0-9.'’\s]{2,})\s+von\s+([0-9][0-9.'’\s]{2,})\s+Hotels?",
+        r"([0-9][0-9.'’\s]{2,})\s+(?:Ergebnisse|Resultate|results)",
+        r"(?:Ergebnisse|Resultate|results)\s*[:\-]?\s*([0-9][0-9.'’\s]{2,})",
+    )
+    for i, pat in enumerate(patterns):
         m = re.search(pat, text, re.I)
-        if m:
-            result_count = int(re.sub(r"\D", "", m.group(1)))
-            break
+        if not m:
+            continue
+        raw = m.group(2) if i == 0 else m.group(1)
+        result_count = int(re.sub(r"\D", "", raw))
+        break
     nums = []
-    soup = BeautifulSoup(html, "html.parser")
     for a in soup.find_all("a", href=True):
         m = re.search(r"/hotel-page-(\d+)", a["href"])
         if m:
@@ -146,34 +173,22 @@ def is_detail(href: str) -> bool:
     return any(p in path for p in DETAIL_PATTERNS)
 
 
-def split_anchor(anchor) -> tuple[str, str]:
-    name = clean(anchor.get_text(" ", strip=True))
-    city = ""
-    for key in ("data-city", "data-location", "data-ort"):
-        if anchor.has_attr(key) and clean(anchor.get(key)):
-            city = clean(anchor.get(key))
-            break
-    if not city:
-        parent = anchor
-        for _ in range(4):
-            parent = parent.parent if parent else None
-            if not parent:
-                break
-            txt = clean(parent.get_text(" | ", strip=True))
-            if not name or len(txt) > 450:
-                continue
-            parts = [clean(p) for p in txt.split("|") if clean(p)]
-            for p in parts:
-                if p == name or len(p) > 80 or "http" in p.lower():
-                    continue
-                if re.search(r"\b\d{4}\b", p):
-                    candidate = clean(re.sub(r".*?\b\d{4}\b", "", p))
-                    if candidate:
-                        city = candidate
-                        break
-            if city:
-                break
-    return name, city
+def split_anchor(anchor) -> tuple[str, str, str]:
+    city_el = anchor.select_one("em.Card--subtitle")
+    title_el = anchor.select_one("strong.Card--title")
+    rating_el = anchor.select_one(".StarsRating")
+    city = clean(city_el.get_text(" ", strip=True) if city_el else "")
+    if title_el:
+        rating = title_el.select_one(".StarsRating")
+        if rating:
+            rating.extract()
+        name = clean(title_el.get_text(" ", strip=True))
+    else:
+        name = clean(anchor.get_text(" ", strip=True))
+        if city and name.startswith(city + " "):
+            name = clean(name[len(city):])
+    classification = clean(rating_el.get("title") if rating_el else "")
+    return name, city, classification
 
 
 def extract_page(html: str, page: int, observed_at: str) -> list[Record]:
@@ -184,7 +199,7 @@ def extract_page(html: str, page: int, observed_at: str) -> list[Record]:
         if not is_detail(href):
             continue
         url = urljoin(BASE, href).split("#", 1)[0]
-        name, city = split_anchor(a)
+        name, city, listing_classification = split_anchor(a)
         if not name or len(name) < 2:
             slug = urlparse(url).path.rsplit("/", 1)[-1]
             slug = re.sub(r"^hotel-", "", slug)
@@ -199,8 +214,9 @@ def extract_page(html: str, page: int, observed_at: str) -> list[Record]:
             membership_state="UNKNOWN_PENDING_DETAIL",
             entity_resolution_state="PENDING_CANONICAL_ANTIJOIN",
             country_scope=scope(city),
-            accommodation_type_hint=type_hint(name),
-            classification_basis="NAME_HEURISTIC",
+            accommodation_type_hint=type_hint(name, listing_classification),
+            listing_classification=listing_classification,
+            classification_basis="CARD_STARS_RATING" if listing_classification else "NAME_HEURISTIC",
             observed_at=observed_at,
         )
         by_url[url] = rec
@@ -259,7 +275,7 @@ def write_outputs(out: Path, records: list[Record], manifest: dict) -> None:
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", default="artifacts/full_market")
-    ap.add_argument("--delay", type=float, default=0.75)
+    ap.add_argument("--delay", type=float, default=1.1)
     ap.add_argument("--allow-partial", action="store_true")
     args = ap.parse_args()
     out = Path(args.out)
@@ -270,7 +286,7 @@ def main() -> int:
     first = get(session, DIRECTORY)
     result_count, page_count = observed_counts(first)
     if not page_count:
-        page_count = 374
+        raise RuntimeError("could not derive live page count from the official directory")
 
     all_records: dict[str, Record] = {}
     page_errors: list[dict] = []
@@ -280,14 +296,14 @@ def main() -> int:
             html = first if page == 1 else get(session, PAGE.format(page=page))
             recs = extract_page(html, page, observed_at)
             page_cardinality[str(page)] = len(recs)
-            if len(recs) < 5 or len(recs) > 30:
+            if len(recs) < 5 or len(recs) > 20:
                 page_errors.append({"page": page, "kind": "SUSPICIOUS_CARDINALITY", "count": len(recs)})
             for r in recs:
                 all_records.setdefault(r.discovery_id, r)
         except Exception as exc:
             page_errors.append({"page": page, "kind": "FETCH_OR_PARSE_ERROR", "error": str(exc)})
         if page != page_count:
-            time.sleep(max(args.delay, 0.2))
+            time.sleep(max(args.delay, 0.5))
 
     records = sorted(all_records.values(), key=lambda r: (r.directory_page, norm(r.canonical_name_candidate), r.discovery_id))
     collisions = Counter((norm(r.canonical_name_candidate), norm(r.city_candidate)) for r in records)
@@ -296,13 +312,15 @@ def main() -> int:
     hard_errors = []
     if len(records) < 2000:
         hard_errors.append(f"only {len(records)} unique entities extracted; minimum is 2000")
-    if result_count and coverage is not None and coverage < 0.90:
-        hard_errors.append(f"coverage {coverage:.4f} is below 0.90 of observed result count {result_count}")
+    if result_count is None:
+        hard_errors.append("official directory total count could not be parsed")
+    elif coverage is not None and coverage < 0.98:
+        hard_errors.append(f"coverage {coverage:.4f} is below 0.98 of observed result count {result_count}")
     if page_errors and not args.allow_partial:
         hard_errors.append(f"{len(page_errors)} page QA/fetch anomalies present")
 
     manifest = {
-        "schema": "SWISS_OS_FULL_MARKET_DISCOVERY_V1",
+        "schema": "SWISS_OS_FULL_MARKET_DISCOVERY_V1_1",
         "generated_at": observed_at,
         "source": DIRECTORY,
         "robots_checked": True,
@@ -314,6 +332,7 @@ def main() -> int:
         "page_cardinality": page_cardinality,
         "name_city_collision_keys": name_city_collisions,
         "type_hint_counts": dict(Counter(r.accommodation_type_hint for r in records)),
+        "listing_classification_present": sum(1 for r in records if r.listing_classification),
         "country_scope_counts": dict(Counter(r.country_scope for r in records)),
         "engine_contract": engine_states(),
         "hard_errors": hard_errors,
@@ -325,7 +344,10 @@ def main() -> int:
         out.mkdir(parents=True, exist_ok=True)
         (out / "manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
 
-    print(json.dumps({"unique": len(records), "observed": result_count, "pages": page_count, "coverage": coverage, "errors": len(page_errors), "hard_errors": hard_errors}, indent=2))
+    print(json.dumps({
+        "unique": len(records), "observed": result_count, "pages": page_count,
+        "coverage": coverage, "errors": len(page_errors), "hard_errors": hard_errors,
+    }, indent=2))
     return 1 if hard_errors else 0
 
 if __name__ == "__main__":

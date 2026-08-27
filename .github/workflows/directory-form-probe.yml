@@ -1,0 +1,90 @@
+name: directory-form-probe
+
+on:
+  push:
+    branches: [market/full-universe-crawler]
+    paths: [.github/workflows/directory-form-probe.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --disable-pip-version-check requests beautifulsoup4
+      - name: Probe public form routing
+        run: |
+          python - <<'PY' > probe.txt
+          import re, requests
+          from bs4 import BeautifulSoup
+          from urllib.parse import urljoin
+
+          BASE='https://www.hotelleriesuisse.ch'
+          START=BASE+'/de/branche/branchenverzeichnis'
+          UA='swiss-os-public-market-research/1.0 (+https://github.com/rotprods/swiss-OS)'
+          H={'User-Agent':UA,'Accept-Language':'de-CH,de;q=0.9,en;q=0.7'}
+          s=requests.Session()
+          r=s.get(START,timeout=30,headers=H)
+          print('GET',r.status_code,r.url,len(r.content))
+          soup=BeautifulSoup(r.text,'html.parser')
+          forms=[f for f in soup.find_all('form') if 'tx_rtpconfighosu_hotel' in (f.get('action') or '')]
+          if not forms: raise SystemExit('hotel filter form not found')
+          form=forms[0]
+          action=urljoin(r.url, form.get('action') or r.url)
+          print('ACTION',action)
+
+          payload=[]
+          for inp in form.find_all('input'):
+              name=inp.get('name'); typ=(inp.get('type') or 'text').lower(); value=inp.get('value','')
+              if not name or typ in {'submit','button','image','file','reset'}: continue
+              if typ in {'checkbox','radio'} and not inp.has_attr('checked'): continue
+              payload.append((name,value))
+          for sel in form.find_all('select'):
+              name=sel.get('name')
+              if not name: continue
+              opts=sel.find_all('option')
+              selected=[o for o in opts if o.has_attr('selected')]
+              for o in (selected or opts[:1]): payload.append((name,o.get('value','')))
+          print('DEFAULT_PAYLOAD_ITEMS',len(payload))
+          p=s.post(action,data=payload,timeout=30,headers={**H,'Referer':r.url},allow_redirects=True)
+          print('POST_DEFAULT',p.status_code,p.url,len(p.content),'HISTORY',[(x.status_code,x.url,x.headers.get('location')) for x in p.history])
+
+          # Explicit broad filter: all statuses + all accommodation types, mirroring visible public controls.
+          broad=[x for x in payload if not x[0].startswith('tx_rtpconfighosu_hotel[filter]')]
+          broad += [
+              ('tx_rtpconfighosu_hotel[filter][status]',''),
+              ('tx_rtpconfighosu_hotel[filter][status][]','Active'),
+              ('tx_rtpconfighosu_hotel[filter][status][]','Inctive'),
+              ('tx_rtpconfighosu_hotel[filter][classificationAdditionalType]',''),
+          ]
+          for v in ['Guesthouse','Hostel','Hotel','ServicedApartments','SwissLodge']:
+              broad.append(('tx_rtpconfighosu_hotel[filter][classificationAdditionalType][]',v))
+          p2=s.post(action,data=broad,timeout=30,headers={**H,'Referer':r.url},allow_redirects=True)
+          print('POST_BROAD',p2.status_code,p2.url,len(p2.content),'HISTORY',[(x.status_code,x.url,x.headers.get('location')) for x in p2.history])
+
+          def dump(label,resp):
+              so=BeautifulSoup(resp.text,'html.parser')
+              text=re.sub(r'\s+',' ',so.get_text(' ',strip=True))
+              print(label+'_TEXT',text[-9000:])
+              hrefs=[]
+              for a in so.find_all('a',href=True):
+                  t=re.sub(r'\s+',' ',a.get_text(' ',strip=True))
+                  h=urljoin(resp.url,a['href'])
+                  if any(k in t.casefold() for k in ['hotel','hostel','lodge','apartment','guesthouse']) or 'branchenverzeichnis' in h.casefold():
+                      hrefs.append((t,h))
+              print(label+'_HREF_COUNT',len(hrefs))
+              for t,h in hrefs[-100:]: print(label+'_HREF',repr(t),h)
+          dump('DEFAULT',p)
+          dump('BROAD',p2)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: directory-form-probe
+          path: probe.txt
+          retention-days: 7

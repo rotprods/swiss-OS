@@ -16,6 +16,8 @@ jobs:
           python-version: '3.12'
       - name: Public repository guard
         run: python scripts/repo_guard.py
+      - name: Install full-market test dependencies
+        run: python -m pip install --disable-pip-version-check requests beautifulsoup4
       - name: Compile operational scripts
         run: python -m py_compile scripts/*.py
       - name: Unit tests

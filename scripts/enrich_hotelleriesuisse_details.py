@@ -18,7 +18,6 @@ from bs4 import BeautifulSoup
 BASE = "https://www.hotelleriesuisse.ch"
 ROBOTS = BASE + "/robots.txt"
 UA = "swiss-os-public-market-research/1.0 (+https://github.com/rotprods/swiss-OS)"
-
 TRANSIENT = {408, 425, 429, 500, 502, 503, 504}
 SOCIAL_HOSTS = {"facebook.com", "instagram.com", "linkedin.com", "youtube.com", "tiktok.com", "x.com", "twitter.com"}
 SPECIALISATIONS = [
@@ -34,8 +33,7 @@ def clean(value: str | None) -> str:
 
 def host(url: str) -> str:
     try:
-        h = (urlparse(url).hostname or "").casefold().removeprefix("www.")
-        return h
+        return (urlparse(url).hostname or "").casefold().removeprefix("www.")
     except Exception:
         return ""
 
@@ -72,10 +70,12 @@ def jsonld_objects(soup: BeautifulSoup):
             obj = json.loads(raw)
         except Exception:
             continue
-        if isinstance(obj, list): out.extend(x for x in obj if isinstance(x, dict))
+        if isinstance(obj, list):
+            out.extend(x for x in obj if isinstance(x, dict))
         elif isinstance(obj, dict):
             graph = obj.get("@graph")
-            if isinstance(graph, list): out.extend(x for x in graph if isinstance(x, dict))
+            if isinstance(graph, list):
+                out.extend(x for x in graph if isinstance(x, dict))
             out.append(obj)
     return out
 
@@ -87,7 +87,8 @@ def address_from_jsonld(objs) -> tuple[str, str, str]:
             city = clean(addr.get("addressLocality"))
             region = clean(addr.get("addressRegion"))
             country = addr.get("addressCountry")
-            if isinstance(country, dict): country = country.get("name") or country.get("@id")
+            if isinstance(country, dict):
+                country = country.get("name") or country.get("@id")
             country = clean(str(country or ""))
             if city or region or country:
                 return city, region, country
@@ -113,9 +114,9 @@ def external_website(soup: BeautifulSoup) -> tuple[str, str]:
         if h.endswith("hotelleriesuisse.ch") or h in SOCIAL_HOSTS or any(h.endswith("." + s) for s in SOCIAL_HOSTS):
             continue
         text = clean(a.get_text(" ", strip=True)).casefold()
-        score = 0
-        if any(k in text for k in ("website", "webseite", "homepage", "site internet", "sito web")): score += 10
-        if a.get("target") == "_blank": score += 1
+        score = 10 if any(k in text for k in ("website", "webseite", "homepage", "site internet", "sito web")) else 0
+        if a.get("target") == "_blank":
+            score += 1
         candidates.append((score, href))
     if not candidates:
         return "", ""
@@ -128,10 +129,8 @@ def membership_state(text: str) -> str:
     lower = text.casefold()
     for heading in ("mitgliedschaften", "adhésions", "adesioni"):
         idx = lower.find(heading)
-        if idx >= 0:
-            window = lower[idx: idx + 700]
-            if "hotelleriesuisse" in window:
-                return "MEMBER_CURRENT_VERIFIED"
+        if idx >= 0 and "hotelleriesuisse" in lower[idx:idx + 700]:
+            return "MEMBER_CURRENT_VERIFIED"
     return "UNKNOWN_AFTER_DETAIL_PARSE"
 
 
@@ -144,7 +143,8 @@ def classification(text: str) -> tuple[str, str]:
     ]
     for pat in patterns:
         m = re.search(pat, text, re.I)
-        if not m: continue
+        if not m:
+            continue
         if m.lastindex and m.group(1).isdigit():
             return f"{m.group(1)} STAR" + (" SUPERIOR" if m.lastindex >= 2 and m.group(2) else ""), "DETAIL_TEXT_REGEX"
         return clean(m.group(1)).upper(), "DETAIL_TEXT_REGEX"
@@ -160,12 +160,8 @@ def rooms(text: str) -> tuple[str, str]:
 
 
 def specialisations(text: str) -> str:
-    found = []
     lower = text.casefold()
-    for s in SPECIALISATIONS:
-        if s.casefold() in lower:
-            found.append(s)
-    return "|".join(found)
+    return "|".join(s for s in SPECIALISATIONS if s.casefold() in lower)
 
 
 def parse_detail(html: str) -> dict:
@@ -177,19 +173,19 @@ def parse_detail(html: str) -> dict:
     cls, cls_basis = classification(text)
     room_count, rooms_basis = rooms(text)
     return {
-        "detail_name": clean((soup.find("h1") or {}).get_text(" ", strip=True) if soup.find("h1") else ""),
+        "detail_name": clean(soup.find("h1").get_text(" ", strip=True) if soup.find("h1") else ""),
         "detail_city": city,
         "detail_region": region,
         "detail_country": country,
-        "country_scope": scope_from_country(country),
-        "official_website_candidate": website,
-        "website_basis": website_basis,
-        "membership_state": membership_state(text),
-        "classification": cls,
-        "classification_basis": cls_basis,
-        "rooms": room_count,
-        "rooms_basis": rooms_basis,
-        "specialisations": specialisations(text),
+        "country_scope_detail": scope_from_country(country),
+        "official_website_candidate_detail": website,
+        "website_basis_detail": website_basis,
+        "membership_state_detail": membership_state(text),
+        "classification_detail": cls,
+        "classification_basis_detail": cls_basis,
+        "rooms_detail": room_count,
+        "rooms_basis_detail": rooms_basis,
+        "specialisations_detail": specialisations(text),
     }
 
 
@@ -207,7 +203,8 @@ def main() -> int:
 
     rows = list(csv.DictReader(Path(args.input).open(encoding="utf-8")))
     shard = [r for i, r in enumerate(rows) if i % args.shard_count == args.shard_index]
-    if args.limit is not None: shard = shard[:args.limit]
+    if args.limit is not None:
+        shard = shard[:args.limit]
     out = Path(args.out); out.mkdir(parents=True, exist_ok=True)
     session = requests.Session(); rp = robots_parser(session)
     observed_at = datetime.now(timezone.utc).isoformat()
@@ -226,25 +223,25 @@ def main() -> int:
             result.update({"detail_fetch_state": f"HTTP_{status or 'ERROR'}", "membership_state_detail": "UNKNOWN_NOT_FETCHED"})
             counts[result["detail_fetch_state"]] += 1; results.append(result)
         else:
-            parsed = parse_detail(html)
-            result.update(parsed)
-            result["membership_state_detail"] = parsed.pop("membership_state") if "membership_state" in parsed else "UNKNOWN_AFTER_DETAIL_PARSE"
+            result.update(parse_detail(html))
             result["detail_fetch_state"] = "PARSED_T1_DETAIL"
             counts["PARSED_T1_DETAIL"] += 1; results.append(result)
-        if pos + 1 < len(shard): time.sleep(max(args.delay, 0.5))
+        if pos + 1 < len(shard):
+            time.sleep(max(args.delay, 0.5))
 
     fields = sorted({k for r in results for k in r.keys()})
     path = out / f"detail_enrichment_shard_{args.shard_index:02d}.csv"
     with path.open("w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=fields); w.writeheader(); w.writerows(results)
     manifest = {
-        "schema": "SWISS_OS_DETAIL_ENRICHMENT_V1",
+        "schema": "SWISS_OS_DETAIL_ENRICHMENT_V1_1",
         "shard_index": args.shard_index,
         "shard_count": args.shard_count,
         "input_rows": len(rows),
         "processed_rows": len(results),
         "fetch_state_counts": dict(counts),
-        "classification_is_evidence_backed_only_when_basis_is_DETAIL_TEXT_REGEX": True,
+        "listing_truth_columns_immutable": True,
+        "detail_truth_columns_suffix": "_detail",
         "membership_unknown_is_not_non_member": True,
         "outbound": "CLOSED"
     }

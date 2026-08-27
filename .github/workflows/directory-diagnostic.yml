@@ -1,0 +1,51 @@
+name: directory-diagnostic
+
+on:
+  push:
+    branches: [market/full-universe-crawler]
+    paths: [.github/workflows/directory-diagnostic.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --disable-pip-version-check requests beautifulsoup4
+      - name: Inspect live routing
+        run: |
+          python - <<'PY'
+          import json, re, requests
+          from bs4 import BeautifulSoup
+          from urllib.parse import urljoin, urlparse
+          base='https://www.hotelleriesuisse.ch'
+          url=base+'/de/branche-und-politik/branchenverzeichnis'
+          r=requests.get(url,timeout=30,headers={'User-Agent':'swiss-os-public-market-research/1.0 (+https://github.com/rotprods/swiss-OS)','Accept-Language':'de-CH,de;q=0.9,en;q=0.7'})
+          print('STATUS',r.status_code,'FINAL',r.url,'BYTES',len(r.content))
+          soup=BeautifulSoup(r.text,'html.parser')
+          print('TITLE',soup.title.get_text(' ',strip=True) if soup.title else '')
+          print('TEXT',re.sub(r'\s+',' ',soup.get_text(' ',strip=True))[:4000])
+          hrefs=[]
+          for a in soup.find_all('a',href=True):
+              h=urljoin(base,a['href'])
+              text=re.sub(r'\s+',' ',a.get_text(' ',strip=True))
+              if 'hotel' in h.casefold() or 'branchenverzeichnis' in h.casefold() or 'mitglieder' in h.casefold():
+                  hrefs.append((text,h))
+          print('HREF_COUNT',len(hrefs))
+          for text,h in hrefs[:160]: print('HREF',repr(text),h)
+          print('FORMS')
+          for form in soup.find_all('form'):
+              print('FORM',form.get('method'),form.get('action'),[(x.name,x.get('name'),x.get('value')) for x in form.find_all(['input','select'])[:30]])
+          scripts=[]
+          for s in soup.find_all('script'):
+              txt=s.string or s.get_text() or ''
+              if any(k in txt.casefold() for k in ['branchenverzeichnis','hotel-page','filtervalues']): scripts.append(txt[:5000])
+          print('MATCHING_SCRIPTS',len(scripts))
+          for s in scripts[:5]: print('SCRIPT',s)
+          PY

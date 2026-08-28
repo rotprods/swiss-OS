@@ -28,6 +28,15 @@ class DirectoryCaptureError(RuntimeError):
     """Raised when a coherent member-directory capture cannot be completed."""
 
 
+_MEMBER_DIRECTORY_MARKERS = (
+    "/mitgliederverzeichnis/",
+    "/liste-des-membres/",
+    "/elenco-dei-soci/",
+    "/elenco-dei-membri/",
+    "/member-directory/",
+)
+
+
 @dataclass(frozen=True)
 class FetchResponse:
     data: bytes
@@ -88,6 +97,14 @@ class ParsedPage:
     rejects: tuple[dict[str, object], ...]
 
 
+def _is_member_detail_path(path: str) -> bool:
+    normalized = re.sub(r"/+", "/", path or "/").lower().rstrip("/")
+    final_segment = normalized.rsplit("/", 1)[-1]
+    if not final_segment.startswith("hotel-") or final_segment.startswith("hotel-page-"):
+        return False
+    return any(marker in normalized for marker in _MEMBER_DIRECTORY_MARKERS)
+
+
 class _DirectoryParser(HTMLParser):
     def __init__(self, base_url: str) -> None:
         super().__init__(convert_charrefs=True)
@@ -110,10 +127,7 @@ class _DirectoryParser(HTMLParser):
         if tag.lower() != "a" or not href:
             return
         absolute = urljoin(self.base_url, href)
-        path = urlsplit(absolute).path
-        if "/mitgliederverzeichnis/hotel-" not in path:
-            return
-        if "hotel-page-" in path:
+        if not _is_member_detail_path(urlsplit(absolute).path):
             return
         self._active_href = absolute
         self._active_parts = []
@@ -251,6 +265,41 @@ def _write_json(path: Path, payload: object) -> None:
         encoding="utf-8",
     )
     tmp.replace(path)
+
+
+def _invalid_zero_record_manifest(
+    *,
+    source_epoch: str,
+    observed_at: str,
+    config: CaptureConfig,
+    expected_partitions: int,
+) -> tuple[dict[str, object], tuple[str, ...]]:
+    violations = ("NO_RECORDS", "DECLARED_RAW_RECORDS_NON_POSITIVE")
+    records: list[object] = []
+    manifest: dict[str, object] = {
+        "schema_version": "MEMBER-DIRECTORY-CAPTURE-DIAGNOSTIC-1.0",
+        "snapshot_id": source_epoch,
+        "observed_at": observed_at,
+        "source_provider": config.source_provider,
+        "locale": config.locale.lower(),
+        "source_url": config.root_url,
+        "source_epoch": source_epoch,
+        "expected_partitions": expected_partitions,
+        "declared_raw_records": 0,
+        "records_count": 0,
+        "coverage_complete_requested": False,
+        "coverage_complete": False,
+        "records": records,
+        "records_sha256": _sha256_json(records),
+        "violations": list(violations),
+        "transfer_eligible": False,
+        "authority_advanced": False,
+        "h_id_allocations": 0,
+        "outbound_opened": False,
+        "outbound": "CLOSED",
+        "send_allowed": 0,
+    }
+    return manifest, violations
 
 
 def capture_member_directory(
@@ -422,20 +471,6 @@ def capture_member_directory(
     declared_raw_records = (
         displayed_count if displayed_count is not None else len(unique_records)
     )
-    manifest_result = build_member_directory_manifest(
-        unique_records,
-        DirectoryManifestConfig(
-            snapshot_id=source_epoch,
-            observed_at=finished.isoformat(),
-            source_provider=config.source_provider,
-            locale=config.locale.lower(),
-            source_url=config.root_url,
-            source_epoch=source_epoch,
-            expected_partitions=max_page,
-            declared_raw_records=declared_raw_records,
-            coverage_complete_requested=coverage_complete_requested,
-        ),
-    )
 
     page_manifest: dict[str, object] = {
         "schema_version": "HS-DIRECTORY-PAGES-1.0",
@@ -465,7 +500,37 @@ def capture_member_directory(
     page_manifest_path = target / "PAGE_MANIFEST.json"
     _write_json(page_manifest_path, page_manifest)
 
-    manifest = dict(manifest_result.manifest)
+    if declared_raw_records <= 0:
+        manifest, mdm_violations = _invalid_zero_record_manifest(
+            source_epoch=source_epoch,
+            observed_at=finished.isoformat(),
+            config=config,
+            expected_partitions=max_page,
+        )
+        mdm_coverage_complete = False
+        transfer_violations: tuple[str, ...] = (
+            "INVALID_CAPTURE_DIAGNOSTIC_NOT_TRANSFER_MANIFEST",
+        )
+    else:
+        manifest_result = build_member_directory_manifest(
+            unique_records,
+            DirectoryManifestConfig(
+                snapshot_id=source_epoch,
+                observed_at=finished.isoformat(),
+                source_provider=config.source_provider,
+                locale=config.locale.lower(),
+                source_url=config.root_url,
+                source_epoch=source_epoch,
+                expected_partitions=max_page,
+                declared_raw_records=declared_raw_records,
+                coverage_complete_requested=coverage_complete_requested,
+            ),
+        )
+        manifest = dict(manifest_result.manifest)
+        mdm_violations = manifest_result.violations
+        mdm_coverage_complete = manifest_result.coverage_complete
+        transfer_violations = ()
+
     manifest.update(
         {
             "capture_started_at": started.isoformat(),
@@ -491,7 +556,8 @@ def capture_member_directory(
     records_path = target / "MEMBER_DIRECTORY_RECORDS.json"
     _write_json(manifest_path, manifest)
     _write_json(records_path, [record.as_dict() for record in unique_records])
-    transfer_violations = validate_member_directory_manifest(manifest)
+    if declared_raw_records > 0:
+        transfer_violations = validate_member_directory_manifest(manifest)
 
     summary: dict[str, object] = {
         "schema_version": "HS-DIRECTORY-CAPTURE-SUMMARY-1.0",
@@ -510,9 +576,10 @@ def capture_member_directory(
         "card_rejects": len(all_rejects),
         "coverage_checks": coverage_checks,
         "coverage_complete_requested": coverage_complete_requested,
-        "mdm_coverage_complete": manifest_result.coverage_complete,
-        "mdm_semantic_violations": list(manifest_result.violations),
+        "mdm_coverage_complete": mdm_coverage_complete,
+        "mdm_semantic_violations": list(mdm_violations),
         "transfer_validation": list(transfer_violations),
+        "manifest_schema_version": manifest["schema_version"],
         "manifest_sha256": manifest["manifest_sha256"],
         "records_sha256": manifest["records_sha256"],
         "page_manifest_sha256": manifest["page_manifest_sha256"],

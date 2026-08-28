@@ -42,21 +42,18 @@ class MetaCapabilities:
     authority_reconstructable: bool = True
     ancestry_current: bool = True
     authority_blocking_p0: bool = False
-
     constrained_db_read: bool = False
     constrained_db_write: bool = False
     native_sheets_read: bool = False
     native_sheets_write: bool = False
     drive_mount_read: bool = False
     drive_create_only_write: bool = False
-
     github_read: bool = True
     github_write: bool = False
     github_ci: bool = False
     library_read: bool = False
     library_write: bool = False
     web_research: bool = False
-
     discover_swiss_subscription: bool = False
     discover_capture_valid: bool = False
     member_directory_evidence: bool = False
@@ -64,11 +61,9 @@ class MetaCapabilities:
     source_scope_reconciled: bool = False
     frozen_candidate: bool = False
     ingest_records_ready: bool = False
-
     operational_graph_write: bool = False
     intelligence_write: bool = False
     observability_write: bool = False
-
     unresolved_source_records: int = 0
     reconcile_required: int = 0
     exact_current_refresh_backlog: int = 0
@@ -82,16 +77,13 @@ class MetaCapabilities:
         unknown = sorted(set(payload) - set(fields))
         if unknown:
             raise ValueError(f"unknown capability keys: {', '.join(unknown)}")
-
         values: dict[str, Any] = {}
         for name in fields:
             if name not in payload:
                 continue
             raw = payload[name]
             if name in _INTEGER_FIELDS:
-                if isinstance(raw, bool) or not isinstance(raw, int):
-                    raise ValueError(f"capability {name} must be a non-negative integer")
-                if raw < 0:
+                if isinstance(raw, bool) or not isinstance(raw, int) or raw < 0:
                     raise ValueError(f"capability {name} must be a non-negative integer")
                 values[name] = raw
             else:
@@ -134,13 +126,6 @@ def _fallbacks(*routes: MetaRoute) -> tuple[MetaRoute, ...]:
 
 
 def choose_meta_route(c: MetaCapabilities) -> MetaDecision:
-    """Choose the highest-value safe route without lowering authority gates.
-
-    All irreversible/promotion permissions default to false. Authority/canonical-ID
-    permission is granted only on the explicit authoritative-promotion route.
-    Outbound is never granted by this planner.
-    """
-
     if c.authority_blocking_p0 or not c.authority_reconstructable or not c.ancestry_current:
         blocks: list[str] = []
         if c.authority_blocking_p0:
@@ -150,223 +135,73 @@ def choose_meta_route(c: MetaCapabilities) -> MetaDecision:
         if not c.ancestry_current:
             blocks.append("ANCESTRY_STALE_OR_MOVED")
         return MetaDecision(
-            execution_mode=ExecutionMode.RECOVERY_RECONCILE,
-            route=MetaRoute.AUTHORITY_RECOVERY,
-            reason="Authority or ancestry is unsafe; reconciliation outranks new production.",
-            graph_impact="META",
-            hard_blocks=tuple(blocks),
-            capabilities_used=tuple(
-                key
-                for key, value in (
-                    ("drive_mount_read", c.drive_mount_read),
-                    ("native_sheets_read", c.native_sheets_read),
-                    ("constrained_db_read", c.constrained_db_read),
-                    ("github_read", c.github_read),
-                    ("library_read", c.library_read),
-                )
-                if value
-            ),
-            next_fallback_routes=_fallbacks(
-                MetaRoute.DRIVE_MOUNT_REHYDRATION,
-                MetaRoute.RECOVERY_PERSISTENCE,
-                MetaRoute.ENGINEERING_QA,
-            ),
+            ExecutionMode.RECOVERY_RECONCILE,
+            MetaRoute.AUTHORITY_RECOVERY,
+            "Authority or ancestry is unsafe; reconciliation outranks new production.",
+            "META",
+            tuple(blocks),
+            tuple(key for key, value in (("drive_mount_read", c.drive_mount_read), ("native_sheets_read", c.native_sheets_read), ("constrained_db_read", c.constrained_db_read), ("github_read", c.github_read), ("library_read", c.library_read)) if value),
+            _fallbacks(MetaRoute.DRIVE_MOUNT_REHYDRATION, MetaRoute.RECOVERY_PERSISTENCE, MetaRoute.ENGINEERING_QA),
         )
 
-    authority_write_ready = all(
-        (
-            c.constrained_db_write,
-            c.native_sheets_write,
-            c.operational_graph_write,
-            c.intelligence_write,
-            c.observability_write,
-            c.promotion_ready,
-        )
-    )
-    if authority_write_ready:
+    if all((c.constrained_db_write, c.native_sheets_write, c.operational_graph_write, c.intelligence_write, c.observability_write, c.promotion_ready)):
         return MetaDecision(
-            execution_mode=ExecutionMode.AUTHORITATIVE_WRITE,
-            route=MetaRoute.AUTHORITATIVE_PROMOTION,
-            reason="All affected authority planes are writable and the promotion gate is ready.",
-            graph_impact="BOTH",
-            capabilities_used=(
-                "constrained_db_write",
-                "native_sheets_write",
-                "operational_graph_write",
-                "intelligence_write",
-                "observability_write",
-                "promotion_ready",
-            ),
+            ExecutionMode.AUTHORITATIVE_WRITE,
+            MetaRoute.AUTHORITATIVE_PROMOTION,
+            "All affected authority planes are writable and the promotion gate is ready.",
+            "BOTH",
+            capabilities_used=("constrained_db_write", "native_sheets_write", "operational_graph_write", "intelligence_write", "observability_write", "promotion_ready"),
             next_fallback_routes=_fallbacks(MetaRoute.AUTHORITY_RECOVERY),
             authority_advance_allowed=True,
             canonical_id_allocation_allowed=True,
-            outbound_allowed=False,
         )
 
-    # CRM-universe routes are dominant until the hard pre-outbound coverage gate closes.
     if not c.crm_universe_complete:
         if c.discover_swiss_subscription and not c.discover_capture_valid:
             return MetaDecision(
-                execution_mode=ExecutionMode.DEGRADED_CANARY,
-                route=MetaRoute.STRUCTURED_SOURCE_CAPTURE,
-                reason="Structured discover.swiss acquisition is available and removes the broadest CRM-universe bottleneck.",
-                graph_impact="META",
+                ExecutionMode.DEGRADED_CANARY,
+                MetaRoute.STRUCTURED_SOURCE_CAPTURE,
+                "Structured discover.swiss acquisition is available and removes the broadest CRM-universe bottleneck.",
+                "META",
                 capabilities_used=("discover_swiss_subscription",),
-                next_fallback_routes=_fallbacks(
-                    MetaRoute.MEMBER_DIRECTORY_MANIFEST,
-                    MetaRoute.EXACT_CURRENT_REFRESH,
-                    MetaRoute.ENGINEERING_QA,
-                ),
+                next_fallback_routes=_fallbacks(MetaRoute.MEMBER_DIRECTORY_MANIFEST, MetaRoute.EXACT_CURRENT_REFRESH, MetaRoute.ENGINEERING_QA),
             )
 
-        if c.discover_capture_valid and not c.member_directory_manifest_complete:
-            if c.web_research or c.member_directory_evidence:
-                return MetaDecision(
-                    execution_mode=ExecutionMode.READ_ONLY_RESEARCH,
-                    route=MetaRoute.MEMBER_DIRECTORY_MANIFEST,
-                    reason="API capture exists, but complete coherent member-directory evidence is still required for SSR.",
-                    graph_impact="META",
-                    capabilities_used=tuple(
-                        key
-                        for key, value in (
-                            ("web_research", c.web_research),
-                            ("member_directory_evidence", c.member_directory_evidence),
-                        )
-                        if value
-                    ),
-                    next_fallback_routes=_fallbacks(
-                        MetaRoute.EXACT_CURRENT_REFRESH,
-                        MetaRoute.RECOVERY_PERSISTENCE,
-                        MetaRoute.ENGINEERING_QA,
-                    ),
-                )
-
-        if (
-            c.discover_capture_valid
-            and c.member_directory_manifest_complete
-            and not c.source_scope_reconciled
-        ):
+        # MDM evidence can be built before or in parallel with API acquisition.
+        # This is the safe no-key fallback defined by MEP-2.0.
+        if not c.member_directory_manifest_complete and (c.web_research or c.member_directory_evidence):
+            used = tuple(key for key, value in (("web_research", c.web_research), ("member_directory_evidence", c.member_directory_evidence)) if value)
+            reason = (
+                "Complete coherent member-directory evidence is required for SSR; build it independently while structured API capture is unavailable."
+                if not c.discover_capture_valid
+                else "API capture exists, but complete coherent member-directory evidence is still required for SSR."
+            )
             return MetaDecision(
-                execution_mode=ExecutionMode.DEGRADED_CANARY,
-                route=MetaRoute.SOURCE_SCOPE_RECONCILIATION,
-                reason="Both source sets exist; SSR-1.0 is the next hard gate before freeze/export.",
-                graph_impact="META",
-                capabilities_used=("discover_capture_valid", "member_directory_manifest_complete"),
-                next_fallback_routes=_fallbacks(
-                    MetaRoute.MEMBER_DIRECTORY_MANIFEST,
-                    MetaRoute.EXACT_CURRENT_REFRESH,
-                ),
+                ExecutionMode.READ_ONLY_RESEARCH,
+                MetaRoute.MEMBER_DIRECTORY_MANIFEST,
+                reason,
+                "META",
+                capabilities_used=used,
+                next_fallback_routes=_fallbacks(MetaRoute.EXACT_CURRENT_REFRESH, MetaRoute.RECOVERY_PERSISTENCE, MetaRoute.ENGINEERING_QA),
             )
 
+        if c.discover_capture_valid and c.member_directory_manifest_complete and not c.source_scope_reconciled:
+            return MetaDecision(ExecutionMode.DEGRADED_CANARY, MetaRoute.SOURCE_SCOPE_RECONCILIATION, "Both source sets exist; SSR-1.0 is the next hard gate before freeze/export.", "META", capabilities_used=("discover_capture_valid", "member_directory_manifest_complete"), next_fallback_routes=_fallbacks(MetaRoute.MEMBER_DIRECTORY_MANIFEST, MetaRoute.EXACT_CURRENT_REFRESH))
         if c.source_scope_reconciled and c.frozen_candidate and not c.ingest_records_ready:
-            return MetaDecision(
-                execution_mode=ExecutionMode.DEGRADED_CANARY,
-                route=MetaRoute.FROZEN_CANDIDATE_EXPORT,
-                reason="Source scope is reconciled; deterministic candidate→CMI export unlocks mass ingest without allocating IDs.",
-                graph_impact="META",
-                capabilities_used=("source_scope_reconciled", "frozen_candidate"),
-                next_fallback_routes=_fallbacks(MetaRoute.MASS_INGEST_STAGING),
-            )
-
+            return MetaDecision(ExecutionMode.DEGRADED_CANARY, MetaRoute.FROZEN_CANDIDATE_EXPORT, "Source scope is reconciled; deterministic candidate→CMI export unlocks mass ingest without allocating IDs.", "META", capabilities_used=("source_scope_reconciled", "frozen_candidate"), next_fallback_routes=_fallbacks(MetaRoute.MASS_INGEST_STAGING))
         if c.ingest_records_ready and c.constrained_db_write:
-            return MetaDecision(
-                execution_mode=ExecutionMode.DEGRADED_CANARY,
-                route=MetaRoute.MASS_INGEST_STAGING,
-                reason="CMI records and constrained staging write are available; classify/anti-join/schedule at scale.",
-                graph_impact="META",
-                capabilities_used=("ingest_records_ready", "constrained_db_write"),
-                next_fallback_routes=_fallbacks(
-                    MetaRoute.EXACT_CURRENT_REFRESH,
-                    MetaRoute.TERMINAL_MAPPING,
-                ),
-            )
-
-        if (
-            (c.exact_current_refresh_backlog > 0 or c.unresolved_source_records > 0)
-            and c.web_research
-        ):
-            return MetaDecision(
-                execution_mode=ExecutionMode.READ_ONLY_RESEARCH,
-                route=MetaRoute.EXACT_CURRENT_REFRESH,
-                reason="Source records still require current evidence; exact-current refresh precedes terminal mapping.",
-                graph_impact="META",
-                capabilities_used=("web_research",),
-                next_fallback_routes=_fallbacks(
-                    MetaRoute.TERMINAL_MAPPING,
-                    MetaRoute.MEMBER_DIRECTORY_MANIFEST,
-                    MetaRoute.ENGINEERING_QA,
-                ),
-            )
-
-        if (
-            c.source_scope_reconciled
-            and c.reconcile_required > 0
-            and c.exact_current_refresh_backlog == 0
-        ):
-            return MetaDecision(
-                execution_mode=ExecutionMode.DEGRADED_CANARY,
-                route=MetaRoute.TERMINAL_MAPPING,
-                reason="Required evidence is present; remaining reconciliations should terminate into canonical/alias/exclusion mappings.",
-                graph_impact="OPERATIONAL",
-                capabilities_used=("source_scope_reconciled",),
-                next_fallback_routes=_fallbacks(MetaRoute.EXACT_CURRENT_REFRESH),
-            )
+            return MetaDecision(ExecutionMode.DEGRADED_CANARY, MetaRoute.MASS_INGEST_STAGING, "CMI records and constrained staging write are available; classify/anti-join/schedule at scale.", "META", capabilities_used=("ingest_records_ready", "constrained_db_write"), next_fallback_routes=_fallbacks(MetaRoute.EXACT_CURRENT_REFRESH, MetaRoute.TERMINAL_MAPPING))
+        if (c.exact_current_refresh_backlog > 0 or c.unresolved_source_records > 0) and c.web_research:
+            return MetaDecision(ExecutionMode.READ_ONLY_RESEARCH, MetaRoute.EXACT_CURRENT_REFRESH, "Source records still require current evidence; exact-current refresh precedes terminal mapping.", "META", capabilities_used=("web_research",), next_fallback_routes=_fallbacks(MetaRoute.TERMINAL_MAPPING, MetaRoute.MEMBER_DIRECTORY_MANIFEST, MetaRoute.ENGINEERING_QA))
+        if c.source_scope_reconciled and c.reconcile_required > 0 and c.exact_current_refresh_backlog == 0:
+            return MetaDecision(ExecutionMode.DEGRADED_CANARY, MetaRoute.TERMINAL_MAPPING, "Required evidence is present; remaining reconciliations should terminate into canonical/alias/exclusion mappings.", "OPERATIONAL", capabilities_used=("source_scope_reconciled",), next_fallback_routes=_fallbacks(MetaRoute.EXACT_CURRENT_REFRESH))
 
     if c.crm_universe_complete and c.scheduler_task_available:
-        return MetaDecision(
-            execution_mode=ExecutionMode.DEGRADED_CANARY,
-            route=MetaRoute.NEXT_GOAL_SCHEDULER,
-            reason="The CRM-universe hard gate is complete; return control to the global North-Star scheduler for the next dependency.",
-            graph_impact="META",
-            capabilities_used=("crm_universe_complete", "scheduler_task_available"),
-            next_fallback_routes=_fallbacks(MetaRoute.ENGINEERING_QA),
-        )
-
+        return MetaDecision(ExecutionMode.DEGRADED_CANARY, MetaRoute.NEXT_GOAL_SCHEDULER, "The CRM-universe hard gate is complete; return control to the global North-Star scheduler for the next dependency.", "META", capabilities_used=("crm_universe_complete", "scheduler_task_available"), next_fallback_routes=_fallbacks(MetaRoute.ENGINEERING_QA))
     if c.drive_mount_read and not c.native_sheets_read:
-        return MetaDecision(
-            execution_mode=ExecutionMode.RECOVERY_RECONCILE,
-            route=MetaRoute.DRIVE_MOUNT_REHYDRATION,
-            reason="Native Sheets access is unavailable but the authenticated Drive mount can still rehydrate persistent artifacts.",
-            graph_impact="META",
-            capabilities_used=("drive_mount_read",),
-            next_fallback_routes=_fallbacks(
-                MetaRoute.RECOVERY_PERSISTENCE,
-                MetaRoute.ENGINEERING_QA,
-            ),
-        )
-
+        return MetaDecision(ExecutionMode.RECOVERY_RECONCILE, MetaRoute.DRIVE_MOUNT_REHYDRATION, "Native Sheets access is unavailable but the authenticated Drive mount can still rehydrate persistent artifacts.", "META", capabilities_used=("drive_mount_read",), next_fallback_routes=_fallbacks(MetaRoute.RECOVERY_PERSISTENCE, MetaRoute.ENGINEERING_QA))
     if c.github_write and c.github_ci:
-        return MetaDecision(
-            execution_mode=ExecutionMode.DEGRADED_CANARY,
-            route=MetaRoute.ENGINEERING_QA,
-            reason="Operational routes are blocked; Git/CI work is allowed only to close measured execution or integrity debt.",
-            graph_impact="META",
-            capabilities_used=("github_write", "github_ci"),
-            next_fallback_routes=_fallbacks(MetaRoute.RECOVERY_PERSISTENCE),
-        )
-
+        return MetaDecision(ExecutionMode.DEGRADED_CANARY, MetaRoute.ENGINEERING_QA, "Operational routes are blocked; Git/CI work is allowed only to close measured execution or integrity debt.", "META", capabilities_used=("github_write", "github_ci"), next_fallback_routes=_fallbacks(MetaRoute.RECOVERY_PERSISTENCE))
     if c.library_write or c.drive_create_only_write:
-        return MetaDecision(
-            execution_mode=ExecutionMode.DEGRADED_CANARY,
-            route=MetaRoute.RECOVERY_PERSISTENCE,
-            reason="No higher-value operational route is available; persist recoverable state instead of losing work.",
-            graph_impact="META",
-            capabilities_used=tuple(
-                key
-                for key, value in (
-                    ("library_write", c.library_write),
-                    ("drive_create_only_write", c.drive_create_only_write),
-                )
-                if value
-            ),
-            next_fallback_routes=(),
-        )
-
-    return MetaDecision(
-        execution_mode=ExecutionMode.BLOCKED_P0,
-        route=MetaRoute.NO_SAFE_ROUTE,
-        reason="No safe route can currently reduce the bottleneck without violating a hard gate.",
-        graph_impact="NONE",
-        hard_blocks=("NO_SAFE_PRODUCTIVE_ROUTE",),
-        next_fallback_routes=(),
-    )
+        return MetaDecision(ExecutionMode.DEGRADED_CANARY, MetaRoute.RECOVERY_PERSISTENCE, "No higher-value operational route is available; persist recoverable state instead of losing work.", "META", capabilities_used=tuple(key for key, value in (("library_write", c.library_write), ("drive_create_only_write", c.drive_create_only_write)) if value))
+    return MetaDecision(ExecutionMode.BLOCKED_P0, MetaRoute.NO_SAFE_ROUTE, "No safe route can currently reduce the bottleneck without violating a hard gate.", "NONE", hard_blocks=("NO_SAFE_PRODUCTIVE_ROUTE",))

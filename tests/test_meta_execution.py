@@ -26,6 +26,17 @@ class MetaExecutionTests(unittest.TestCase):
         self.assertFalse(decision.canonical_id_allocation_allowed)
         self.assertFalse(decision.outbound_allowed)
 
+    def test_only_authority_blocking_p0_forces_recovery(self) -> None:
+        decision = choose_meta_route(
+            MetaCapabilities(
+                authority_blocking_p0=True,
+                web_research=True,
+                unresolved_source_records=10,
+            )
+        )
+        self.assertEqual(decision.route, MetaRoute.AUTHORITY_RECOVERY)
+        self.assertIn("OPEN_AUTHORITY_BLOCKING_P0", decision.hard_blocks)
+
     def test_structured_capture_wins_when_key_available(self) -> None:
         decision = choose_meta_route(
             MetaCapabilities(
@@ -84,6 +95,30 @@ class MetaExecutionTests(unittest.TestCase):
         self.assertFalse(decision.canonical_id_allocation_allowed)
         self.assertFalse(decision.outbound_allowed)
 
+    def test_exact_current_refresh_precedes_terminal_mapping(self) -> None:
+        decision = choose_meta_route(
+            MetaCapabilities(
+                source_scope_reconciled=True,
+                reconcile_required=50,
+                exact_current_refresh_backlog=20,
+                web_research=True,
+            )
+        )
+        self.assertEqual(decision.route, MetaRoute.EXACT_CURRENT_REFRESH)
+        self.assertEqual(decision.execution_mode, ExecutionMode.READ_ONLY_RESEARCH)
+
+    def test_terminal_mapping_runs_after_refresh_backlog_clears(self) -> None:
+        decision = choose_meta_route(
+            MetaCapabilities(
+                source_scope_reconciled=True,
+                reconcile_required=50,
+                exact_current_refresh_backlog=0,
+                web_research=False,
+            )
+        )
+        self.assertEqual(decision.route, MetaRoute.TERMINAL_MAPPING)
+        self.assertEqual(decision.execution_mode, ExecutionMode.DEGRADED_CANARY)
+
     def test_unresolved_records_route_to_exact_current_refresh(self) -> None:
         decision = choose_meta_route(
             MetaCapabilities(
@@ -125,9 +160,29 @@ class MetaExecutionTests(unittest.TestCase):
         self.assertNotEqual(degraded.route, MetaRoute.AUTHORITATIVE_PROMOTION)
         self.assertFalse(degraded.authority_advance_allowed)
 
+    def test_post_crm_returns_to_global_scheduler(self) -> None:
+        decision = choose_meta_route(
+            MetaCapabilities(
+                crm_universe_complete=True,
+                scheduler_task_available=True,
+            )
+        )
+        self.assertEqual(decision.route, MetaRoute.NEXT_GOAL_SCHEDULER)
+        self.assertFalse(decision.outbound_allowed)
+
     def test_unknown_capability_key_is_rejected(self) -> None:
         with self.assertRaises(ValueError):
             MetaCapabilities.from_mapping({"not_a_capability": True})
+
+    def test_string_false_is_not_truthy_capability(self) -> None:
+        with self.assertRaisesRegex(ValueError, "JSON boolean"):
+            MetaCapabilities.from_mapping({"native_sheets_write": "false"})
+
+    def test_integer_fields_are_strict_and_non_negative(self) -> None:
+        with self.assertRaisesRegex(ValueError, "non-negative integer"):
+            MetaCapabilities.from_mapping({"unresolved_source_records": "10"})
+        with self.assertRaisesRegex(ValueError, "non-negative integer"):
+            MetaCapabilities.from_mapping({"unresolved_source_records": -1})
 
     def test_no_safe_route_is_typed_p0(self) -> None:
         decision = choose_meta_route(MetaCapabilities())

@@ -24,31 +24,31 @@ from .member_directory import (
 )
 
 
-class HSLCA transfer_manifestError(ValueError):
+class HslcaTransferManifestError(ValueError):
     """Raised when a finalized HSLCA capture is not transfer-manifest eligible."""
 
 
 def _strict_false(payload: Mapping[str, object], field: str) -> None:
     value = payload.get(field)
     if type(value) is not bool or value is not False:
-        raise HSLCA transfer_manifestError(f"{field} must be exactly false")
+        raise HslcaTransferManifestError(f"{field} must be exactly false")
 
 
 def _strict_zero(payload: Mapping[str, object], field: str) -> None:
     value = payload.get(field)
     if type(value) is not int or value != 0:
-        raise HSLCA transfer_manifestError(f"{field} must be integer 0")
+        raise HslcaTransferManifestError(f"{field} must be integer 0")
 
 
 def _positive_int(value: object, field: str) -> int:
     if type(value) is not int or value <= 0:
-        raise HSLCA transfer_manifestError(f"{field} must be a positive integer")
+        raise HslcaTransferManifestError(f"{field} must be a positive integer")
     return value
 
 
 def _required_text(value: object, field: str) -> str:
     if not isinstance(value, str) or not value.strip():
-        raise HSLCA transfer_manifestError(f"{field} must be a non-empty string")
+        raise HslcaTransferManifestError(f"{field} must be a non-empty string")
     return value.strip()
 
 
@@ -59,7 +59,7 @@ def _record_id(capture_id: str, detail_url: str) -> str:
 
 def compile_transfer_manifest(finalized_capture: Mapping[str, Any]) -> dict[str, object]:
     if finalized_capture.get("schema_version") != "MEMBER_DIRECTORY_CAPTURE_V1":
-        raise HSLCA transfer_manifestError("unsupported capture schema")
+        raise HslcaTransferManifestError("unsupported capture schema")
 
     _strict_false(finalized_capture, "authority_advanced")
     _strict_zero(finalized_capture, "h_id_allocations")
@@ -67,16 +67,15 @@ def compile_transfer_manifest(finalized_capture: Mapping[str, Any]) -> dict[str,
     _strict_zero(finalized_capture, "send_allowed")
 
     if finalized_capture.get("capture_mode") != "LIVE_COMPLETE_MATERIALIZED_COUNT":
-        raise HSLCA transfer_manifestError("capture_mode must be LIVE_COMPLETE_MATERIALIZED_COUNT")
+        raise HslcaTransferManifestError("capture_mode must be LIVE_COMPLETE_MATERIALIZED_COUNT")
     if finalized_capture.get("coverage_claim") != "COMPLETE":
-        raise HSLCA transfer_manifestError("coverage_claim must be COMPLETE")
+        raise HslcaTransferManifestError("coverage_claim must be COMPLETE")
     if finalized_capture.get("record_count_basis") != "MATERIALIZED_PARTITION_TOTAL":
-        raise HSLCA transfer_manifestError(
+        raise HslcaTransferManifestError(
             "record_count_basis must be MATERIALIZED_PARTITION_TOTAL"
         )
-    violations = finalized_capture.get("capture_violations")
-    if violations != []:
-        raise HSLCA transfer_manifestError("finalized capture must have zero capture violations")
+    if finalized_capture.get("capture_violations") != []:
+        raise HslcaTransferManifestError("finalized capture must have zero capture violations")
 
     capture_id = _required_text(finalized_capture.get("capture_id"), "capture_id")
     locale = _required_text(finalized_capture.get("locale"), "locale").lower()
@@ -87,7 +86,7 @@ def compile_transfer_manifest(finalized_capture: Mapping[str, Any]) -> dict[str,
     )
     pages = finalized_capture.get("pages")
     if not isinstance(pages, list) or len(pages) != expected_pages:
-        raise HSLCA transfer_manifestError("pages must exactly match expected_pages")
+        raise HslcaTransferManifestError("pages must exactly match expected_pages")
 
     source_url = ""
     records: list[DirectoryRecord] = []
@@ -95,13 +94,13 @@ def compile_transfer_manifest(finalized_capture: Mapping[str, Any]) -> dict[str,
     seen_detail_urls: set[str] = set()
     for page in pages:
         if not isinstance(page, Mapping):
-            raise HSLCA transfer_manifestError("pages must contain only objects")
+            raise HslcaTransferManifestError("pages must contain only objects")
         position = _positive_int(page.get("page_position"), "page_position")
         if position in seen_positions:
-            raise HSLCA transfer_manifestError(f"duplicate page_position: {position}")
+            raise HslcaTransferManifestError(f"duplicate page_position: {position}")
         seen_positions.add(position)
         if page.get("capture_id") != capture_id or page.get("locale") != locale:
-            raise HSLCA transfer_manifestError(
+            raise HslcaTransferManifestError(
                 f"page {position} capture_id/locale lineage mismatch"
             )
         page_source_url = _required_text(page.get("source_url"), f"page {position} source_url")
@@ -110,10 +109,10 @@ def compile_transfer_manifest(finalized_capture: Mapping[str, Any]) -> dict[str,
         captured_at = _required_text(page.get("captured_at"), f"page {position} captured_at")
         raw_records = page.get("records")
         if not isinstance(raw_records, list) or not raw_records:
-            raise HSLCA transfer_manifestError(f"page {position} records must be non-empty")
+            raise HslcaTransferManifestError(f"page {position} records must be non-empty")
         for index, raw in enumerate(raw_records, start=1):
             if not isinstance(raw, Mapping):
-                raise HSLCA transfer_manifestError(
+                raise HslcaTransferManifestError(
                     f"page {position} record {index} must be an object"
                 )
             name = _required_text(raw.get("name"), f"page {position} record {index} name")
@@ -125,7 +124,7 @@ def compile_transfer_manifest(finalized_capture: Mapping[str, Any]) -> dict[str,
                 raw.get("evidence_ref"), f"page {position} record {index} evidence_ref"
             )
             if detail_url in seen_detail_urls:
-                raise HSLCA transfer_manifestError(f"duplicate detail_url: {detail_url}")
+                raise HslcaTransferManifestError(f"duplicate detail_url: {detail_url}")
             seen_detail_urls.add(detail_url)
             records.append(
                 DirectoryRecord.from_mapping(
@@ -148,9 +147,9 @@ def compile_transfer_manifest(finalized_capture: Mapping[str, Any]) -> dict[str,
             )
 
     if seen_positions != set(range(1, expected_pages + 1)):
-        raise HSLCA transfer_manifestError("page positions are not exactly 1..expected_pages")
+        raise HslcaTransferManifestError("page positions are not exactly 1..expected_pages")
     if len(records) != declared_raw_records:
-        raise HSLCA transfer_manifestError(
+        raise HslcaTransferManifestError(
             f"materialized records {len(records)} != declared_raw_records {declared_raw_records}"
         )
 
@@ -169,12 +168,12 @@ def compile_transfer_manifest(finalized_capture: Mapping[str, Any]) -> dict[str,
         ),
     )
     if not result.coverage_complete:
-        raise HSLCA transfer_manifestError(
+        raise HslcaTransferManifestError(
             "canonical MDM rejected finalized capture: " + ", ".join(result.violations)
         )
     transfer_violations = validate_member_directory_manifest(result.manifest)
     if transfer_violations:
-        raise HSLCA transfer_manifestError(
+        raise HslcaTransferManifestError(
             "canonical MDM failed transfer validation: " + ", ".join(transfer_violations)
         )
     return result.manifest
@@ -203,7 +202,7 @@ def main(argv: list[str] | None = None) -> int:
     try:
         payload = _read_json(args.finalized_capture)
         if not isinstance(payload, Mapping):
-            raise HSLCA transfer_manifestError("finalized capture must be a JSON object")
+            raise HslcaTransferManifestError("finalized capture must be a JSON object")
         manifest = compile_transfer_manifest(payload)
         _write_json(args.out, manifest)
         print(
@@ -225,7 +224,7 @@ def main(argv: list[str] | None = None) -> int:
             )
         )
         return 0
-    except (HSLCA transfer_manifestError, ValueError, json.JSONDecodeError, OSError) as exc:
+    except (HslcaTransferManifestError, ValueError, json.JSONDecodeError, OSError) as exc:
         print(
             json.dumps(
                 {

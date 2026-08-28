@@ -13,6 +13,7 @@ from .crm_universe import (
 from .db import connect, foreign_key_violations, initialize, integrity_check
 from .invariants import run_manifest_invariants
 from .manifest import OperationalManifest
+from .snapshot_freeze import SnapshotFreezeCandidate, validate_snapshot_freeze
 
 
 def cmd_manifest_validate(path: str) -> int:
@@ -90,6 +91,30 @@ def cmd_crm_universe_inspect_db(db_path: str, snapshot_id: str) -> int:
     return 0
 
 
+def cmd_crm_snapshot_freeze_validate(path: str) -> int:
+    payload = json.loads(Path(path).read_text(encoding="utf-8"))
+    candidate = SnapshotFreezeCandidate(
+        snapshot_id=str(payload.get("snapshot_id", "")),
+        locale=str(payload.get("locale", "")),
+        source_url=str(payload.get("source_url", "")),
+        expected_pages=int(payload.get("expected_pages", 0)),
+        observed_pages=int(payload.get("observed_pages", 0)),
+        declared_raw_records=int(payload.get("declared_raw_records", 0)),
+        materialized_records=int(payload.get("materialized_records", 0)),
+        duplicate_source_record_keys=int(payload.get("duplicate_source_record_keys", 0)),
+        unresolved_snapshot_conflicts=int(payload.get("unresolved_snapshot_conflicts", 0)),
+        missing_record_identity=int(payload.get("missing_record_identity", 0)),
+    )
+    result = validate_snapshot_freeze(candidate)
+    output = {
+        "snapshot_id": candidate.snapshot_id,
+        "freeze_eligible": result.eligible,
+        **result.as_dict(),
+    }
+    print(json.dumps(output, indent=2, sort_keys=True))
+    return 0 if result.eligible else 2
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="swiss-os")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -116,6 +141,14 @@ def build_parser() -> argparse.ArgumentParser:
     crm_inspect = crm_sub.add_parser("inspect-db")
     crm_inspect.add_argument("db_path", help="Path to the constrained SQLite database")
     crm_inspect.add_argument("snapshot_id", help="CRM snapshot ID to inspect")
+
+    snapshot = sub.add_parser(
+        "crm-snapshot",
+        help="Validate coherent snapshot freeze candidates",
+    )
+    snapshot_sub = snapshot.add_subparsers(dest="snapshot_command", required=True)
+    freeze_validate = snapshot_sub.add_parser("freeze-validate")
+    freeze_validate.add_argument("path", help="Path to a JSON snapshot candidate payload")
     return parser
 
 
@@ -131,6 +164,8 @@ def main(argv: list[str] | None = None) -> int:
         return cmd_crm_universe_validate(args.path)
     if args.command == "crm-universe" and args.crm_command == "inspect-db":
         return cmd_crm_universe_inspect_db(args.db_path, args.snapshot_id)
+    if args.command == "crm-snapshot" and args.snapshot_command == "freeze-validate":
+        return cmd_crm_snapshot_freeze_validate(args.path)
     return 2
 
 

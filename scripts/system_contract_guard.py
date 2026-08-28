@@ -19,6 +19,7 @@ REQUIRED_FILES = [
     "docs/operations/MEMBER_DIRECTORY_MANIFEST.md",
     "docs/operations/SOURCE_SCOPE_RECONCILIATION.md",
     "docs/operations/ALIAS_SEMANTIC_RECONCILIATION.md",
+    "docs/operations/COMPOSITE_CONSTRAINED_PARENT.md",
     "docs/architecture/ENGINE_REGISTRY.md",
     "docs/architecture/AUTHORITY_MODEL.md",
     "docs/architecture/SYSTEM_MAP.md",
@@ -40,6 +41,7 @@ STATE_FREE_FILES = [
     "docs/operations/MEMBER_DIRECTORY_MANIFEST.md",
     "docs/operations/SOURCE_SCOPE_RECONCILIATION.md",
     "docs/operations/ALIAS_SEMANTIC_RECONCILIATION.md",
+    "docs/operations/COMPOSITE_CONSTRAINED_PARENT.md",
 ]
 
 MUTABLE_FRONTIER_PATTERNS = [
@@ -107,6 +109,17 @@ REQUIRED_MARKERS = {
         "RECONCILE_REQUIRED",
         "authority_advanced = false",
         "h_id_allocations = 0",
+        "OUTBOUND = CLOSED",
+        "send_allowed = 0",
+    ],
+    "docs/operations/COMPOSITE_CONSTRAINED_PARENT.md": [
+        "CCP-1.0",
+        "DURABLE_MATERIALIZABLE_CONSTRAINED_PARENT",
+        "ARR-1.0",
+        "expected_materialized_sha256",
+        "RECONCILE_REQUIRED_CROSS_PLANE",
+        "authority_advanced = false",
+        "canonical_id_allocations = 0",
         "OUTBOUND = CLOSED",
         "send_allowed = 0",
     ],

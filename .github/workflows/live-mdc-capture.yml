@@ -14,7 +14,7 @@ permissions:
 jobs:
   capture:
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 30
     env:
       PYTHONPATH: src
     steps:
@@ -35,7 +35,8 @@ jobs:
             --root-url https://www.hotelleriesuisse.ch/de/verband-und-geschaeftsstelle/mitglieder/mitgliederverzeichnis \
             --locale de \
             --out-dir "$RUNNER_TEMP/hs-directory-de" \
-            --delay 0.35 \
+            --delay 3.0 \
+            --attempts 5 \
             --expected-page-size 12 \
             2>&1 | tee "$RUNNER_TEMP/hs-directory-de/CAPTURE_RUN.log"
 

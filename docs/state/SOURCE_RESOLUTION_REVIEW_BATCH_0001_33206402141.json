@@ -1,0 +1,65 @@
+{
+  "schema_version": "SOURCE-RESOLUTION-EXPLICIT-REVIEWS-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "source_snapshot_id": "HS-MEMBER-DE-33206402141",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "review_state": "READY_FOR_SRR_APPLICATION",
+  "reviews_count": 2,
+  "reviews": [
+    {
+      "source_record_key": "MD-025e7888dfc33e19723a",
+      "source_name": "Victoria – Alpine Boutique Hotel & Fine Dining",
+      "source_city": "Meiringen",
+      "source_detail_url": "https://www.hotelleriesuisse.ch/de/verband-und-geschaeftsstelle/mitglieder/mitgliederverzeichnis/hotel-victoria-alpine-boutique-hotel-fine-dining",
+      "action": "MATCH_EXISTING",
+      "canonical_hotel_id": "H-0686",
+      "canonical_name": "Victoria Boutique Hotel & Fine Dining",
+      "canonical_city": "Meiringen",
+      "reason_code": "CURRENT_EXACT_DETAIL_AND_STABLE_IDENTITY_NAME_VARIANT",
+      "evidence_ref": "ECV_BATCH_0001_SUB0002_RESULT.json#packet=2426d1c1b80ba959891d31c5d406b37f47d35323f1e114b27ec630e19aa1f4f0|ECV_RESPONSE_SHA256=330bb01dbffaa313c8698834acc565ccf6772b35d0e91a3b5a2b6ec1ca013dbc|HOTELS_MASTER:H-0686|https://www.victoria-meiringen.ch/",
+      "identity_basis": [
+        "same city: Meiringen",
+        "current exact HotellerieSuisse member-detail verification",
+        "stable official identity: Hotel VICTORIA / Alpine Boutique Hotel & Fine Dining",
+        "official address: Bahnhofplatz 9, 3860 Meiringen",
+        "official phone: +41 33 972 10 40"
+      ],
+      "current_evidence_verified": true,
+      "authority_action": "NONE_PREAUTH_REVIEW"
+    },
+    {
+      "source_record_key": "MD-0672b5697de8a818d65b",
+      "source_name": "BaseCamp Hotel & Apartements",
+      "source_city": "Zermatt",
+      "source_detail_url": "https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-basecamp-hotel-apartements",
+      "action": "MATCH_EXISTING",
+      "canonical_hotel_id": "H-0022",
+      "canonical_name": "BASECAMP Hotel & Apartments",
+      "canonical_city": "Zermatt",
+      "reason_code": "CURRENT_EXACT_DETAIL_AND_STABLE_IDENTITY_SPELLING_VARIANT",
+      "evidence_ref": "ECV_BATCH_0001_SUB0003_RESULT.json#packet=48632d17698772a6c5c17a24fa5c906eed05c957337758bbe18927b6ae6a30d8|ECV_RESPONSE_SHA256=82c45fdfded05f08917c26e83a714c2e8ef7c4985e6ead66392499f6ce423381|HOTELS_MASTER:H-0022|https://hotel-basecamp.ch/",
+      "identity_basis": [
+        "same city: Zermatt",
+        "current exact HotellerieSuisse member-detail verification",
+        "stable official identity: BASECAMP Hotel & Apartments",
+        "official address: Riedstrasse 80, 3920 Zermatt",
+        "official phone: +41 27 966 28 80",
+        "source/canonical difference is spelling and capitalization only"
+      ],
+      "current_evidence_verified": true,
+      "authority_action": "NONE_PREAUTH_REVIEW"
+    }
+  ],
+  "application_semantics": {
+    "target_contract": "SRR-1.1",
+    "expected_transition_on_valid_application": "RECONCILE_REQUIRED -> ACTIVE_CANONICAL",
+    "terminal_mapping_effect_now": "NONE_UNTIL_SRR_IS_REBUILT_AND_VALIDATED",
+    "canonical_h_id_reservation": "FORBIDDEN",
+    "authority_promotion": "FORBIDDEN"
+  },
+  "authority_advanced": false,
+  "h_id_allocations": 0,
+  "crm_universe_complete": false,
+  "outbound": "CLOSED",
+  "send_allowed": 0
+}

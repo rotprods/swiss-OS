@@ -7,6 +7,7 @@ from typing import Iterable, Mapping
 
 _HOTEL_ID_RE = re.compile(r"^H-\d{4}$")
 _SUPERSEDED_ID_IN_NOTES_RE = re.compile(r"\b(H-\d{4})\b(?=[^\n]{0,80}\bsupersed(?:e|ed|ing|es)?\b)", re.IGNORECASE)
+_ALLOWED_STABLE_BASES = {"EXACT_DETAIL_URL", "EXACT_SOURCE_RECORD_KEY", "EXACT_HSID"}
 
 
 @dataclass(frozen=True)
@@ -125,10 +126,13 @@ def _claimed_alias_ids(row: Mapping[str, object]) -> tuple[str, ...]:
 
 
 def _stable_equivalence_proven(row: Mapping[str, object]) -> bool:
-    # Exact name+city is the default deterministic proof. A stronger upstream
-    # resolver may explicitly provide stable_identity_verified=True when the
-    # equality is proved by stable detail/source identity instead of spelling.
-    return row.get("stable_identity_verified") is True
+    # A bare boolean is deliberately insufficient. Stronger-than-name+city
+    # equivalence must name a supported stable identity basis and durable ref.
+    if row.get("stable_identity_verified") is not True:
+        return False
+    basis = row.get("stable_identity_basis")
+    ref = row.get("stable_identity_ref")
+    return isinstance(basis, str) and basis in _ALLOWED_STABLE_BASES and isinstance(ref, str) and bool(ref.strip())
 
 
 def validate_alias_semantics(
@@ -245,7 +249,19 @@ def validate_alias_semantics(
         candidate_matches_alias = candidate_key == alias_key
         candidate_matches_target = candidate_key == target_key
         alias_matches_target = alias_key == target_key
+        stable_requested = resolution.get("stable_identity_verified") is True
         stable_proof = _stable_equivalence_proven(resolution)
+
+        if stable_requested and not stable_proof:
+            violations.append(
+                AliasSemanticViolation(
+                    "STABLE_IDENTITY_PROOF_INVALID",
+                    alias_id,
+                    target_id,
+                    "stable identity override lacks an allowed basis and non-empty durable reference",
+                )
+            )
+            continue
 
         if candidate_matches_target and not candidate_matches_alias:
             violations.append(

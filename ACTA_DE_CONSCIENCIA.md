@@ -1,22 +1,18 @@
 # ACTA DE CONSCIENCIA — SWITZERLAND_JOB_OS
 
-Recorded at: **2026-08-28T13:06:00+02:00**  
-Branch: `agent/acta-crm-universe-guard-20260828`  
+Updated at: **2026-08-28T13:38:00+02:00**  
+Authority state: **E4 / 686 active canonical / 690 physical**  
 Agent role: Mission Commander / Authority & Reconciliation / QA-Governance
 
-## 1. Mission remembered
+## Mission
 
-The system exists to maximize the probability of a **real, truthful, legal, economically viable Swiss employment offer that Roberto accepts and can use for sustainable relocation**. Hotel counts, CRM rows, crawling throughput, enrichment depth and outbound volume are supporting infrastructure, not the North Star.
+The system exists to maximize the probability of a real, truthful, legal, economically viable Swiss employment offer that Roberto accepts and can use for sustainable relocation. Hotel counts, crawling throughput, CRM rows and outreach volume are infrastructure, not the North Star.
 
-## 2. Authority model understood
+## Authority model
 
-I will not treat chat state, repository prose, local SQLite experiments, canaries, staging workbooks or historical cache observations as operational authority.
+Chat state, repository prose, API captures, local SQLite work, canaries, caches and staging artifacts are not operational authority. Authority advances only through a fully synchronized authority-eligible wave across constrained DB → Sheets/CRM → Graph/Intelligence → observability/checkpoint/handoff/recovery. On ambiguity, fail closed.
 
-Authority is advanced only by the last fully synchronized, authority-eligible constrained wave after DB → Sheets/CRM → Graph/Intelligence → observability/checkpoints/handoff reconciliation. On ambiguity, I fail closed.
-
-## 3. Current authoritative state reconstructed
-
-Source of live public-safe handoff: `STATE.md`, latest commits on `main`, issue `#14`, `GOAL.md`, `AGENTS.md`, and the CRM Universe protocol.
+## Current authoritative state
 
 ```text
 entity epoch                    HS_ENTITY_EPOCH_2026-08-25_E4
@@ -33,50 +29,37 @@ OUTBOUND                        CLOSED
 send_allowed                      0
 ```
 
-The current production priority is **full CRM source-record coverage**, not another local count milestone.
+No API capture, cache, canary or staging value advances this authority.
 
-## 4. Current constrained recovery state
+## Source acquisition capability
 
-`OPERATIONAL_DB_SHADOW_MANIFEST_V12.json` and its SQLite payload are physically discoverable in Drive and independently verified against E4:
+`discover.swiss` adapter DSA-1.0 is now the preferred structured acquisition path. It captures HotellerieSuisse/provider identifiers, provenance, count/materialization parity, continuation-token integrity and deterministic record hashes without leaking the runtime subscription key.
 
-```text
-active identities               686
-aliases                           4
-expected physical               690
-integrity                       ok
-FK violations                    0
-manifest SHA match             TRUE
-next physical ID              H-0691
-```
-
-This is constrained recovery evidence. Presence of V12 does not independently promote authority.
-
-## 5. CRM universe staging understood
-
-Latest non-authoritative mass-ingestion staging is v10:
+A valid API capture still remains non-freezeable until its source scope is reconciled against the intended HotellerieSuisse member-directory universe:
 
 ```text
-reference pages                         171
-pages with cache evidence                55
-pages pending refresh                   116
-cache observations                      605
-historical missing identities staged    174
-CRM import/staging queue                240
-V16 exact-detail canary                  25
-reserve/no-ID                             7
-snapshot conflicts                        4
-normalized name+city import duplicates    0
-canonical H-ID reservations               0
-formula errors                            0
+scope_state = HOTELLERIESUISSE_API_CAPTURED_MEMBER_DIRECTORY_RECONCILIATION_REQUIRED
+member_directory_scope_reconciled = FALSE
+crm_freeze_eligible = FALSE
 ```
 
-Historical-cache identities are discovery only. They must be refreshed against exact-current evidence before entity resolution. H-IDs are allocated only during an authority-eligible commit after rereading the live frontier.
+If the Infocenter Open key is unavailable, validated directory harvesting remains the fallback and caches remain discovery evidence only.
 
-## 6. Hard gate understood
+## Snapshot and CRM-universe contracts now executable
 
-`CRM_UNIVERSE_COMPLETE = TRUE` is a prerequisite before outbound may even be evaluated.
+The system now has executable layers for:
 
-Completion means every source record in one explicitly frozen/versioned HotellerieSuisse snapshot terminates exactly once as:
+```text
+source acquisition
+→ coherent snapshot freeze
+→ snapshot-scoped source-record identity
+→ CRM mapping accounting
+→ CRM universe completion gate
+```
+
+Page number is never source identity. Stable record identity prefers provider identity, then exact detail URL, then source surface + normalized name/city fallback. `CRM_UNIVERSE_COMPLETE` cannot be inferred from canonical/raw counts.
+
+Final source records must terminate exactly once as:
 
 ```text
 ACTIVE_CANONICAL
@@ -84,71 +67,172 @@ ALIAS_TO_CANONICAL
 EXCLUDED_WITH_REASON
 ```
 
-with:
+with zero unmapped, zero `RECONCILE_REQUIRED`, zero unresolved duplicate conflicts, valid aliases and exact DB/CRM/Graph/Intelligence reconciliation bound to one snapshot.
+
+## CRM mass-ingestion super-wave — merged
+
+PR #23 was reconciled against concurrent `main`, passed CI and merged as:
 
 ```text
-unmapped = 0
-RECONCILE_REQUIRED = 0
-invalid alias targets = 0
-unresolved duplicate conflicts = 0
-DB ↔ Sheets/CRM = EXACT
-Graph denominator = active canonical denominator
-Intelligence denominator = active canonical denominator
-all coverage metrics bound to the same snapshot_id
+1ae7a34cd5f3298cd70627fa06b0042cf64e6c63
 ```
 
-Raw directory count is not equivalent to active canonical count.
-
-## 7. Key source-semantics risk
-
-Official indexed/cache surfaces disagree by locale/epoch. Observed counts include DE 2050/171 pages, FR 2052/171, and older caches above 2050. The same `hotel-page-N` may contain different records across locale/cache epochs.
-
-Therefore page number is not identity. Snapshot record identity must include snapshot/locale/source/observation lineage.
-
-## 8. Current blockers / risks
-
-1. `CRM_UNIVERSE_COMPLETE = FALSE` — primary system blocker to outbound evaluation.
-2. 116 of 171 reference pages still require refresh in the latest staging view.
-3. 240 staged/import candidates remain non-authoritative until exact-current refresh, anti-join, entity resolution and authority-eligible commit.
-4. Snapshot conflicts remain and must be resolved before freeze completeness.
-5. Candidate readiness remains an independent gate; no candidate fact may be fabricated.
-6. Outbound remains CLOSED regardless of enrichment quality until all hard gates and explicit user authorization pass.
-
-## 9. Immediate execution frontier
+The pre-authority operational chain is now:
 
 ```text
-CONTINUE MASS DIRECTORY HARVEST
-→ SELECT / FREEZE COHERENT SOURCE SNAPSHOT
-→ ENUMERATE SNAPSHOT-SCOPED SOURCE RECORDS
-→ NORMALIZE + ANTI-JOIN
-→ EXACT-CURRENT REFRESH TRUE MISSING RECORDS
-→ ENTITY / ALIAS / EXCLUSION RESOLUTION
-→ RECONCILE_REQUIRED → 0
+discover.swiss / validated source capture
+→ snapshot-scoped identity + freeze gates
+→ deterministic CRM anti-join
+→ crm_ingest_staging
+→ scheduler work
+→ exact-current refresh / entity resolution / exclusion review
+→ terminal CRM source mapping
+→ authority-eligible DB commit
+→ Sheets/CRM mirror
+→ Graph + Intelligence reconciliation
+```
+
+### Deterministic anti-join
+
+```text
+EXACT_CANONICAL_DOMAIN
+→ EXACT_CANONICAL_NAME_CITY
+→ EXACT_ALIAS_NAME_CITY
+→ TRUE_MISSING
+```
+
+Ambiguous matches fail closed as `CONFLICT`.
+
+### Non-authoritative staging classes
+
+```text
+ACTIVE_MATCH
+ALIAS_MATCH
+TRUE_MISSING
+CONFLICT
+EXCLUSION_CANDIDATE
+```
+
+`TRUE_MISSING` means only that no exact deterministic match exists in the current canonical/alias reference. It does not authorize canonical creation or an H-ID.
+
+### Scheduler routing
+
+```text
+TRUE_MISSING        → REFRESH_EXACT_CURRENT     priority 900
+CONFLICT            → ENTITY_RESOLUTION         priority 950
+EXCLUSION_CANDIDATE → EXCLUSION_REVIEW          priority 850
+ACTIVE_MATCH        → no redundant task
+ALIAS_MATCH         → no redundant task
+```
+
+Scheduler work is idempotent by snapshot freshness + snapshot-record scope.
+
+### Hard invariants
+
+```text
+H_ID_ALLOCATIONS = 0
+AUTHORITY_ADVANCED = FALSE
+OUTBOUND = CLOSED
+```
+
+`crm_ingest_staging` is intentionally isolated from `canonical_hotels`, `crm_snapshot_records` and final `crm_source_mappings`.
+
+## Current staging frontier — v11
+
+```text
+reference pages                         171
+pages with cache evidence                57
+pages pending refresh                   114
+cache observations                      629
+historical-cache missing staged         182
+CRM import/staging queue                248
+V16 exact-detail canary                  25
+reserve/no-ID                             7
+snapshot conflicts                        4
+normalized import duplicates              0
+canonical H-ID reservations               0
+formula errors                             0
+```
+
+Historical-cache missing identities remain:
+
+```text
+HISTORICAL_CACHE_DISCOVERY_ONLY
+→ REFRESH_EXACT_CURRENT_THEN_ENTITY_RESOLVE
+→ NO_H_ID_RESERVED
+```
+
+## Constrained recovery lineage
+
+V12 remains a physically verified E4 constrained representation:
+
+```text
+active identities      686
+aliases                   4
+physical expected       690
+next physical ID     H-0691
+integrity                ok
+FK violations             0
+manifest SHA match      TRUE
+```
+
+Presence of V12 does not itself promote authority.
+
+## Remaining hard blockers
+
+1. `CRM_UNIVERSE_COMPLETE = FALSE`.
+2. Structured API/member-directory scope reconciliation is not yet complete.
+3. The current fallback staging still has 114 reference pages pending refresh and 4 snapshot conflicts.
+4. Exact-current evidence/entity resolution must drain actionable staging work before terminal mapping.
+5. Native in-place `HOTELS_MASTER` write capability remains unavailable under issue #12; without the CRM mirror, a local constrained DB cannot promote authority.
+6. Candidate readiness and outbound authorization remain separate later gates.
+
+## Current execution frontier
+
+Primary path:
+
+```text
+DISCOVER.SWISS FULL dsod-hs CAPTURE
+→ CAPTURE QA
+→ MEMBER-DIRECTORY SCOPE RECONCILIATION
+→ FROZEN_VERIFIED TARGET SNAPSHOT
+→ COMPLETE SNAPSHOT RECORD MATERIALIZATION
+→ MASS ANTI-JOIN / STAGING
+→ DRAIN REFRESH_EXACT_CURRENT
+→ DRAIN ENTITY_RESOLUTION
+→ DRAIN EXCLUSION_REVIEW
+→ TERMINAL SOURCE MAPPINGS
+→ RECONCILE_REQUIRED = 0
+→ UNMAPPED = 0
+→ /wave recover
 → DB-FIRST AUTHORITY COMMIT
 → HOTELS_MASTER PK MIRROR
-→ INTELLIGENCE + OPERATIONAL GRAPH SYNC
-→ COVERAGE RECOMPUTE BY SNAPSHOT RECORD MAPPING
-→ CRM_UNIVERSE_COMPLETE TRUE
+→ INTELLIGENCE + OPERATIONAL GRAPH
+→ COVERAGE RECOMPUTE
+→ CRM_UNIVERSE_COMPLETE = TRUE
 ```
 
-Deep vacancy/housing/people/channel enrichment may run in parallel after CRM seeding, but must not block market coverage.
+Fallback while API access/scope is unresolved:
 
-## 10. My operating commitments
+```text
+CONTINUE VALIDATED MEMBER-DIRECTORY HARVEST
+→ CACHE DISCOVERY ONLY
+→ FEED SAME SNAPSHOT / ANTI-JOIN / SCHEDULER CONTRACT
+```
+
+## Operating commitments
 
 - Truth > volume.
 - Evidence > inference.
-- No false progress from canary/staging counts.
-- No H-ID reservation before commit.
+- No false progress from capture/canary/staging counts.
+- No H-ID reservation before authority-eligible commit.
+- No page-position identity.
 - No `UNKNOWN_AFTER_SEARCH` without Search Proof.
 - No phone → WhatsApp inference.
-- No outbound before CRM universe completion + all independent gates + explicit authorization.
-- Every material wave closes with one explicit WOP state.
-- Every structural change remains reversible and testable.
+- No outbound before CRM universe completion, all independent gates and explicit authorization.
+- Preserve concurrent work; reconcile rather than overwrite.
+- Every structural wave is testable, reversible and closed with an explicit authority state.
 
-## 11. Development decision for this wave
+## Consciousness state
 
-The next code-level improvement is to make the CRM-universe completion contract executable. I will add a deterministic guard that validates snapshot mapping accounting and fails closed unless every CUP-1.0 gate is satisfied. This prevents future agents or automation from promoting `CRM_UNIVERSE_COMPLETE` from an incomplete or internally inconsistent metrics payload.
-
-## 12. Consciousness state
-
-I understand that the project is no longer at the old 667-hotel/G-0800 graph-repair frontier discussed earlier in chat. The repo has advanced to E4 with 686 active canonical entities and a separate v10 mass-ingestion staging lineage. I will continue from **that** frontier and will not regress authority to older conversational state.
+I understand the current frontier and will not regress to the older 667-hotel state or the superseded v10 staging state. The live project is E4/686 authority, v11 fallback staging, discover.swiss structured acquisition, executable snapshot/CRM completion contracts, and an integrated mass-ingestion + scheduler pipeline. The next value-producing work is no longer designing that pipeline; it is executing and reconciling the full source universe through it.

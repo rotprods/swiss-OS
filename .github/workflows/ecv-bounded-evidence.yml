@@ -1,0 +1,129 @@
+name: ecv-bounded-evidence
+
+on:
+  push:
+    branches:
+      - 'ops/ecv-bounded-*'
+    paths:
+      - 'docs/state/ecv_inputs/*.json'
+      - '.github/workflows/ecv-bounded-evidence.yml'
+  workflow_dispatch:
+    inputs:
+      batch_path:
+        description: 'Repo-relative CWP/ECV batch JSON path'
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Resolve bounded batch
+        id: batch
+        shell: bash
+        env:
+          INPUT_BATCH: ${{ inputs.batch_path }}
+        run: |
+          set -euo pipefail
+          if [[ -n "${INPUT_BATCH:-}" ]]; then
+            BATCH="$INPUT_BATCH"
+          else
+            BATCH="$(find docs/state/ecv_inputs -maxdepth 1 -type f -name '*.json' | sort | tail -n 1)"
+          fi
+          if [[ -z "$BATCH" || ! -f "$BATCH" ]]; then
+            echo 'No bounded ECV input batch found' >&2
+            exit 2
+          fi
+          echo "batch=$BATCH" >> "$GITHUB_OUTPUT"
+          echo "Resolved $BATCH"
+      - name: Preflight fail-closed batch safety
+        shell: bash
+        env:
+          BATCH: ${{ steps.batch.outputs.batch }}
+        run: |
+          set -euo pipefail
+          PYTHONPATH=src python - "$BATCH" <<'PY'
+          import json, sys
+          from pathlib import Path
+          payload = json.loads(Path(sys.argv[1]).read_text(encoding='utf-8'))
+          assert isinstance(payload, dict)
+          items = payload.get('items')
+          assert isinstance(items, list) and 1 <= len(items) <= 20
+          assert payload.get('items_count') == len(items)
+          assert payload.get('authority_advanced') is False
+          assert type(payload.get('h_id_allocations')) is int and payload['h_id_allocations'] == 0
+          assert payload.get('outbound') == 'CLOSED'
+          assert type(payload.get('send_allowed')) is int and payload['send_allowed'] == 0
+          for row in items:
+              assert isinstance(row, dict)
+              assert row.get('work_state') in {'VERIFY_NEW_ENTITY', 'RECONCILE_REQUIRED', 'REVIEW_UNKNOWN_DECISION'}
+              url = str(row.get('detail_url', ''))
+              assert url.startswith('https://www.hotelleriesuisse.ch/') or url.startswith('https://hotelleriesuisse.ch/')
+              assert '/mitgliederverzeichnis/hotel-' in url
+              assert 'hotel-page-' not in url
+          print(json.dumps({'preflight': 'PASS', 'items': len(items), 'authority_advanced': False, 'h_id_allocations': 0, 'outbound': 'CLOSED', 'send_allowed': 0}, sort_keys=True))
+          PY
+      - name: Run ECV-1.0 exact-current verification
+        shell: bash
+        env:
+          BATCH: ${{ steps.batch.outputs.batch }}
+        run: |
+          set -euo pipefail
+          mkdir -p .artifacts/ecv
+          PYTHONPATH=src python -m swiss_os.exact_current_verify verify \
+            "$BATCH" \
+            --out .artifacts/ecv/EXACT_CURRENT_RESULT.json \
+            --delay 1.0 \
+            --timeout 30 \
+            --attempts 2 \
+            | tee .artifacts/ecv/ECV_BUILD.json
+          PYTHONPATH=src python -m swiss_os.exact_current_verify validate \
+            .artifacts/ecv/EXACT_CURRENT_RESULT.json \
+            | tee .artifacts/ecv/ECV_VALIDATE.json
+      - name: Postflight hard-lock and summary
+        shell: bash
+        run: |
+          set -euo pipefail
+          PYTHONPATH=src python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          p = Path('.artifacts/ecv/EXACT_CURRENT_RESULT.json')
+          payload = json.loads(p.read_text(encoding='utf-8'))
+          assert payload.get('authority_advanced') is False
+          assert type(payload.get('h_id_allocations')) is int and payload['h_id_allocations'] == 0
+          assert payload.get('outbound') == 'CLOSED'
+          assert type(payload.get('send_allowed')) is int and payload['send_allowed'] == 0
+          summary = {
+              'schema_version': payload.get('schema_version'),
+              'batch_id': payload.get('batch_id'),
+              'items_count': payload.get('items_count'),
+              'results_count': payload.get('results_count'),
+              'counts_by_state': payload.get('counts_by_state'),
+              'all_verified': payload.get('all_verified'),
+              'packet_sha256': payload.get('packet_sha256'),
+              'file_sha256': hashlib.sha256(p.read_bytes()).hexdigest(),
+              'authority_advanced': False,
+              'h_id_allocations': 0,
+              'outbound': 'CLOSED',
+              'send_allowed': 0,
+          }
+          Path('.artifacts/ecv/ECV_SUMMARY.json').write_text(json.dumps(summary, indent=2, sort_keys=True) + '\n', encoding='utf-8')
+          print(json.dumps(summary, indent=2, sort_keys=True))
+          PY
+      - name: Upload bounded ECV evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ecv-bounded-evidence
+          path: .artifacts/ecv
+          if-no-files-found: warn
+          include-hidden-files: true
+          retention-days: 7

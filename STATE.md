@@ -1,7 +1,7 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest chained Meta Execution reconciliation: **2026-08-28T23:12:00Z**.  
-GitHub parent for this wave: **`808a4097a4bdaa2b2dff77c3b779f576f72154a4`**.  
+Latest chained Meta Execution reconciliation: **2026-08-28T23:18:00Z**.  
+GitHub parent for this wave: **`5eefc51a53742c487af9e2f6309de1ff03202c7c`**.  
 Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**.  
 Open GitHub issues labelled `P0`: **0**.  
 Frozen current CRM source snapshot: **`HS-MEMBER-DE-33206402141`**.
@@ -57,7 +57,7 @@ CWP packet internal SHA-256     2741ca3b870c83d5fe424243bb06f599a96517f5922ec13b
 CWP JSON file SHA-256           60ecb59fb8947aee90267c777792fa51238e4bd19bb6e6a993c64cdeb8587b1d
 ```
 
-The later 624/1437 source-mapping frontier is downstream reconciliation state and must not be used as immutable CWP ordering. A fresh replay of all 2061 source records against the 690-row E4 authority reproduces 623 exact matches / 1438 candidates / 0 conflicts. Reconstructed offset 100..119 hashes exactly to persisted SUB0006 (`085f20a4...`), proving offset 120..139 lineage-safe. Recovery proof: `docs/state/CWP_LINEAGE_RECOVERY_2026-08-29.json`.
+The later 624/1437 source-mapping frontier is downstream reconciliation state and must not be used as immutable CWP ordering. A fresh replay of all 2061 source records against the 690-row E4 authority reproduces 623 exact matches / 1438 candidates / 0 conflicts. Reconstructed offset 100..119 hashes exactly to persisted SUB0006 (`085f20a4...`), proving subsequent immutable slices contiguous. Recovery proof: `docs/state/CWP_LINEAGE_RECOVERY_2026-08-29.json`.
 
 ## 4. Source mapping frontier — pre-authority
 
@@ -76,18 +76,18 @@ Persisted SMO terminal overlays remain: `MD-025e7888dfc33e19723a -> H-0686` and 
 
 ## 5. Exact-current verification frontier
 
-SUB0007 completed successfully under GitHub Actions run `33219437882`:
+SUB0008 completed successfully under GitHub Actions run `33219834303`:
 
 ```text
-ECV verified frontier             140 / 1438
-ECV remaining never verified     1298
+ECV verified frontier             160 / 1438
+ECV remaining never verified     1278
 pending requeue                     0
-SUB0007 items                     20 / 20 CURRENT_DETAIL_VERIFIED
-SUB0007 packet SHA-256     27c38cef2683117a03eb12b763a8effe77fc7b8164f32c19ad15791b7f66f08a
-SUB0007 artifact SHA-256   8506a4abda5040ee27ec40e0f95e56c3704529b0dce40ccf83ce2fe6ed9784d7
+SUB0008 items                     20 / 20 CURRENT_DETAIL_VERIFIED
+SUB0008 packet SHA-256     84cd4fddf9e2b2f343c5743698f0e13ca85cfb36101cc0de646f5cd2198007a0
+SUB0008 artifact SHA-256   675d8d4a49e3ad2a65a0c287960538b0e6d6bfab79d06816a8e5c17ccd6b5d4e
 ```
 
-SUB0008 is staged at original candidate offset 140..159, first key `MD-168e2b3d43460de6bba5`, last key `MD-1a18386074be6c3b0ac5`, items SHA `c0d17f777222399794f2e92d628674967d6b3aa973b4a6eba351b2558e4ed436`. It remains evidence-only until the live exact-current canary succeeds.
+SUB0009 is staged at original candidate offset 160..179, first key `MD-1a30b7c45d2cc05ae938`, last key `MD-1d77f9b5f6c4e1314799`, items SHA `e4cb08a6cca66042dda3cf4c75d8730f7c7e06b7ed13fd3535a9b7f9d5afa200`. It remains evidence-only until the live exact-current canary succeeds.
 
 ## 6. Protocol / capability state
 
@@ -107,10 +107,10 @@ Library historical staging                NON-AUTHORITATIVE
 ## 7. NEXT
 
 ```text
-run ECV SUB0008
+run ECV SUB0009
 → persist ECV result and advance evidence frontier only if 20/20 verifies
 → continue bounded untouched CWP slices while provider pacing remains healthy
-→ entity-resolve verified candidates and persist SMO terminal overlays
+→ entity-resolve verified candidates and persist only base-membership-proven SMO terminal overlays
 → replay/materialize full 2061-record source mapping
 → resolve reverse gaps 66
 → RECONCILE_REQUIRED = 0

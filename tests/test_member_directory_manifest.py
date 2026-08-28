@@ -14,14 +14,31 @@ class MemberDirectoryManifestTests(unittest.TestCase):
         result = compile_member_directory_manifest(self._rows(), snapshot_id="MD-E1", observed_at="2026-08-28T12:00:00Z", expected_pages=2, declared_raw_records=2)
         self.assertTrue(result["coverage_complete"])
         self.assertEqual(result["observed_pages"], 2)
+        self.assertEqual(result["observed_page_numbers"], [1, 2])
+        self.assertEqual(result["missing_pages"], [])
+        self.assertEqual(result["out_of_range_pages"], [])
         self.assertEqual(result["materialized_records"], 2)
         self.assertEqual(result["violations"], [])
+        self.assertFalse(result["authority_advanced"])
+        self.assertEqual(result["h_id_allocations"], 0)
+        self.assertFalse(result["outbound_opened"])
 
     def test_partial_page_coverage_fails_closed(self):
         result = compile_member_directory_manifest(self._rows()[:1], snapshot_id="MD-E1", observed_at="2026-08-28T12:00:00Z", expected_pages=2, declared_raw_records=2)
         self.assertFalse(result["coverage_complete"])
-        self.assertTrue(any("observed_pages=" in item for item in result["violations"]))
+        self.assertEqual(result["missing_pages"], [2])
+        self.assertTrue(any(item.startswith("missing pages:") for item in result["violations"]))
         self.assertTrue(any("materialized_records=" in item for item in result["violations"]))
+
+    def test_equal_unique_page_count_with_wrong_range_fails_closed(self):
+        rows = self._rows()
+        rows[0]["page"] = 2
+        rows[1]["page"] = 3
+        result = compile_member_directory_manifest(rows, snapshot_id="MD-OFFBYONE", observed_at="2026-08-28T12:00:00Z", expected_pages=2, declared_raw_records=2)
+        self.assertFalse(result["coverage_complete"])
+        self.assertEqual(result["missing_pages"], [1])
+        self.assertEqual(result["out_of_range_pages"], [3])
+        self.assertEqual(result["observed_pages"], 1)
 
     def test_mixed_epoch_fails_closed(self):
         rows = self._rows()
@@ -43,6 +60,16 @@ class MemberDirectoryManifestTests(unittest.TestCase):
         rows[0]["page"], rows[1]["page"] = 2, 1
         second = compile_member_directory_manifest(rows, snapshot_id="MD-E1", observed_at="2026-08-28T12:00:00Z", expected_pages=2, declared_raw_records=2)
         self.assertEqual(first["records_sha256"], second["records_sha256"])
+
+    def test_boolean_and_non_integer_counts_are_rejected(self):
+        with self.assertRaisesRegex(ValueError, "positive integer"):
+            compile_member_directory_manifest(self._rows(), snapshot_id="MD", observed_at="now", expected_pages=True, declared_raw_records=2)
+        with self.assertRaisesRegex(ValueError, "positive integer"):
+            compile_member_directory_manifest(self._rows(), snapshot_id="MD", observed_at="now", expected_pages=2, declared_raw_records="2")
+
+    def test_non_object_observation_is_rejected(self):
+        with self.assertRaisesRegex(ValueError, "observations must be objects"):
+            compile_member_directory_manifest([self._rows()[0], "bad"], snapshot_id="MD", observed_at="now", expected_pages=2, declared_raw_records=2)
 
 
 if __name__ == "__main__":

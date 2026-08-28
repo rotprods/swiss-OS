@@ -1,0 +1,51 @@
+{
+  "schema_version": "ASR_SQLITE_REPAIR_PLAN_V1",
+  "parent_sha256": "0e605b412f29893ca1775f1e8fccd5987d0613baab4ac29b6699988cde0fdfe5",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "expected_physical_rows": 690,
+  "expected_alias_rows_after": 0,
+  "pairs": [
+    {
+      "alias_hotel_id": "H-0610",
+      "invalid_target_hotel_id": "H-0656",
+      "expected_before_state": "SUPERSEDED_DUPLICATE→H-0656",
+      "restored_state": "CANONICAL_CURRENT_RECONCILED",
+      "alias_identity": "Hôtel Alpe Fleurie|Villars-sur-Ollon",
+      "target_identity": "Hotel Murtenhof & Krone|Murten",
+      "issue": "https://github.com/rotprods/swiss-OS/issues/89"
+    },
+    {
+      "alias_hotel_id": "H-0624",
+      "invalid_target_hotel_id": "H-0639",
+      "expected_before_state": "SUPERSEDED_DUPLICATE→H-0639",
+      "restored_state": "CANONICAL_CURRENT_RECONCILED",
+      "alias_identity": "Hôtel Le Mont Paisible|Crans-Montana",
+      "target_identity": "Hotel Alpbach|Meiringen",
+      "issue": "https://github.com/rotprods/swiss-OS/issues/89"
+    },
+    {
+      "alias_hotel_id": "H-0629",
+      "invalid_target_hotel_id": "H-0638",
+      "expected_before_state": "SUPERSEDED_DUPLICATE→H-0638",
+      "restored_state": "CANONICAL_CURRENT_RECONCILED",
+      "alias_identity": "Stiftung Lilienberg Unternehmerforum|Ermatingen",
+      "target_identity": "Jugendherberge Seelisberg|Seelisberg",
+      "issue": "https://github.com/rotprods/swiss-OS/issues/89"
+    },
+    {
+      "alias_hotel_id": "H-0630",
+      "invalid_target_hotel_id": "H-0640",
+      "expected_before_state": "SUPERSEDED_DUPLICATE→H-0640",
+      "restored_state": "CANONICAL_CURRENT_RECONCILED",
+      "alias_identity": "Strandhotel Iseltwald|Iseltwald",
+      "target_identity": "Hotel Central Luzern|Luzern",
+      "issue": "https://github.com/rotprods/swiss-OS/issues/89"
+    }
+  ],
+  "permissions": {
+    "authority_advance_allowed": false,
+    "canonical_id_allocation_allowed": false,
+    "outbound_allowed": false,
+    "send_allowed": 0
+  }
+}

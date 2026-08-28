@@ -19,11 +19,43 @@ Produced by:
 swiss-os discover-swiss snapshot --out <private-manifest.json>
 ```
 
-It must already satisfy `capture_valid = true`.
+It must already satisfy:
+
+```text
+capture_valid = true
+```
 
 ### Member-directory evidence manifest
 
-Must contain:
+Canonical builder/validator contract:
+
+```text
+docs/operations/MEMBER_DIRECTORY_MANIFEST.md
+MDM-1.0
+```
+
+Build:
+
+```bash
+swiss-os member-directory build records.json \
+  --snapshot-id <snapshot_id> \
+  --observed-at <ISO8601> \
+  --locale <locale> \
+  --source-url <selected source surface> \
+  --declared-raw-records <n> \
+  --expected-pages <n> \
+  --observed-pages <n> \
+  --coverage-complete \
+  --out member-directory-manifest.json
+```
+
+Validate before SSR:
+
+```bash
+swiss-os member-directory validate member-directory-manifest.json --require-complete
+```
+
+The required SSR shape is:
 
 ```json
 {
@@ -43,7 +75,9 @@ Must contain:
 }
 ```
 
-`coverage_complete=true` is a strong assertion: the selected member-directory evidence set must represent the complete selected directory snapshot/epoch, not a partial cache collection.
+`coverage_complete=true` is a strong executable assertion: the selected member-directory evidence set represents the complete selected directory snapshot/epoch, not a partial or mixed cache collection.
+
+MDM can be built independently of the API capture. This permits MEP-2.0 to continue member-directory evidence acquisition while the discover.swiss subscription key is unavailable, without weakening the later SSR gate.
 
 ## Matching precedence
 
@@ -53,7 +87,9 @@ Must contain:
 3. EXACT_NAME_CITY
 ```
 
-All matching layers require uniqueness. Ambiguity within either source is itself a typed conflict and fails closed.
+All matching layers require uniqueness. Ambiguity within either source is a typed conflict and fails closed.
+
+Page number is not a source-record identity and does not participate in matching.
 
 ## Scope states
 
@@ -65,7 +101,7 @@ UNRESOLVED
 
 `EXACT` means every API record and every directory record is paired exactly once.
 
-`EXPLAINED` permits explicit source-scope deltas only when every unmatched record carries a typed explanation with an evidence reference. Examples may include a source-specific non-public record or a directory-only record omitted from the API for a verified reason. The explanation is evidence, not a heuristic.
+`EXPLAINED` permits explicit source-scope deltas only when every unmatched record carries a typed explanation with an evidence reference. The explanation is evidence, not a heuristic.
 
 `UNRESOLVED` means at least one unmatched record or conflict remains.
 
@@ -181,16 +217,17 @@ The resulting file can be passed directly to:
 swiss-os crm-ingest stage DB_PATH SNAPSHOT_ID crm-ingest-records.json --observed-at <ISO8601>
 ```
 
-This closes the executable handoff from structured acquisition to deterministic anti-join/scheduler while keeping authority separate.
-
-## Relationship to CUP-1.1
+## Executable chain
 
 ```text
-discover.swiss acquisition
+DSA-1.0 valid discover.swiss capture
++
+MDM-1.0 validated coverage_complete member-directory manifest
 → SSR-1.0 source-scope reconciliation
+→ EXACT | EXPLAINED
 → FROZEN_CANDIDATE
 → candidate_export
-→ CRM mass anti-join + scheduler
+→ CMI mass anti-join + scheduler
 → exact-current / entity-resolution work
 → terminal mappings
 → snapshot freeze verification
@@ -199,4 +236,6 @@ discover.swiss acquisition
 → CRM_UNIVERSE_COMPLETE
 ```
 
-SSR-1.0 closes the ambiguity between a valid API capture and the intended public member-directory universe. It does not bypass issue #12 or any outbound gate.
+The repository integration tests prove that a valid MDM manifest enters SSR and can yield an `EXACT` `FROZEN_CANDIDATE`; partial MDM manifests are rejected before reconciliation.
+
+SSR-1.0 closes ambiguity between a valid API capture and the intended public member-directory universe. It does not bypass any native Sheets/authority dependency or outbound gate.

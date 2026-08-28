@@ -2,9 +2,6 @@ name: ecv-live-batch-canary
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - source/ecv-batch-0001-20260828
 
 permissions:
   contents: read
@@ -53,4 +50,5 @@ jobs:
           name: ecv-batch-0001-sub0001-evidence
           path: .artifacts
           if-no-files-found: error
+          include-hidden-files: true
           retention-days: 7

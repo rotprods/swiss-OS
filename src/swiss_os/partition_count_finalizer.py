@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+from datetime import datetime, timezone
 import hashlib
 import json
 from pathlib import Path
@@ -36,6 +37,21 @@ def _positive_int(value: object, *, field: str) -> int:
     return value
 
 
+def _timestamp(value: object, *, field: str) -> datetime:
+    if not isinstance(value, str) or not value.strip():
+        raise PartitionCountFinalizerError(f"{field} must be an ISO-8601 string")
+    text = value.strip()
+    if text.endswith("Z"):
+        text = text[:-1] + "+00:00"
+    try:
+        parsed = datetime.fromisoformat(text)
+    except ValueError as exc:
+        raise PartitionCountFinalizerError(f"{field} must be valid ISO-8601") from exc
+    if parsed.tzinfo is None:
+        raise PartitionCountFinalizerError(f"{field} must be timezone-aware")
+    return parsed.astimezone(timezone.utc)
+
+
 def _strict_false(payload: Mapping[str, object], key: str) -> None:
     value = payload.get(key)
     if not isinstance(value, bool) or value is not False:
@@ -61,13 +77,14 @@ def finalize_materialized_partition_count(capture_payload: object) -> dict[str, 
 
     capture_id = capture_payload.get("capture_id")
     locale = capture_payload.get("locale")
-    completed_at = capture_payload.get("completed_at")
     if not isinstance(capture_id, str) or not capture_id.strip():
         raise PartitionCountFinalizerError("capture_id must be a non-empty string")
     if not isinstance(locale, str) or not locale.strip():
         raise PartitionCountFinalizerError("locale must be a non-empty string")
-    if not isinstance(completed_at, str) or not completed_at.strip():
-        raise PartitionCountFinalizerError("completed_at must be a non-empty string")
+    started_at = _timestamp(capture_payload.get("started_at"), field="started_at")
+    completed_at = _timestamp(capture_payload.get("completed_at"), field="completed_at")
+    if completed_at < started_at:
+        raise PartitionCountFinalizerError("completed_at precedes started_at")
 
     reported = capture_payload.get("reported_records")
     if reported not in (None, 0):
@@ -109,6 +126,11 @@ def finalize_materialized_partition_count(capture_payload: object) -> dict[str, 
         if page.get("capture_id") != capture_id or page.get("locale") != locale:
             raise PartitionCountFinalizerError(
                 f"page {position} capture_id/locale lineage mismatch"
+            )
+        captured_at = _timestamp(page.get("captured_at"), field=f"page {position} captured_at")
+        if captured_at < started_at or captured_at > completed_at:
+            raise PartitionCountFinalizerError(
+                f"page {position} captured_at falls outside current capture window"
             )
         observed_pages = page.get("observed_expected_pages")
         if observed_pages is not None:
@@ -161,11 +183,6 @@ def finalize_materialized_partition_count(capture_payload: object) -> dict[str, 
     if materialized_records <= 0 or materialized_records != len(seen_detail_urls):
         raise PartitionCountFinalizerError("materialized record parity failed")
 
-    # Without an independent provider count, partition cardinality is part of
-    # the completeness proof. Every non-last page must expose one stable page
-    # size and the final page must contain 1..page_size records. This prevents
-    # a missing card on an intermediate page from being silently absorbed into
-    # a lower materialized denominator.
     if expected_pages > 1:
         non_last_counts = [records_per_page[pos] for pos in range(1, expected_pages)]
         page_size = non_last_counts[0]

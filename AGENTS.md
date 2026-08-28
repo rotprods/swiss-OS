@@ -7,17 +7,20 @@ Every agent optimizes the G-0001 North Star, not vanity metrics.
 Before material work:
 
 1. read `docs/operations/META_EXECUTION_PROTOCOL.md`;
-2. read `docs/operations/WAVE_OPERATING_PROTOCOL.md`;
-3. read `GOAL.md`;
-4. read `STATE.md` from the current GitHub `main` ancestry;
-5. reconcile against live Drive/Sheets + the latest authority-eligible constrained manifest;
-6. read relevant invariants, issues, SLOs, TTL state and scheduler tasks;
-7. identify affected engines using `docs/architecture/ENGINE_REGISTRY.md`;
-8. when work affects hotel-universe coverage, CRM seeding or outbound readiness, read `docs/operations/CRM_UNIVERSE_PROTOCOL.md`;
-9. when structured source capture/scope is involved, read `docs/operations/DISCOVER_SWISS_SNAPSHOT_ADAPTER.md` and `docs/operations/SOURCE_SCOPE_RECONCILIATION.md`;
-10. select/declare an execution mode, MEP route and `GRAPH_IMPACT`;
-11. fail closed on lineage ambiguity, stale parent state or partial writes;
-12. preserve outbound CLOSED unless separately and explicitly authorized.
+2. read `docs/operations/NEXT_POINTER_PROTOCOL.md`;
+3. read `docs/operations/WAVE_OPERATING_PROTOCOL.md`;
+4. read `GOAL.md`;
+5. read `STATE.md` from the current GitHub `main` ancestry;
+6. reconcile against live Drive/Sheets + the latest authority-eligible constrained manifest;
+7. read relevant invariants, issues, SLOs, TTL state and scheduler tasks;
+8. identify affected engines using `docs/architecture/ENGINE_REGISTRY.md`;
+9. when work affects hotel-universe coverage, CRM seeding or outbound readiness, read `docs/operations/CRM_UNIVERSE_PROTOCOL.md`;
+10. when MEP selects structured acquisition, read `docs/operations/DISCOVER_SWISS_SNAPSHOT_ADAPTER.md`;
+11. when MEP selects member-directory evidence acquisition, read and execute `docs/operations/MEMBER_DIRECTORY_MANIFEST.md` (MDM-1.0);
+12. before source-scope reconciliation, read `docs/operations/SOURCE_SCOPE_RECONCILIATION.md` and require both DSA and MDM inputs to pass their own gates;
+13. select/declare an execution mode, MEP route and `GRAPH_IMPACT`;
+14. fail closed on lineage ambiguity, stale parent state or partial writes;
+15. preserve outbound CLOSED unless separately and explicitly authorized.
 
 Before checkpoint promotion, production continuation, architecture release or a user-requested full-system review, also run the applicable gates in `docs/operations/PRODUCTION_READINESS_GAUNTLET.md`.
 
@@ -25,7 +28,7 @@ Before checkpoint promotion, production continuation, architecture release or a 
 
 MEP-2.0 is the cross-engine continuity layer.
 
-Every invoked or scheduled cycle follows the COLETTE loop:
+Every invoked or scheduled activation follows the COLETTE loop repeatedly:
 
 ```text
 COLLECT authority/ancestry/capabilities
@@ -34,8 +37,12 @@ COLLECT authority/ancestry/capabilities
 → EXECUTE one bounded WAVE
 → TEST / adversarial QA
 → TRANSACT / PERSIST affected durable planes
-→ EVOLVE state and select the next safe route
+→ EVOLVE state
+→ persist NEXT
+→ immediately execute the next safe cycle while runtime remains available
 ```
+
+Completing one wave is not a stop condition.
 
 ### No-idle rule
 
@@ -47,12 +54,12 @@ Examples:
 
 ```text
 native Sheets write unavailable
-→ source acquisition / source-scope / mass staging / exact-current refresh / QA / recovery
+→ source acquisition / MDM evidence / source-scope / mass staging / exact-current refresh / QA / recovery
 ```
 
 ```text
 discover.swiss key unavailable
-→ coherent member-directory evidence / exact-current refresh / discovery-only anti-join
+→ MDM-1.0 coherent member-directory evidence / exact-current refresh / discovery-only anti-join
 ```
 
 ```text
@@ -70,7 +77,9 @@ Only the last fully synchronized authority-eligible constrained commit may advan
 
 Mutable frontier counts/tasks MUST NOT be hardcoded in this file. Read them from the live control plane and `STATE.md` after reconciliation.
 
-Every material cycle must also compare its last-known Git ancestry with the current shared `main`. Concurrent progress is absorbed/reconciled; it is never overwritten from a stale chat handoff.
+Every material cycle must compare its last-known Git ancestry with the current shared `main`. Concurrent progress is absorbed/reconciled; it is never overwritten from a stale chat handoff.
+
+A persisted `NEXT` pointer is continuation state, not authorization. Before resuming it, reread `main`, authority parent/epoch, blockers and capabilities, then recalculate MEP.
 
 ## Core roles / engines
 
@@ -102,12 +111,14 @@ The canonical engine taxonomy and interfaces live in `docs/architecture/ENGINE_R
 
 MEP is not a twenty-third domain engine; it coordinates existing engines and chooses the next safe route from capability/bottleneck state.
 
+MDM is not a separate authority engine; it is an executable source-evidence contract owned by Discovery/Evidence/QA responsibilities and consumed by SSR.
+
 Do not invent an additional engine unless it owns a distinct persistent responsibility or authority/invariant boundary.
 
 ## Mandatory wave loop
 
 ```text
-META CYCLE OPEN
+META ACTIVATION OPEN
 → AUTHORITY + ANCESTRY BOOTSTRAP
 → CAPABILITY MATRIX
 → DRIFT / ISSUE / SLO / TTL SCAN
@@ -131,7 +142,9 @@ META CYCLE OPEN
 → LIBRARY / DRIVE RECOVERY PERSISTENCE
 → FINAL RECONCILIATION
 → WAVE CLOSE
-→ META LEARN / NEXT ROUTE
+→ META LEARN
+→ NEXT POINTER
+→ NEXT SAFE WAVE IN SAME ACTIVATION
 ```
 
 If a required authority plane is unavailable, switch to `DEGRADED_CANARY` or `RECOVERY_RECONCILE`; no canonical promotion is allowed, but MEP must continue another safe route when one exists.
@@ -142,7 +155,7 @@ Maintain two explicit scopes:
 
 ### PROJECT_MEMORY_META_GRAPH
 
-Goals, checkpoints, releases, waves, decisions, artifacts, protocols, capability blockers and architecture.
+Goals, checkpoints, releases, waves, meta-cycles, decisions, artifacts, protocols, capability blockers and architecture.
 
 ### OPERATIONAL_GRAPH
 
@@ -166,7 +179,7 @@ A create-only Drive artifact path is not equivalent to native in-place Sheets mu
 
 ## Context-compaction survival
 
-A material cycle must leave enough durable state for another agent/chat to reconstruct truth without relying on conversation memory.
+A material activation must leave enough durable state for another agent/chat to reconstruct truth without relying on conversation memory.
 
 Minimum pointers:
 
@@ -176,8 +189,9 @@ STATE.md
 latest authority parent/manifest
 LATEST_RECOVERY
 LATEST_CRM_UNIVERSE when applicable
+NEXT
 current protocol versions
-current P0 blockers
+current authority-blocking P0 blockers
 latest material handoff / meta-cycle decision
 ```
 
@@ -206,7 +220,9 @@ Material reasoning that changes execution becomes a durable contract, decision, 
 - Do not claim background/real-time daemons unless they actually exist.
 - Do not stop merely because the preferred tool path failed when MEP identifies another safe productive route.
 - Never treat page number as stable source-record identity across member-directory cache/locale epochs.
+- Never label a mixed/partial MDM evidence set `coverage_complete=true`.
 - Never overwrite concurrent shared progress without ancestry reconciliation.
+- Never execute a persisted NEXT pointer without revalidation.
 
 ## Closure
 
@@ -220,6 +236,6 @@ BLOCKED_P0
 SUPERSEDED
 ```
 
-The enclosing meta-cycle then records its next route or terminal blocker.
+The enclosing activation then persists NEXT and immediately continues the next safe route while runtime capacity remains. It only stops when the project/activation is genuinely terminal, all safe productive routes are blocked, explicit authorization/private input is required, or runtime/tool limits force handoff after NEXT persistence.
 
 Use `STATE.md` for the current mutable frontier. Use this file for stable agent behavior only.

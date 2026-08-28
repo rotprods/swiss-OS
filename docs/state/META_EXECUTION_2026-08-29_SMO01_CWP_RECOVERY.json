@@ -1,0 +1,48 @@
+{
+  "graph_type": "PROJECT_MEMORY_META_GRAPH_DELTA",
+  "schema_version": "1.2",
+  "project": "SWITZERLAND_JOB_OS",
+  "cycle_id": "META-20260829-SMO01-CWP-RECOVERY",
+  "generated_at": "2026-08-28T22:48:00Z",
+  "base_git_sha": "0c3770e6226074e846b7526dd521ef63040f85d9",
+  "authority_mutation": false,
+  "nodes": [
+    {"id":"AUTHORITY-E4","type":"AUTHORITY_STATE","physical":690,"active":690,"aliases":0,"asr":"EXACT"},
+    {"id":"ECV-FRONTIER-120","type":"EVIDENCE_FRONTIER","verified":120,"remaining":1317,"pending_requeue":0},
+    {"id":"SMO-1.0","type":"PROTOCOL","state":"ACTIVE_PREAUTH"},
+    {"id":"SMO-OVERLAY-0001","type":"SOURCE_MAPPING_OVERLAY","terminal_deltas":2,"effective_terminal":626,"effective_reconcile":1435,"sha256":"e966d5ab0e70ce92fc0a690409cd2e910281e3584d09aeb1a098f198bd5bc01e"},
+    {"id":"MAP-MD-025e7888dfc33e19723a","type":"TERMINAL_SOURCE_MAPPING","state":"ACTIVE_CANONICAL","canonical_hotel_id":"H-0686"},
+    {"id":"MAP-MD-0672b5697de8a818d65b","type":"TERMINAL_SOURCE_MAPPING","state":"ACTIVE_CANONICAL","canonical_hotel_id":"H-0022"},
+    {"id":"CWP-RECOVERY-DIAGNOSTIC","type":"RECOVERY_DIAGNOSTIC","historical_candidates":1437,"reconstructed_candidates":1438,"delta":1,"first100_hash_match":true,"first120_keys_match":true},
+    {"id":"BLOCKER-CWP-ONE-RECORD-DELTA","type":"BLOCKER","state":"P0_ROUTE_BLOCKER_NOT_AUTHORITY_P0"},
+    {"id":"NEXT","type":"CONTINUATION_POINTER","route":"RESOLVE_ONE_RECORD_ANTI_JOIN_DELTA_THEN_ECV_SUB0007"},
+    {"id":"OUTBOUND","type":"GATE","state":"CLOSED","send_allowed":0}
+  ],
+  "edges": [
+    ["ECV-FRONTIER-120","SUPPORTED","SMO-OVERLAY-0001"],
+    ["SMO-1.0","MATERIALIZED","SMO-OVERLAY-0001"],
+    ["SMO-OVERLAY-0001","TERMINALIZED","MAP-MD-025e7888dfc33e19723a"],
+    ["SMO-OVERLAY-0001","TERMINALIZED","MAP-MD-0672b5697de8a818d65b"],
+    ["SMO-OVERLAY-0001","DOES_NOT_MUTATE","AUTHORITY-E4"],
+    ["CWP-RECOVERY-DIAGNOSTIC","EXPOSED","BLOCKER-CWP-ONE-RECORD-DELTA"],
+    ["BLOCKER-CWP-ONE-RECORD-DELTA","BLOCKS","NEXT"],
+    ["AUTHORITY-E4","KEEPS","OUTBOUND"]
+  ],
+  "metrics": {
+    "authority_active": 690,
+    "source_records": 2061,
+    "effective_terminal_source_mappings": 626,
+    "effective_reconcile_required": 1435,
+    "ecv_verified": 120,
+    "ecv_remaining_unverified": 1317,
+    "reverse_reconcile_required": 66,
+    "canonical_id_allocations": 0
+  },
+  "invariants": {
+    "authority_advanced": false,
+    "canonical_id_allocations": 0,
+    "crm_universe_complete": false,
+    "outbound_opened": false,
+    "send_allowed": 0
+  }
+}

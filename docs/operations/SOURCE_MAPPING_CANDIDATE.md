@@ -27,6 +27,8 @@ SMC eliminates silent unmapped source records while refusing to disguise unresol
 
 Verification arrays must contain unique active source keys and may not include terminal CMI matches.
 
+The runtime semantics consumed here are the canonical merged CWP-1.0 work-state contract and ECV-1.0 exact-current verification contract; SMC does not reinterpret either upstream state machine.
+
 ## Mapping rules
 
 ### Existing terminal match

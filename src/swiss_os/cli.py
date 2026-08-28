@@ -5,6 +5,11 @@ import json
 from pathlib import Path
 import sys
 
+from .crm_universe import (
+    CRMUniverseMetrics,
+    inspect_crm_snapshot,
+    validate_crm_universe_gate,
+)
 from .db import connect, foreign_key_violations, initialize, integrity_check
 from .invariants import run_manifest_invariants
 from .manifest import OperationalManifest
@@ -45,6 +50,46 @@ def cmd_db_check(path: str) -> int:
     return 0 if payload["pass"] else 2
 
 
+def cmd_crm_universe_validate(path: str) -> int:
+    payload = json.loads(Path(path).read_text(encoding="utf-8"))
+    metrics = CRMUniverseMetrics(
+        snapshot_id=str(payload.get("snapshot_id", "")),
+        snapshot_state=str(payload.get("snapshot_state", "")),
+        snapshot_raw_records=int(payload.get("snapshot_raw_records", 0)),
+        active_canonical_mappings=int(payload.get("active_canonical_mappings", 0)),
+        alias_to_canonical_mappings=int(payload.get("alias_to_canonical_mappings", 0)),
+        excluded_with_reason_mappings=int(payload.get("excluded_with_reason_mappings", 0)),
+        reconcile_required=int(payload.get("reconcile_required", 0)),
+        unmapped_records=int(payload.get("unmapped_records", 0)),
+        unresolved_duplicate_conflicts=int(payload.get("unresolved_duplicate_conflicts", 0)),
+        invalid_alias_targets=int(payload.get("invalid_alias_targets", 0)),
+        constrained_active_canonical=int(payload.get("constrained_active_canonical", 0)),
+        sheets_active_canonical=int(payload.get("sheets_active_canonical", 0)),
+        graph_active_canonical=int(payload.get("graph_active_canonical", 0)),
+        intelligence_active_canonical=int(payload.get("intelligence_active_canonical", 0)),
+        db_sheets_exact=bool(payload.get("db_sheets_exact", False)),
+        graph_exact=bool(payload.get("graph_exact", False)),
+        intelligence_exact=bool(payload.get("intelligence_exact", False)),
+        coverage_snapshot_ids=tuple(payload.get("coverage_snapshot_ids", ())),
+    )
+    result = validate_crm_universe_gate(metrics)
+    output = {
+        "snapshot_id": metrics.snapshot_id,
+        "snapshot_state": metrics.snapshot_state,
+        "crm_universe_complete": result.complete,
+        **result.as_dict(),
+    }
+    print(json.dumps(output, indent=2, sort_keys=True))
+    return 0 if result.complete else 2
+
+
+def cmd_crm_universe_inspect_db(db_path: str, snapshot_id: str) -> int:
+    with connect(db_path) as conn:
+        stats = inspect_crm_snapshot(conn, snapshot_id)
+    print(json.dumps(stats.as_dict(), indent=2, sort_keys=True))
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="swiss-os")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -60,6 +105,17 @@ def build_parser() -> argparse.ArgumentParser:
     init.add_argument("path")
     check = db_sub.add_parser("check")
     check.add_argument("path")
+
+    crm = sub.add_parser(
+        "crm-universe",
+        help="Inspect and evaluate the CUP-1.0 CRM universe contract",
+    )
+    crm_sub = crm.add_subparsers(dest="crm_command", required=True)
+    crm_validate = crm_sub.add_parser("validate")
+    crm_validate.add_argument("path", help="Path to a JSON CRM-universe metrics payload")
+    crm_inspect = crm_sub.add_parser("inspect-db")
+    crm_inspect.add_argument("db_path", help="Path to the constrained SQLite database")
+    crm_inspect.add_argument("snapshot_id", help="CRM snapshot ID to inspect")
     return parser
 
 
@@ -71,6 +127,10 @@ def main(argv: list[str] | None = None) -> int:
         return cmd_db_init(args.path)
     if args.command == "db" and args.db_command == "check":
         return cmd_db_check(args.path)
+    if args.command == "crm-universe" and args.crm_command == "validate":
+        return cmd_crm_universe_validate(args.path)
+    if args.command == "crm-universe" and args.crm_command == "inspect-db":
+        return cmd_crm_universe_inspect_db(args.db_path, args.snapshot_id)
     return 2
 
 

@@ -1,10 +1,11 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest Meta Execution reconciliation: **2026-08-28T20:08:00+02:00**.  
-Latest reconstructed GitHub `main`: **`377744d9860e89861f0c80d045d774dcb58eb03b`**.  
+Latest Meta Execution reconciliation: **2026-08-28T20:25:00+02:00**.  
+Latest reconstructed GitHub `main`: **`60606dc36bf88883d6a2eb9e1c7903e03dc29bc8`**.  
 Latest physically verified constrained parent: **`OPERATIONAL_DB_SHADOW_MANIFEST_V13`**.  
 Latest semantic-authority gate: **ASR-1.0 / issue #89 = RECONCILE_REQUIRED**.  
-Latest repair artifact: **ASR_REPAIR_CANARY_2026-08-28_V1**.
+Latest deterministic recovery capability: **ARR-1.0**.  
+Latest exact repair evidence: **ASR_REPAIR_CANARY_2026-08-28_V1 + issue-89 public-safe repair/write-set plans**.
 
 ## 1. Authority posture — fail closed
 
@@ -26,131 +27,221 @@ OUTBOUND                        CLOSED
 send_allowed                      0
 ```
 
-Do **not** infer an authoritative `690 active` merely by deleting the four edges. `690` exists only as a repair-canary candidate until DB → HOTELS_MASTER → Intelligence → Operational Graph → observability/recovery reconcile atomically and ASR-1.0 returns `EXACT`.
+Do **not** infer an authoritative `690 active` merely by removing four alias edges. A repaired DB or Sheets canary is not authority until DB → HOTELS_MASTER → Intelligence → Operational Graph → observability/recovery reconcile atomically and ASR-1.0 returns `EXACT`.
 
 ## 2. P0 #89 — semantic alias identity corruption
 
-Persisted edges in V13 / HOTELS_MASTER:
+Persisted invalid edges:
 
 ```text
-H-0610 → H-0656
-H-0624 → H-0639
-H-0629 → H-0638
-H-0630 → H-0640
+H-0610 Hôtel Alpe Fleurie — Villars-sur-Ollon
+→ H-0656 Hotel Murtenhof & Krone — Murten
+
+H-0624 Hôtel Le Mont Paisible — Crans-Montana
+→ H-0639 Hotel Alpbach — Meiringen
+
+H-0629 Stiftung Lilienberg Unternehmerforum — Ermatingen
+→ H-0638 Jugendherberge Seelisberg — Seelisberg
+
+H-0630 Strandhotel Iseltwald — Iseltwald
+→ H-0640 Hotel Central Luzern — Luzern
 ```
 
-Physical identities prove those edges join unrelated hotels:
+`ENTITY_RESOLUTION:ER-CP0650-001..004` correctly identifies the target names/cities as duplicate discovery candidates anti-joinable to existing canonical targets, but the notes incorrectly attached unrelated physical H-IDs as superseded rows.
 
-```text
-H-0610  Hôtel Alpe Fleurie — Villars-sur-Ollon
-H-0656  Hotel Murtenhof & Krone — Murten
-
-H-0624  Hôtel Le Mont Paisible — Crans-Montana
-H-0639  Hotel Alpbach — Meiringen
-
-H-0629  Stiftung Lilienberg Unternehmerforum — Ermatingen
-H-0638  Jugendherberge Seelisberg — Seelisberg
-
-H-0630  Strandhotel Iseltwald — Iseltwald
-H-0640  Hotel Central Luzern — Luzern
-```
-
-`ENTITY_RESOLUTION:ER-CP0650-001..004` identifies the *target* properties as duplicate candidates but its notes attach the unrelated source H-IDs as superseded rows. Historical HOTELS_MASTER revision `464` proves both sides existed simultaneously as distinct current canonical hotels before the supersession run. Each target name+city occurs exactly once in V13, so there is no target-name physical duplicate row to supersede.
+Historical HOTELS_MASTER revision `464` (`2026-08-23T18:40:27.970Z`) proves all four source-side H-IDs were distinct `CANONICAL_CURRENT_RECONCILED` hotels before the supersession run. It also proves their Intelligence seed state was `L1 / CANONICAL_INDEXED_RECONCILE_SEED` and their HOTEL→INTEL edges existed as ordinary `HAS_INTELLIGENCE` relations.
 
 Root class:
 
 ```text
 candidate / H-ID lineage drift
-→ research duplicate was correctly anti-joinable to an existing target
-→ unrelated physical H-ID was incorrectly marked superseded
+→ duplicate discovery candidate correctly resolves to existing target
+→ unrelated physical H-ID incorrectly receives supersession mutation
 ```
 
 Issue: `#89`.
 
-## 3. ASR-1.0 now merged
+## 3. ASR-1.0 semantic gate
 
-PR `#90` merged as:
+ASR-1.0 merged previously in PR `#90` as:
 
 ```text
 377744d9860e89861f0c80d045d774dcb58eb03b
 ```
 
-Contract:
+Contract: `docs/operations/ALIAS_SEMANTIC_RECONCILIATION.md`.  
+Validator: `src/swiss_os/alias_semantics.py`.
 
-`docs/operations/ALIAS_SEMANTIC_RECONCILIATION.md`
+ASR requires every persisted alias edge to prove semantic identity, not merely PK/FK validity. It fails closed on missing/ambiguous evidence, mismatched physical identity, target mismatch, self-aliases or unproved real-world equivalence.
 
-Executable validator:
+## 4. ARR-1.0 deterministic repair replay
 
-`src/swiss_os/alias_semantics.py`
-
-ASR-1.0 adds the invariant that every persisted alias edge must prove semantic identity, not merely PK/FK validity. It fails closed on missing/ambiguous evidence, mismatched physical identity, target mismatch, self-aliases, or unproved real-world equivalence. A stronger stable-identity override requires an allowed basis plus a durable evidence reference; a bare boolean cannot bypass the gate.
-
-Repository CI and adversarial regression tests include the exact four issue-#89 mappings.
-
-## 4. Repair canary V1 — non-authoritative
-
-A disposable copy of V13 was repaired without creating, deleting, reusing or renumbering any H-ID.
+PR `#92` passed repository guards, stable-contract guard, unit tests and manifest canary, then merged as:
 
 ```text
-file                          switzerland_job_os_operational_shadow_v14_alias_repair_canary.sqlite
-canary SHA-256                70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6
+60606dc36bf88883d6a2eb9e1c7903e03dc29bc8
+```
+
+Contract: `docs/operations/ALIAS_REPAIR_REPLAY.md`.  
+Executable: `src/swiss_os/alias_repair.py`.
+
+ARR-1.0 provides a portable copy-on-write repair path with:
+
+```text
+exact parent SHA lock
++ expected alias identity
++ expected target identity
++ expected persisted target/state
++ mutation cardinality gates
++ integrity/FK pre/post checks
++ atomic temp → replace publication
++ no overwrite / no in-place mutation
++ idempotent replay
+```
+
+ARR deliberately does **not** infer the post-repair active denominator:
+
+```text
+candidate_active_canonical = null
+active_denominator_state   = RECONCILE_REQUIRED_CROSS_PLANE
+authority_advanced         = false
+h_id_allocations           = 0
+outbound_opened            = false
+send_allowed               = 0
+```
+
+Public-safe deterministic plan: `docs/state/ISSUE_89_ASR_REPAIR_PLAN.json`.  
+Public-safe cross-plane plan: `docs/state/ISSUE_89_CROSS_PLANE_WRITESET.json`.
+
+## 5. Exact V13 replay evidence — non-authoritative
+
+V13 was reread from Drive by exact file ID and reverified in this activation:
+
+```text
+Drive file ID                 1rIL6x_bmBoCbxVSAGFvdjoKnUqSX3YnT
+SHA-256                       0e605b412f29893ca1775f1e8fccd5987d0613baab4ac29b6699988cde0fdfe5
+SQLite integrity_check       ok
+FK violations                  0
+physical rows                690
+invalid alias rows             4
+```
+
+Deterministic repair of those exact bytes reproduces the prior canary artifact exactly:
+
+```text
+repaired SHA-256              70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6
 physical rows                 690
-candidate active if promoted  690 — CANARY ONLY
 hotel_aliases after repair      0
-superseded hotel rows after     0
+superseded rows after repair    0
 SQLite integrity_check        ok
 FK violations                   0
-idempotency replay            PASS / 0 additional updates / 0 deletes
+idempotency replay            PASS / 0 additional logical mutations
+active denominator            NOT INFERRED
 ```
 
-Logical differences from V13 are exactly:
+Logical SQLite differences remain exactly four state restorations plus four invalid `hotel_aliases` removals. No H-ID is created, deleted, reused or renumbered.
+
+## 6. Live HOTELS_MASTER recovery preflight
+
+The native Google Sheet is reachable and writable:
 
 ```text
-hotels         4 state restorations
-hotel_aliases  4 invalid edge removals
-all other DB tables 0 logical differences
+spreadsheet ID                 1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w
+latest observed revision       488
 ```
 
-Canary state restorations:
+A full rollback copy was created **before any live mutation**:
 
 ```text
-H-0610 → CANONICAL_CURRENT_RECONCILED
-H-0624 → CANONICAL_CURRENT_RECONCILED
-H-0629 → CANONICAL_CURRENT_RECONCILED
-H-0630 → CANONICAL_CURRENT_RECONCILED
+HOTELS_MASTER_ROLLBACK_PRE_ASR_2026-08-28_2011
+Drive ID 1bu1SjxxG4fF4yx7H2rshOiw-tnJZMcHxIL3S8ipyQKk
 ```
 
-Drive durable canary report:
+No live repair mutation has been performed.
 
-`ASR_REPAIR_CANARY_2026-08-28_V1` — Google Doc ID `1AACvFVJx7WvgEnme9nibCqQgebSYZ_qDrwkg43aAdAY`, stored under `11_OPERATIONAL_DB_SNAPSHOTS`.
-
-The local SQLite canary itself could not be connector-egressed from the execution sandbox; its SHA and fully deterministic two-statement repair recipe are persisted in the Drive report. V13 remains the durable immutable parent.
-
-## 5. Exact cross-plane repair required
-
-Before any authority promotion, the same bounded recovery wave must reconcile:
+Exact affected live surfaces have been reconstructed by stable keys:
 
 ```text
-constrained DB
-→ HOTELS_V2 four PK-keyed state corrections
-→ HOTEL_INTELLIGENCE_V1 four identity reactivations
-→ GRAPH_NODES_V2 eight node-state corrections
-→ GRAPH_EDGES_V2 four invalid ALIASES_TO removals/tombstones
-→ restore four HOTEL→INTEL edge semantics
+HOTELS_V2
+  H-0610 / H-0624 / H-0629 / H-0630
+
+HOTEL_INTELLIGENCE_V1
+  H-0610 / H-0624 / H-0629 / H-0630
+
+GRAPH_NODES_V2
+  HOTEL:<four IDs>
+  INTEL:<four IDs>
+
+GRAPH_EDGES_V2
+  four invalid EDGE:ALIAS:* relations
+  four HOTEL→INTEL relations currently marked SUPERSEDED_ALIAS
+
+ENTITY_RESOLUTION
+  ER-CP0650-001..004 retained as research anti-join evidence
+
+STATE_TRANSITIONS
+  TR-20260825-H0610-SUPERSEDE
+  TR-20260825-H0624-SUPERSEDE
+  TR-20260825-H0629-SUPERSEDE
+  TR-20260825-H0630-SUPERSEDE
+  preserved; repair requires append-only corrective transitions
+```
+
+Drive durable preflight: `ASR_ATOMIC_RECOVERY_PREFLIGHT_2026-08-28_V2`, Doc ID `13G_a1kj3uhu_XmH5xK253d0DBPeUiLl-dwkOiHHdLZU`.
+
+## 7. Current atomic-promotion blocker
+
+This runtime can read the exact V13 binary and construct the exact repaired SQLite, but the Google Drive connector rejects egress of the newly generated SQLite with:
+
+```text
+BLOCKED_FILE_REFERENCE
+```
+
+Therefore the system MUST NOT mutate HOTELS_V2/Intelligence/Graph alone. That would create a forbidden cross-plane partial authority state.
+
+Current durable strategy:
+
+```text
+immutable V13 Drive parent
++ ARR-1.0 deterministic replay
++ exact parent SHA
++ exact expected repaired SHA observation
++ public-safe repair plan
++ public-safe cross-plane write set
++ HOTELS_MASTER rollback copy
++ Drive preflight report
+```
+
+A persistent operator environment that can write the repaired SQLite can reproduce the exact repair without relying on chat context.
+
+## 8. Required bounded recovery transaction
+
+Before authority can move, one recovery wave must execute and reconcile:
+
+```text
+fresh Git ancestry + V13 parent check
+→ durable ARR repaired constrained DB
+→ resolve all Sheet rows again by PK/key
+→ HOTELS_V2 four state restorations
+→ HOTEL_INTELLIGENCE_V1 restore L1 / CANONICAL_INDEXED_RECONCILE_SEED without inventing enrichment
+→ GRAPH_NODES_V2 remove invalid supersession state
+→ GRAPH_EDGES_V2 remove invalid ALIASES_TO relations
+→ restore four ordinary HAS_INTELLIGENCE edge semantics
+→ preserve ER records but remove their interpretation as physical supersession evidence
 → append four corrective STATE_TRANSITIONS
-→ preserve ER-CP0650-001..004 as research anti-join evidence, not physical supersession evidence
-→ recompute active denominator
-→ recompute Intelligence / Graph denominators
-→ scheduler / checkpoint / metrics / SLO reconciliation
-→ recovery + replay + idempotency
+→ derive checkpoint/active denominator only after data-plane reconciliation
+→ scheduler / metrics / health / SLO / invariant reconciliation
 → ASR-1.0 EXACT
+→ DB ↔ Sheets ↔ Intelligence ↔ Graph exact
+→ restore/replay/idempotency gauntlet
+→ recovery persistence
 ```
 
-Current live mirrors confirm the corruption is materialized consistently across HOTELS_V2, HOTEL_INTELLIGENCE_V1, GRAPH_NODES_V2, GRAPH_EDGES_V2 and STATE_TRANSITIONS. That consistency does not make it correct; it defines the atomic repair surface.
+Any parent/revision/key drift switches the wave back to `RECOVERY_RECONCILE`; no force-write is permitted.
 
-## 6. Source-universe work remains valid but is temporarily lower priority
+## 9. Source-universe work remains valid but lower priority than #89
 
-The pre-authority CRM pipeline already on `main` remains available:
+The pre-authority CRM pipeline on `main` remains available:
 
 ```text
 HSLCA-R1.0 / MDC-1.1
@@ -163,13 +254,13 @@ HSLCA-R1.0 / MDC-1.1
 → SRR-1.1
 ```
 
-The previous full live directory canary acquired all `172/172` pages and `2061` unique detail URLs but was diagnostic because MDC-1.0 reversed city/name fields. MDC-1.1 fixed that parser. `discover.swiss` remains unavailable without `DISCOVER_SWISS_SUBSCRIPTION_KEY`.
+A prior live directory canary acquired `172/172` pages and `2061` unique detail URLs but was diagnostic because MDC-1.0 reversed city/name fields; MDC-1.1 fixed that parser. `discover.swiss` remains unavailable without `DISCOVER_SWISS_SUBSCRIPTION_KEY`.
 
-Open PR `#88` remains **unmerged** because its HSLCA→PCF live canary has not yet produced the required green live-source qualification. Do not merge it merely because repository CI passes.
+Open PR `#88` remains unmerged until its required live-source qualification passes. Repository CI alone is insufficient.
 
-Source acquisition is not the current highest-value route while the authority parent itself is semantically unsafe.
+Read-only source-universe research may continue while #89 blocks authority/H-ID allocation, but it may not bypass the semantic-authority P0.
 
-## 7. Runtime capability
+## 10. Runtime capability
 
 ```text
 GitHub read/write/CI                         AVAILABLE
@@ -178,29 +269,46 @@ authenticated Drive read                     AVAILABLE
 Drive/Docs durable writes                    AVAILABLE
 native HOTELS_MASTER in-place Sheets write   AVAILABLE
 V13 raw parent recovery                      AVAILABLE / SHA verified
+repaired SQLite local construction           AVAILABLE / deterministic
+repaired SQLite connector egress             BLOCKED_FILE_REFERENCE
 Library durable write                        not proven in this activation
 ```
 
 Do not claim Library synchronization unless a real write actuator succeeds.
 
-## 8. Current MEP route
+## 11. Current MEP route
 
-Highest-value safe route:
+Highest-value route:
 
 ```text
-ALIAS_SEMANTIC_ATOMIC_RECOVERY_PREFLIGHT
-→ reconstruct exact affected PKs across every live plane
-→ create rollback/recovery snapshot
-→ fresh ancestry + V13 parent verification
-→ bounded repair transaction only if every precondition passes
-→ ASR-1.0 EXACT
-→ exact cross-plane reconciliation
-→ only then resume CRM source-universe frontier
+ASR_REPAIR_ARTIFACT_EGRESS_OR_PERSISTENT_OPERATOR_REPLAY
 ```
 
-If any required authority plane or rollback primitive cannot be proven, remain in `RECOVERY_RECONCILE / DEGRADED_CANARY` and continue non-destructive lineage/QA work rather than partially repairing live authority.
+If durable repaired-DB persistence becomes available:
 
-## 9. Durable NEXT
+```text
+/wave recover
+→ reread main/V13/Sheets revision
+→ ARR replay
+→ atomic cross-plane write set
+→ ASR EXACT
+→ gauntlet
+→ authority reconciliation
+```
+
+If that capability remains unavailable, continue safe work that reduces future execution risk:
+
+```text
+repair-plan validation
+→ cross-plane precondition validation
+→ historical-revision proof
+→ source-universe read-only qualification
+→ QA/recovery engineering
+```
+
+Do not partially repair live mirrors.
+
+## 12. Durable NEXT
 
 Canonical machine-readable pointer: `docs/state/NEXT.json`.
 
@@ -212,9 +320,9 @@ canonical_id_allocation_allowed = FALSE
 outbound_allowed = FALSE
 ```
 
-## 10. North-star continuation
+## 13. North-star continuation
 
-After #89 is fully and atomically reconciled:
+After #89 is atomically reconciled:
 
 ```text
 resume fresh coherent HSLCA capture

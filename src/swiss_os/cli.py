@@ -5,7 +5,11 @@ import json
 from pathlib import Path
 import sys
 
-from .crm_universe import CRMUniverseMetrics, validate_crm_universe_gate
+from .crm_universe import (
+    CRMUniverseMetrics,
+    inspect_crm_snapshot,
+    validate_crm_universe_gate,
+)
 from .db import connect, foreign_key_violations, initialize, integrity_check
 from .invariants import run_manifest_invariants
 from .manifest import OperationalManifest
@@ -79,6 +83,13 @@ def cmd_crm_universe_validate(path: str) -> int:
     return 0 if result.complete else 2
 
 
+def cmd_crm_universe_inspect_db(db_path: str, snapshot_id: str) -> int:
+    with connect(db_path) as conn:
+        stats = inspect_crm_snapshot(conn, snapshot_id)
+    print(json.dumps(stats.as_dict(), indent=2, sort_keys=True))
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="swiss-os")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -97,11 +108,14 @@ def build_parser() -> argparse.ArgumentParser:
 
     crm = sub.add_parser(
         "crm-universe",
-        help="Evaluate the CUP-1.0 CRM universe completion gate",
+        help="Inspect and evaluate the CUP-1.0 CRM universe contract",
     )
     crm_sub = crm.add_subparsers(dest="crm_command", required=True)
     crm_validate = crm_sub.add_parser("validate")
     crm_validate.add_argument("path", help="Path to a JSON CRM-universe metrics payload")
+    crm_inspect = crm_sub.add_parser("inspect-db")
+    crm_inspect.add_argument("db_path", help="Path to the constrained SQLite database")
+    crm_inspect.add_argument("snapshot_id", help="CRM snapshot ID to inspect")
     return parser
 
 
@@ -115,6 +129,8 @@ def main(argv: list[str] | None = None) -> int:
         return cmd_db_check(args.path)
     if args.command == "crm-universe" and args.crm_command == "validate":
         return cmd_crm_universe_validate(args.path)
+    if args.command == "crm-universe" and args.crm_command == "inspect-db":
+        return cmd_crm_universe_inspect_db(args.db_path, args.snapshot_id)
     return 2
 
 

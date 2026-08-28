@@ -1,0 +1,85 @@
+{
+  "schema_version": "ASR_REPAIR_PLAN_V1",
+  "project": "SWITZERLAND_JOB_OS",
+  "issue": 89,
+  "generated_at": "2026-08-28T20:24:00+02:00",
+  "git_parent_sha": "60606dc36bf88883d6a2eb9e1c7903e03dc29bc8",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "authority_parent": "OPERATIONAL_DB_SHADOW_MANIFEST_V13",
+  "expected_parent_sha256": "0e605b412f29893ca1775f1e8fccd5987d0613baab4ac29b6699988cde0fdfe5",
+  "parent_drive_file_id": "1rIL6x_bmBoCbxVSAGFvdjoKnUqSX3YnT",
+  "repair_module": "python -m swiss_os.alias_repair",
+  "instructions": [
+    {
+      "alias_hotel_id": "H-0610",
+      "canonical_hotel_id": "H-0656",
+      "expected_alias_name": "Hôtel Alpe Fleurie",
+      "expected_alias_city": "Villars-sur-Ollon",
+      "expected_target_name": "Hotel Murtenhof & Krone",
+      "expected_target_city": "Murten",
+      "restore_state": "CANONICAL_CURRENT_RECONCILED"
+    },
+    {
+      "alias_hotel_id": "H-0624",
+      "canonical_hotel_id": "H-0639",
+      "expected_alias_name": "Hôtel Le Mont Paisible",
+      "expected_alias_city": "Crans-Montana",
+      "expected_target_name": "Hotel Alpbach",
+      "expected_target_city": "Meiringen",
+      "restore_state": "CANONICAL_CURRENT_RECONCILED"
+    },
+    {
+      "alias_hotel_id": "H-0629",
+      "canonical_hotel_id": "H-0638",
+      "expected_alias_name": "Stiftung Lilienberg Unternehmerforum",
+      "expected_alias_city": "Ermatingen",
+      "expected_target_name": "Jugendherberge Seelisberg",
+      "expected_target_city": "Seelisberg",
+      "restore_state": "CANONICAL_CURRENT_RECONCILED"
+    },
+    {
+      "alias_hotel_id": "H-0630",
+      "canonical_hotel_id": "H-0640",
+      "expected_alias_name": "Strandhotel Iseltwald",
+      "expected_alias_city": "Iseltwald",
+      "expected_target_name": "Hotel Central Luzern",
+      "expected_target_city": "Luzern",
+      "restore_state": "CANONICAL_CURRENT_RECONCILED"
+    }
+  ],
+  "expected_replay_observation": {
+    "output_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+    "physical_rows": 690,
+    "hotel_alias_rows": 0,
+    "superseded_rows": 0,
+    "integrity_check": "ok",
+    "foreign_key_violations": 0,
+    "idempotency_additional_mutations": 0,
+    "candidate_active_canonical": null,
+    "active_denominator_state": "RECONCILE_REQUIRED_CROSS_PLANE"
+  },
+  "historical_identity_evidence": {
+    "hotels_master_revision_id": "464",
+    "revision_modified_at": "2026-08-23T18:40:27.970Z",
+    "source_side_states": {
+      "H-0610": "CANONICAL_CURRENT_RECONCILED",
+      "H-0624": "CANONICAL_CURRENT_RECONCILED",
+      "H-0629": "CANONICAL_CURRENT_RECONCILED",
+      "H-0630": "CANONICAL_CURRENT_RECONCILED"
+    },
+    "intelligence_identity_state": "CANONICAL_INDEXED_RECONCILE_SEED",
+    "intelligence_enrichment_level": "L1",
+    "hotel_intelligence_edges": "HAS_INTELLIGENCE without SUPERSEDED_ALIAS state"
+  },
+  "rollback": {
+    "hotels_master_copy_id": "1bu1SjxxG4fF4yx7H2rshOiw-tnJZMcHxIL3S8ipyQKk",
+    "title": "HOTELS_MASTER_ROLLBACK_PRE_ASR_2026-08-28_2011"
+  },
+  "current_blocker": "REPAIRED_SQLITE_BINARY_EGRESS_UNAVAILABLE_IN_CURRENT_RUNTIME",
+  "repair_execution_authorized": false,
+  "authority_advance_allowed": false,
+  "canonical_id_allocation_allowed": false,
+  "crm_universe_complete": false,
+  "outbound_allowed": false,
+  "send_allowed": 0
+}

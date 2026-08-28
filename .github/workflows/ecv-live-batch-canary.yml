@@ -2,6 +2,9 @@ name: ecv-live-batch-canary
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - source/ecv-batch-0001-sub0002-20260828
 
 permissions:
   contents: read
@@ -21,21 +24,21 @@ jobs:
           set -euo pipefail
           mkdir -p .artifacts
           PYTHONPATH=src python -m swiss_os.exact_current_verify verify \
-            docs/state/CMI_WORK_BATCH_0001_33206402141.json \
-            --out .artifacts/ECV_BATCH_0001_SUB0001.json \
+            docs/state/CMI_WORK_BATCH_0001_SUB0002_33206402141.json \
+            --out .artifacts/ECV_BATCH_0001_SUB0002.json \
             --delay 0.35 \
             --timeout 30 \
             --attempts 3 \
             > .artifacts/ECV_RUNTIME.json
           PYTHONPATH=src python -m swiss_os.exact_current_verify validate \
-            .artifacts/ECV_BATCH_0001_SUB0001.json \
+            .artifacts/ECV_BATCH_0001_SUB0002.json \
             > .artifacts/ECV_VALIDATE.json
       - name: Safety assertions
         shell: bash
         run: |
           python - <<'PY'
           import json
-          p=json.load(open('.artifacts/ECV_BATCH_0001_SUB0001.json'))
+          p=json.load(open('.artifacts/ECV_BATCH_0001_SUB0002.json'))
           assert p['authority_advanced'] is False
           assert p['h_id_allocations'] == 0 and type(p['h_id_allocations']) is int
           assert p['outbound'] == 'CLOSED'
@@ -47,7 +50,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ecv-batch-0001-sub0001-evidence
+          name: ecv-batch-0001-sub0002-evidence
           path: .artifacts
           if-no-files-found: error
           include-hidden-files: true

@@ -1,7 +1,8 @@
 # STATE — LIVE HANDOFF POINTER
 
 Last full operational control-plane reconciliation: **2026-08-27T17:12:40+02:00**.  
-Latest Drive-mount CRM staging: **2026-08-28 v11**.
+Latest Drive-mount CRM staging: **2026-08-28 v11**.  
+Latest source-acquisition capability: **discover.swiss adapter DSA-1.0 / PR #20 merged**.
 
 ## Authoritative operational state
 
@@ -20,13 +21,13 @@ OUTBOUND                     CLOSED
 send_allowed                   0
 ```
 
-No cache/canary/staging value advances authority. `CP-0750` is an intermediate scale checkpoint only; it is not an outbound-readiness gate.
+No API capture, cache, canary or staging value advances authority. `CP-0750` is an intermediate scale checkpoint only; it is not an outbound-readiness gate.
 
 ## CRM-universe hard gate
 
 `CRM_UNIVERSE_COMPLETE = TRUE` is mandatory before the outbound stack may even be evaluated.
 
-The final denominator is not a permanently hard-coded count. Completion requires one explicitly frozen/versioned HotellerieSuisse source snapshot whose raw source records are all mapped exactly once to:
+The final denominator is not a permanently hard-coded count. Completion requires one explicitly frozen/versioned HotellerieSuisse target snapshot whose raw source records are all mapped exactly once to:
 
 ```text
 ACTIVE_CANONICAL
@@ -34,9 +35,75 @@ ALIAS_TO_CANONICAL
 EXCLUDED_WITH_REASON
 ```
 
-with `RECONCILE_REQUIRED = 0`, unmapped source records = 0 and all affected DB/CRM/Graph/Intelligence layers reconciled.
+with `RECONCILE_REQUIRED = 0`, unmapped source records = 0, source scope reconciled and all affected DB/CRM/Graph/Intelligence layers reconciled.
 
-Contract: `docs/operations/CRM_UNIVERSE_PROTOCOL.md`.
+Contract: `docs/operations/CRM_UNIVERSE_PROTOCOL.md` (CUP-1.1).
+
+## Preferred source acquisition — discover.swiss API
+
+PR `#20` merged at:
+
+```text
+1230add925c43597fb8d903c13b07ac12da9a5c4
+```
+
+The preferred primary bulk enumerator is now the structured discover.swiss Infocenter / AccommoDataHub lodging interface rather than web-page position crawling.
+
+Canonical source-acquisition contract:
+
+`docs/operations/DISCOVER_SWISS_SNAPSHOT_ADAPTER.md` (DSA-1.0).
+
+Default adapter request semantics:
+
+```text
+/info/v2/lodgingbusinesses
+project = dsod-hs
+top = -1
+first page includeCount = true
+nextPageToken → continuationToken
+```
+
+The executable adapter captures and validates:
+
+```text
+discover.swiss identifier
+official HotellerieSuisse hsId
+HotellerieSuisse dataGovernance provenance
+reported count vs materialized count
+provider/source-key uniqueness
+continuation-token integrity/cycle safety
+deterministic records SHA-256
+zero API-key leakage to manifests/GitHub
+```
+
+PR #20 CI:
+
+```text
+repo_guard                  PASS
+system_contract_guard       PASS
+unit tests                  44 / 44 PASS
+manifest semantics canary   PASS
+```
+
+A successful `dsod-hs` API capture deliberately exits as:
+
+```text
+scope_state = HOTELLERIESUISSE_API_CAPTURED_MEMBER_DIRECTORY_RECONCILIATION_REQUIRED
+member_directory_scope_reconciled = FALSE
+crm_freeze_eligible = FALSE
+```
+
+until the structured API set is reconciled against the intended HotellerieSuisse public member-directory scope. Count equality alone is insufficient.
+
+Live API execution requires a discover.swiss **Infocenter Open** subscription key. This is an external runtime secret, not repository state. The adapter reads it from:
+
+```text
+DISCOVER_SWISS_SUBSCRIPTION_KEY
+```
+
+The key must never be committed, logged into public artifacts or pasted into GitHub issues.
+
+If no key is available, the member-directory harvest remains the safe fallback/reconciliation path and historical caches remain discovery-only.
 
 ## Drive capability
 
@@ -46,7 +113,7 @@ Native in-place Google Sheets mutation remains unavailable in this runtime. Issu
 
 ## Snapshot semantics
 
-Official indexed surfaces disagree across locale/cache epochs:
+Official indexed member-directory surfaces disagree across locale/cache epochs:
 
 ```text
 DE root cache       2050 / 171 pages
@@ -56,15 +123,20 @@ older page caches   2053–2114 / 172–177 pages observed
 
 The same `hotel-page-N` can contain different entities across locale/cache epochs. Therefore **page number is not source-record identity**.
 
-The final freeze must bind at minimum:
+The final target freeze must bind at minimum:
 
 ```text
 snapshot_id
+source provider / project
 locale
 source URL/surface
 observed_at / epoch
-source-record identity
+stable provider/source-record identity
 ```
+
+For API-backed HotellerieSuisse capture, prefer `hs:<hsId>` while retaining the discover.swiss identifier.
+
+The current executable snapshot-freeze contract independently rejects incomplete page coverage, raw/materialized mismatch, duplicate source keys, unresolved snapshot conflicts and missing record identity.
 
 Historical page caches remain discovery/anti-join evidence only.
 
@@ -123,14 +195,14 @@ canonical H-ID reservations                 0
 formula errors                              0
 ```
 
-The v11 harvest added two newly retrievable pending member-directory pages:
+The v11 fallback harvest added:
 
 ```text
 page 94  DE  2067 / 173  → 12 observations → 8 true missing, 4 overlaps
 page 145 FR  2060 / 172  → 12 observations → 0 true missing, 12 overlaps
 ```
 
-The strong overlap on page 145 is positive evidence that current canonical/staging already covers that cached slice; it does not advance snapshot completeness by itself.
+The strong overlap on page 145 is positive anti-join evidence; it does not independently prove current snapshot completion.
 
 All historical-cache missing identities remain:
 
@@ -153,19 +225,22 @@ Pointers / recovery:
 
 - Library: `/SWITZERLAND_JOB_OS/CRM_UNIVERSE_STAGING_2026-08-28_v11.xlsx`
 - Library: `/SWITZERLAND_JOB_OS/CRM_UNIVERSE_STAGING_LATEST.xlsx`
+- Library: `/SWITZERLAND_JOB_OS/LATEST_CRM_UNIVERSE.json`
 - Drive Hospitality: `CRM_UNIVERSE_STAGING_2026-08-28_v11.xlsx`
 - production tracker: issue `#14`.
 
-Post-merge `LATEST_CRM_UNIVERSE.json`, meta-graph delta and handoff are generated only after the merge SHA is known, so their Git lineage cannot be stale.
-
 ## Production priority
 
+Primary path when the Infocenter Open key is available:
+
 ```text
-CONTINUE MASS DIRECTORY HARVEST
-→ SELECT / FREEZE COHERENT SOURCE SNAPSHOT
-→ ENUMERATE SNAPSHOT-SCOPED SOURCE RECORDS
-→ BULK NORMALIZE / ANTI-JOIN
-→ EXACT-CURRENT REFRESH OF TRUE MISSING RECORDS
+DISCOVER.SWISS dsod-hs FULL CAPTURE
+→ CAPTURE QA / COUNT / TOKENS / hsId / PROVENANCE
+→ MEMBER-DIRECTORY SCOPE RECONCILIATION
+→ FREEZE VERIFIED TARGET SNAPSHOT
+→ SNAPSHOT-SCOPED SOURCE RECORD IDs
+→ BULK CRM ANTI-JOIN
+→ EXACT-CURRENT REFRESH OF AMBIGUOUS / TRUE-MISSING RECORDS
 → ENTITY / ALIAS / EXCLUSION RESOLUTION
 → DB-FIRST AUTHORITATIVE COMMIT
 → HOTELS_MASTER PK MIRROR
@@ -174,10 +249,24 @@ CONTINUE MASS DIRECTORY HARVEST
 → COVERAGE RECOMPUTE
 ```
 
-Deep enrichment may run after seeding but must not block CRM-universe coverage.
+Fallback while API access is unavailable:
+
+```text
+CONTINUE VALIDATED MEMBER-DIRECTORY HARVEST
+→ CACHE = DISCOVERY ONLY
+→ NO H-ID RESERVATION
+→ FEED THE SAME SNAPSHOT/ANTI-JOIN CONTRACT
+```
+
+Deep vacancy/housing/people/channel enrichment may run after seeding but must not block CRM-universe coverage.
 
 ## Next authoritative wave
 
-When native Sheets write is available, start `/wave recover`, re-read live HOTELS_MASTER/control-plane authority, anti-join all staging, allocate H-IDs only at commit time, and execute the full DB → Sheets → Intelligence → Operational Graph → observability → recovery chain.
+Before any canonical CRM promotion, both are required:
+
+1. native HOTELS_MASTER write capability or an explicitly approved verified successor mirror path;
+2. `/wave recover` re-reading live HOTELS_MASTER/control-plane authority and the chosen constrained parent.
+
+Then anti-join all staging/API source records, allocate H-IDs only at commit time, and execute the full DB → Sheets/CRM → Intelligence → Operational Graph → observability → recovery chain.
 
 Only 100% mapped frozen-snapshot coverage may set `CRM_UNIVERSE_COMPLETE = TRUE`.

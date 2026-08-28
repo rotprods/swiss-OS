@@ -1,6 +1,7 @@
 import sqlite3
 import unittest
 
+from swiss_os.crm_universe import inspect_crm_snapshot
 from swiss_os.db import initialize
 
 
@@ -139,6 +140,51 @@ class CRMSnapshotSchemaTests(unittest.TestCase):
                 )
                 """
             )
+
+    def test_inspect_snapshot_separates_declared_and_materialized_coverage(self) -> None:
+        conn = _memory_db()
+        _insert_snapshot(conn)
+        _insert_record(conn, "SR-1", "A")
+        conn.execute(
+            """
+            INSERT INTO crm_source_mappings (
+                snapshot_record_id, mapping_state, exclusion_reason,
+                evidence_ref, mapped_at
+            ) VALUES (
+                'SR-1', 'EXCLUDED_WITH_REASON', 'out of scope',
+                'E-A', '2026-08-28T12:02:00+02:00'
+            )
+            """
+        )
+        stats = inspect_crm_snapshot(conn, "HS-SNAPSHOT-1")
+        self.assertEqual(stats.declared_raw_directory_count, 2)
+        self.assertEqual(stats.materialized_source_records, 1)
+        self.assertEqual(stats.terminal_mapped_records, 1)
+        self.assertEqual(stats.unmapped_records, 0)
+        self.assertEqual(stats.materialized_coverage_pct, 1.0)
+        self.assertEqual(stats.declared_coverage_pct, 0.5)
+
+    def test_inspect_snapshot_counts_unmapped_materialized_records(self) -> None:
+        conn = _memory_db()
+        _insert_snapshot(conn)
+        _insert_record(conn, "SR-1", "A")
+        _insert_record(conn, "SR-2", "B")
+        conn.execute(
+            """
+            INSERT INTO crm_source_mappings (
+                snapshot_record_id, mapping_state, reconcile_reason,
+                evidence_ref, mapped_at
+            ) VALUES (
+                'SR-1', 'RECONCILE_REQUIRED', 'identity conflict',
+                'E-A', '2026-08-28T12:02:00+02:00'
+            )
+            """
+        )
+        stats = inspect_crm_snapshot(conn, "HS-SNAPSHOT-1")
+        self.assertEqual(stats.materialized_source_records, 2)
+        self.assertEqual(stats.reconcile_required, 1)
+        self.assertEqual(stats.unmapped_records, 1)
+        self.assertEqual(stats.terminal_mapped_records, 0)
 
 
 if __name__ == "__main__":

@@ -7,6 +7,12 @@ on:
     paths:
       - 'docs/state/ecv_inputs/*.json'
       - '.github/workflows/ecv-bounded-evidence.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'docs/state/ecv_inputs/*.json'
+      - '.github/workflows/ecv-bounded-evidence.yml'
   workflow_dispatch:
     inputs:
       batch_path:

@@ -82,8 +82,13 @@ def build_member_directory_manifest(capture_payload: Mapping[str, Any]) -> dict[
     if not observations:
         raise ValueError("capture contains zero materialized observations")
 
+    # A current source can omit a server-rendered aggregate count while still
+    # expose a complete, stable pagination partition. A validated finalizer may
+    # therefore supply an explicit materialized declaration without pretending
+    # it was provider-reported. Provider-reported count retains precedence.
     reported_records = _positive_int(capture_payload.get("reported_records"))
-    declared_raw_records = reported_records or len(observations)
+    materialized_declared = _positive_int(capture_payload.get("declared_raw_records"))
+    declared_raw_records = reported_records or materialized_declared or len(observations)
     manifest = compile_member_directory_manifest(
         observations,
         snapshot_id=capture_id,
@@ -110,6 +115,7 @@ def build_member_directory_manifest(capture_payload: Mapping[str, Any]) -> dict[
             "capture_id": capture_id,
             "capture_mode": capture_payload.get("capture_mode"),
             "coverage_claim": capture_payload.get("coverage_claim"),
+            "record_count_basis": capture_payload.get("record_count_basis", "PROVIDER_REPORTED" if reported_records else "MATERIALIZED_FALLBACK"),
             "records_count": len(out.get("records", [])),
             "materialized_source_urls": source_urls,
             "violations": merged_violations,

@@ -18,6 +18,7 @@ from .ingest_scheduler import enqueue_ingest_work
 from .invariants import run_manifest_invariants
 from .manifest import OperationalManifest
 from .mass_ingest import classify_batch, stage_decisions, staging_metrics
+from .meta_execution import MetaCapabilities, choose_meta_route
 from .snapshot_freeze import SnapshotFreezeCandidate, SnapshotSourceRecord, validate_snapshot_freeze
 from .source_scope import ScopeExplanation, build_candidate_snapshot, reconcile_source_scope
 
@@ -67,6 +68,22 @@ def cmd_db_check(path: str) -> int:
     }
     print(json.dumps(payload, indent=2, sort_keys=True))
     return 0 if payload["pass"] else 2
+
+
+def cmd_meta_next(path: str) -> int:
+    payload = _read_json(path)
+    if not isinstance(payload, dict):
+        raise ValueError("meta capability payload must be a JSON object")
+    capabilities = MetaCapabilities.from_mapping(payload)
+    decision = choose_meta_route(capabilities)
+    out = {
+        **decision.as_dict(),
+        "authority_advanced": False,
+        "h_id_allocations": 0,
+        "outbound_opened": False,
+    }
+    print(json.dumps(out, indent=2, sort_keys=True))
+    return 2 if decision.execution_mode.value == "BLOCKED_P0" else 0
 
 
 def cmd_crm_universe_validate(path: str) -> int:
@@ -241,6 +258,11 @@ def build_parser() -> argparse.ArgumentParser:
     db_check = db_sub.add_parser("check")
     db_check.add_argument("path")
 
+    meta = sub.add_parser("meta", help="Choose the next safe MEP-2.0 route from a capability snapshot")
+    meta_sub = meta.add_subparsers(dest="meta_command", required=True)
+    meta_next = meta_sub.add_parser("next")
+    meta_next.add_argument("capabilities_json")
+
     crm = sub.add_parser("crm-universe", help="Inspect and evaluate the CUP CRM universe contract")
     crm_sub = crm.add_subparsers(dest="crm_command", required=True)
     crm_validate = crm_sub.add_parser("validate")
@@ -290,6 +312,8 @@ def main(argv: list[str] | None = None) -> int:
         return cmd_db_init(args.path)
     if args.command == "db" and args.db_command == "check":
         return cmd_db_check(args.path)
+    if args.command == "meta" and args.meta_command == "next":
+        return cmd_meta_next(args.capabilities_json)
     if args.command == "crm-universe" and args.crm_command == "validate":
         return cmd_crm_universe_validate(args.path)
     if args.command == "crm-universe" and args.crm_command == "inspect-db":

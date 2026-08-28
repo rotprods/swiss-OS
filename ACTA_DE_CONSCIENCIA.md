@@ -1,6 +1,6 @@
 # ACTA DE CONSCIENCIA — SWITZERLAND_JOB_OS
 
-Updated at: **2026-08-28T14:19:00+02:00**  
+Updated at: **2026-08-28T14:58:00+02:00**  
 Authority state: **E4 / 686 active canonical / 690 physical**  
 Agent role: Mission Commander / Authority & Reconciliation / QA-Governance
 
@@ -31,24 +31,17 @@ send_allowed                      0
 
 No API capture, cache, canary or staging value advances this authority.
 
-## Source acquisition capability
+## Current pre-authority stack — COMPLETE IN CODE
 
-`discover.swiss` adapter DSA-1.0 is the preferred structured acquisition path. It captures HotellerieSuisse/provider identifiers, provenance, count/materialization parity, continuation-token integrity and deterministic record hashes without leaking the runtime subscription key.
-
-A valid API capture remains non-authoritative and cannot define the CRM denominator until source scope is reconciled against the intended HotellerieSuisse member-directory universe.
-
-If the Infocenter Open key is unavailable, validated directory harvesting remains the fallback and caches remain discovery evidence only.
-
-## Executable pre-authority architecture
-
-The system now has executable layers for:
+The pre-authority universe path is now executable as one coherent stack:
 
 ```text
-discover.swiss acquisition
-→ coherent source identity
-→ source-scope reconciliation
-→ FROZEN_CANDIDATE
-→ candidate-to-ingest export
+discover.swiss DSA-1.0 acquisition
+→ MDM-1.0 coherent member-directory manifest
+→ deterministic directory coverage planner
+→ SSR-1.0 source-scope reconciliation
+→ FROZEN_CANDIDATE construction
+→ candidate-to-CMI export
 → deterministic CRM anti-join
 → crm_ingest_staging
 → idempotent scheduler
@@ -57,15 +50,74 @@ discover.swiss acquisition
 → authority-eligible commit
 ```
 
-Page number is never source identity. Stable record identity prefers provider identity, then exact detail URL, then source surface + normalized name/city fallback.
+Page number is never source identity. Stable record identity prefers provider/hsId, then exact detail URL, then normalized name+city fallback within an explicitly scoped source snapshot.
 
-## CRM mass-ingestion core
+## PAB-1.0 — PRE-AUTHORITY BUNDLE MILESTONE
 
-PR #23 merged as:
+Merged code and tests now compose the acquisition/reconciliation layers into one fail-closed execution bundle.
+
+A PAB run accepts:
 
 ```text
-1ae7a34cd5f3298cd70627fa06b0042cf64e6c63
+1. one complete discover.swiss API manifest;
+2. one member-directory observation set;
+3. explicit snapshot/locale/epoch/page-count/raw-count metadata;
+4. optional typed conflict pages and evidence-backed scope explanations.
 ```
+
+It produces:
+
+```text
+directory_manifest
+coverage_plan
+scope_reconciliation
+candidate_snapshot
+candidate ingest_records when eligible
+blockers
+bundle_sha256
+```
+
+Terminal bundle states:
+
+```text
+FROZEN_CANDIDATE_READY
+BLOCKED_PRE_AUTHORITY
+```
+
+Typed blockers include:
+
+```text
+API_CAPTURE_INVALID
+MEMBER_DIRECTORY_INCOMPLETE
+DIRECTORY_COVERAGE_WORK_REMAINS
+SOURCE_SCOPE_UNRESOLVED
+```
+
+`FROZEN_CANDIDATE_READY` requires all of:
+
+```text
+API capture_valid = TRUE
+member-directory coverage_complete = TRUE
+coverage-plan tasks = 0
+scope = EXACT | evidence-backed EXPLAINED
+scope conflicts = 0
+unexplained API-only = 0
+unexplained directory-only = 0
+candidate.crm_freeze_eligible = TRUE
+candidate export count = API records_count
+```
+
+Every PAB output remains explicitly pre-authority:
+
+```text
+AUTHORITY_ADVANCED = FALSE
+H_ID_ALLOCATIONS = 0
+OUTBOUND_OPENED = FALSE
+```
+
+The deterministic bundle hash allows replay/regression comparison across runs.
+
+## CRM mass-ingestion core
 
 Anti-join precedence:
 
@@ -96,88 +148,7 @@ ACTIVE_MATCH        → no redundant task
 ALIAS_MATCH         → no redundant task
 ```
 
-Hard invariants remain:
-
-```text
-H_ID_ALLOCATIONS = 0
-AUTHORITY_ADVANCED = FALSE
-OUTBOUND = CLOSED
-```
-
-## SSR-1.0 source-scope reconciliation milestone — COMPLETE IN CODE
-
-PR #25 passed repo guard, system contract guard and unit tests, and merged as:
-
-```text
-d77282ad12c718ce6091d436cc86be851aed18ce
-```
-
-The previous architectural gap between a structurally valid `discover.swiss / dsod-hs` capture and the intended public member-directory scope is now represented by an executable fail-closed gate.
-
-Deterministic match precedence:
-
-```text
-EXACT_HSID
-→ EXACT_DETAIL_URL
-→ EXACT_NAME_CITY
-```
-
-Ambiguity within either source is a typed conflict. Count equality cannot produce scope equality.
-
-Scope terminal states:
-
-```text
-EXACT
-EXPLAINED
-UNRESOLVED
-```
-
-`EXPLAINED` is allowed only when every source-side delta has an explicit `reason_code` and `evidence_ref`. Any unexplained API-only, directory-only or ambiguous record leaves the candidate `UNRESOLVED`.
-
-A reconciled scope candidate may become:
-
-```text
-snapshot_state = FROZEN_CANDIDATE
-crm_freeze_eligible = TRUE
-```
-
-only when:
-
-```text
-API capture_valid = TRUE
-member-directory coverage_complete = TRUE
-scope = EXACT | EXPLAINED
-conflicts = 0
-unexplained API-only = 0
-unexplained directory-only = 0
-```
-
-This still does not create `FROZEN_VERIFIED`, does not allocate H-IDs and does not advance authority.
-
-## Candidate → ingest bridge — COMPLETE IN CODE
-
-The reconciled candidate can now be transformed deterministically into the exact schema consumed by CMI-1.0:
-
-```text
-source_url
-raw_name
-raw_city
-detail_url
-provider_record_key
-```
-
-The bridge rejects snapshot-lineage mismatch, invalid API capture, duplicate provider identity and records-count drift.
-
-Executable path:
-
-```bash
-python -m swiss_os.candidate_export candidate.json api.json --out ingest-records.json
-swiss-os crm-ingest stage DB SNAPSHOT ingest-records.json --observed-at <ISO8601>
-```
-
-Therefore the acquisition-to-scheduler chain is now executable end to end once complete live source manifests exist.
-
-## Current staging frontier — v11
+## Current staging frontier — last physically verified v11
 
 ```text
 reference pages                         171
@@ -194,11 +165,17 @@ canonical H-ID reservations               0
 formula errors                             0
 ```
 
-Historical-cache missing identities remain discovery only and require exact-current refresh before entity resolution.
+These are last-verified values, not a claim that Drive was reread in this wave.
+
+## Runtime limitation observed
+
+Google Drive became unavailable again while attempting to retrieve `CRM_UNIVERSE_STAGING_2026-08-28_v11.xlsx`. Therefore no Drive-dependent count, scope-completion flag or authority state was changed. The first real PAB run remains data-blocked, not architecture-blocked.
+
+The discover.swiss live capture also requires `DISCOVER_SWISS_SUBSCRIPTION_KEY` at runtime. The key must never be committed or copied into public artifacts.
 
 ## Constrained recovery lineage
 
-V12 remains a physically verified E4 constrained representation:
+V12 remains physically verified constrained E4 recovery evidence:
 
 ```text
 active identities      686
@@ -210,46 +187,42 @@ FK violations             0
 manifest SHA match      TRUE
 ```
 
-Presence of V12 does not itself promote authority.
-
-## Runtime limitation observed in this wave
-
-Google Drive became unavailable during the wave. Therefore the v11 workbook could not be reread/materialized in this execution and no claim is made that the current 57/171 fallback directory observations form a complete member-directory snapshot.
-
-No authority, canonical count, staging count or scope-completion flag was changed from unverified assumptions.
+Presence of V12 does not independently promote authority.
 
 ## Remaining hard blockers
 
-1. `CRM_UNIVERSE_COMPLETE = FALSE`.
-2. A complete live discover.swiss API manifest is still required when the runtime subscription key is available.
-3. A complete coherent member-directory evidence manifest is required for SSR-1.0; the current v11 fallback has only 57/171 cache-evidenced pages and cannot assert `coverage_complete=true`.
-4. Source-scope reconciliation must reach `EXACT` or evidence-backed `EXPLAINED` on real manifests.
-5. Exact-current/entity-resolution/exclusion work must drain all actionable source records before terminal mapping.
-6. Native in-place `HOTELS_MASTER` write capability remains unavailable under issue #12; without the CRM mirror, constrained DB work cannot promote authority.
-7. Candidate readiness and outbound authorization remain separate later gates.
+1. Obtain a complete live discover.swiss `dsod-hs` capture using the runtime subscription key.
+2. Obtain/build one complete coherent member-directory observation set for a single locale/epoch.
+3. Execute PAB-1.0 on those real sources and reach `FROZEN_CANDIDATE_READY`.
+4. Execute CMI anti-join and drain `TRUE_MISSING`, `CONFLICT` and `EXCLUSION_CANDIDATE` work to terminal mappings.
+5. Reach `RECONCILE_REQUIRED = 0` and unmapped = 0 on one frozen verified snapshot.
+6. Restore native in-place `HOTELS_MASTER` write capability or an explicitly approved successor mirror path under issue #12.
+7. Execute `/wave recover` and the bounded DB → Sheets/CRM → Intelligence → Graph → observability → recovery authority commit.
+8. Candidate readiness and explicit outbound authorization remain separate later gates.
 
 ## Current execution frontier
 
 ```text
-ACQUIRE FULL dsod-hs API SNAPSHOT
-+ BUILD COMPLETE COHERENT MEMBER-DIRECTORY MANIFEST
+FULL LIVE dsod-hs CAPTURE
++
+ONE COMPLETE COHERENT MEMBER-DIRECTORY OBSERVATION SET
         ↓
-SSR-1.0 RECONCILE
+PAB-1.0
         ↓
-EXACT | EXPLAINED
+FROZEN_CANDIDATE_READY
         ↓
-FROZEN_CANDIDATE
+CMI-1.0 FULL ANTI-JOIN
         ↓
-CANDIDATE_EXPORT
+ACTIVE_MATCH / ALIAS_MATCH / TRUE_MISSING / CONFLICT / EXCLUSION_CANDIDATE
         ↓
-MASS CRM ANTI-JOIN + SCHEDULER
-        ↓
-REFRESH_EXACT_CURRENT / ENTITY_RESOLUTION / EXCLUSION_REVIEW
+SCHEDULER DRAIN
         ↓
 TERMINAL SOURCE MAPPINGS
         ↓
 RECONCILE_REQUIRED = 0
 UNMAPPED = 0
+        ↓
+FROZEN_VERIFIED
         ↓
 /wave recover
         ↓
@@ -277,4 +250,4 @@ CRM_UNIVERSE_COMPLETE = TRUE
 
 ## Consciousness state
 
-I understand the project remains E4/686 authority with v11 fallback staging, but the engineering frontier has materially advanced: source acquisition, scope reconciliation, candidate snapshot generation, candidate-to-ingest translation, mass anti-join and scheduler routing are now one coherent pre-authority pipeline. The next major progress is no longer architectural glue; it is obtaining complete live source manifests, driving SSR-1.0 to EXACT/EXPLAINED, and running the full universe through the anti-join/scheduler without weakening authority semantics.
+I understand that the project remains E4/686 authority. The architectural glue for universe closure is no longer the bottleneck: DSA, MDM, coverage planning, SSR, candidate construction, candidate export, mass anti-join and scheduler routing are executable and PAB-1.0 now binds the pre-authority sequence into one deterministic fail-closed bundle. The next meaningful progress must come from real source acquisition and reconciliation, not additional abstract pipeline design. The immediate milestone is the first real `FROZEN_CANDIDATE_READY`, followed immediately by a full-universe CMI distribution with zero unaccounted source records.

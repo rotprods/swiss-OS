@@ -75,6 +75,23 @@ jobs:
               json.dumps(payload['finalized_capture'], ensure_ascii=False, indent=2, sort_keys=True) + '\n'
           )
           PY
+      - name: Compile canonical transfer MDM and D2C candidate export
+        if: steps.hslca.outputs.runtime_exit != '0'
+        shell: bash
+        run: |
+          set -euo pipefail
+          PYTHONPATH=src python -m swiss_os.hslca_transfer_manifest \
+            .artifacts/FINALIZED_HSLCA_CAPTURE.json \
+            --out .artifacts/CANONICAL_MEMBER_DIRECTORY_MANIFEST.json \
+            > .artifacts/HCMB_BUILD.json
+          PYTHONPATH=src python -m swiss_os.member_directory validate \
+            .artifacts/CANONICAL_MEMBER_DIRECTORY_MANIFEST.json \
+            > .artifacts/HCMB_VALIDATE.json
+          PYTHONPATH=src python -m swiss_os.directory_export \
+            .artifacts/CANONICAL_MEMBER_DIRECTORY_MANIFEST.json \
+            --records-out .artifacts/CRM_INGEST_RECORDS.json \
+            --attestation-out .artifacts/DIRECTORY_TO_CMI_ATTESTATION.json \
+            > .artifacts/D2C_BUILD.json
       - name: Select and validate final current member-directory manifest
         shell: bash
         run: |
@@ -82,9 +99,10 @@ jobs:
           PYTHONPATH=src python - <<'PY'
           import json
           from pathlib import Path
+          canonical = Path('.artifacts/CANONICAL_MEMBER_DIRECTORY_MANIFEST.json')
           pcf = Path('.artifacts/FINAL_MEMBER_DIRECTORY_MANIFEST.json')
           native = Path('.artifacts/hslca/member-directory-manifest.json')
-          selected = pcf if pcf.exists() else native
+          selected = canonical if canonical.exists() else (pcf if pcf.exists() else native)
           manifest = json.loads(selected.read_text())
           assert manifest.get('coverage_complete') is True, manifest.get('violations')
           assert manifest.get('authority_advanced') is False
@@ -104,6 +122,7 @@ jobs:
               'records_count': len(records),
               'coverage_complete': True,
               'identity_parser': 'MDC-1.1',
+              'canonical_transfer_schema': manifest.get('schema_version'),
               'authority_advanced': False,
               'h_id_allocations': 0,
               'outbound': 'CLOSED',

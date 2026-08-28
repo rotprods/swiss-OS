@@ -15,9 +15,10 @@ Before material work:
 7. identify affected engines using `docs/architecture/ENGINE_REGISTRY.md`;
 8. when work affects hotel-universe coverage, CRM seeding or outbound readiness, read `docs/operations/CRM_UNIVERSE_PROTOCOL.md`;
 9. when structured source capture/scope is involved, read `docs/operations/DISCOVER_SWISS_SNAPSHOT_ADAPTER.md` and `docs/operations/SOURCE_SCOPE_RECONCILIATION.md`;
-10. select/declare an execution mode, MEP route and `GRAPH_IMPACT`;
-11. fail closed on lineage ambiguity, stale parent state or partial writes;
-12. preserve outbound CLOSED unless separately and explicitly authorized.
+10. when the authority parent contains aliases/superseded IDs, or work changes entity supersession, read and execute `docs/operations/ALIAS_SEMANTIC_RECONCILIATION.md` before any authority promotion;
+11. select/declare an execution mode, MEP route and `GRAPH_IMPACT`;
+12. fail closed on lineage ambiguity, stale parent state, semantic alias ambiguity or partial writes;
+13. preserve outbound CLOSED unless separately and explicitly authorized.
 
 Before checkpoint promotion, production continuation, architecture release or a user-requested full-system review, also run the applicable gates in `docs/operations/PRODUCTION_READINESS_GAUNTLET.md`.
 
@@ -67,6 +68,8 @@ This rule never lowers authority, privacy, evidence, provider-control, or outbou
 Repository prose is versioned system memory, not operational truth.
 
 Only the last fully synchronized authority-eligible constrained commit may advance canonical state. A local SQLite canary is non-authoritative until DB → Sheets → Graph/Intelligence → observability → checkpoint/scheduler → handoff reconciliation succeeds.
+
+Structural integrity is not semantic authority. If alias/supersession semantics are unresolved, the affected active denominator is `RECONCILE_REQUIRED` even when SQLite integrity and FK checks pass.
 
 Mutable frontier counts/tasks MUST NOT be hardcoded in this file. Read them from the live control plane and `STATE.md` after reconciliation.
 
@@ -118,6 +121,7 @@ META CYCLE OPEN
 → DISCOVER / VERIFY
 → NORMALIZE
 → DEDUPE / ALIAS / GROUP RESOLUTION
+→ ALIAS SEMANTIC RECONCILIATION WHEN ALIASES EXIST
 → STAGE
 → CANARY
 → VALIDATE
@@ -200,6 +204,7 @@ Material reasoning that changes execution becomes a durable contract, decision, 
 - No PII/operational binaries in the public repository.
 - No checkpoint promotion without validation and state transition.
 - No canary count may be reported as authoritative.
+- **No authority promotion may proceed from aliases/supersessions whose ASR-1.0 semantic state is not `EXACT`.**
 - **No outbound gate may open before `CRM_UNIVERSE_COMPLETE = TRUE` for the frozen verified target snapshot.**
 - A partial checkpoint, shortlist or deeply enriched sample never substitutes for complete CRM source-record coverage.
 - No outbound without explicit authorization after all independent gates pass.

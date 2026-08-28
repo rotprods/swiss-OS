@@ -4,7 +4,7 @@ Latest chained Meta Execution reconciliation: **2026-08-28T20:52:30Z**.
 Reconstructed GitHub `main`: **`7c667b94a7460ea2262dc0d12ba983eeb124863b`**.  
 Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**.  
 Open GitHub issues labelled `P0`: **0**.  
-CRM source snapshot: **`HS-MEMBER-DE-33206402141`**.
+Frozen current CRM source snapshot: **`HS-MEMBER-DE-33206402141`**.
 
 ## 1. Authoritative operational state
 
@@ -29,11 +29,11 @@ send_allowed                      0
 
 Immutable V13 base SHA-256 remains `0e605b412f29893ca1775f1e8fccd5987d0613baab4ac29b6699988cde0fdfe5`; deterministic repaired constrained-parent materialization SHA-256 remains `70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`. No source/candidate/ECV wave below has allocated an H-ID or changed this authority.
 
+**Authority/canary invariant:** cache, staging, research, diagnostic or canary artifacts are non-authoritative and can never promote canonical IDs, denominators or cross-plane authority by themselves.
+
 ## 2. Coherent current HotellerieSuisse source — QUALIFIED
 
 PR #97 merged HSLCA/MDC/HPCB/PCCN source acquisition as `f4225a56ff431e5a92c98a104d4df418010a13d1`.
-
-Live evidence:
 
 ```text
 Actions run                     33206402141
@@ -50,13 +50,13 @@ pagination observations         171×172 pages; page 170 alone reported 171
 PCCN consensus                  171/172 = 99.4186%
 ```
 
-Raw HSLCA correctly failed closed on `REPORTED_RECORDS_UNRESOLVED` + `PAGE_COUNT_DRIFT:171,172`. HPCB proved current-run checkpoint provenance. PCCN-1.0 accepted only the bounded one-page stale metadata shape while preserving the raw page-170 observation; PCF core then passed exact positions/cardinality/unique-detail checks. The temporary live push trigger was removed before merge.
+Raw HSLCA correctly failed closed on `REPORTED_RECORDS_UNRESOLVED` + `PAGE_COUNT_DRIFT:171,172`. HPCB proved current-run checkpoint provenance. PCCN-1.0 accepted only the bounded one-page stale pagination-metadata shape while preserving the raw outlier; PCF core then passed exact positions/cardinality/unique-detail checks. The temporary live push trigger was removed before merge.
 
 Drive acceptance artifact: `HSLCA_LIVE_ACCEPTANCE_33206402141`, ID `1bcIj_Ab2ajjjND3n7p9ES2IDjp7_Jy81S-IFn9LtlCI`.
 
-## 3. Canonical MDM + CMI — COMPLETE PRE-AUTHORITY
+## 3. Canonical MDM / CMI / mapping frontier
 
-PR #99 merged HCMA-1.0 as `ec5201760f1c6fd7cb5f31f00e8b52935f0e0da3`. HCMA converts the qualified HSLCA/PCF bundle into the canonical `MEMBER-DIRECTORY-1.0` contract only after exact capture↔manifest lineage, page, URL, identity and HPCB timestamp checks.
+PR #99 merged HCMA-1.0 as `ec5201760f1c6fd7cb5f31f00e8b52935f0e0da3`.
 
 Canonical MDM:
 
@@ -73,7 +73,7 @@ records_sha256                  b02c6fae1215643088eafec0af8b2b139506e4e46dec9e81
 manifest_sha256                 e5c7e2d52eed1dd585a9a00f1bd98015997ec902e8890d0abcb89cdc87aeb74f
 ```
 
-CMI export:
+CMI:
 
 ```text
 exported records                2061
@@ -82,49 +82,36 @@ attestation_sha256              e0e1bfa992c78e9b3eb080f24dbc6a53d36b39a66bdc2d72
 attestation state               DIRECTORY_COMPLETE_SSR_PENDING
 ```
 
-Drive control summary: `CMI_HSLCA_2061_PREAUTH_SUMMARY_2026-08-28`, spreadsheet ID `1-n34KObY-1AUv6AB8Tm7Mzp2WHDk2f_d0OoVqeITm94`.
-
-## 4. Current-authority anti-join + CWP
-
-The 2,061-source-record CMI candidate universe was compared against the current E4 690-canonical HOTELS_V2 set without allocating IDs.
+Current E4 anti-join:
 
 ```text
-source records                  2061
 MATCH_EXISTING_CANONICAL         624
 CANDIDATE_NEW_ENTITY_PREAUTH    1437
 exact-match conflicts              0
 anti-join payload SHA-256       c50a2b2b70677d6651f89e94fe19382d525c72c52111c91b8291c15887729d2a
+reverse E4 without exact source    66  (RECONCILE_REQUIRED_NOT_EXCLUSION)
 ```
 
-The reverse anti-join finds **66** current E4 canonical identities without an exact current source match. They remain `RECONCILE_REQUIRED_NOT_EXCLUSION`; no absence from the new source snapshot is interpreted as an exclusion without entity/scope evidence.
-
-CWP frontier:
+CWP / source mapping:
 
 ```text
 terminal exact existing matches  624
 active VERIFY_NEW_ENTITY work    1437
-batches at size 100                15
+CWP batches                        15
 CWP packet SHA-256              6ae41038683c185a51e482c2f979dc1a52b9348cc172a367bf5dc1311efd9249
-```
-
-PR #101 merged CWP-1.1 on the concurrent ancestry before current `main`; it makes canonical CMI `TRUE_MISSING` directly executable as `VERIFY_NEW_ENTITY` while preserving the hard rule that this is routing only, never proof of a new canonical entity.
-
-Source-mapping candidate state:
-
-```text
-ACTIVE_CANONICAL                 624
-RECONCILE_REQUIRED              1437
+ACTIVE_CANONICAL mappings         624
+RECONCILE_REQUIRED mappings      1437
 terminal coverage          624 / 2061 = 30.2766%
 unmapped source records            0
 ```
 
-`unmapped=0` does not mean completion: `RECONCILE_REQUIRED` must also reach zero.
+PR #101 merged CWP-1.1 on the concurrent ancestry now included in `main`. `unmapped=0` is not completion: `RECONCILE_REQUIRED` must also reach zero.
 
-## 5. Exact-current verification frontier
+Drive control summary: `CMI_HSLCA_2061_PREAUTH_SUMMARY_2026-08-28`, ID `1-n34KObY-1AUv6AB8Tm7Mzp2WHDk2f_d0OoVqeITm94`.
+
+## 4. Exact-current verification frontier
 
 PR #102 merged the reusable manual ECV runner and first CWP-derived subbatch as `7c667b94a7460ea2262dc0d12ba983eeb124863b`.
-
-Live subbatch evidence:
 
 ```text
 batch_id                        HS-MEMBER-DE-33206402141:WORK:0001:SUB:0001
@@ -136,27 +123,13 @@ ECV packet SHA-256              0b0d10ac7fbe118fcbdf434b89b298759e911dda3c9adf5d
 remaining unverified candidates 1417
 ```
 
-Run `33209778218` / job `98979875797` passed ECV verification, packet validation and safety assertions. Its overall run was marked failed only by the final hidden-directory artifact upload; the merged workflow fixes retention with `include-hidden-files: true` and has no automatic push trigger.
+Run `33209778218` / job `98979875797` passed ECV verification, packet validation and safety assertions. Its overall failure came only from hidden-directory artifact upload; the merged workflow fixes retention and has no automatic push trigger.
 
-`CURRENT_DETAIL_VERIFIED` is evidence, **not** a terminal source mapping. The 20 verified records remain in the 1,437-record entity-resolution frontier until proven existing, new, renamed/merged, or excluded with reason.
+`CURRENT_DETAIL_VERIFIED` is evidence, **not** a terminal source mapping. All 1,437 candidate records remain in the entity-resolution frontier until proven existing, new, renamed/merged, or excluded with reason.
 
-## 6. Parallel exact-current fallback evidence
+Parallel exact-current batches 01–08 remain read-only support evidence: 96 attempted, 78 current exact member detail, 6 current non-exact support/scope, 12 unresolved/stale; zero H-ID reservations and zero authority/outbound change.
 
-Batches 01–08 remain read-only evidence debt reduction:
-
-```text
-records attempted                         96
-current exact member detail               78
-current non-exact support/scope            6
-unresolved / stale refresh required       12
-canonical H-ID reservations                0
-authority advancement                      0
-outbound                                    0
-```
-
-They may assist entity resolution but cannot supersede the coherent frozen source or independently promote authority.
-
-## 7. Capability / blocker state
+## 5. Capability / blocker / NEXT
 
 ```text
 GitHub read/write/CI                         AVAILABLE
@@ -164,33 +137,27 @@ web/current-source research                  AVAILABLE
 Drive read/write                             AVAILABLE
 native Google Sheets mutation                AVAILABLE
 HOTELS_MASTER current E4                     AVAILABLE
-coherent HotellerieSuisse capture            AVAILABLE / QUALIFIED
-discover.swiss subscription key              UNAVAILABLE
+coherent HotellerieSuisse source             AVAILABLE / QUALIFIED
+discover.swiss subscription key              UNAVAILABLE (alternate-source limitation)
 open GitHub P0 issues                        0
 ```
 
-The missing discover.swiss credential is now an alternate-source limitation, not a blocker on productive CRM work because the current HotellerieSuisse source universe is qualified.
-
-## 8. Current MEP route
-
-Highest-value safe route:
+Highest-value safe MEP route:
 
 ```text
 ECV remaining 1417 candidate records
 → entity resolution against E4 + exact-current evidence
 → source-mapping terminalization
-→ resolve 66 reverse anti-join authority/source discrepancies
+→ resolve 66 reverse authority/source discrepancies
 → ACTIVE_CANONICAL | ALIAS_TO_CANONICAL | EXCLUDED_WITH_REASON for every source record
 → RECONCILE_REQUIRED = 0
 → source-scope reconciliation / SRR
 → authority-eligible candidate only then
 ```
 
-No source candidate may reserve `H-0691` or any later ID. A later authority mutation must be a new bounded transactional DB → HOTELS_MASTER → Intelligence → Graph → scheduler/checkpoint/metrics/SLO reconciliation with ASR and restore/replay/idempotency gates.
+No source candidate may reserve `H-0691` or any later ID. Any later authority mutation requires a fresh bounded DB → HOTELS_MASTER → Intelligence → Graph → scheduler/checkpoint/metrics/SLO transaction with ASR and restore/replay/idempotency gates.
 
-## 9. Durable NEXT
-
-Canonical continuation pointer: `docs/state/NEXT.json`.
+Canonical continuation pointer: `docs/state/NEXT.json`. Drive cold-recovery mirror: `NEXT_CRM_SOURCE_2061_ECV_2026-08-28`, ID `1mOQdAHnxVvssTXdRdEU8IPStkEwT1F3OCBCiXCKGatc`.
 
 ```text
 authority_advance_allowed = FALSE
@@ -200,5 +167,3 @@ CRM_UNIVERSE_COMPLETE = FALSE
 OUTBOUND = CLOSED
 send_allowed = 0
 ```
-
-A subsequent activation must reread fresh `main`, verify E4 690/690/0 aliases, then continue ECV/entity-resolution/source-mapping work rather than restarting source acquisition.

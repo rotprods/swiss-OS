@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/rotprods/swiss-OS/schemas/next-pointer.schema.json",
+  "title": "SWITZERLAND_JOB_OS NEXT Pointer",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "project",
+    "generated_at",
+    "activation_id",
+    "parent_repo_sha",
+    "authority_epoch",
+    "authority_parent",
+    "goal_id",
+    "execution_mode",
+    "activation_state",
+    "last_wave_closure",
+    "route_id",
+    "objective",
+    "current_bottleneck",
+    "next_action",
+    "required_inputs",
+    "blockers",
+    "fallbacks",
+    "recovery_artifacts",
+    "authority_advanced",
+    "h_id_allocations",
+    "outbound",
+    "send_allowed"
+  ],
+  "properties": {
+    "schema_version": {"const": "NEXT-1.0"},
+    "project": {"const": "SWITZERLAND_JOB_OS"},
+    "generated_at": {"type": "string", "format": "date-time"},
+    "activation_id": {"type": "string", "minLength": 1},
+    "parent_repo_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "authority_epoch": {"type": "string", "minLength": 1},
+    "authority_parent": {"type": "string", "minLength": 1},
+    "goal_id": {"type": "string", "minLength": 1},
+    "checkpoint_id": {"type": ["string", "null"]},
+    "execution_mode": {
+      "enum": ["AUTHORITATIVE_WRITE", "READ_ONLY_RESEARCH", "DEGRADED_CANARY", "RECOVERY_RECONCILE"]
+    },
+    "activation_state": {
+      "enum": ["CONTINUE", "COMPLETE_OBJECTIVE", "EXHAUSTED_SAFE_WORK", "BLOCKED_EXTERNAL_ALL_ROUTES", "RUNTIME_LIMIT_HANDOFF", "AUTHORIZATION_REQUIRED"]
+    },
+    "last_wave_closure": {
+      "enum": ["COMPLETE_AUTHORITY", "COMPLETE_READ_ONLY", "SAFE_STOP_CANARY", "BLOCKED_P0", "SUPERSEDED"]
+    },
+    "route_id": {"type": "string", "minLength": 1},
+    "objective": {"type": "string", "minLength": 1},
+    "current_bottleneck": {"type": "string", "minLength": 1},
+    "next_action": {"type": "string"},
+    "required_inputs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "blockers": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "fallbacks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["route_id", "priority", "mode", "required_capabilities", "blocked_by", "action"],
+        "properties": {
+          "route_id": {"type": "string", "minLength": 1},
+          "priority": {"type": "integer"},
+          "mode": {
+            "enum": ["AUTHORITATIVE_WRITE", "READ_ONLY_RESEARCH", "DEGRADED_CANARY", "RECOVERY_RECONCILE"]
+          },
+          "required_capabilities": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+          "blocked_by": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+          "action": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "recovery_artifacts": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "authority_advanced": {"type": "boolean"},
+    "h_id_allocations": {"type": "integer", "minimum": 0},
+    "outbound": {"const": "CLOSED"},
+    "send_allowed": {"const": 0},
+    "notes": {"type": "array", "items": {"type": "string"}}
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "activation_state": {"const": "CONTINUE"}
+        }
+      },
+      "then": {
+        "properties": {
+          "next_action": {"minLength": 1}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "execution_mode": {
+            "enum": ["READ_ONLY_RESEARCH", "DEGRADED_CANARY", "RECOVERY_RECONCILE"]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "authority_advanced": {"const": false}
+        }
+      }
+    }
+  ]
+}

@@ -37,9 +37,32 @@ def _sha256_payload(payload: object) -> str:
     ).hexdigest()
 
 
+def _strict_bool(manifest: Mapping[str, object], field: str) -> bool:
+    value = manifest.get(field)
+    if type(value) is not bool:
+        raise DirectoryExportError(f"{field} must be a JSON boolean")
+    return value
+
+
+def _strict_int(manifest: Mapping[str, object], field: str) -> int:
+    value = manifest.get(field)
+    if type(value) is not int:
+        raise DirectoryExportError(f"{field} must be a JSON integer")
+    return value
+
+
 def export_directory_to_cmi(
     manifest: Mapping[str, object],
 ) -> tuple[list[dict[str, str]], dict[str, object]]:
+    # Security-critical gate fields are type-strict. Do not allow JSON strings or
+    # booleans to be coerced through bool()/int() before transfer validation.
+    coverage_complete = _strict_bool(manifest, "coverage_complete")
+    authority_advanced = _strict_bool(manifest, "authority_advanced")
+    outbound_opened = _strict_bool(manifest, "outbound_opened")
+    h_id_allocations = _strict_int(manifest, "h_id_allocations")
+    send_allowed = _strict_int(manifest, "send_allowed")
+    records_count = _strict_int(manifest, "records_count")
+
     transfer_violations = validate_member_directory_manifest(manifest)
     if transfer_violations:
         raise DirectoryExportError(
@@ -48,7 +71,7 @@ def export_directory_to_cmi(
         )
     if manifest.get("schema_version") != "MEMBER-DIRECTORY-1.0":
         raise DirectoryExportError("unsupported member-directory schema")
-    if not bool(manifest.get("coverage_complete")):
+    if not coverage_complete:
         raise DirectoryExportError("coverage_complete=true is required")
     declared_violations = manifest.get("violations", [])
     if declared_violations:
@@ -57,19 +80,19 @@ def export_directory_to_cmi(
         raise DirectoryExportError(
             "source_provider must be HOTELLERIESUISSE_MEMBER_DIRECTORY"
         )
-    if bool(manifest.get("authority_advanced")):
+    if authority_advanced:
         raise DirectoryExportError("input manifest must remain pre-authority")
-    if int(manifest.get("h_id_allocations", 0)) != 0:
+    if h_id_allocations != 0:
         raise DirectoryExportError("input manifest cannot allocate H-IDs")
-    if bool(manifest.get("outbound_opened")):
+    if outbound_opened:
         raise DirectoryExportError("input manifest cannot open outbound")
-    if int(manifest.get("send_allowed", 0)) != 0:
+    if send_allowed != 0:
         raise DirectoryExportError("input manifest must keep send_allowed=0")
 
     raw_records = manifest.get("records")
     if not isinstance(raw_records, list):
         raise DirectoryExportError("manifest records must be an array")
-    if int(manifest.get("records_count", -1)) != len(raw_records):
+    if records_count != len(raw_records):
         raise DirectoryExportError("manifest records_count does not match records")
 
     exported: list[dict[str, str]] = []

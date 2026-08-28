@@ -1,6 +1,6 @@
 # SOURCE RESOLUTION REVIEW — SWITZERLAND_JOB_OS
 
-Version: **SRR-1.0**  
+Version: **SRR-1.1**  
 Status: **EXECUTABLE PRE-AUTHORITY ENTITY-RESOLUTION CONTRACT**
 
 ## Objective
@@ -68,7 +68,7 @@ Auto-proposal is a work-planning aid, not authority. An operator/agent may provi
 ]
 ```
 
-Reviews may target only SMC mappings currently in `RECONCILE_REQUIRED`. A terminal SMC mapping cannot be rewritten by SRR.
+Review scalar fields are type-strict JSON strings. Numbers, booleans and other values are never coerced into identifiers, actions, reason codes or evidence references. Reviews may target only SMC mappings currently in `RECONCILE_REQUIRED`; a terminal SMC mapping cannot be rewritten by SRR.
 
 ## Canonical catalog boundary
 
@@ -86,7 +86,7 @@ The catalog is a read-only authority snapshot used only for deterministic target
 ]
 ```
 
-Canonical IDs must be unique. `is_active` is strict JSON boolean. Non-active targets are forbidden for match/alias actions.
+Canonical IDs must be unique. `is_active` is mandatory and must be an explicit JSON boolean; omitted status never defaults to active. Non-active targets are forbidden for match/alias actions.
 
 Private production catalog data does not belong in the public repository; only synthetic fixtures/contracts do.
 
@@ -110,6 +110,27 @@ authority_batch_ready
 ```
 
 `authority_batch_ready` means no SRR item remains `UNRESOLVED`; it does **not** mean authority was committed, `RECONCILE_REQUIRED=0`, or CRM completion was reached. `NEW_CANONICAL` items still require the bounded authority transaction that allocates immutable H-IDs and reconciles every affected plane.
+
+## Transfer validation
+
+The `validate` path is an authority-transfer boundary, not only a digest checker. It recomputes and verifies:
+
+```text
+source-record uniqueness
+mapping-state domain
+resolution-action domain
+action → mapping-state transition legality
+canonical-target presence/absence rules
+current-evidence requirement for existing/alias/new actions
+mapping/action counts
+terminal/reconcile/new/unresolved counts
+terminal coverage
+authority_batch_ready boolean semantics
+hard authority/H-ID/outbound locks
+mappings SHA and review SHA
+```
+
+A hash-consistent artifact with impossible semantic transitions is invalid.
 
 ## Commands
 
@@ -153,10 +174,13 @@ SRR intentionally cannot skip the authority transaction.
 SMC input valid and strictly pre-authority
 source_record_key unique
 terminal SMC mappings immutable in SRR
+canonical catalog explicitly declares is_active for every row
 canonical target exists and is active
+explicit review scalars are type-strict strings
 ambiguous deterministic matches remain unresolved
 current exact evidence required for existing/alias/new-canonical decisions
 NEW_CANONICAL allocates no H-ID
+transfer validator rejects semantically impossible transitions
 all output hashes deterministic
 CRM_UNIVERSE_COMPLETE = FALSE
 AUTHORITY_ADVANCED = FALSE

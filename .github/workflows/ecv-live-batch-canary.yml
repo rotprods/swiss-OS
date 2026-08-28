@@ -2,9 +2,12 @@ name: ecv-live-batch-canary
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - source/ecv-batch-0001-sub0002-20260828
+    inputs:
+      batch_path:
+        description: Repository-relative CMI-WORK-PACKET JSON path to verify
+        required: true
+        type: string
+        default: docs/state/CMI_WORK_BATCH_0001_33206402141.json
 
 permissions:
   contents: read
@@ -13,44 +16,56 @@ jobs:
   verify:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    env:
+      BATCH_PATH: ${{ inputs.batch_path }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Verify exact-current work subbatch
+      - name: Validate batch path
+        shell: bash
+        run: |
+          set -euo pipefail
+          case "$BATCH_PATH" in
+            docs/state/*.json) ;;
+            *) echo "batch_path must be a JSON file under docs/state" >&2; exit 2 ;;
+          esac
+          test -f "$BATCH_PATH"
+      - name: Verify exact-current work batch
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p .artifacts
           PYTHONPATH=src python -m swiss_os.exact_current_verify verify \
-            docs/state/CMI_WORK_BATCH_0001_SUB0002_33206402141.json \
-            --out .artifacts/ECV_BATCH_0001_SUB0002.json \
+            "$BATCH_PATH" \
+            --out .artifacts/ECV_RESULT.json \
             --delay 0.35 \
             --timeout 30 \
             --attempts 3 \
             > .artifacts/ECV_RUNTIME.json
           PYTHONPATH=src python -m swiss_os.exact_current_verify validate \
-            .artifacts/ECV_BATCH_0001_SUB0002.json \
+            .artifacts/ECV_RESULT.json \
             > .artifacts/ECV_VALIDATE.json
       - name: Safety assertions
         shell: bash
         run: |
           python - <<'PY'
           import json
-          p=json.load(open('.artifacts/ECV_BATCH_0001_SUB0002.json'))
+          p=json.load(open('.artifacts/ECV_RESULT.json'))
           assert p['authority_advanced'] is False
           assert p['h_id_allocations'] == 0 and type(p['h_id_allocations']) is int
           assert p['outbound'] == 'CLOSED'
           assert p['send_allowed'] == 0 and type(p['send_allowed']) is int
-          assert p['items_count'] == 20 == p['results_count']
-          print(json.dumps({'counts':p['counts_by_state'],'all_verified':p['all_verified'],'packet_sha256':p['packet_sha256']},indent=2,sort_keys=True))
+          assert type(p['items_count']) is int and p['items_count'] > 0
+          assert p['items_count'] == p['results_count']
+          print(json.dumps({'items_count':p['items_count'],'counts':p['counts_by_state'],'all_verified':p['all_verified'],'packet_sha256':p['packet_sha256']},indent=2,sort_keys=True))
           PY
       - name: Upload ECV evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ecv-batch-0001-sub0002-evidence
+          name: ecv-live-batch-evidence-${{ github.run_id }}
           path: .artifacts
           if-no-files-found: error
           include-hidden-files: true

@@ -127,6 +127,21 @@ class DirectoryExportTests(unittest.TestCase):
             with self.assertRaises(DirectoryExportError):
                 export_directory_to_cmi(manifest)
 
+    def test_security_gate_fields_reject_json_type_coercion(self) -> None:
+        for field, value, expected in (
+            ("coverage_complete", "false", "JSON boolean"),
+            ("authority_advanced", "false", "JSON boolean"),
+            ("outbound_opened", "false", "JSON boolean"),
+            ("h_id_allocations", "0", "JSON integer"),
+            ("send_allowed", "0", "JSON integer"),
+            ("records_count", "2", "JSON integer"),
+            ("records_count", True, "JSON integer"),
+        ):
+            manifest = complete_manifest()
+            manifest[field] = value
+            with self.assertRaisesRegex(DirectoryExportError, expected):
+                export_directory_to_cmi(manifest)
+
 
 if __name__ == "__main__":
     unittest.main()

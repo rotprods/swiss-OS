@@ -43,7 +43,7 @@ jobs:
             fi
             exit "$rc"
           fi
-      - name: Finalize count-less capture through checkpoint provenance and PCF
+      - name: Finalize count-less capture through HPCB, PCCN and PCF
         if: steps.hslca.outputs.runtime_exit != '0'
         shell: bash
         run: |
@@ -53,8 +53,12 @@ jobs:
             --pages-dir .artifacts/hslca/pages \
             --out .artifacts/hslca/capture-with-checkpoint-times.json \
             > .artifacts/HSLCA_PCF_BRIDGE.json
-          PYTHONPATH=src python -m swiss_os.partition_count_finalizer build \
+          PYTHONPATH=src python -m swiss_os.page_count_consensus \
             .artifacts/hslca/capture-with-checkpoint-times.json \
+            --out .artifacts/hslca/capture-pccn-normalized.json \
+            > .artifacts/PCCN_NORMALIZE.json
+          PYTHONPATH=src python -m swiss_os.partition_count_finalizer build \
+            .artifacts/hslca/capture-pccn-normalized.json \
             --out .artifacts/PARTITION_COUNT_FINALIZER.json \
             > .artifacts/PCF_BUILD.json
           PYTHONPATH=src python -m swiss_os.partition_count_finalizer validate \

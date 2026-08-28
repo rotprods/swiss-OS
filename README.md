@@ -6,35 +6,56 @@ Evidence-first operating system for securing a viable Swiss hospitality job offe
 
 Secure at least one **truthful, legal, verifiable and economically viable Swiss employment offer** that Roberto can realistically accept and use to relocate sustainably.
 
-## Current state
+## Read order
 
-| Dimension | Current state |
-|---|---|
-| Physical hotel lineage rows | `677` |
-| Superseded duplicate aliases | `4` |
-| Active canonical entities | `673` |
-| Active canonical checkpoint | `CP-0750 — 673 / 750` |
-| Next physical ID | `H-0678` |
-| Active Intelligence / Graph | `673 / 673` |
-| Current L4 | `105 / 673` |
-| G-0700 final L9 | `0 / 2050` |
-| Candidate lanes | `0 / 4 — BLOCKED_USER_INPUT` |
-| Outbound | `CLOSED` |
-| `send_allowed` | `0` |
-| Operational parent | `V11` |
+For material execution, read in this order:
 
-The distinction between physical lineage and active canonical entities is executable and tested in `src/swiss_os`.
+1. [`docs/operations/WAVE_OPERATING_PROTOCOL.md`](docs/operations/WAVE_OPERATING_PROTOCOL.md)
+2. [`GOAL.md`](GOAL.md)
+3. [`STATE.md`](STATE.md)
+4. [`AGENTS.md`](AGENTS.md)
+5. [`OPERATING_RULES.md`](OPERATING_RULES.md)
+6. reconcile against live Drive/Sheets + the latest authority-eligible constrained manifest.
+
+`STATE.md` is the **only mutable current-state pointer in the repository**. README and AGENTS deliberately do not duplicate live counts/frontiers.
 
 ## Repository role
 
-GitHub is the **version-control and executable-contract plane** for architecture, schemas, migrations, tests, runbooks and durable decision logic. Google Drive/Sheets remain the human/control-plane mirror and the constrained operational database remains the authoritative state backend.
+GitHub is the **version-control and executable-contract plane** for architecture, schemas, migrations, tests, runbooks, operating protocol and durable decision logic.
+
+Google Drive/Sheets are the human/control-plane mirror. The constrained operational database stores PK/FK/UNIQUE/CHECK-enforced state. ChatGPT Library is a recovery/cold-persistence surface.
 
 ```text
-GitHub                         Google Drive / Sheets            Operational DB
-contracts + executable core   human/control-plane mirror      constrained state
-schemas + migrations          live registries                 PK/FK/UNIQUE/CHECK
-tests + decisions             executive observability         restore/replay
+GitHub                      Drive / Sheets                  Constrained DB              Library
+code + contracts            human control plane            operational state           recovery bundles
+schemas + migrations        live registries                PK/FK/UNIQUE/CHECK          manifests/digests
+tests + CI                  observability                  restore/replay              cold persistence
+STATE pointer               Graph/Intelligence mirror      operational graph truth     NOT operational truth
 ```
+
+A local DB canary is not canonical by itself. Canonical promotion requires the synchronization chain declared in the Wave Operating Protocol.
+
+## Execution model
+
+Every material mutation executes inside a bounded **WAVE**:
+
+```text
+BOOTSTRAP AUTHORITY
+→ RECONCILE
+→ EXECUTE BOUNDED TASK
+→ STAGE/CANARY
+→ VALIDATE
+→ DB COMMIT
+→ SHEETS MIRROR
+→ GRAPH / INTELLIGENCE
+→ INVARIANTS / SLO
+→ METRICS / SCHEDULER / TRANSITIONS
+→ GITHUB HANDOFF
+→ LIBRARY RECOVERY
+→ FINAL RECONCILIATION
+```
+
+If a required authority plane is unavailable, the wave switches to `DEGRADED_CANARY` and cannot advance canonical state.
 
 ## Run the core
 
@@ -42,8 +63,6 @@ tests + decisions             executive observability         restore/replay
 PYTHONPATH=src python -m unittest discover -s tests -v
 PYTHONPATH=src python -m swiss_os.cli manifest validate tests/fixtures/manifest_superseded.json
 ```
-
-Start with [`GOAL.md`](GOAL.md), [`STATE.md`](STATE.md), [`AGENTS.md`](AGENTS.md) and [`docs/architecture/EXECUTABLE_CORE.md`](docs/architecture/EXECUTABLE_CORE.md).
 
 ## Safety boundary
 

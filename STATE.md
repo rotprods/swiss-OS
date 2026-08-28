@@ -1,7 +1,7 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest chained Meta Execution reconciliation: **2026-08-28T22:48:00Z**.  
-GitHub parent at wave start: **`0c3770e6226074e846b7526dd521ef63040f85d9`**.  
+Latest chained Meta Execution reconciliation: **2026-08-28T23:12:00Z**.  
+GitHub parent for this wave: **`808a4097a4bdaa2b2dff77c3b779f576f72154a4`**.  
 Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**.  
 Open GitHub issues labelled `P0`: **0**.  
 Frozen current CRM source snapshot: **`HS-MEMBER-DE-33206402141`**.
@@ -25,7 +25,7 @@ OUTBOUND                        CLOSED
 send_allowed                      0
 ```
 
-Immutable V13 base SHA-256: `0e605b412f29893ca1775f1e8fccd5987d0613baab4ac29b6699988cde0fdfe5`. Repaired constrained-parent SHA-256: `70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`. No source/ECV/SRR/overlay wave may advance authority from staging, cache, Library, provider response or canary state.
+Immutable V13 base SHA-256: `0e605b412f29893ca1775f1e8fccd5987d0613baab4ac29b6699988cde0fdfe5`. Repaired constrained-parent SHA-256: `70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`. Staging, cache, provider response, Library and canary state are never authority parents.
 
 ## 2. Qualified current source
 
@@ -42,54 +42,52 @@ canonical MDM manifest SHA-256  e5c7e2d52eed1dd585a9a00f1bd98015997ec902e8890d0a
 CMI records SHA-256             22bfc4ee304b37b426e6e8f4da03ca73febc7d2283882caf58fd13edaee5081f
 ```
 
-Raw pagination metadata drift remains preserved as an observation; HPCB/PCCN/PCF qualified the coherent 2061-record source. discover.swiss subscription access is unavailable, so HotellerieSuisse remains the MEP fallback source rather than idling.
+discover.swiss subscription access remains unavailable. MEP therefore continues with the qualified HotellerieSuisse member-directory source instead of idling.
 
-## 3. Source mapping frontier
+## 3. Immutable CMI/CWP lineage recovered
 
-Pinned base mapping candidate:
+Durable Drive evidence plus deterministic replay establish the original intake frontier as:
 
 ```text
-source records                         2061
+CMI ACTIVE_MATCH                        623
+CMI TRUE_MISSING                      1438
+CWP MATCHED_EXISTING                   623
+CWP VERIFY_NEW_ENTITY                 1438
+CWP packet internal SHA-256     2741ca3b870c83d5fe424243bb06f599a96517f5922ec13bdc6621252b3273c0
+CWP JSON file SHA-256           60ecb59fb8947aee90267c777792fa51238e4bd19bb6e6a993c64cdeb8587b1d
+```
+
+The later 624/1437 source-mapping frontier is downstream reconciliation state and must not be used as immutable CWP ordering. A fresh replay of all 2061 source records against the 690-row E4 authority reproduces 623 exact matches / 1438 candidates / 0 conflicts. Reconstructed offset 100..119 hashes exactly to persisted SUB0006 (`085f20a4...`), proving offset 120..139 lineage-safe. Recovery proof: `docs/state/CWP_LINEAGE_RECOVERY_2026-08-29.json`.
+
+## 4. Source mapping frontier — pre-authority
+
+```text
 base terminal mappings                  624
 base RECONCILE_REQUIRED                1437
-base terminal coverage             30.2766%
 base candidate SHA-256          2f9413318c410eb0f0443de260213d31e9ab2bdc1058581c0fa9c0340474aa27
-anti-join SHA-256               c50a2b2b70677d6651f89e94fe19382d525c72c52111c91b8291c15887729d2a
-CWP packet SHA-256              6ae41038683c185a51e482c2f979dc1a52b9348cc172a367bf5dc1311efd9249
-reverse authority/source gaps           66  RECONCILE_REQUIRED_NOT_EXCLUSION
-```
-
-SMO-1.0 now persists the two previously reviewed `MATCH_EXISTING` transitions as a replayable, pre-authority terminal-mapping overlay:
-
-```text
-MD-025e7888dfc33e19723a -> H-0686
-MD-0672b5697de8a818d65b -> H-0022
-overlay SHA-256                 e966d5ab0e70ce92fc0a690409cd2e910281e3584d09aeb1a098f198bd5bc01e
+SMO overlay terminal deltas               2
 effective terminal mappings             626
-effective RECONCILE_REQUIRED            1435
+effective RECONCILE_REQUIRED           1435
 effective terminal coverage         30.373605%
-materialization state            OVERLAY_VALIDATED_BASE_REBUILD_PENDING
+reverse authority/source gaps            66
 ```
 
-The overlay is terminal source-mapping state for its two exact source keys, but not canonical authority. The full 2061-record mapping must be replayed/materialized before SSR or authority eligibility.
+Persisted SMO terminal overlays remain: `MD-025e7888dfc33e19723a -> H-0686` and `MD-0672b5697de8a818d65b -> H-0022`. They are source-mapping state only and do not mutate E4 authority.
 
-## 4. Exact-current verification frontier
+## 5. Exact-current verification frontier
+
+SUB0007 completed successfully under GitHub Actions run `33219437882`:
 
 ```text
-ECV verified frontier             120 / 1437
-ECV remaining never verified      1317
-ECV pending requeue                  0
-latest batch                       HS-MEMBER-DE-33206402141:WORK:0001:SUB:0006
-latest packet SHA-256              9a97b4f1187a8c075e7a8d5c502adbfbf9eb4d76b921d1e1b570ef7ee3ab0308
+ECV verified frontier             140 / 1438
+ECV remaining never verified     1298
+pending requeue                     0
+SUB0007 items                     20 / 20 CURRENT_DETAIL_VERIFIED
+SUB0007 packet SHA-256     27c38cef2683117a03eb12b763a8effe77fc7b8164f32c19ad15791b7f66f08a
+SUB0007 artifact SHA-256   8506a4abda5040ee27ec40e0f95e56c3704529b0dce40ccf83ce2fe6ed9784d7
 ```
 
-All six persisted ECV waves are evidence-only and preserve `authority_advanced=false`, `h_id_allocations=0`, `OUTBOUND=CLOSED`, `send_allowed=0`.
-
-## 5. CWP recovery diagnostic
-
-The original raw source artifact and current E4 HOTELS_MASTER were physically recovered. Re-running the published `normalize_text` exact name+city semantics produces 623 current exact matches / 1438 candidate rows versus the pinned historical 624 / 1437. Crucially, the reconstructed first 100 candidate rows hash exactly to the historical batch-0001 SHA `458acbb69354bdb00ce4bbf82c6464f4bcb4ea5686919f3daffe6751ce8dabbe`, and all persisted first 120 candidate keys match reconstruction.
-
-Because the single historical classification delta has not yet been identified, ECV SUB0007 is fail-closed: offset 120..139 may not be selected until the discrepancy is resolved or proved to occur after that slice. Durable diagnostic: `docs/state/CWP_RECOVERY_DIAGNOSTIC_2026-08-29.json`.
+SUB0008 is staged at original candidate offset 140..159, first key `MD-168e2b3d43460de6bba5`, last key `MD-1a18386074be6c3b0ac5`, items SHA `c0d17f777222399794f2e92d628674967d6b3aa973b4a6eba351b2558e4ed436`. It remains evidence-only until the live exact-current canary succeeds.
 
 ## 6. Protocol / capability state
 
@@ -102,28 +100,23 @@ handoff frontier guard                   ACTIVE IN CI
 GitHub branch/PR/CI/review/merge          AVAILABLE
 Drive + native Sheets                     AVAILABLE
 web/current-source research               AVAILABLE
-discover.swiss subscription key           UNAVAILABLE / NON-BLOCKING FALLBACK
+discover.swiss subscription key           UNAVAILABLE / MEP FALLBACK ACTIVE
 Library historical staging                NON-AUTHORITATIVE
 ```
 
 ## 7. NEXT
 
 ```text
-identify the one-record 623/1438 vs 624/1437 anti-join delta
-→ reproduce pinned CWP lineage or prove delta position
-→ recover untouched CWP offset 120..139
-→ ECV SUB0007
-→ entity resolution / SMO terminalization
-→ replay/materialize full source mapping
+run ECV SUB0008
+→ persist ECV result and advance evidence frontier only if 20/20 verifies
+→ continue bounded untouched CWP slices while provider pacing remains healthy
+→ entity-resolve verified candidates and persist SMO terminal overlays
+→ replay/materialize full 2061-record source mapping
 → resolve reverse gaps 66
 → RECONCILE_REQUIRED = 0
 → SSR-1.0
 → only then construct an authority-eligible cross-plane candidate
 ```
-
-If exact CWP lineage remains unavailable, continue safe entity resolution on already verified ECV records and persist further SMO overlays; do not idle and do not allocate H-IDs.
-
-Canonical continuation pointer: `docs/state/NEXT.json`.
 
 ```text
 authority_advance_allowed = FALSE
@@ -133,3 +126,5 @@ CRM_UNIVERSE_COMPLETE = FALSE
 OUTBOUND = CLOSED
 send_allowed = 0
 ```
+
+Canonical continuation pointer: `docs/state/NEXT.json`.

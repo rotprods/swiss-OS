@@ -1,0 +1,72 @@
+{
+  "graph_type": "PROJECT_MEMORY_META_GRAPH_DELTA",
+  "schema_version": "1.2",
+  "project": "SWITZERLAND_JOB_OS",
+  "cycle_id": "META-20260828-CRM-SOURCE-2061-ECV-01",
+  "generated_at": "2026-08-28T20:52:30Z",
+  "base_git_sha": "7c667b94a7460ea2262dc0d12ba983eeb124863b",
+  "authority_mutation": false,
+  "nodes": [
+    {"id":"AUTHORITY-E4","type":"AUTHORITY_STATE","physical":690,"active":690,"aliases":0,"asr":"EXACT"},
+    {"id":"SNAPSHOT-HS-MEMBER-DE-33206402141","type":"SOURCE_SNAPSHOT","state":"CURRENT_COHERENT_PREAUTH","pages":172,"records":2061},
+    {"id":"PROTO-HPCB-1.0","type":"PROTOCOL","state":"PASS"},
+    {"id":"PROTO-PCCN-1.0","type":"PROTOCOL","state":"PASS","consensus_pages":171,"total_pages":172},
+    {"id":"PROTO-HCMA-1.0","type":"PROTOCOL","state":"PASS"},
+    {"id":"MDM-HS-MEMBER-DE-33206402141","type":"CANONICAL_MEMBER_DIRECTORY","records":2061,"coverage_complete":true},
+    {"id":"CMI-HS-MEMBER-DE-33206402141","type":"CMI_EXPORT","records":2061,"state":"NON_AUTHORITATIVE"},
+    {"id":"ANTI-JOIN-E4-690","type":"ANTI_JOIN","matched_existing":624,"candidate_new_preauth":1437,"conflicts":0},
+    {"id":"CWP-HS-MEMBER-DE-33206402141","type":"WORK_PACKET","active_items":1437,"terminal_matches":624,"batches":15},
+    {"id":"ECV-SUBBATCH-0001-0001","type":"ECV_BATCH","attempted":20,"current_detail_verified":20,"packet_sha256":"0b0d10ac7fbe118fcbdf434b89b298759e911dda3c9adf5d11124f462b435586"},
+    {"id":"SOURCE-MAPPING-CANDIDATE","type":"SOURCE_MAPPING","terminal":624,"reconcile_required":1437,"unmapped":0},
+    {"id":"REVERSE-ANTI-JOIN-66","type":"AUTHORITY_SOURCE_RECONCILIATION","state":"RECONCILE_REQUIRED_NOT_EXCLUSION","records":66},
+    {"id":"EXACT-REFRESH-01-08","type":"EVIDENCE_SERIES","attempted":96,"current_exact":78,"support_scope":6,"unresolved_stale":12},
+    {"id":"G-0500","type":"GOAL"},
+    {"id":"GATE-CRM-UNIVERSE-COMPLETE","type":"GATE","state":false},
+    {"id":"OUTBOUND","type":"GATE","state":"CLOSED","send_allowed":0},
+    {"id":"NEXT","type":"CONTINUATION_POINTER","route":"ECV_REMAINING_CWP_BATCHES_THEN_ENTITY_RESOLUTION"}
+  ],
+  "edges": [
+    ["SNAPSHOT-HS-MEMBER-DE-33206402141","VALIDATED_BY","PROTO-HPCB-1.0"],
+    ["SNAPSHOT-HS-MEMBER-DE-33206402141","VALIDATED_BY","PROTO-PCCN-1.0"],
+    ["SNAPSHOT-HS-MEMBER-DE-33206402141","CANONICALIZED_BY","PROTO-HCMA-1.0"],
+    ["PROTO-HCMA-1.0","PRODUCED","MDM-HS-MEMBER-DE-33206402141"],
+    ["MDM-HS-MEMBER-DE-33206402141","EXPORTED_TO","CMI-HS-MEMBER-DE-33206402141"],
+    ["CMI-HS-MEMBER-DE-33206402141","ANTI_JOINED_AGAINST","AUTHORITY-E4"],
+    ["ANTI-JOIN-E4-690","PRODUCED","CWP-HS-MEMBER-DE-33206402141"],
+    ["CWP-HS-MEMBER-DE-33206402141","DISPATCHED","ECV-SUBBATCH-0001-0001"],
+    ["ANTI-JOIN-E4-690","PRODUCED","SOURCE-MAPPING-CANDIDATE"],
+    ["AUTHORITY-E4","HAS_REVERSE_RECONCILIATION","REVERSE-ANTI-JOIN-66"],
+    ["EXACT-REFRESH-01-08","SUPPORTS","SOURCE-MAPPING-CANDIDATE"],
+    ["SOURCE-MAPPING-CANDIDATE","IMPLEMENTS","G-0500"],
+    ["G-0500","REQUIRES","GATE-CRM-UNIVERSE-COMPLETE"],
+    ["GATE-CRM-UNIVERSE-COMPLETE","BLOCKS","OUTBOUND"],
+    ["ECV-SUBBATCH-0001-0001","EMITS","NEXT"]
+  ],
+  "metrics": {
+    "authority_active": 690,
+    "source_records": 2061,
+    "terminal_source_mappings": 624,
+    "reconcile_required": 1437,
+    "terminal_mapping_coverage_pct": 30.2766,
+    "ecv_verified": 20,
+    "ecv_remaining_unverified": 1417,
+    "reverse_reconcile_required": 66,
+    "canonical_id_allocations": 0
+  },
+  "hashes": {
+    "raw_source_artifact_sha256":"721f9ff9f84e2d5d9df62c6b22f12e7354cef3a298cb8990be66a202e1e769ce",
+    "mdm_records_sha256":"b02c6fae1215643088eafec0af8b2b139506e4e46dec9e81277a1a9e5e4e897f",
+    "mdm_manifest_sha256":"e5c7e2d52eed1dd585a9a00f1bd98015997ec902e8890d0abcb89cdc87aeb74f",
+    "cmi_records_sha256":"22bfc4ee304b37b426e6e8f4da03ca73febc7d2283882caf58fd13edaee5081f",
+    "anti_join_payload_sha256":"c50a2b2b70677d6651f89e94fe19382d525c72c52111c91b8291c15887729d2a",
+    "cwp_packet_sha256":"6ae41038683c185a51e482c2f979dc1a52b9348cc172a367bf5dc1311efd9249",
+    "ecv_first_packet_sha256":"0b0d10ac7fbe118fcbdf434b89b298759e911dda3c9adf5d11124f462b435586"
+  },
+  "invariants": {
+    "authority_advanced": false,
+    "canonical_id_allocations": 0,
+    "crm_universe_complete": false,
+    "outbound_opened": false,
+    "send_allowed": 0
+  }
+}

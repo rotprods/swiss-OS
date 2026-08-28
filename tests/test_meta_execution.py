@@ -42,6 +42,8 @@ class MetaExecutionTests(unittest.TestCase):
             MetaCapabilities(
                 discover_swiss_subscription=True,
                 discover_capture_valid=False,
+                web_research=True,
+                member_directory_evidence=True,
                 github_write=True,
                 github_ci=True,
             )
@@ -59,6 +61,33 @@ class MetaExecutionTests(unittest.TestCase):
         )
         self.assertEqual(decision.route, MetaRoute.MEMBER_DIRECTORY_MANIFEST)
         self.assertEqual(decision.execution_mode, ExecutionMode.READ_ONLY_RESEARCH)
+
+    def test_directory_manifest_is_productive_no_key_fallback(self) -> None:
+        decision = choose_meta_route(
+            MetaCapabilities(
+                discover_swiss_subscription=False,
+                discover_capture_valid=False,
+                member_directory_manifest_complete=False,
+                web_research=True,
+            )
+        )
+        self.assertEqual(decision.route, MetaRoute.MEMBER_DIRECTORY_MANIFEST)
+        self.assertEqual(decision.execution_mode, ExecutionMode.READ_ONLY_RESEARCH)
+        self.assertIn("web_research", decision.capabilities_used)
+        self.assertFalse(decision.authority_advance_allowed)
+        self.assertFalse(decision.canonical_id_allocation_allowed)
+        self.assertFalse(decision.outbound_allowed)
+
+    def test_existing_member_evidence_enables_no_key_manifest_route(self) -> None:
+        decision = choose_meta_route(
+            MetaCapabilities(
+                discover_swiss_subscription=False,
+                member_directory_evidence=True,
+                member_directory_manifest_complete=False,
+            )
+        )
+        self.assertEqual(decision.route, MetaRoute.MEMBER_DIRECTORY_MANIFEST)
+        self.assertIn("member_directory_evidence", decision.capabilities_used)
 
     def test_ssr_follows_complete_source_sets(self) -> None:
         decision = choose_meta_route(
@@ -99,6 +128,7 @@ class MetaExecutionTests(unittest.TestCase):
         decision = choose_meta_route(
             MetaCapabilities(
                 source_scope_reconciled=True,
+                member_directory_manifest_complete=True,
                 reconcile_required=50,
                 exact_current_refresh_backlog=20,
                 web_research=True,
@@ -111,6 +141,7 @@ class MetaExecutionTests(unittest.TestCase):
         decision = choose_meta_route(
             MetaCapabilities(
                 source_scope_reconciled=True,
+                member_directory_manifest_complete=True,
                 reconcile_required=50,
                 exact_current_refresh_backlog=0,
                 web_research=False,
@@ -119,9 +150,10 @@ class MetaExecutionTests(unittest.TestCase):
         self.assertEqual(decision.route, MetaRoute.TERMINAL_MAPPING)
         self.assertEqual(decision.execution_mode, ExecutionMode.DEGRADED_CANARY)
 
-    def test_unresolved_records_route_to_exact_current_refresh(self) -> None:
+    def test_unresolved_records_route_to_exact_current_refresh_after_manifest(self) -> None:
         decision = choose_meta_route(
             MetaCapabilities(
+                member_directory_manifest_complete=True,
                 unresolved_source_records=50,
                 web_research=True,
             )

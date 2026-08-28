@@ -16,6 +16,7 @@ REQUIRED_FILES = [
     "docs/operations/PRODUCTION_READINESS_GAUNTLET.md",
     "docs/operations/CRM_UNIVERSE_PROTOCOL.md",
     "docs/operations/DISCOVER_SWISS_SNAPSHOT_ADAPTER.md",
+    "docs/operations/MEMBER_DIRECTORY_MANIFEST.md",
     "docs/operations/SOURCE_SCOPE_RECONCILIATION.md",
     "docs/architecture/ENGINE_REGISTRY.md",
     "docs/architecture/AUTHORITY_MODEL.md",
@@ -35,6 +36,7 @@ STATE_FREE_FILES = [
     "docs/operations/NEXT_POINTER_PROTOCOL.md",
     "docs/operations/CRM_UNIVERSE_PROTOCOL.md",
     "docs/operations/DISCOVER_SWISS_SNAPSHOT_ADAPTER.md",
+    "docs/operations/MEMBER_DIRECTORY_MANIFEST.md",
     "docs/operations/SOURCE_SCOPE_RECONCILIATION.md",
 ]
 
@@ -84,6 +86,15 @@ REQUIRED_MARKERS = {
     "docs/operations/PRODUCTION_READINESS_GAUNTLET.md": ["G00", "G20", "system_contract_guard.py", "OUTBOUND = CLOSED"],
     "docs/operations/CRM_UNIVERSE_PROTOCOL.md": ["CRM_UNIVERSE_COMPLETE = TRUE", "snapshot_raw_records", "snapshot_unmapped_records = 0", "ALIAS_TO_CANONICAL", "RECONCILE_REQUIRED", "OUTBOUND", "discover.swiss", "member-directory scope"],
     "docs/operations/DISCOVER_SWISS_SNAPSHOT_ADAPTER.md": ["DSA-1.0", "dsod-hs", "continuationToken", "hsId", "member_directory_scope_reconciled", "DISCOVER_SWISS_SUBSCRIPTION_KEY"],
+    "docs/operations/MEMBER_DIRECTORY_MANIFEST.md": [
+        "MDM-1.0",
+        "coverage_complete = true",
+        "missing pages = 0",
+        "out-of-range pages = 0",
+        "authority_advanced = false",
+        "h_id_allocations = 0",
+        "outbound_opened = false",
+    ],
     "docs/operations/SOURCE_SCOPE_RECONCILIATION.md": ["SSR-1.0", "EXACT_HSID", "EXACT_DETAIL_URL", "EXACT_NAME_CITY", "FROZEN_CANDIDATE", "H_ID_ALLOCATIONS = 0"],
     "docs/architecture/ENGINE_REGISTRY.md": ["Mission Commander", "Authority & Reconciliation Engine", "Entity Resolution Engine", "Evidence Engine", "Operational Graph Engine", "Scheduler & TTL Engine", "QA / Governance Engine", "Recovery & Persistence Engine", "Git / CI Engine"],
     "docs/architecture/SYSTEM_MAP.md": ["Operational Graph", "Project Memory Meta Graph", "Library", "DEGRADED_CANARY", "MEP-2.0", "COLETTE"],
@@ -109,9 +120,7 @@ for rel in STATE_FREE_FILES:
     for label, pattern in MUTABLE_FRONTIER_PATTERNS:
         match = pattern.search(text)
         if match:
-            errors.append(
-                f"stable document contains mutable {label}: {rel}: {match.group(0)!r}"
-            )
+            errors.append(f"stable document contains mutable {label}: {rel}: {match.group(0)!r}")
 
 for rel, markers in REQUIRED_MARKERS.items():
     text = read(rel).lower()
@@ -120,12 +129,7 @@ for rel, markers in REQUIRED_MARKERS.items():
             errors.append(f"missing contract marker in {rel}: {marker}")
 
 state_text = read("STATE.md").lower()
-for marker in (
-    "authoritative",
-    "canary",
-    "outbound",
-    "send_allowed",
-):
+for marker in ("authoritative", "canary", "outbound", "send_allowed"):
     if marker not in state_text:
         errors.append(f"STATE.md missing authority/canary marker: {marker}")
 

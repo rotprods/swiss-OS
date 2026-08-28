@@ -1,15 +1,15 @@
 {
   "schema_version": "NPP-1.0",
   "project": "SWITZERLAND_JOB_OS",
-  "generated_at": "2026-08-28T22:48:00Z",
-  "cycle_id": "META-20260829-SMO01-CWP-RECOVERY",
-  "parent_git_sha": "0c3770e6226074e846b7526dd521ef63040f85d9",
+  "generated_at": "2026-08-28T23:12:00Z",
+  "cycle_id": "META-20260829-CWP-LINEAGE-ECV-SUB0008",
+  "parent_git_sha": "808a4097a4bdaa2b2dff77c3b779f576f72154a4",
   "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
   "authority_parent": "ISSUE_89_COMPOSITE_CONSTRAINED_PARENT",
   "authority_parent_materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
   "execution_mode": "PRE_AUTHORITY_SOURCE_RECONCILIATION",
-  "selected_route": "SMO_TERMINALIZE_READY_REVIEWS_AND_RECOVER_CWP_LINEAGE",
-  "next_route": "RESOLVE_ONE_RECORD_ANTI_JOIN_DELTA_THEN_ECV_SUB0007",
+  "selected_route": "IMMUTABLE_CWP_LINEAGE_RECOVERED_THEN_ECV_CHAIN",
+  "next_route": "RUN_ECV_SUB0008_THEN_CONTINUE_PROVIDER_SAFE_CWP_SLICES",
   "goal_id": "G-0500",
   "checkpoint_id": "CRM_UNIVERSE_COMPLETE",
   "authority_state": {
@@ -32,80 +32,77 @@
     "canonical_mdm_manifest_sha256": "e5c7e2d52eed1dd585a9a00f1bd98015997ec902e8890d0abcb89cdc87aeb74f",
     "cmi_records_sha256": "22bfc4ee304b37b426e6e8f4da03ca73febc7d2283882caf58fd13edaee5081f"
   },
+  "immutable_cwp_lineage": {
+    "cmi_active_match": 623,
+    "cmi_true_missing": 1438,
+    "cwp_matched_existing": 623,
+    "cwp_verify_new_entity": 1438,
+    "cwp_packet_internal_sha256": "2741ca3b870c83d5fe424243bb06f599a96517f5922ec13bdc6621252b3273c0",
+    "cwp_json_file_sha256": "60ecb59fb8947aee90267c777792fa51238e4bd19bb6e6a993c64cdeb8587b1d",
+    "reconstruction_exact_matches": 623,
+    "reconstruction_candidates": 1438,
+    "reconstruction_conflicts": 0,
+    "lineage_recovery_artifact": "docs/state/CWP_LINEAGE_RECOVERY_2026-08-29.json",
+    "lineage_state": "RECOVERED_EXACT_FOR_CANDIDATE_ORDER"
+  },
   "mapping_frontier": {
+    "downstream_base_terminal_source_mappings": 624,
+    "downstream_base_reconcile_required": 1437,
     "base_candidate_sha256": "2f9413318c410eb0f0443de260213d31e9ab2bdc1058581c0fa9c0340474aa27",
-    "base_terminal_source_mappings": 624,
-    "base_reconcile_required": 1437,
-    "overlay_artifact": "docs/state/SOURCE_MAPPING_OVERLAY_SRR_BATCH_0001_33206402141.json",
     "overlay_sha256": "e966d5ab0e70ce92fc0a690409cd2e910281e3584d09aeb1a098f198bd5bc01e",
     "overlay_terminal_deltas": 2,
     "effective_terminal_source_mappings": 626,
     "effective_reconcile_required": 1435,
     "effective_terminal_mapping_coverage_pct": 30.373605046094126,
-    "materialization_state": "OVERLAY_VALIDATED_BASE_REBUILD_PENDING",
-    "reverse_authority_without_exact_source_match": 66,
-    "anti_join_payload_sha256": "c50a2b2b70677d6651f89e94fe19382d525c72c52111c91b8291c15887729d2a",
-    "cwp_packet_sha256": "6ae41038683c185a51e482c2f979dc1a52b9348cc172a367bf5dc1311efd9249"
+    "reverse_authority_without_exact_source_match": 66
   },
   "ecv_frontier": {
-    "candidate_records_total": 1437,
-    "current_detail_verified": 120,
-    "remaining_unverified": 1317,
+    "candidate_records_total": 1438,
+    "current_detail_verified": 140,
+    "remaining_unverified": 1298,
     "pending_requeue": 0,
-    "latest_subbatch_id": "HS-MEMBER-DE-33206402141:WORK:0001:SUB:0006",
-    "latest_subbatch_items_sha256": "085f20a4be4ed9356cb7780c81f2c75ee5a9427d3bcd0fc763b75364a544b632",
-    "latest_subbatch_packet_sha256": "9a97b4f1187a8c075e7a8d5c502adbfbf9eb4d76b921d1e1b570ef7ee3ab0308",
-    "latest_subbatch_state": "CURRENT_DETAIL_VERIFIED_20_OF_20"
-  },
-  "cwp_recovery": {
-    "diagnostic_artifact": "docs/state/CWP_RECOVERY_DIAGNOSTIC_2026-08-29.json",
-    "reconstructed_exact_matches": 623,
-    "reconstructed_candidate_rows": 1438,
-    "pinned_exact_matches": 624,
-    "pinned_candidate_rows": 1437,
-    "classification_delta": 1,
-    "first_100_reconstructed_items_sha256": "458acbb69354bdb00ce4bbf82c6464f4bcb4ea5686919f3daffe6751ce8dabbe",
-    "first_100_matches_pinned_batch": true,
-    "first_120_persisted_keys_match_reconstruction": true,
-    "next_untouched_offset": 120,
-    "sub0007_lineage_eligible": false,
-    "exact_blocker": "Identify the single source record classified MATCH_EXISTING in the pinned historical anti-join but CANDIDATE_NEW_ENTITY under current deterministic reconstruction, or prove its sorted candidate position is after offset 139."
+    "latest_completed_subbatch_id": "HS-MEMBER-DE-33206402141:WORK:0001:SUB:0007",
+    "latest_completed_packet_sha256": "27c38cef2683117a03eb12b763a8effe77fc7b8164f32c19ad15791b7f66f08a",
+    "latest_completed_artifact_sha256": "8506a4abda5040ee27ec40e0f95e56c3704529b0dce40ccf83ce2fe6ed9784d7",
+    "staged_subbatch_id": "HS-MEMBER-DE-33206402141:WORK:0001:SUB:0008",
+    "staged_offset_start": 140,
+    "staged_offset_end_inclusive": 159,
+    "staged_items_sha256": "c0d17f777222399794f2e92d628674967d6b3aa973b4a6eba351b2558e4ed436",
+    "staged_first_key": "MD-168e2b3d43460de6bba5",
+    "staged_last_key": "MD-1a18386074be6c3b0ac5"
   },
   "hard_blockers": [
-    "CWP_LINEAGE_ONE_RECORD_CLASSIFICATION_DELTA_BEFORE_SUB0007",
     "EFFECTIVE_RECONCILE_REQUIRED_1435_NOT_ZERO",
-    "REVERSE_AUTHORITY_SOURCE_DISCREPANCIES_66_REQUIRE_RESOLUTION"
+    "REVERSE_AUTHORITY_SOURCE_DISCREPANCIES_66_REQUIRE_RESOLUTION",
+    "DISCOVER_SWISS_SUBSCRIPTION_KEY_UNAVAILABLE_FOR_DISCOVER_PARITY"
   ],
   "capability_fallbacks": [
-    "discover.swiss subscription key unavailable -> use qualified HotellerieSuisse source",
-    "original CWP full artifact unavailable -> deterministic reconstruction from pinned source and E4 authority",
-    "if SUB0007 remains blocked -> continue entity resolution on already CURRENT_DETAIL_VERIFIED records and persist additional SMO overlays"
+    "discover.swiss subscription key unavailable -> continue qualified HotellerieSuisse source path",
+    "continue bounded exact-current CWP slices through GitHub Actions with provider pacing",
+    "entity-resolve already verified ECV rows and persist SMO overlays if provider verification becomes temporarily unavailable"
   ],
   "required_inputs": [
-    "GitHub main at or after parent_git_sha",
+    "GitHub main at or descendant of parent_git_sha",
     "E4 authority 690/690/0 aliases/ASR EXACT",
-    "HOTELS_MASTER 1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w",
+    "HOTELS_MASTER Drive ID 1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w",
     "raw HSLCA artifact 9700376482 SHA 721f9ff9f84e2d5d9df62c6b22f12e7354cef3a298cb8990be66a202e1e769ce",
-    "CMI SHA 22bfc4ee304b37b426e6e8f4da03ca73febc7d2283882caf58fd13edaee5081f",
-    "anti-join SHA c50a2b2b70677d6651f89e94fe19382d525c72c52111c91b8291c15887729d2a",
-    "CWP SHA 6ae41038683c185a51e482c2f979dc1a52b9348cc172a367bf5dc1311efd9249",
-    "ECV sub0001..sub0006 result summaries",
+    "CWP lineage recovery proof docs/state/CWP_LINEAGE_RECOVERY_2026-08-29.json",
+    "ECV SUB0007 result summary and artifact",
     "SMO overlay e966d5ab0e70ce92fc0a690409cd2e910281e3584d09aeb1a098f198bd5bc01e"
   ],
   "resume_instructions": [
-    "Reconstruct current main ancestry and reject stale lineage if main moved incompatibly.",
-    "Run handoff_frontier_guard.py and verify ECV 120/1437, remaining 1317, pending_requeue 0.",
-    "Verify SMO overlay and keep its two source keys terminal without mutating E4 authority.",
-    "Resolve the one-record anti-join discrepancy before selecting CWP offset 120..139 for SUB0007.",
-    "If blocked, entity-resolve already verified ECV rows and emit bounded SMO overlays instead of idling.",
-    "Never reserve H-0691 or any canonical ID from pre-authority work."
+    "Reject stale lineage if main moved incompatibly.",
+    "Run/observe ECV SUB0008 and persist its result; only evidence frontier may advance.",
+    "If SUB0008 succeeds and provider pacing is healthy, generate next untouched 20-record slice from immutable 1438-candidate CWP order.",
+    "Continue entity resolution in parallel on verified records; do not allocate H-IDs.",
+    "Before authority eligibility require full mapping replay, RECONCILE_REQUIRED=0, reverse gap resolution, SSR-1.0 and fresh cross-plane transaction."
   ],
   "promotion_preconditions": [
     "Full 2061-record source mapping replay/materialization validates exactly once per source record.",
     "RECONCILE_REQUIRED=0.",
     "All 66 reverse authority/source discrepancies are resolved or explicitly justified.",
-    "SSR-1.0 passes on the coherent frozen source scope.",
-    "Any authority promotion uses a fresh bounded DB -> HOTELS_MASTER -> Intelligence -> Graph -> control-plane transaction with ASR/restore/replay/idempotency gates."
+    "SSR-1.0 passes on coherent frozen source scope.",
+    "Any authority promotion uses fresh bounded DB -> HOTELS_MASTER -> Intelligence -> Graph -> control-plane transaction with ASR/restore/replay/idempotency gates."
   ],
   "authority_advance_allowed": false,
   "canonical_id_allocation_allowed": false,

@@ -110,6 +110,7 @@ def normalize_page_count_consensus(capture_payload: object) -> dict[str, Any]:
         )
 
     histogram = Counter(observations)
+    observed_values = sorted(histogram)
     consensus_count = histogram.get(expected_pages, 0)
     outlier_positions = sorted(
         position
@@ -119,6 +120,11 @@ def normalize_page_count_consensus(capture_payload: object) -> dict[str, Any]:
     outlier_count = len(outlier_positions)
 
     if outlier_count:
+        expected_drift_violation = _DRIFT_PREFIX + ",".join(str(value) for value in observed_values)
+        if drift_violations != [expected_drift_violation]:
+            raise PageCountConsensusError(
+                "PAGE_COUNT_DRIFT declaration does not match observed histogram"
+            )
         # At least 99% of independently fetched pages must agree with the selected
         # complete partition count. Integer arithmetic avoids float boundary drift.
         if consensus_count * 100 < expected_pages * 99:
@@ -129,8 +135,6 @@ def normalize_page_count_consensus(capture_payload: object) -> dict[str, Any]:
             )
         if expected_pages in outlier_positions:
             raise PageCountConsensusError("terminal page must report expected_pages")
-        if not drift_violations:
-            raise PageCountConsensusError("observed drift is absent from capture_violations")
     elif drift_violations:
         raise PageCountConsensusError("capture declares drift but page observations are unanimous")
 
@@ -147,7 +151,7 @@ def normalize_page_count_consensus(capture_payload: object) -> dict[str, Any]:
     normalized["page_count_consensus"] = {
         "schema_version": SCHEMA_VERSION,
         "expected_pages": expected_pages,
-        "observations": {str(key): histogram[key] for key in sorted(histogram)},
+        "observations": {str(key): histogram[key] for key in observed_values},
         "consensus_pages": consensus_count,
         "total_pages": expected_pages,
         "outlier_positions": outlier_positions,

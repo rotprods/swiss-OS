@@ -8,6 +8,14 @@ from typing import Any, Iterable, Mapping
 from .snapshot_freeze import normalize_text, normalize_url
 
 
+def _positive_int(value: Any, field: str) -> int:
+    """Return a strict positive integer without coercing bool/float/string input."""
+
+    if type(value) is not int or value <= 0:
+        raise ValueError(f"{field} must be a positive integer")
+    return value
+
+
 @dataclass(frozen=True)
 class MemberDirectoryObservation:
     name: str
@@ -30,7 +38,7 @@ class MemberDirectoryObservation:
         hs_id = str(value.get("hs_id", "") or "").strip()
         detail_url = normalize_url(str(value.get("detail_url", "") or ""))
         raw_page = value.get("page")
-        page = int(raw_page) if raw_page not in (None, "") else None
+        page = None if raw_page in (None, "") else _positive_int(raw_page, f"observation {index} page")
         if not name:
             raise ValueError(f"observation {index} is missing name")
         if not evidence_ref:
@@ -39,8 +47,6 @@ class MemberDirectoryObservation:
             raise ValueError(f"observation {index} is missing locale")
         if not epoch:
             raise ValueError(f"observation {index} is missing epoch")
-        if page is not None and page <= 0:
-            raise ValueError(f"observation {index} page must be positive")
         record_id = str(value.get("record_id", "") or "").strip()
         if not record_id:
             identity = hs_id or detail_url or f"{normalize_text(name)}|{normalize_text(city)}"
@@ -88,8 +94,8 @@ def compile_member_directory_manifest(
     observed_at = observed_at.strip()
     if not snapshot_id or not observed_at:
         raise ValueError("snapshot_id and observed_at are required")
-    if expected_pages <= 0 or declared_raw_records <= 0:
-        raise ValueError("expected_pages and declared_raw_records must be positive")
+    expected_pages = _positive_int(expected_pages, "expected_pages")
+    declared_raw_records = _positive_int(declared_raw_records, "declared_raw_records")
 
     rows = [MemberDirectoryObservation.from_mapping(value, idx) for idx, value in enumerate(observations)]
     if not rows:
@@ -97,7 +103,11 @@ def compile_member_directory_manifest(
 
     locales = sorted({row.locale for row in rows})
     epochs = sorted({row.epoch for row in rows})
-    observed_pages = sorted({row.page for row in rows if row.page is not None})
+    observed_page_set = {row.page for row in rows if row.page is not None}
+    required_page_set = set(range(1, expected_pages + 1))
+    observed_page_values = sorted(observed_page_set.intersection(required_page_set))
+    missing_pages = sorted(required_page_set.difference(observed_page_set))
+    out_of_range_pages = sorted(observed_page_set.difference(required_page_set))
     duplicate_record_ids = _duplicates(row.record_id for row in rows)
     duplicate_identity_keys = _duplicates(row.identity_key() for row in rows)
 
@@ -106,8 +116,10 @@ def compile_member_directory_manifest(
         violations.append(f"mixed locales: {locales}")
     if len(epochs) != 1:
         violations.append(f"mixed epochs: {epochs}")
-    if len(observed_pages) != expected_pages:
-        violations.append(f"observed_pages={len(observed_pages)} != expected_pages={expected_pages}")
+    if missing_pages:
+        violations.append(f"missing pages: {missing_pages}")
+    if out_of_range_pages:
+        violations.append(f"out-of-range pages: {out_of_range_pages}")
     if len(rows) != declared_raw_records:
         violations.append(f"materialized_records={len(rows)} != declared_raw_records={declared_raw_records}")
     if duplicate_record_ids:
@@ -128,7 +140,10 @@ def compile_member_directory_manifest(
         "locale": locales[0] if len(locales) == 1 else "MIXED",
         "epoch": epochs[0] if len(epochs) == 1 else "MIXED",
         "expected_pages": expected_pages,
-        "observed_pages": len(observed_pages),
+        "observed_pages": len(observed_page_values),
+        "observed_page_values": observed_page_values,
+        "missing_pages": missing_pages,
+        "out_of_range_pages": out_of_range_pages,
         "declared_raw_records": declared_raw_records,
         "materialized_records": len(records),
         "duplicate_record_ids": duplicate_record_ids,
@@ -137,4 +152,7 @@ def compile_member_directory_manifest(
         "violations": violations,
         "records_sha256": records_sha256,
         "records": records,
+        "authority_advanced": False,
+        "h_id_allocations": 0,
+        "outbound_opened": False,
     }

@@ -1,0 +1,58 @@
+[
+  {
+    "route_id": "R1_DISCOVER_SWISS_CAPTURE",
+    "priority": 100,
+    "mode": "READ_ONLY_RESEARCH",
+    "required_capabilities": ["discover_swiss_key", "network"],
+    "blocked_by": [],
+    "action": "Capture the complete discover.swiss dsod-hs lodging universe and emit a private validated manifest."
+  },
+  {
+    "route_id": "R2_SOURCE_SCOPE_RECONCILIATION",
+    "priority": 95,
+    "mode": "RECOVERY_RECONCILE",
+    "required_capabilities": ["valid_api_manifest", "complete_directory_manifest"],
+    "blocked_by": ["SOURCE_SCOPE_CONFLICT"],
+    "action": "Run SSR-1.0 and explain or resolve every API/directory delta at source-record level."
+  },
+  {
+    "route_id": "R3_CANDIDATE_EXPORT_MASS_STAGE",
+    "priority": 90,
+    "mode": "DEGRADED_CANARY",
+    "required_capabilities": ["freeze_eligible_candidate", "constrained_staging_db"],
+    "blocked_by": [],
+    "action": "Export the freeze candidate into CMI records, anti-join and enqueue non-authoritative mass staging work."
+  },
+  {
+    "route_id": "R4_EXACT_CURRENT_ENTITY_RESOLUTION",
+    "priority": 85,
+    "mode": "DEGRADED_CANARY",
+    "required_capabilities": ["staged_unresolved_records", "web_evidence"],
+    "blocked_by": [],
+    "action": "Refresh exact-current evidence and resolve canonical, alias, exclusion or reconcile-required outcomes."
+  },
+  {
+    "route_id": "R5_MEMBER_DIRECTORY_MANIFEST",
+    "priority": 80,
+    "mode": "DEGRADED_CANARY",
+    "required_capabilities": ["web_evidence"],
+    "blocked_by": [],
+    "action": "Build the complete coherent member-directory evidence manifest without treating page position as identity."
+  },
+  {
+    "route_id": "R6_ACQUISITION_ENGINEERING",
+    "priority": 70,
+    "mode": "DEGRADED_CANARY",
+    "required_capabilities": ["github_write", "ci"],
+    "blocked_by": [],
+    "action": "Implement and test the next executable acquisition, reconciliation or bulk-ingestion gap."
+  },
+  {
+    "route_id": "R7_RECOVERY_QA_PERSISTENCE",
+    "priority": 60,
+    "mode": "RECOVERY_RECONCILE",
+    "required_capabilities": ["recovery_artifacts"],
+    "blocked_by": [],
+    "action": "Repair lineage, dedupe, restore/replay, QA, graph/meta-graph or recovery persistence that blocks the next route."
+  }
+]

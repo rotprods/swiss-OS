@@ -1,6 +1,6 @@
 # CMI WORK PACKET — SWITZERLAND_JOB_OS
 
-Version: **CWP-1.0**  
+Version: **CWP-1.1**  
 Status: **EXECUTABLE NON-AUTHORITATIVE WORK ROUTING CONTRACT**
 
 ## Objective
@@ -11,7 +11,7 @@ Transform the full CMI anti-join decision set into bounded, deterministic entity
 complete directory capture
 → D2C records
 → CMI anti-join decisions
-→ CWP-1.0 classification
+→ CWP-1.1 classification
 → bounded exact-current/entity-resolution batches
 ```
 
@@ -37,6 +37,8 @@ Highest-priority work. Includes ambiguous, conflicting or explicitly reconcile-r
 ### `VERIFY_NEW_ENTITY`
 
 Source record has no existing canonical match and requires exact-current identity verification before any future canonical allocation.
+
+The canonical CMI-1.0 staging class `TRUE_MISSING` maps exactly to this work state. This is a routing classification only; it does **not** reserve or allocate an H-ID and does not imply the source record is a genuinely new real-world entity until exact-current and dedupe/group/alias review pass.
 
 ### `REVIEW_UNKNOWN_DECISION`
 
@@ -68,7 +70,31 @@ result.decisions
 payload.decisions
 ```
 
-It resolves common field variants for source key, name, city, detail URL, decision, canonical match and reason. Missing source keys receive an index-scoped fallback key, but duplicate keys fail closed.
+CWP-1.1 directly consumes the canonical `crm-ingest stage` / `mass_ingest.IngestDecision.as_dict()` shape without a translation shim. In particular it recognizes:
+
+```text
+staging_class
+normalized_name
+normalized_city
+normalized_detail_url
+source_record_key
+matched_hotel_id
+reason_code
+```
+
+Compatibility variants remain accepted for older callers (`decision`, `classification`, `raw_name`, `raw_city`, `detail_url`, etc.). Missing source keys receive an index-scoped fallback key, but duplicate keys fail closed.
+
+Canonical CMI staging routing is:
+
+```text
+ACTIVE_MATCH + matched_hotel_id → MATCHED_EXISTING
+ALIAS_MATCH + matched_hotel_id  → MATCHED_EXISTING
+TRUE_MISSING                    → VERIFY_NEW_ENTITY
+CONFLICT                        → RECONCILE_REQUIRED
+unknown/unrecognized            → REVIEW_UNKNOWN_DECISION
+```
+
+`EXCLUSION_CANDIDATE` remains non-terminal at the CWP layer unless a later exclusion-review contract produces an evidence-backed terminal exclusion mapping.
 
 ## Output
 
@@ -85,7 +111,7 @@ packet_sha256
 next_route
 ```
 
-Each batch includes its own SHA-256 and hard-lock state.
+The serialized schema remains `CMI-WORK-PACKET-1.0`; CWP-1.1 is a compatible routing correction, not a wire-format change. Each batch includes its own SHA-256 and hard-lock state.
 
 ## Commands
 

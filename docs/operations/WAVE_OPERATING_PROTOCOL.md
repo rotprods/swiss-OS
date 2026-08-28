@@ -1,7 +1,25 @@
 # WAVE OPERATING PROTOCOL — SWITZERLAND_JOB_OS
 
-Version: **WOP-1.1**  
-Status: **CANONICAL OPERATING CONTRACT**
+Version: **WOP-1.2**  
+Status: **CANONICAL WAVE-LEVEL OPERATING CONTRACT**
+
+## 0. Relationship to Meta Execution Protocol
+
+`docs/operations/META_EXECUTION_PROTOCOL.md` governs the activation/session level. WOP governs exactly one bounded mutation transaction inside that activation.
+
+```text
+MEP activation
+→ zero or more bounded WOP waves
+→ durable NEXT after every wave
+→ immediate continuation while a safe route exists
+```
+
+A WOP closure never implies activation closure. The MEP no-idle invariant applies after every wave:
+
+```text
+SAFE_UNBLOCKED_ROUTE_EXISTS = TRUE
+→ ACTIVATION_MUST_CONTINUE = TRUE
+```
 
 ## 1. Definition
 
@@ -17,23 +35,28 @@ Every material wave declares or derives:
 
 ```text
 wave_id
+activation_id
 run_id
 goal_id
 checkpoint_id
 task_id(s)
 authority_epoch
 parent_manifest
+parent_main_sha
 scope
 batch_limit
 execution_mode
 started_at
 owner/agent
 graph_impact
+lease_id when write-capable
+selected_route
 ```
 
 Recommended IDs:
 
 ```text
+ACT-YYYYMMDD-HHMM-<slug>
 WAVE-YYYYMMDD-<checkpoint>-<sequence>
 RUN-YYYYMMDD-HHMM-<slug>
 ```
@@ -54,9 +77,10 @@ No anonymous material mutation is permitted.
 
 1. reconstruct authority;
 2. scan drift/issues/SLO/TTL;
-3. select the highest-value unblocked scheduler task;
+3. select the highest-value unblocked scheduler task/MEP route;
 4. execute one bounded wave;
-5. reconcile all required persistence layers before claiming authority.
+5. reconcile all required persistence layers before claiming authority;
+6. emit durable NEXT and return control to the MEP activation loop.
 
 `/wave recover` always reconciles before new discovery/allocation.
 
@@ -84,7 +108,7 @@ Within authority-eligible artifacts:
 PHYSICAL + CONSTRAINED DATA
 > LIVE CONTROL PLANE
 > VALIDATED MANIFEST
-> GITHUB STATE POINTER
+> GITHUB STATE/NEXT POINTER
 > HISTORICAL PROSE
 ```
 
@@ -100,7 +124,7 @@ Version-control and executable-contract plane:
 - schemas/migrations;
 - tests/CI;
 - architecture/operating contracts;
-- public-safe state/handoffs;
+- public-safe state/NEXT/handoffs;
 - public-safe intelligence summaries.
 
 Never store operational SQLite, credentials, raw contacts, candidate-private assets, PII or sensitive raw evidence in the public repo.
@@ -132,7 +156,7 @@ PK-keyed operational truth for hotels, aliases/groups, evidence, vacancies, peop
 
 ### Project Memory Meta Graph
 
-Goals, checkpoints, releases, waves, decisions, artifacts and architecture.
+Goals, checkpoints, releases, activations, waves, routes, NEXT pointers, decisions, artifacts and architecture.
 
 `graph_registry.json` or equivalent is meta/project memory, not the entire operational graph.
 
@@ -146,21 +170,18 @@ Material DB/schema/recovery waves should persist:
 WAVE_<id>_RECOVERY_BUNDLE.zip
 manifest.json
 state_digest.json
+NEXT.json
 ```
 
 ### Local execution workspace / Git local
 
-Execution cache only.
-
-In the ChatGPT sandbox, filesystem persistence and Git CLI network access are not guaranteed; GitHub connector operations are the VCS actuator.
-
-In a persistent Mac/Codex environment, a normal local clone may be used, but remote GitHub remains the shared VCS authority.
+Execution cache only. GitHub remains shared VCS authority.
 
 ## 6. Execution modes
 
 ### AUTHORITATIVE_WRITE
 
-All required planes available; preflight passes; canonical promotion allowed.
+All required planes available; preflight and write lease pass; canonical promotion allowed.
 
 ### READ_ONLY_RESEARCH
 
@@ -177,7 +198,7 @@ Allowed:
 - local constrained canary;
 - QA/restore/replay;
 - GitHub public-safe engineering;
-- Library recovery persistence.
+- Library/Drive create-only recovery persistence when available.
 
 Forbidden:
 
@@ -187,7 +208,7 @@ Forbidden:
 - claiming Graph/Sheets synchronization;
 - outbound.
 
-Closes `SAFE_STOP_CANARY`.
+Closes `SAFE_STOP_CANARY`, emits NEXT and returns to MEP fallback selection.
 
 ### RECOVERY_RECONCILE
 
@@ -200,8 +221,9 @@ No new canonical allocation until live authority is reconstructed and provisiona
 ```text
 WAVE OPEN
 → AUTHORITY BOOTSTRAP
+→ LEASE / CONCURRENCY CHECK
 → DRIFT / ISSUE / SLO / TTL SCAN
-→ SCHEDULER SELECTION
+→ SCHEDULER / ROUTE SELECTION
 → DISCOVER / VERIFY
 → NORMALIZE
 → DEDUPE / ALIAS / GROUP RESOLUTION
@@ -219,9 +241,11 @@ WAVE OPEN
 → STATE TRANSITIONS / RUN LOG
 → GOAL / CHECKPOINT IF WARRANTED
 → GITHUB STATE/HANDOFF
-→ LIBRARY RECOVERY
+→ LIBRARY / DRIVE RECOVERY
 → FINAL RECONCILIATION
 → WAVE CLOSE
+→ EMIT DURABLE NEXT
+→ RETURN TO MEP COLETTE LOOP
 ```
 
 From DB COMMIT onward, the chain is one logical promotion transaction. If a required step fails, authority does not advance.
@@ -232,9 +256,11 @@ Reconstruct:
 
 ```text
 release
+activation identity / current lease
 active goal/checkpoint
 authority epoch
 latest authority-eligible manifest
+parent main SHA
 physical count
 active canonical count
 aliases/superseded count
@@ -247,10 +273,11 @@ active scheduler tasks
 stale send-critical facts
 send_allowed / outbound
 GitHub STATE pointer
+GitHub/Drive/Library NEXT pointer
 Library recovery pointer
 ```
 
-Never trust prompt-copied counts without reconciliation.
+Never trust prompt-copied counts or a stale NEXT without reconciliation.
 
 ## 9. Canonical write protocol
 
@@ -303,6 +330,8 @@ idempotency replay unintended inserts = 0
 restore logical differences = 0
 send_allowed = 0 unless separately authorized
 release/checkpoint/control-plane agreement = PASS
+lease parent/epoch still current
+NEXT ancestry and hash valid
 ```
 
 SQLite restore equivalence is logical, not binary SHA equality.
@@ -315,7 +344,7 @@ Every wave declares:
 GRAPH_IMPACT = NONE | META | OPERATIONAL | BOTH
 ```
 
-META required for changes to goals, checkpoints, releases, waves, decisions, architecture or artifact lineage.
+META required for changes to goals, checkpoints, releases, activations, waves, routes, NEXT pointers, decisions, architecture or artifact lineage.
 
 OPERATIONAL required for changes to entities, aliases/groups, evidence, vacancies, people/channels, housing, tasks, applications or outcomes.
 
@@ -325,22 +354,22 @@ No authoritative operational mutation may leave its graph representation behind.
 
 `AGENTS.md` stores stable behavior/roles only.
 
-It MUST NOT hardcode mutable frontier counts or current tasks.
-
 Mutable state belongs in:
 
 ```text
 live Drive/Sheets control plane
 latest authority-eligible manifest
 STATE.md
+NEXT.json
 ```
 
 Agents read:
 
 ```text
-WAVE_OPERATING_PROTOCOL.md
+META_EXECUTION_PROTOCOL.md
+→ WAVE_OPERATING_PROTOCOL.md
 → GOAL.md
-→ STATE.md
+→ STATE.md / NEXT.json
 → AGENTS.md
 → OPERATING_RULES.md
 → live authority reconciliation
@@ -353,20 +382,21 @@ before material work.
 Architecture/code/schema/protocol changes:
 
 ```text
-issue when useful
+search equivalent issue / compute dedupe key
 → branch
 → implementation
 → tests
 → PR
 → CI
-→ diff/review
+→ diff/adversarial review
 → merge
-→ operational adoption/reconciliation
+→ recompute NEXT
+→ continue to next safe route
 ```
 
-Data-only waves never require private operational data in GitHub.
-
 CI success validates repository contracts/tests. It does NOT prove Drive/DB runtime synchronization.
+
+Issue creation is budgeted and loop-guarded by MEP. Repeated issue creation is not implementation progress.
 
 ## 14. Library protocol
 
@@ -375,10 +405,8 @@ For material DB/schema/recovery waves:
 1. build recovery bundle;
 2. build manifest with SHA and `AUTHORITATIVE` vs `CANARY` state;
 3. upload under `/SWITZERLAND_JOB_OS/`;
-4. update `LATEST_RECOVERY.json` or equivalent pointer;
+4. update `LATEST_RECOVERY.json` and applicable NEXT pointer;
 5. never label canary as authority.
-
-Library failure creates a persistence issue but does not rewrite operational authority.
 
 ## 15. Outage protocol
 
@@ -388,52 +416,45 @@ If a required authority layer fails:
 DETECT
 → STOP AUTHORITY PROMOTION
 → REGISTER BLOCKED LAYER
-→ CONTINUE SAFE RESEARCH/CANARY ONLY
+→ CONTINUE SAFE RESEARCH/CANARY/ENGINEERING ROUTES
 → GITHUB PUBLIC-SAFE HANDOFF
-→ LIBRARY RECOVERY BUNDLE
-→ CLOSE SAFE_STOP_CANARY
-```
-
-When it returns:
-
-```text
-/wave recover
-→ re-read live authority
-→ compare provisional work
-→ anti-join IDs/names/cities/domains/aliases/tasks
-→ reallocate provisional IDs if frontier moved
-→ rerun canary from live parent
-→ AUTHORITATIVE_WRITE only after reconciliation
+→ LIBRARY/DRIVE RECOVERY BUNDLE WHEN AVAILABLE
+→ CLOSE WAVE SAFE_STOP_CANARY
+→ EMIT NEXT FALLBACK
+→ CONTINUE MEP ACTIVATION WHEN SAFE
 ```
 
 No provisional local ID is a reservation.
 
-## 16. Concurrency
+## 16. Concurrency and lease
 
 Immediately before canonical commit:
 
+- require a valid project/epoch write lease;
 - re-read live frontier;
 - anti-join canonical entities;
 - anti-join aliases/superseded IDs;
 - anti-join domains;
 - anti-join active task keys;
-- confirm parent manifest/epoch unchanged.
+- confirm parent manifest/epoch/main SHA unchanged.
 
 If the parent moved, transition to `RECOVERY_RECONCILE` rather than force-writing.
+
+Another activation with a live write lease may reconstruct/read, but cannot perform competing writes. Stale-lease recovery requires ancestry and authority revalidation.
 
 ## 17. Wave observability
 
 Emit at minimum:
 
 ```text
-wave_id / run_id
+activation_id / wave_id / run_id
 goal_id / checkpoint_id
+selected_route
 execution_mode
-authority_parent / authority_epoch
-canonical_before
-canonical_after_authoritative
-canary_candidate_count
-physical_before / physical_after_authoritative
+authority parent/epoch / parent main SHA
+canonical before/after authoritative
+canary count separately
+physical before/after authoritative
 tasks attempted/completed/failed
 issues opened/resolved
 SLO breaches
@@ -445,14 +466,16 @@ Graph denominator
 Intelligence denominator
 quality_result
 closure_state
-next_bottleneck
+progress_token / artifact hash
+NEXT selected route
+next bottleneck
 ```
 
 Never put a canary count in `canonical_after_authoritative`.
 
 ## 18. Closure states
 
-Exactly one:
+Exactly one WOP closure state:
 
 ```text
 COMPLETE_AUTHORITY
@@ -462,23 +485,17 @@ BLOCKED_P0
 SUPERSEDED
 ```
 
-`COMPLETE_AUTHORITY` requires all required persistence/reconciliation gates.
+After closure, WOP always emits NEXT. MEP decides whether the activation continues or exits with an explicit activation stop reason.
 
 ## 19. Real-time semantics
 
 No background daemon is claimed unless actually configured.
 
-**Real-time synchronization** means:
+**Real-time synchronization** means every affected required layer is synchronously reconciled before an authoritative wave closes.
 
-> before an authoritative wave closes, every affected required layer is synchronously reconciled inside that wave.
-
-Temporary staging/canary divergence is allowed. Silent post-wave divergence is not.
+A short-interval scheduled activation is a wake-up safety net, not proof of an always-on runtime.
 
 ## 20. Outbound lock
-
-Research and market mapping never imply authorization to contact employers.
-
-Default:
 
 ```text
 OUTBOUND = CLOSED
@@ -489,6 +506,6 @@ External email, portal submission, DM, WhatsApp or follow-up requires the separa
 
 ## 21. Current-state location rule
 
-Current connector availability, active checkpoint, live counts, active task, parent manifest and canary frontier are operational state.
+Current connector availability, active checkpoint, live counts, active task, parent manifest, canary frontier, activation lease and selected NEXT route are mutable operational state.
 
-They MUST live in `STATE.md`, live Drive/Sheets and manifests — never in this permanent protocol.
+They MUST live in `STATE.md`, `NEXT.json`, live Drive/Sheets and manifests — never in this permanent protocol.

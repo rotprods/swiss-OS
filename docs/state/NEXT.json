@@ -1,19 +1,20 @@
 {
   "schema_version": "NPP-1.0",
   "project": "SWITZERLAND_JOB_OS",
-  "generated_at": "2026-08-28T20:08:00+02:00",
-  "cycle_id": "META-20260828-ASR-REPAIR-CANARY-01",
-  "parent_git_sha": "377744d9860e89861f0c80d045d774dcb58eb03b",
+  "generated_at": "2026-08-28T20:26:00+02:00",
+  "cycle_id": "META-20260828-ASR-ARR-CONTINUATION-01",
+  "parent_git_sha": "60606dc36bf88883d6a2eb9e1c7903e03dc29bc8",
   "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
   "authority_parent": "OPERATIONAL_DB_SHADOW_MANIFEST_V13",
   "authority_parent_sha256": "0e605b412f29893ca1775f1e8fccd5987d0613baab4ac29b6699988cde0fdfe5",
   "execution_mode": "RECOVERY_RECONCILE",
-  "selected_route": "ALIAS_SEMANTIC_REPAIR_CANARY",
-  "next_route": "ALIAS_SEMANTIC_ATOMIC_RECOVERY_PREFLIGHT",
+  "selected_route": "ALIAS_SEMANTIC_ATOMIC_RECOVERY_PREFLIGHT",
+  "next_route": "ASR_REPAIR_ARTIFACT_EGRESS_OR_PERSISTENT_OPERATOR_REPLAY",
   "goal_id": "G-0500",
   "checkpoint_id": "CRM_UNIVERSE_COMPLETE",
   "hard_blockers": [
     "ISSUE_89_SEMANTIC_ALIAS_IDENTITY_CORRUPTION",
+    "REPAIRED_SQLITE_BINARY_EGRESS_UNAVAILABLE_IN_CURRENT_RUNTIME",
     "ACTIVE_CANONICAL_DENOMINATOR_RECONCILE_REQUIRED_UNTIL_ASR_EXACT",
     "DISCOVER_SWISS_SUBSCRIPTION_KEY_UNAVAILABLE_FOR_LATER_SSR"
   ],
@@ -28,20 +29,30 @@
     "outbound": "CLOSED",
     "send_allowed": 0
   },
-  "repair_canary": {
-    "name": "ASR_REPAIR_CANARY_2026-08-28_V1",
-    "local_sqlite_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
-    "drive_report_id": "1AACvFVJx7WvgEnme9nibCqQgebSYZ_qDrwkg43aAdAY",
-    "physical_rows": 690,
-    "candidate_active_if_promoted": 690,
-    "candidate_active_is_authoritative": false,
+  "arr_replay": {
+    "protocol": "ARR-1.0",
+    "merge_sha": "60606dc36bf88883d6a2eb9e1c7903e03dc29bc8",
+    "repair_plan": "docs/state/ISSUE_89_ASR_REPAIR_PLAN.json",
+    "cross_plane_write_set": "docs/state/ISSUE_89_CROSS_PLANE_WRITESET.json",
+    "expected_repaired_sha256_observation": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
     "sqlite_integrity_check": "ok",
     "foreign_key_violations": 0,
     "hotel_state_restorations": 4,
     "invalid_hid_alias_edges_removed": 4,
-    "other_db_table_logical_differences": 0,
     "idempotency_replay": "PASS",
+    "active_denominator": null,
+    "active_denominator_state": "RECONCILE_REQUIRED_CROSS_PLANE",
     "canonical_id_allocations": 0
+  },
+  "rollback": {
+    "hotels_master_copy_id": "1bu1SjxxG4fF4yx7H2rshOiw-tnJZMcHxIL3S8ipyQKk",
+    "title": "HOTELS_MASTER_ROLLBACK_PRE_ASR_2026-08-28_2011",
+    "created_before_live_mutation": true,
+    "live_mutation_performed": false
+  },
+  "drive_preflight": {
+    "document_id": "13G_a1kj3uhu_XmH5xK253d0DBPeUiLl-dwkOiHHdLZU",
+    "title": "ASR_ATOMIC_RECOVERY_PREFLIGHT_2026-08-28_V2"
   },
   "invalid_alias_edges": [
     {"alias_hotel_id": "H-0610", "alias_identity": "Hôtel Alpe Fleurie|Villars-sur-Ollon", "invalid_target": "H-0656", "target_identity": "Hotel Murtenhof & Krone|Murten"},
@@ -49,42 +60,44 @@
     {"alias_hotel_id": "H-0629", "alias_identity": "Stiftung Lilienberg Unternehmerforum|Ermatingen", "invalid_target": "H-0638", "target_identity": "Jugendherberge Seelisberg|Seelisberg"},
     {"alias_hotel_id": "H-0630", "alias_identity": "Strandhotel Iseltwald|Iseltwald", "invalid_target": "H-0640", "target_identity": "Hotel Central Luzern|Luzern"}
   ],
+  "historical_recovery_evidence": {
+    "hotels_master_revision": "464",
+    "source_hotel_state": "CANONICAL_CURRENT_RECONCILED",
+    "intelligence_enrichment_level": "L1",
+    "intelligence_identity_state": "CANONICAL_INDEXED_RECONCILE_SEED",
+    "hotel_intelligence_edge_state": "ordinary HAS_INTELLIGENCE relation"
+  },
   "required_inputs": [
-    "GitHub main + STATE.md + ASR-1.0",
+    "GitHub main + STATE.md + ASR-1.0 + ARR-1.0",
     "OPERATIONAL_DB_SHADOW_MANIFEST_V13 and V13 raw SQLite bytes",
-    "HOTELS_MASTER current HOTELS_V2 / ENTITY_RESOLUTION / HOTEL_INTELLIGENCE_V1 / GRAPH_NODES_V2 / GRAPH_EDGES_V2 / STATE_TRANSITIONS",
+    "docs/state/ISSUE_89_ASR_REPAIR_PLAN.json",
+    "docs/state/ISSUE_89_CROSS_PLANE_WRITESET.json",
+    "HOTELS_MASTER live tabs and latest spreadsheet revision",
     "HOTELS_MASTER historical revision 464 lineage evidence",
-    "Drive ASR_REPAIR_CANARY_2026-08-28_V1",
+    "HOTELS_MASTER rollback copy 1bu1SjxxG4fF4yx7H2rshOiw-tnJZMcHxIL3S8ipyQKk",
+    "Drive ASR atomic recovery preflight V2",
     "issue #89"
-  ],
-  "required_atomic_repair_surface": [
-    "constrained DB: restore four hotel states and remove four invalid H-ID alias edges",
-    "HOTELS_V2: four PK-keyed state restorations",
-    "HOTEL_INTELLIGENCE_V1: four identity reactivations without inventing enrichment",
-    "GRAPH_NODES_V2: restore four HOTEL and four INTEL nodes",
-    "GRAPH_EDGES_V2: remove/tombstone four invalid ALIASES_TO edges and restore four HAS_INTELLIGENCE edge semantics",
-    "STATE_TRANSITIONS: append four corrective rollback transitions; preserve history",
-    "ENTITY_RESOLUTION: preserve ER-CP0650-001..004 as research anti-join evidence but remove physical supersession meaning",
-    "observability/scheduler/checkpoints: recompute denominators and affected tasks",
-    "recovery: preserve immutable parent + rollback artifact + replay proof"
   ],
   "promotion_preconditions": [
     "Re-read GitHub main; if parent_git_sha moved, reconstruct ancestry before work.",
     "Re-verify V13 SHA-256 and E4 authority parent before mutation.",
-    "Create a recoverable HOTELS_MASTER backup/export or equivalent exact rollback artifact.",
-    "Use PK-keyed writes only; never row offsets.",
-    "Run the repair as one bounded logical authority transaction across every affected plane.",
+    "Prove a durable output path for the repaired constrained SQLite before touching live Sheets.",
+    "Re-resolve every live row by PK/entity_key/edge_id immediately before mutation; never trust stored row offsets.",
+    "Require all current identity and invalid-target preconditions to match the public-safe write set.",
+    "Execute the repair as one bounded logical authority transaction across every affected plane.",
     "Require ASR-1.0 alias_semantics_state=EXACT after repair.",
     "Require exact DB↔HOTELS_MASTER affected-PK reconciliation.",
-    "Require zero invalid ALIASES_TO edges and no orphan superseded HOTEL/INTEL nodes.",
-    "Require Intelligence and Operational Graph denominators equal the recomputed corrected active denominator.",
+    "Require no active invalid ALIASES_TO edges and no orphan superseded HOTEL/INTEL nodes.",
+    "Derive the active canonical denominator only after corrected cross-plane state is exact.",
+    "Require Intelligence and Operational Graph denominators equal that derived denominator.",
     "Run restore/replay/idempotency and production-readiness gauntlet.",
     "If any plane, parent, rollback path or concurrency check fails, do not partially promote authority."
   ],
   "productive_fallbacks": [
-    "Continue non-destructive lineage reconstruction for issue #89.",
-    "Build exact rollback/write-set manifests for all affected live Sheets and graph rows.",
-    "Continue source-universe research/ECV/SRR work without H-ID allocation if authority repair preflight is blocked.",
+    "Attempt repaired-DB persistence only through a real supported durable file actuator; do not fake egress.",
+    "Continue non-destructive issue-89 lineage/precondition validation.",
+    "Keep repair-plan/write-set/rollback documentation synchronized across GitHub and Drive.",
+    "Continue source-universe read-only qualification without H-ID allocation if issue-89 promotion remains blocked.",
     "Leave source PR #88 unmerged until its required live HSLCA→PCF qualification is green."
   ],
   "source_frontier_after_repair": "FRESH_HSLCA_COHERENT_CAPTURE_THEN_PCF_IF_COUNTLESS",
@@ -93,17 +106,19 @@
   "canonical_id_allocation_allowed": false,
   "outbound_allowed": false,
   "resume_instructions": [
-    "Treat issue #89 as higher priority than new CRM source acquisition until semantic authority is repaired.",
-    "Do not use 686 or 690 as a new promoted active denominator while alias_semantics_state is RECONCILE_REQUIRED.",
-    "Reconstruct all eight affected physical identities and the four ER-CP0650 evidence rows before live write.",
-    "Prepare exact rollback + live write-set and run bounded recovery preflight.",
+    "Treat issue #89 as higher priority than new canonical CRM acquisition.",
+    "Never promote 686 or 690 while alias_semantics_state is RECONCILE_REQUIRED.",
+    "Reconstruct current Git ancestry and all four source/target physical identities before any repair attempt.",
+    "If repaired SQLite durable persistence becomes available, run ARR from exact V13 and verify expected output/invariants.",
+    "Only then apply the cross-plane write set atomically and append corrective transitions.",
     "Promote only after ASR-1.0 EXACT and exact DB/Sheets/Intelligence/Graph/observability reconciliation.",
+    "If durable SQLite egress is still unavailable, continue safe source-universe/QA work rather than partially mutating live authority.",
     "After #89 closes, return to the fresh coherent HSLCA/PCF/MDM/CMI/CWP/ECV/SMC/SRR source-universe chain.",
     "Never reserve H-IDs from staging and keep OUTBOUND=CLOSED / send_allowed=0."
   ],
   "done_when": [
     "Issue #89 is repaired atomically with ASR-1.0 EXACT and all affected persistence planes reconciled.",
-    "A safe active canonical denominator is recomputed from corrected semantics and persisted consistently.",
+    "A safe active canonical denominator is derived from corrected semantics and persisted consistently.",
     "Then one coherent frozen source universe is fully mapped with unmapped=0 and RECONCILE_REQUIRED=0.",
     "CRM_UNIVERSE_COMPLETE becomes true only after its independent cross-plane authority gate passes."
   ]

@@ -1,0 +1,27 @@
+{
+  "schema_version": "ECV-RESULT-SUMMARY-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "source_snapshot_id": "HS-MEMBER-DE-33206402141",
+  "batch_id": "HS-MEMBER-DE-33206402141:WORK:0001:SUB:0009",
+  "input_items": 20,
+  "input_items_sha256": "e4cb08a6cca66042dda3cf4c75d8730f7c7e06b7ed13fd3535a9b7f9d5afa200",
+  "github_actions_run_id": 33221492594,
+  "github_actions_job_id": 99016270642,
+  "artifact_id": 9705349595,
+  "artifact_zip_sha256": "7b4ae910716f3e3a7af88dbe4a646ec9146d0833f7da206816dd8423cd62ea2e",
+  "results_count": 20,
+  "counts_by_state": {
+    "CURRENT_DETAIL_VERIFIED": 20
+  },
+  "all_verified": true,
+  "ecv_packet_sha256": "047e1f06dd924377104560cd3a6942f96e6147c7d524679c4fcbebd54dd6b79f",
+  "cumulative_current_detail_verified": 180,
+  "remaining_never_verified": 1258,
+  "pending_requeue": 0,
+  "authority_advanced": false,
+  "h_id_allocations": 0,
+  "outbound": "CLOSED",
+  "send_allowed": 0,
+  "terminal_mapping_effect": "NONE_UNTIL_ENTITY_RESOLUTION",
+  "note": "All 20 exact current detail pages verified. CURRENT_DETAIL_VERIFIED remains evidence only; no canonical ID is reserved or authority advanced. H-0691 remains unallocated."
+}

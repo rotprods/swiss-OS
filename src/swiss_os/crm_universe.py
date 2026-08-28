@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+import sqlite3
 from typing import Iterable
 
 
@@ -48,6 +49,55 @@ class CRMUniverseMetrics:
 
 
 @dataclass(frozen=True)
+class CRMSnapshotDBStats:
+    snapshot_id: str
+    snapshot_state: str
+    declared_raw_directory_count: int
+    materialized_source_records: int
+    active_canonical_mappings: int
+    alias_to_canonical_mappings: int
+    excluded_with_reason_mappings: int
+    reconcile_required: int
+    unmapped_records: int
+
+    @property
+    def terminal_mapped_records(self) -> int:
+        return (
+            self.active_canonical_mappings
+            + self.alias_to_canonical_mappings
+            + self.excluded_with_reason_mappings
+        )
+
+    @property
+    def materialized_coverage_pct(self) -> float:
+        if self.materialized_source_records <= 0:
+            return 0.0
+        return self.terminal_mapped_records / self.materialized_source_records
+
+    @property
+    def declared_coverage_pct(self) -> float:
+        if self.declared_raw_directory_count <= 0:
+            return 0.0
+        return self.terminal_mapped_records / self.declared_raw_directory_count
+
+    def as_dict(self) -> dict[str, object]:
+        return {
+            "snapshot_id": self.snapshot_id,
+            "snapshot_state": self.snapshot_state,
+            "declared_raw_directory_count": self.declared_raw_directory_count,
+            "materialized_source_records": self.materialized_source_records,
+            "active_canonical_mappings": self.active_canonical_mappings,
+            "alias_to_canonical_mappings": self.alias_to_canonical_mappings,
+            "excluded_with_reason_mappings": self.excluded_with_reason_mappings,
+            "reconcile_required": self.reconcile_required,
+            "unmapped_records": self.unmapped_records,
+            "terminal_mapped_records": self.terminal_mapped_records,
+            "materialized_coverage_pct": self.materialized_coverage_pct,
+            "declared_coverage_pct": self.declared_coverage_pct,
+        }
+
+
+@dataclass(frozen=True)
 class CRMUniverseGateResult:
     complete: bool
     violations: tuple[str, ...]
@@ -66,6 +116,59 @@ class CRMUniverseGateResult:
 def _non_negative(name: str, value: int, violations: list[str]) -> None:
     if value < 0:
         violations.append(f"{name} must be non-negative")
+
+
+def inspect_crm_snapshot(conn: sqlite3.Connection, snapshot_id: str) -> CRMSnapshotDBStats:
+    """Return authoritative DB-side accounting for one CRM snapshot.
+
+    Report the declared directory denominator separately from physically materialized
+    source records; they are not equal until enumeration is complete.
+    """
+
+    row = conn.execute(
+        """
+        SELECT snapshot_state, raw_directory_count
+        FROM crm_snapshots
+        WHERE snapshot_id = ?
+        """,
+        (snapshot_id,),
+    ).fetchone()
+    if row is None:
+        raise KeyError(f"unknown CRM snapshot: {snapshot_id}")
+
+    materialized = int(
+        conn.execute(
+            "SELECT COUNT(*) FROM crm_snapshot_records WHERE snapshot_id = ?",
+            (snapshot_id,),
+        ).fetchone()[0]
+    )
+    counts = {
+        str(mapping_state): int(count)
+        for mapping_state, count in conn.execute(
+            """
+            SELECT m.mapping_state, COUNT(*)
+            FROM crm_source_mappings AS m
+            JOIN crm_snapshot_records AS r
+              ON r.snapshot_record_id = m.snapshot_record_id
+            WHERE r.snapshot_id = ?
+            GROUP BY m.mapping_state
+            """,
+            (snapshot_id,),
+        )
+    }
+    mapped_total = sum(counts.values())
+
+    return CRMSnapshotDBStats(
+        snapshot_id=snapshot_id,
+        snapshot_state=str(row[0]),
+        declared_raw_directory_count=int(row[1]),
+        materialized_source_records=materialized,
+        active_canonical_mappings=counts.get("ACTIVE_CANONICAL", 0),
+        alias_to_canonical_mappings=counts.get("ALIAS_TO_CANONICAL", 0),
+        excluded_with_reason_mappings=counts.get("EXCLUDED_WITH_REASON", 0),
+        reconcile_required=counts.get("RECONCILE_REQUIRED", 0),
+        unmapped_records=materialized - mapped_total,
+    )
 
 
 def validate_crm_universe_gate(metrics: CRMUniverseMetrics) -> CRMUniverseGateResult:

@@ -1,0 +1,50 @@
+{
+  "schema_version": "CCP-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "issue": 89,
+  "generated_at": "2026-08-28T20:48:00+02:00",
+  "representation_state": "DURABLE_MATERIALIZABLE_CONSTRAINED_PARENT",
+  "base_sha256": "0e605b412f29893ca1775f1e8fccd5987d0613baab4ac29b6699988cde0fdfe5",
+  "base_size_bytes": 3059712,
+  "base_replicas": [
+    {
+      "provider": "GOOGLE_DRIVE",
+      "file_id": "1rIL6x_bmBoCbxVSAGFvdjoKnUqSX3YnT",
+      "size_bytes": 3059712,
+      "role": "V13_RECOVERY_PARENT"
+    },
+    {
+      "provider": "GOOGLE_DRIVE",
+      "file_id": "1R5sd3AMJMxJO91RwdMGhcR5NL-cS672c",
+      "size_bytes": 3059712,
+      "role": "ASR_IMMUTABLE_REDUNDANT_BASE"
+    }
+  ],
+  "repair_protocol": "ARR-1.0",
+  "repair_plan_path": "docs/state/ISSUE_89_ASR_REPAIR_PLAN.json",
+  "repair_plan_blob_sha": "d23f00927ec45d50574a5470ebe06a6bd24c6beb",
+  "repair_engine_path": "src/swiss_os/alias_repair.py",
+  "repair_engine_blob_sha": "ebf15d552c127c0530d87c5d3567995c8b6ac7fd",
+  "repair_engine_commit_sha": "60606dc36bf88883d6a2eb9e1c7903e03dc29bc8",
+  "expected_materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+  "materialization_proof": {
+    "output_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+    "integrity_check": "ok",
+    "foreign_key_violations": 0,
+    "physical_rows": 690,
+    "alias_rows": 0,
+    "superseded_rows": 0,
+    "idempotency_replay": "PASS",
+    "proof_class": "EXACT_V13_LOCAL_MATERIALIZATION_FROM_DURABLE_BASE_SHA",
+    "authority_claim": false
+  },
+  "cross_plane_write_set": "docs/state/ISSUE_89_CROSS_PLANE_WRITESET.json",
+  "hotels_master_rollback_copy_id": "1bu1SjxxG4fF4yx7H2rshOiw-tnJZMcHxIL3S8ipyQKk",
+  "active_denominator": null,
+  "active_denominator_state": "RECONCILE_REQUIRED_CROSS_PLANE",
+  "authority_advanced": false,
+  "canonical_id_allocations": 0,
+  "crm_universe_complete": false,
+  "outbound_opened": false,
+  "send_allowed": 0
+}

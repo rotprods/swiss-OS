@@ -75,6 +75,12 @@ Operational state backend enforcing PK/FK/UNIQUE/CHECK/idempotency and restore/r
 
 Its state becomes authority only after affected mirrors/graphs/governance surfaces reconcile.
 
+A raw repaired SQLite file is the preferred recovery artifact, but raw-binary provider egress is not a semantic authority requirement. `CCP-1.0` may represent constrained state as an immutable durable remote base plus a pinned deterministic `ARR-1.0` repair definition, precommitted materialized SHA-256 and exact materialization proof. This is a **DURABLE_MATERIALIZABLE_CONSTRAINED_PARENT**, not a local canary and not an authority promotion by itself.
+
+A CCP remains `RECONCILE_REQUIRED_CROSS_PLANE` until the materialized state and every affected Drive/Sheets, Intelligence, Operational Graph, scheduler/checkpoint, observability and recovery plane reconcile in one bounded recovery wave. CCP never pre-authorizes a numeric active denominator, canonical ID allocation or outbound.
+
+Contract: `docs/operations/COMPOSITE_CONSTRAINED_PARENT.md`.
+
 ### Operational Graph
 
 PK-keyed operational relationship state for entities, aliases/groups, evidence, vacancies, people/channels, housing, tasks, applications and outcomes.

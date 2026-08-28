@@ -30,6 +30,8 @@ class MemberDirectoryObservation:
         hs_id = str(value.get("hs_id", "") or "").strip()
         detail_url = normalize_url(str(value.get("detail_url", "") or ""))
         raw_page = value.get("page")
+        if isinstance(raw_page, bool):
+            raise ValueError(f"observation {index} page must be a positive integer")
         page = int(raw_page) if raw_page not in (None, "") else None
         if not name:
             raise ValueError(f"observation {index} is missing name")
@@ -76,6 +78,12 @@ def _duplicates(values: Iterable[str]) -> list[str]:
     return sorted(dup)
 
 
+def _require_positive_int(name: str, value: object) -> int:
+    if isinstance(value, bool) or not isinstance(value, int) or value <= 0:
+        raise ValueError(f"{name} must be a positive integer")
+    return value
+
+
 def compile_member_directory_manifest(
     observations: Iterable[Mapping[str, Any]],
     *,
@@ -88,16 +96,23 @@ def compile_member_directory_manifest(
     observed_at = observed_at.strip()
     if not snapshot_id or not observed_at:
         raise ValueError("snapshot_id and observed_at are required")
-    if expected_pages <= 0 or declared_raw_records <= 0:
-        raise ValueError("expected_pages and declared_raw_records must be positive")
+    expected_pages = _require_positive_int("expected_pages", expected_pages)
+    declared_raw_records = _require_positive_int("declared_raw_records", declared_raw_records)
 
-    rows = [MemberDirectoryObservation.from_mapping(value, idx) for idx, value in enumerate(observations)]
+    raw_rows = list(observations)
+    if not all(isinstance(value, Mapping) for value in raw_rows):
+        raise ValueError("all member-directory observations must be objects")
+    rows = [MemberDirectoryObservation.from_mapping(value, idx) for idx, value in enumerate(raw_rows)]
     if not rows:
         raise ValueError("at least one member-directory observation is required")
 
     locales = sorted({row.locale for row in rows})
     epochs = sorted({row.epoch for row in rows})
-    observed_pages = sorted({row.page for row in rows if row.page is not None})
+    observed_page_set = {row.page for row in rows if row.page is not None}
+    expected_page_set = set(range(1, expected_pages + 1))
+    missing_pages = sorted(expected_page_set.difference(observed_page_set))
+    out_of_range_pages = sorted(page for page in observed_page_set if page not in expected_page_set)
+    observed_valid_pages = sorted(observed_page_set.intersection(expected_page_set))
     duplicate_record_ids = _duplicates(row.record_id for row in rows)
     duplicate_identity_keys = _duplicates(row.identity_key() for row in rows)
 
@@ -106,8 +121,10 @@ def compile_member_directory_manifest(
         violations.append(f"mixed locales: {locales}")
     if len(epochs) != 1:
         violations.append(f"mixed epochs: {epochs}")
-    if len(observed_pages) != expected_pages:
-        violations.append(f"observed_pages={len(observed_pages)} != expected_pages={expected_pages}")
+    if missing_pages:
+        violations.append(f"missing pages: {missing_pages}")
+    if out_of_range_pages:
+        violations.append(f"out-of-range pages: {out_of_range_pages}")
     if len(rows) != declared_raw_records:
         violations.append(f"materialized_records={len(rows)} != declared_raw_records={declared_raw_records}")
     if duplicate_record_ids:
@@ -128,7 +145,10 @@ def compile_member_directory_manifest(
         "locale": locales[0] if len(locales) == 1 else "MIXED",
         "epoch": epochs[0] if len(epochs) == 1 else "MIXED",
         "expected_pages": expected_pages,
-        "observed_pages": len(observed_pages),
+        "observed_pages": len(observed_valid_pages),
+        "observed_page_numbers": observed_valid_pages,
+        "missing_pages": missing_pages,
+        "out_of_range_pages": out_of_range_pages,
         "declared_raw_records": declared_raw_records,
         "materialized_records": len(records),
         "duplicate_record_ids": duplicate_record_ids,
@@ -137,4 +157,7 @@ def compile_member_directory_manifest(
         "violations": violations,
         "records_sha256": records_sha256,
         "records": records,
+        "authority_advanced": False,
+        "h_id_allocations": 0,
+        "outbound_opened": False,
     }

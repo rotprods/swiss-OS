@@ -2,9 +2,6 @@ name: hslca-pcf-live-canary
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - ops/hslca-pcf-live-bridge-v1
 
 permissions:
   contents: read

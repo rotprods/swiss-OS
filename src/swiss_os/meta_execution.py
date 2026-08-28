@@ -219,27 +219,34 @@ def choose_meta_route(c: MetaCapabilities) -> MetaDecision:
                 ),
             )
 
-        if c.discover_capture_valid and not c.member_directory_manifest_complete:
-            if c.web_research or c.member_directory_evidence:
-                return MetaDecision(
-                    execution_mode=ExecutionMode.READ_ONLY_RESEARCH,
-                    route=MetaRoute.MEMBER_DIRECTORY_MANIFEST,
-                    reason="API capture exists, but complete coherent member-directory evidence is still required for SSR.",
-                    graph_impact="META",
-                    capabilities_used=tuple(
-                        key
-                        for key, value in (
-                            ("web_research", c.web_research),
-                            ("member_directory_evidence", c.member_directory_evidence),
-                        )
-                        if value
-                    ),
-                    next_fallback_routes=_fallbacks(
-                        MetaRoute.EXACT_CURRENT_REFRESH,
-                        MetaRoute.RECOVERY_PERSISTENCE,
-                        MetaRoute.ENGINEERING_QA,
-                    ),
-                )
+        # A coherent member-directory evidence set can be built before or in
+        # parallel with API capture. This is the required no-key fallback.
+        if not c.member_directory_manifest_complete and (
+            c.web_research or c.member_directory_evidence
+        ):
+            return MetaDecision(
+                execution_mode=ExecutionMode.READ_ONLY_RESEARCH,
+                route=MetaRoute.MEMBER_DIRECTORY_MANIFEST,
+                reason=(
+                    "Complete coherent member-directory evidence is required for SSR; build it independently while structured API capture is unavailable."
+                    if not c.discover_capture_valid
+                    else "API capture exists, but complete coherent member-directory evidence is still required for SSR."
+                ),
+                graph_impact="META",
+                capabilities_used=tuple(
+                    key
+                    for key, value in (
+                        ("web_research", c.web_research),
+                        ("member_directory_evidence", c.member_directory_evidence),
+                    )
+                    if value
+                ),
+                next_fallback_routes=_fallbacks(
+                    MetaRoute.EXACT_CURRENT_REFRESH,
+                    MetaRoute.RECOVERY_PERSISTENCE,
+                    MetaRoute.ENGINEERING_QA,
+                ),
+            )
 
         if (
             c.discover_capture_valid

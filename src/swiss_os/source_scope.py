@@ -189,7 +189,6 @@ def reconcile_source_scope(
         raise ValueError("member-directory record_id values must be unique")
 
     api_by_key = {key: record for key, record in zip(api_keys, api_records)}
-    dir_by_id = {record.record_id: record for record in directory_records}
 
     dir_hs, ambiguous_dir_hs = _unique_index([(r.hs_id, r.record_id) for r in directory_records])
     dir_url, ambiguous_dir_url = _unique_index([(r.detail_url, r.record_id) for r in directory_records])
@@ -207,6 +206,13 @@ def reconcile_source_scope(
     matches: list[ScopeMatch] = []
     conflicts: set[str] = set()
 
+    # Ambiguity within either source is itself a reconciliation conflict, even
+    # before cross-source matching. This prevents duplicate identities from
+    # degrading into silent unmatched records.
+    conflicts.update(f"AMBIGUOUS_HSID:{key}" for key in sorted(ambiguous_api_hs | ambiguous_dir_hs))
+    conflicts.update(f"AMBIGUOUS_DETAIL_URL:{key}" for key in sorted(ambiguous_api_url | ambiguous_dir_url))
+    conflicts.update(f"AMBIGUOUS_NAME_CITY:{key}" for key in sorted(ambiguous_api_nc | ambiguous_dir_nc))
+
     def bind(api_key: str, dir_id: str, basis: str) -> None:
         if api_key not in unmatched_api or dir_id not in unmatched_dir:
             conflicts.add(f"MULTI_MATCH:{basis}:{api_key}:{dir_id}")
@@ -215,32 +221,26 @@ def reconcile_source_scope(
         unmatched_dir.remove(dir_id)
         matches.append(ScopeMatch(api_key, dir_id, basis))
 
-    # hsId
     for hs_id, api_key in sorted(api_hs.items()):
         if hs_id in ambiguous_api_hs or hs_id in ambiguous_dir_hs:
-            conflicts.add(f"AMBIGUOUS_HSID:{hs_id}")
             continue
         dir_id = dir_hs.get(hs_id)
         if dir_id:
             bind(api_key, dir_id, "EXACT_HSID")
 
-    # detail URL
     for url, api_key in sorted(api_url.items()):
         if api_key not in unmatched_api:
             continue
         if url in ambiguous_api_url or url in ambiguous_dir_url:
-            conflicts.add(f"AMBIGUOUS_DETAIL_URL:{url}")
             continue
         dir_id = dir_url.get(url)
         if dir_id and dir_id in unmatched_dir:
             bind(api_key, dir_id, "EXACT_DETAIL_URL")
 
-    # normalized name + city
     for nc, api_key in sorted(api_nc.items()):
         if api_key not in unmatched_api:
             continue
         if nc in ambiguous_api_nc or nc in ambiguous_dir_nc:
-            conflicts.add(f"AMBIGUOUS_NAME_CITY:{nc}")
             continue
         dir_id = dir_nc.get(nc)
         if dir_id and dir_id in unmatched_dir:

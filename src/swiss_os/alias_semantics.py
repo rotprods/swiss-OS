@@ -3,10 +3,10 @@ from __future__ import annotations
 from dataclasses import dataclass
 import re
 import unicodedata
-from typing import Iterable, Mapping, Sequence
+from typing import Iterable, Mapping
 
 _HOTEL_ID_RE = re.compile(r"^H-\d{4}$")
-_HOTEL_ID_IN_TEXT_RE = re.compile(r"\bH-\d{4}\b")
+_SUPERSEDED_ID_IN_NOTES_RE = re.compile(r"\b(H-\d{4})\b(?=[^\n]{0,80}\bsupersed(?:e|ed|ing|es)?\b)", re.IGNORECASE)
 
 
 @dataclass(frozen=True)
@@ -119,7 +119,9 @@ def _claimed_alias_ids(row: Mapping[str, object]) -> tuple[str, ...]:
     notes = row.get("notes", "")
     if not isinstance(notes, str):
         return ()
-    return tuple(dict.fromkeys(_HOTEL_ID_IN_TEXT_RE.findall(notes)))
+    # Do not bind every H-ID mentioned in prose. Only the H-ID syntactically
+    # associated with a supersession assertion is eligible as the alias side.
+    return tuple(dict.fromkeys(_SUPERSEDED_ID_IN_NOTES_RE.findall(notes)))
 
 
 def _stable_equivalence_proven(row: Mapping[str, object]) -> bool:
@@ -162,9 +164,8 @@ def validate_alias_semantics(
     resolutions_by_alias: dict[str, list[Mapping[str, object]]] = {}
     for row in resolutions:
         for claimed_id in _claimed_alias_ids(row):
-            if not _HOTEL_ID_RE.fullmatch(claimed_id):
-                continue
-            resolutions_by_alias.setdefault(claimed_id, []).append(row)
+            if _HOTEL_ID_RE.fullmatch(claimed_id):
+                resolutions_by_alias.setdefault(claimed_id, []).append(row)
 
     seen_alias_ids: set[str] = set()
     for alias in aliases:
@@ -207,20 +208,30 @@ def validate_alias_semantics(
                 AliasSemanticViolation("ALIAS_EVIDENCE_MISSING", alias_id, target_id, "no entity-resolution row binds this alias H-ID")
             )
             continue
-
-        compatible = [row for row in evidence_rows if _resolution_target(row) in ("", target_id)]
-        if len(compatible) != 1:
+        if len(evidence_rows) != 1:
             violations.append(
                 AliasSemanticViolation(
                     "ALIAS_EVIDENCE_AMBIGUOUS",
                     alias_id,
                     target_id,
-                    f"expected exactly one compatible entity-resolution row, found {len(compatible)}",
+                    f"expected exactly one entity-resolution row, found {len(evidence_rows)}",
                 )
             )
             continue
 
-        resolution = compatible[0]
+        resolution = evidence_rows[0]
+        explicit_target = _resolution_target(resolution)
+        if explicit_target and explicit_target != target_id:
+            violations.append(
+                AliasSemanticViolation(
+                    "RESOLUTION_TARGET_MISMATCH",
+                    alias_id,
+                    target_id,
+                    f"entity-resolution target {explicit_target} differs from persisted target",
+                )
+            )
+            continue
+
         candidate_key = _resolution_candidate_identity(resolution)
         alias_key = identity_key(_catalog_name(alias_hotel), _catalog_city(alias_hotel))
         target_key = identity_key(_catalog_name(target_hotel), _catalog_city(target_hotel))
@@ -268,17 +279,6 @@ def validate_alias_semantics(
                 )
             )
             continue
-
-        explicit_target = _resolution_target(resolution)
-        if explicit_target and explicit_target != target_id:
-            violations.append(
-                AliasSemanticViolation(
-                    "RESOLUTION_TARGET_MISMATCH",
-                    alias_id,
-                    target_id,
-                    f"entity-resolution target {explicit_target} differs from persisted target",
-                )
-            )
 
     state = "EXACT" if not violations else "RECONCILE_REQUIRED"
     return AliasSemanticResult(state=state, checked_aliases=len(aliases), violations=tuple(violations))

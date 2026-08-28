@@ -7,6 +7,7 @@ on:
       - ops/live-mdc-capture-20260828
     paths:
       - .github/workflows/live-mdc-capture.yml
+      - src/swiss_os/adaptive_directory_capture.py
 
 permissions:
   contents: read
@@ -14,7 +15,7 @@ permissions:
 jobs:
   capture:
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 45
     env:
       PYTHONPATH: src
     steps:
@@ -31,12 +32,14 @@ jobs:
         run: |
           set -o pipefail
           mkdir -p "$RUNNER_TEMP/hs-directory-de"
-          python -m swiss_os.member_directory_capture capture \
+          python -m swiss_os.adaptive_directory_capture capture \
             --root-url https://www.hotelleriesuisse.ch/de/verband-und-geschaeftsstelle/mitglieder/mitgliederverzeichnis \
             --locale de \
             --out-dir "$RUNNER_TEMP/hs-directory-de" \
-            --delay 3.0 \
-            --attempts 5 \
+            --delay 6.0 \
+            --attempts 6 \
+            --base-backoff 15 \
+            --max-backoff 120 \
             --expected-page-size 12 \
             2>&1 | tee "$RUNNER_TEMP/hs-directory-de/CAPTURE_RUN.log"
 
@@ -54,10 +57,12 @@ jobs:
                   continue
               payload = json.loads(path.read_text(encoding="utf-8"))
               assert payload.get("authority_advanced", False) is False
-              assert int(payload.get("h_id_allocations", 0)) == 0
+              h_ids = payload.get("h_id_allocations", 0)
+              assert isinstance(h_ids, int) and not isinstance(h_ids, bool) and h_ids == 0
               outbound = payload.get("outbound", "CLOSED")
               assert outbound == "CLOSED"
-              assert int(payload.get("send_allowed", 0)) == 0
+              send_allowed = payload.get("send_allowed", 0)
+              assert isinstance(send_allowed, int) and not isinstance(send_allowed, bool) and send_allowed == 0
           PY
 
       - name: Upload capture evidence

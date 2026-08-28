@@ -41,6 +41,9 @@ jobs:
           echo "runtime_exit=$rc" >> "$GITHUB_OUTPUT"
           if [[ ! -f .artifacts/hslca/capture.json ]]; then
             echo "HSLCA did not reach a finalized capture bundle" >&2
+            if [[ "$rc" -eq 0 ]]; then
+              exit 2
+            fi
             exit "$rc"
           fi
       - name: Finalize count-less capture through checkpoint provenance and PCF-1.0
@@ -113,4 +116,5 @@ jobs:
           name: hslca-pcf-live-evidence
           path: .artifacts
           if-no-files-found: error
+          include-hidden-files: true
           retention-days: 7

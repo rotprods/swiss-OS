@@ -1,9 +1,10 @@
 # STATE — LIVE HANDOFF POINTER
 
-Last full operational control-plane reconciliation: **2026-08-27T17:12:40+02:00**.  
-Latest ancestry reconstruction: **2026-08-28 / main parent ce28d6fc2689c2dcf251abe709226157597ae107**.  
+Latest operational reconciliation: **2026-08-28T16:19:00+02:00**.  
+Latest GitHub ancestry reconstructed before this state wave: **`efbd1c24eff17d24c391b2d6224a600ed0f1b4ec`**.  
+Latest physically reverified constrained parent: **`OPERATIONAL_DB_SHADOW_MANIFEST_V13`**.  
 Latest Drive-mount CRM staging: **v11**.  
-Latest Meta Execution cycle: **EXACT_CURRENT_REFRESH batch 01**.
+Latest Meta Execution frontier: **EXACT_CURRENT_REFRESH batch 04**.
 
 ## 1. Authoritative operational state
 
@@ -11,10 +12,12 @@ Authority is unchanged:
 
 ```text
 entity epoch                    HS_ENTITY_EPOCH_2026-08-25_E4
-constrained recovery parent     OPERATIONAL_DB_SHADOW_MANIFEST_V12
+constrained recovery parent     OPERATIONAL_DB_SHADOW_MANIFEST_V13
+constrained parent SHA-256      0e605b412f29893ca1775f1e8fccd5987d0613baab4ac29b6699988cde0fdfe5
 physical HOTELS rows            690
 superseded duplicate aliases      4
 active canonical                686
+next physical H-ID              H-0691
 CP-0750                         686 / 750 ACTIVE — intermediate only
 Intelligence                    686 / 686
 Operational Graph               686 / 686
@@ -25,6 +28,24 @@ send_allowed                      0
 ```
 
 No API capture, historical cache, research batch, PAB result, MDM result, canary or staging artifact may advance these values by itself.
+
+### V13 physical recovery verification
+
+V13 was retrieved from Drive and independently reverified in the current activation:
+
+```text
+manifest                         OPERATIONAL_DB_SHADOW_MANIFEST_V13.json
+SQLite                           switzerland_job_os_operational_shadow_v13.sqlite
+manifest / SQLite SHA match      TRUE
+SQLite integrity_check           ok
+foreign_key_check violations       0
+physical identities              690
+active identities                686
+aliases                            4
+next physical ID                 H-0691
+```
+
+`SOURCE_SNAPSHOTS`, `GOAL_STATE` and the historical `RUN_LOG` already pointed to V13. Older GitHub handoffs that named V12 as the active constrained parent are stale lineage pointers, not current authority.
 
 ## 2. CRM-universe hard gate
 
@@ -50,7 +71,7 @@ CRM_UNIVERSE_COMPLETE = TRUE
 
 Even then, outbound remains independently gated and requires explicit user authorization.
 
-Canonical CRM/source contracts:
+Canonical source contracts:
 
 - `docs/operations/CRM_UNIVERSE_PROTOCOL.md` — CUP-1.1
 - `docs/operations/DISCOVER_SWISS_SNAPSHOT_ADAPTER.md` — DSA-1.0
@@ -64,21 +85,16 @@ Canonical continuity stack:
 
 ```text
 MEP-2.0
-→ NPP-1.0 NEXT pointer
+→ NPP-1.0 NEXT
 → WOP-1.1 bounded wave
-→ engine dispatch
+→ affected engines
 → PRG gauntlet
-→ persistence / reconciliation
+→ control-plane / Git / recovery persistence
 → NEXT
-→ immediate next safe cycle while runtime remains available
+→ immediate next safe COLETTE cycle while runtime remains available
 ```
 
-Contracts:
-
-- `docs/operations/META_EXECUTION_PROTOCOL.md`
-- `docs/operations/NEXT_POINTER_PROTOCOL.md`
-
-MEP uses the COLETTE loop:
+COLETTE:
 
 ```text
 COLLECT
@@ -86,91 +102,67 @@ COLLECT
 → LOCATE
 → EXECUTE
 → TEST
-→ TRANSACT/PERSIST
+→ TRANSACT / PERSIST
 → EVOLVE / NEXT / REPEAT
 ```
 
-A completed wave is not a stop condition. Recoverable capability failures trigger a safe alternate route rather than idle time.
+A completed wave is not a stop condition. Recoverable capability failures trigger the next safe route.
 
-System-definition milestones:
+Recent system milestones:
 
 ```text
-MEP/NPP merge                 62886e4bac48f726603d1a481ee027d0515e4939
-PAB-1.0 + concurrent handoff  present in main before PR #34
-MDM/MEP hardening             ce28d6fc2689c2dcf251abe709226157597ae107
+MEP/NPP                             PR #27
+MDM compiler                        PR #28
+directory coverage planner          PR #29
+PAB-1.0 bundle                      PR #30
+MEP/MDM fallback hardening          PR #34
+durable NEXT / batch01 state        PR #37
+strict MDM page input hardening     PR #38
 ```
 
-## 4. Source acquisition / scope state
+## 4. Runtime capability
 
-### Preferred structured route
+### Structured source
 
-`discover.swiss / dsod-hs` through DSA-1.0 remains the preferred bulk source when `DISCOVER_SWISS_SUBSCRIPTION_KEY` is available.
-
-Current runtime:
+Preferred bulk acquisition remains discover.swiss / `dsod-hs`.
 
 ```text
-discover.swiss subscription key     UNAVAILABLE
+DISCOVER_SWISS_SUBSCRIPTION_KEY     UNAVAILABLE
 valid discover.swiss capture        NOT PRESENT
 ```
 
 No API data is fabricated.
 
-### Member-directory route
+### Member-directory source
 
-MEP can now select MDM-1.0 independently while the API key is unavailable.
-
-Current web source surfaces do **not** establish one coherent current complete member-directory snapshot:
+Accessible web surfaces still represent multiple cache epochs / denominators. Page number is not source-record identity.
 
 ```text
-root/current surface     not reliably retrievable in current web path
-available cached pages   multiple cache epochs / denominators
-page position            NOT stable source-record identity
+coherent complete MDM snapshot      NOT YET ACQUIRED
+MDM coverage_complete               FALSE / not claimed
+SSR executable with complete pair   FALSE
+FROZEN_CANDIDATE                    not claimed
 ```
 
-Therefore:
+Historical caches remain discovery/anti-join evidence only.
+
+### Drive / Sheets / persistence
+
+The prior native writer blocker is resolved:
 
 ```text
-MDM coverage_complete    FALSE / not claimed
-SSR                       not executable against a complete source pair yet
-FROZEN_CANDIDATE          not claimed
+authenticated Drive read            AVAILABLE
+Drive artifact creation             AVAILABLE
+native HOTELS_MASTER Sheets write   AVAILABLE / REVERSIBLE CANARY VERIFIED
+GitHub read/write/CI                AVAILABLE
+web research                        AVAILABLE
 ```
 
-Historical/cache observations remain discovery/anti-join evidence only.
+The real `HOTELS_MASTER` was tested by creating a temporary `_WRITER_CANARY_20260828` tab, writing and reading back `HOTELS_MASTER_IN_PLACE_WRITER_PASS`, then deleting the temporary tab. No canonical data changed.
 
-## 5. Drive / persistence capability
+GitHub issue `#12` is closed as resolved. Writer availability does **not** authorize authority promotion; CUP/WOP gates still apply.
 
-Current runtime capability is more precise than the previous handoff:
-
-```text
-authenticated Drive mount read            AVAILABLE
-Drive create-only artifact upload         AVAILABLE
-native in-place Google Sheets mutation    UNAVAILABLE
-ChatGPT Library read/write                 AVAILABLE
-GitHub read/write/CI                       AVAILABLE
-web research                               AVAILABLE
-```
-
-The mounted project and `HOTELS_MASTER` can be rehydrated through `/Google Drive/...`.
-
-Create-only Drive artifacts are not equivalent to native in-place HOTELS_MASTER writes. Issue #12 continues to track the later authority-write dependency.
-
-## 6. Constrained E4 recovery lineage
-
-V12 remains the physically recoverable constrained parent previously verified in Drive:
-
-```text
-active identities       686
-aliases                   4
-expected physical       690
-next physical ID        H-0691
-integrity               ok
-FK violations             0
-manifest SHA match      TRUE
-```
-
-V12 recovery evidence does not independently promote authority.
-
-## 7. CRM staging v11 — non-authoritative
+## 5. CRM staging v11 — non-authoritative
 
 Artifact:
 
@@ -179,7 +171,7 @@ CRM_UNIVERSE_STAGING_2026-08-28_v11.xlsx
 SHA-256 97486f7e4ae176f447ab8b57ab5ec199cdf3eb5bba556dfb8569235a87f482a1
 ```
 
-Previously persisted summary reported:
+Older persisted summary:
 
 ```text
 V16 exact-detail canary             25
@@ -193,17 +185,9 @@ snapshot conflicts                    4
 canonical H-ID reservations           0
 ```
 
-A direct materialization of the current v11 workbook during the 2026-08-28 Meta Execution cycle found:
+Direct materialization found `Historical_Missing_Seed` contains **228 data rows**. That mismatch is staging-observability drift only; it is not an authority change.
 
-```text
-Historical_Missing_Seed data rows   228
-```
-
-This conflicts with an older persisted staging summary that reported a lower historical-missing count. It is **staging observability drift**, not an authority change.
-
-Do not use either staging count as canonical truth until the staging workbook/pointer metrics are reconciled in a later staging-maintenance wave.
-
-All historical missing identities remain:
+All historical missing rows remain:
 
 ```text
 HISTORICAL_CACHE_DISCOVERY_ONLY
@@ -211,61 +195,86 @@ HISTORICAL_CACHE_DISCOVERY_ONLY
 → NO_H_ID_RESERVED
 ```
 
-## 8. EXACT_CURRENT_REFRESH — batch 01
+## 6. EXACT_CURRENT_REFRESH frontier
 
-Public-safe durable artifact:
+All batches are read-only evidence work. They allocate no H-IDs and advance no authority.
 
-```text
-EXACT_CURRENT_REFRESH_BATCH_2026-08-28_01.json
-```
-
-Batch attempted 12 historical-cache identities.
-
-Result classes:
+### Batch 01
 
 ```text
-CURRENT_EXACT_MEMBER_DETAIL                         9
-CURRENT_EXACT_ENTITY_INDUSTRY_DETAIL_SCOPE_RECONCILE 1
-REFRESH_REQUIRED / exact detail not retrieved       1
-SCOPE_RECONCILE / exact member detail not located   1
-canonical H-ID reservations                         0
-authority advancement                               0
-outbound                                             0
+attempted                                           12
+CURRENT_EXACT_MEMBER_DETAIL                          9
+industry-detail scope reconcile                      1
+unresolved / exact-detail still required             2
 ```
 
-This batch reduces evidence debt only. It does not terminally map or promote any hotel.
+### Batch 02
 
-## 9. Current MEP route
+Durably recovered from Library:
 
-Selected safe route:
+```text
+attempted                                           12
+CURRENT_EXACT_MEMBER_DETAIL                         10
+unresolved exact detail                              2
+```
+
+### Batches 03 + 04
+
+Current activation:
+
+```text
+attempted                                           24
+exact member-detail identity evidence               20
+support-only / exact-detail unresolved               4
+canonical H-ID reservations                          0
+authority advancement                                0
+outbound                                              0
+```
+
+The real control plane records:
+
+```text
+RUN-2026-08-28-NATIVE-SHEETS-WRITER-RECOVERY
+RUN-2026-08-28-EXACT-REFRESH-03-04
+ISS-054 RESOLVED_NATIVE_WRITER_PASS
+DEC-0100 V13 constrained-parent reconciliation
+DEC-0101 native writer capability recovery
+TR-20260828-WRITER-RECOVERY
+TR-20260828-CONSTRAINED-PARENT-V13
+```
+
+## 7. Current MEP route
+
+Selected safe route remains:
 
 ```text
 EXACT_CURRENT_REFRESH
 ```
 
-Why:
+Reason:
 
-- structured discover.swiss acquisition lacks its subscription key;
-- one coherent complete MDM source snapshot is not currently obtainable from the accessible mixed-cache web surfaces;
-- web research can still resolve exact current evidence for staged missing identities;
-- native Sheets write is not needed for read-only evidence progress.
+- structured discover.swiss acquisition still lacks its key;
+- no coherent complete MDM source snapshot is yet available;
+- exact member-detail research continues to reduce evidence debt;
+- native Sheets is now available for the later synchronized promotion chain once CRM source mapping is actually complete.
 
-Fallback priority remains:
+Fallback priority:
 
 ```text
 if structured capture becomes available
 → STRUCTURED_SOURCE_CAPTURE
 
-if coherent member-directory source becomes available
+if a coherent complete member-directory snapshot becomes available
 → MEMBER_DIRECTORY_MANIFEST
+→ PAB / SSR
 
 otherwise
 → EXACT_CURRENT_REFRESH
 → ENTITY RESOLUTION / terminal mapping where evidence is sufficient
-→ recovery / QA
+→ QA / recovery
 ```
 
-## 10. Durable NEXT
+## 8. Durable NEXT
 
 Machine-readable continuation pointer:
 
@@ -273,9 +282,7 @@ Machine-readable continuation pointer:
 docs/state/NEXT.json
 ```
 
-Cold-recovery copies are persisted in Library and Drive Context Hub.
-
-NEXT permissions are always:
+NEXT always preserves:
 
 ```text
 authority_advance_allowed = FALSE
@@ -283,18 +290,17 @@ canonical_id_allocation_allowed = FALSE
 outbound_allowed = FALSE
 ```
 
-Every resumed activation rereads GitHub `main`, authority parent/epoch and capabilities before executing NEXT.
+Every activation rereads GitHub `main`, V13/E4 authority and runtime capabilities before executing NEXT.
 
-## 11. Next production objective
+## 9. Production objective
 
 Continue chained COLETTE cycles:
 
 ```text
 EXACT_CURRENT_REFRESH batches
-→ persist evidence states
-→ reduce unresolved source-record debt
-→ continuously re-probe structured/coherent source capability
-→ MDM + DSA when both become possible
+→ persist exact/support/unresolved evidence states
+→ continuously re-probe discover.swiss / coherent MDM acquisition
+→ MDM + DSA when source capability permits
 → PAB-1.0
 → SSR EXACT | EXPLAINED
 → FROZEN_CANDIDATE
@@ -306,18 +312,17 @@ EXACT_CURRENT_REFRESH batches
 → RECONCILE_REQUIRED = 0
 ```
 
-Before any authority promotion:
+Writer capability is no longer the blocker. When the frozen source universe is terminally mapped, perform one bounded authoritative WOP promotion from V13 or its then-current verified successor:
 
 ```text
-restore native Sheets write or an explicitly approved verified successor path
-→ /wave recover live authority
+re-read live parent + concurrency anti-join
 → constrained DB
-→ HOTELS_MASTER / CRM mirror
+→ HOTELS_MASTER / CRM mirror by PK
 → Intelligence
 → Operational Graph
 → observability / scheduler / checkpoints / transitions
-→ GitHub / Drive / Library persistence
+→ GitHub / Drive / recovery persistence
 → final exact reconciliation
 ```
 
-Only then may `CRM_UNIVERSE_COMPLETE` advance.
+Only that fully reconciled state may set `CRM_UNIVERSE_COMPLETE = TRUE`. `OUTBOUND` remains separately CLOSED.

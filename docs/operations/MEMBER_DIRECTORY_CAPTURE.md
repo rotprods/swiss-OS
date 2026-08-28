@@ -1,6 +1,6 @@
 # MEMBER-DIRECTORY CAPTURE — SWITZERLAND_JOB_OS
 
-Version: **MDC-1.0**  
+Version: **MDC-1.1**  
 Status: **EXECUTABLE CURRENT-SNAPSHOT ACQUISITION CONTRACT**
 
 ## Objective
@@ -54,15 +54,22 @@ The source epoch is immutable for the capture.
 
 ## Card identity
 
-The directory card contract is:
+The live HotellerieSuisse member-directory list renders each property link in source order:
 
 ```text
-first non-empty anchor text = display name
-last non-empty anchor text = city
+first non-empty anchor text = city / locality
+last non-empty anchor text = display property name
 anchor href = exact member-detail URL
 ```
 
-A card with insufficient or invalid text is rejected and blocks complete coverage.
+MDC normalizes this source order into the public record model:
+
+```text
+name = last non-empty anchor text
+city = first non-empty anchor text
+```
+
+This ordering is a source contract and is covered by a regression fixture derived from the observed production rendering pattern (for example `Muralto` followed by `@Home Hotel Locarno`). A card with insufficient or invalid text is rejected and blocks complete coverage.
 
 `hotel-page-N` is partition lineage only. It is not source-record identity.
 
@@ -149,8 +156,10 @@ A complete directory manifest can feed SSR/CMI and terminal mapping work. It doe
 
 ## Relationship to the execution stack
 
+HSLCA-R1.0 is the preferred provider-rate-limit-aware resumable runtime for long captures. MDC-1.1 remains the strict card/page/MDM semantics reference and direct bounded capture implementation.
+
 ```text
-MDC-1.0 complete directory capture
+MDC-1.1 / HSLCA-R1.0 complete directory capture
 +
 DSA-1.0 discover.swiss capture when available
 → SSR-1.0 source-scope reconciliation
@@ -162,4 +171,4 @@ DSA-1.0 discover.swiss capture when available
 → CUP-1.1 complete CRM universe
 ```
 
-When the discover.swiss key is unavailable, MEP-2.0 may still execute MDC and CMI canary anti-join to reduce the exact same CRM bottleneck, while preserving SSR and authority gates.
+When the discover.swiss key is unavailable, MEP-2.0 may still execute current directory capture and CMI canary anti-join to reduce the exact same CRM bottleneck, while preserving SSR and authority gates.

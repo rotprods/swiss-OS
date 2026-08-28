@@ -30,8 +30,10 @@ def page_html(
     count = f"<div>{displayed_count} Ergebnisse</div>" if displayed_count else ""
     body = []
     for name, city, slug in cards:
+        # The production HotellerieSuisse list card renders locality before
+        # the property name even though our normalized model is name/city.
         body.append(
-            f'<a href="{ROOT}/hotel-{slug}"><span>{name}</span><span>{city}</span></a>'
+            f'<a href="{ROOT}/hotel-{slug}"><span>{city}</span><span>{name}</span></a>'
         )
     return f"<html><body>{count}{pagination}{''.join(body)}</body></html>".encode()
 
@@ -61,6 +63,22 @@ class MemberDirectoryCaptureTests(unittest.TestCase):
         self.assertEqual(parsed.cards[0].city, "Bern")
         self.assertEqual(parsed.page_references, (2, 3))
         self.assertEqual(parsed.count_candidates, ())  # production count parser ignores implausible low fixture totals
+
+    def test_live_card_order_regression_city_then_property(self) -> None:
+        html = (
+            f'<a href="{ROOT}/hotel-home-hotel-locarno">'
+            "<span>Muralto</span><span>@Home Hotel Locarno</span></a>"
+            f'<a href="{ROOT}/hotel-22-summits-apartments">'
+            "<span>Zermatt</span><span>22 Summits Apartments</span></a>"
+        ).encode()
+        parsed = parse_directory_page(html, ROOT)
+        self.assertEqual(
+            [(card.name, card.city) for card in parsed.cards],
+            [
+                ("@Home Hotel Locarno", "Muralto"),
+                ("22 Summits Apartments", "Zermatt"),
+            ],
+        )
 
     def test_complete_two_page_capture(self) -> None:
         pages = {

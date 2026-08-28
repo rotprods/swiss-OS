@@ -18,14 +18,14 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Run polite resumable HSLCA-R1.0 capture
+      - name: Run polite resumable HSLCA-R1.0 capture with MDC-1.1 identity semantics
         id: hslca
         shell: bash
         run: |
           set +e
           mkdir -p .artifacts/hslca
           CAPTURE_ID="HS-MEMBER-DE-${GITHUB_RUN_ID}"
-          PYTHONPATH=src python -m swiss_os.hotelleriesuisse_capture_runtime capture \
+          PYTHONPATH=src python -m swiss_os.hslca_mdc_runtime capture \
             --capture-id "$CAPTURE_ID" \
             --root-url "https://www.hotelleriesuisse.ch/de/verband-und-geschaeftsstelle/mitglieder/mitgliederverzeichnis" \
             --locale de \
@@ -103,6 +103,7 @@ jobs:
               'snapshot_id': manifest.get('snapshot_id'),
               'records_count': len(records),
               'coverage_complete': True,
+              'identity_parser': 'MDC-1.1',
               'authority_advanced': False,
               'h_id_allocations': 0,
               'outbound': 'CLOSED',

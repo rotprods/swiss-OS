@@ -1,27 +1,25 @@
 # STATE — LIVE HANDOFF POINTER
 
 Last full operational control-plane reconciliation: **2026-08-27T17:12:40+02:00**.  
-Latest system architecture/production-readiness audit: **2026-08-28**.  
+Latest Drive-mount read recovery / CRM-universe wave: **2026-08-28**.  
 Latest constrained local canary: **SV2-059 / V16**.
 
 ## 1. Authoritative operational state — DO NOT INFER FROM CANARY
 
-The last state fully synchronized through Drive/Sheets, constrained DB, Intelligence, Graph and governance remains:
+The last state fully synchronized through Drive/Sheets, constrained DB, Intelligence, Operational Graph and governance remains:
 
 ```text
-entity epoch              HS_ENTITY_EPOCH_2026-08-25_E4
-physical HOTELS rows      690
-superseded duplicate aliases 4
-active canonical          686
-CP-0750                   686 / 750 ACTIVE
-remaining                  64
-next authoritative ID     H-0691
-Intelligence              686 / 686
-Graph V2                  686 / 686
-L4                        105 / 686
-G-0700 L9                   0 / 2050
-OUTBOUND                  CLOSED
-send_allowed                0
+entity epoch                 HS_ENTITY_EPOCH_2026-08-25_E4
+physical HOTELS rows         690
+superseded duplicate aliases   4
+active canonical             686
+CP-0750                      686 / 750 ACTIVE
+Intelligence                 686 / 686
+Operational Graph            686 / 686
+L4                           105 / 686
+G-0700 L9                      0 / 2050 reference universe
+OUTBOUND                     CLOSED
+send_allowed                   0
 ```
 
 Alias lineage remains immutable:
@@ -33,11 +31,73 @@ H-0629 → H-0638
 H-0630 → H-0640
 ```
 
-No later canary may advance these counters until DB, Sheets mirror, Graph/Intelligence, metrics, scheduler, checkpoints and persistent handoff all reconcile.
+No canary/staging count advances authority until the full affected-plane promotion chain reconciles.
 
-## 2. Latest physically verified authority parent
+## 2. Full CRM universe is now the pre-outbound hard gate
 
-The E4 control plane referenced a shadow that was not physically discoverable during recovery. A deterministic constrained **V13** was rebuilt from the last persisted valid parent plus authoritative deltas and explicit alias mappings.
+User requirement and historical Drive goal are aligned:
+
+```text
+CRM_UNIVERSE_COMPLETE = FALSE
+```
+
+Outbound must remain CLOSED until **100% of a frozen verified target directory snapshot** is represented in CRM and every source record is deterministically mapped.
+
+Intermediate checkpoints such as CP-0750 are scale milestones only. They cannot be interpreted as outbound readiness.
+
+Governing contract:
+
+`docs/operations/CRM_UNIVERSE_PROTOCOL.md`
+
+## 3. Drive recovery capability
+
+The direct Google Drive connector is disabled in this runtime. However, Google Drive is mounted read-only through ChatGPT Library at `/Google Drive`.
+
+Recovered project path:
+
+`/Google Drive/01_AI_SYSTEMS_AGENTS/00_AGENTIC_SYSTEMS_OS/01_PROJECTS/SWITZERLAND_JOB_OS`
+
+Recovered live CRM/control-plane Sheet:
+
+`01_HOSPITALITY_VERTICAL/HOTELS_MASTER`
+
+Capabilities in this runtime:
+
+```text
+Drive mount listing/read/materialize       AVAILABLE
+HOTELS_MASTER physical read                AVAILABLE
+create-only new artifacts into Drive mount AVAILABLE
+native Sheets in-place mutation            UNAVAILABLE
+AUTHORITATIVE_WRITE to HOTELS_MASTER       BLOCKED
+```
+
+Therefore the current wave runs `RECOVERY_RECONCILE → DEGRADED_CANARY` for CRM ingestion staging.
+
+## 4. CRM target / snapshot state
+
+Drive `G-0500` already defines full Swiss hotel-universe parity with `2050` retained as an immutable reference epoch while later count observations are versioned separately.
+
+Drive source snapshot `HS_2026-08-19_WORKING` records:
+
+```text
+working reference records  2050
+working reference pages     171
+```
+
+Older indexed HotellerieSuisse pages expose different historical totals, confirming that the source denominator changes over time. The completion denominator therefore must be a frozen/versioned snapshot rather than a timeless hard-coded number.
+
+Current gate state:
+
+```text
+working reference          2050 / 171 pages
+fresh frozen snapshot      NOT YET RECONSTRUCTED
+source records fully mapped NO
+CRM_UNIVERSE_COMPLETE       FALSE
+```
+
+## 5. Latest physically verified constrained authority parent
+
+A deterministic constrained **V13** is the latest physically verified authority parent:
 
 ```text
 V13 physical rows          690
@@ -50,129 +110,101 @@ send_allowed                 0
 SHA-256  0e605b412f29893ca1775f1e8fccd5987d0613baab4ac29b6699988cde0fdfe5
 ```
 
-V13 remains the latest physically verified constrained authority parent until a later full synchronization succeeds.
+## 6. V16 acceleration canary — NON-AUTHORITATIVE
 
-## 3. SV2-059 / V16 acceleration canary — NON-AUTHORITATIVE
-
-Batch05 reached its bounded ceiling with exact-detail candidate research.
+V16 remains staging/canary only:
 
 ```text
 local physical rows                         715
 local candidate entities excluding aliases 711
-Batch05 exact-detail candidates              25
+exact-detail candidates                      25
 integrity_check                              ok
 FK violations                                 0
 ID gaps                                       0
 name+city duplicates                          0
 non-empty domain duplicates                   0
 idempotency replay unintended inserts         0
+restore logical differences                   0
 external actions                              0
 send_allowed                                  0
-restore tables compared                      63
-restore logical differences                   0
 ```
 
-Projection only if a future synchronized recovery wave revalidates the allocation:
+Previously proposed IDs are not reservations. Reallocation is mandatory if the live frontier changes before commit.
+
+## 7. Mass CRM ingestion artifact
+
+Created in this recovery wave:
+
+`CRM_UNIVERSE_STAGING_2026-08-28.xlsx`
+
+Contents include:
 
 ```text
-711 / 750
-39 remaining
-next provisional physical ID H-0716
+690 mounted Drive HOTELS_V2 physical rows
+25 V16 canary candidates
+7 no-ID reserve candidates
+171-page directory crawl queue
+historical indexed page observations typed discovery-only
+existing discovery registry mirror
+Drive source-snapshot / goal / checkpoint recovery context
+CRM import staging queue
 ```
 
-These are **not current authority values**. Provisional IDs are not reservations.
+This artifact is an ingestion/recovery package, not an authority database.
 
-Public-safe detail:
+Public-safe wave detail:
 
-- `docs/state/SV2_059_V16_CANARY.md`
-- `docs/intelligence/SV2_059_INTELLIGENCE_PREFETCH.md`
+`docs/state/CRM_UNIVERSE_WAVE_2026-08-28.md`
 
-## 4. System architecture readiness
+## 8. Production priority
 
-The 2026-08-28 meta-audit introduced/validated:
+The production bottleneck is now **CRM universe seeding**, not deep enrichment of bounded hotel batches.
+
+Canonical strategy:
 
 ```text
-WAVE_OPERATING_PROTOCOL
-ENGINE_REGISTRY
-PRODUCTION_READINESS_GAUNTLET
-stable-document state-drift CI guard
-state-free SYSTEM_MAP / AUTHORITY_MODEL / RUNBOOK
-historical-document authority banners
-Library recovery pointers
+FREEZE/REFRESH DIRECTORY SNAPSHOT
+→ ENUMERATE ALL SOURCE RECORDS
+→ SOURCE-RECORD STAGING IDS
+→ BULK NORMALIZE
+→ ANTI-JOIN CRM / ALIASES / GROUPS / DOMAINS
+→ ENTITY-RESOLUTION BATCHES
+→ DB-FIRST CANONICAL/ALIAS/EXCLUSION COMMIT
+→ SHEETS / CRM PK MIRROR
+→ OPERATIONAL GRAPH + INTELLIGENCE SEEDS
+→ SOURCE-RECORD COVERAGE RECOMPUTE
 ```
 
-Canonical contracts:
+Deep vacancy/housing/people/channel/digital enrichment may proceed in parallel after seeding; it must not block the remaining directory universe from entering CRM.
 
-- `docs/operations/WAVE_OPERATING_PROTOCOL.md`
-- `docs/operations/PRODUCTION_READINESS_GAUNTLET.md`
-- `docs/architecture/ENGINE_REGISTRY.md`
-- `docs/audits/SYSTEM_AUDIT_AND_PRODUCTION_PLAN_2026-08-28.md`
+## 9. Next authoritative execution frontier
 
-Repository/architecture readiness is production-oriented subject to PR/CI completion.
-
-## 5. Current runtime blocker
-
-In the 2026-08-28 audit session the Google Drive connector returned **disabled**.
-
-Consequences:
-
-```text
-AUTHORITATIVE_WRITE          BLOCKED in this runtime
-RECOVERY_RECONCILE           required when Drive returns
-READ_ONLY_RESEARCH           allowed when safe
-DEGRADED_CANARY              allowed when safe
-canonical authority advance  forbidden
-Drive audit-doc replication  pending
-```
-
-GitHub and ChatGPT Library remain available. This capability outage does not justify changing canonical counts.
-
-## 6. Recovery semantics
-
-SQLite restore PASS means logical operational equivalence:
-
-- both databases pass `integrity_check`;
-- both have zero FK violations;
-- schema objects match;
-- table sets and row counts match;
-- `source EXCEPT restore = ∅` for every table;
-- `restore EXCEPT source = ∅` for every table.
-
-Binary SHA equality verifies transfer identity of one artifact but is not required for SQLite logical backup/restore equivalence.
-
-## 7. Next authoritative execution frontier
-
-Next write-capable execution begins:
+When native Sheets write is available:
 
 ```text
 /wave recover
-→ RECOVERY_RECONCILE
-→ re-read live Drive/Sheets authority
-→ inspect parent/epoch/concurrent writes
-→ anti-join all V16 provisional identities + aliases + domains + task keys
-→ reallocate provisional IDs if frontier moved
-→ rebuild canary from actual live parent
-→ constrained DB commit
-→ Sheets PK mirror
-→ Intelligence
-→ Operational Graph
-→ epoch/snapshot
-→ invariants/SLO
-→ metrics/health/scheduler/issues/checkpoints
-→ transitions/run log
+→ re-read live HOTELS_MASTER / goal / checkpoint / scheduler / issues / snapshots
+→ freeze/verify current directory snapshot
+→ anti-join all accumulated source-record staging
+→ allocate canonical IDs only at DB commit time
+→ constrained batch commits
+→ Sheets/CRM PK mirror
+→ Intelligence seed sync
+→ Operational Graph sync
+→ metrics / health / SLO / scheduler / issues / transitions
+→ source-record coverage reconciliation
 → GitHub STATE/handoff
-→ Library + Drive recovery persistence
-→ final reconciliation
-→ COMPLETE_AUTHORITY only if exact
+→ Library + Drive recovery
+→ CRM_UNIVERSE_COMPLETE only at 100% mapped snapshot
 ```
 
-Until then, safe research/canary work may continue but may not report a new authoritative canonical count.
+Only after `CRM_UNIVERSE_COMPLETE = TRUE` may the separate outbound gate be evaluated. Candidate readiness, channel/evidence freshness, suppression/idempotency and explicit user authorization remain independent requirements.
 
-## 8. Source precedence
+## 10. Source precedence
 
 ```text
 PHYSICAL + CONSTRAINED AUTHORITY-ELIGIBLE DATA
-> live control plane
+> live/mounted control plane
 > validated authority-eligible manifest
 > GitHub STATE pointer
 > historical release/handoff prose
@@ -180,8 +212,6 @@ PHYSICAL + CONSTRAINED AUTHORITY-ELIGIBLE DATA
 
 A local canary is excluded from authority until full promotion.
 
-## 9. Public/private boundary
+## 11. Public/private boundary
 
-GitHub stores public-safe executable contracts and state/handoff pointers only. Operational SQLite payloads, contacts, candidate-private data and sensitive raw evidence remain outside the public repository.
-
-ChatGPT Library is durable recovery/cold persistence, never operational truth.
+GitHub stores public-safe executable contracts and state/handoff pointers only. Operational SQLite payloads, contacts, candidate-private data and sensitive raw evidence remain outside the public repository. ChatGPT Library and Drive staging artifacts are recovery/ingestion surfaces, not authority by themselves.

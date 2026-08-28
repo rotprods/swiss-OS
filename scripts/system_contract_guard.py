@@ -89,6 +89,7 @@ REQUIRED_MARKERS = {
     "docs/operations/MEMBER_DIRECTORY_MANIFEST.md": [
         "MDM-1.0",
         "coverage_complete = true",
+        "page must be a strict positive integer",
         "missing pages = 0",
         "out-of-range pages = 0",
         "authority_advanced = false",

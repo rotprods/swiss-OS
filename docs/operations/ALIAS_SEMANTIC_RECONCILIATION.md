@@ -29,7 +29,15 @@ entity-resolution target agrees with the persisted canonical target when explici
 alias and canonical target are proven to represent the same real-world entity
 ```
 
-The default deterministic proof is normalized exact `name + city`. A stronger resolver may set `stable_identity_verified = true` only when equivalence is already proved from stable detail/source identity. That flag is evidence state, not a heuristic escape hatch.
+The default deterministic proof is normalized exact `name + city`. A stronger resolver may set `stable_identity_verified = true` only when equivalence is already proved from stable source identity. A bare boolean is invalid: it must also carry a non-empty `stable_identity_ref` and an allowed `stable_identity_basis`:
+
+```text
+EXACT_DETAIL_URL
+EXACT_SOURCE_RECORD_KEY
+EXACT_HSID
+```
+
+These fields record prior evidence; they are not a heuristic escape hatch.
 
 ## Fail-closed classifications
 
@@ -44,6 +52,7 @@ SELF_ALIAS
 ALIAS_EVIDENCE_MISSING
 ALIAS_EVIDENCE_AMBIGUOUS
 IDENTITY_FIELDS_MISSING
+STABLE_IDENTITY_PROOF_INVALID
 ALIAS_IDENTITY_MISMATCH
 ALIAS_EVIDENCE_IDENTITY_MISMATCH
 REAL_WORLD_EQUIVALENCE_UNPROVEN

@@ -1,0 +1,95 @@
+{
+  "schema_version": "EXACT_CURRENT_REFRESH_V1",
+  "project": "SWITZERLAND_JOB_OS",
+  "cycle_id": "META-20260828-EXACT-REFRESH-03",
+  "generated_at": "2026-08-28T22:12:00+02:00",
+  "parent_git_sha": "8f7bde7bcc01f9511f24d616593ec589546976fd",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "authority_parent": "ISSUE_89_COMPOSITE_CONSTRAINED_PARENT",
+  "authority_active_canonical": 690,
+  "authority_physical_rows": 690,
+  "authority_aliases": 0,
+  "execution_mode": "READ_ONLY_RESEARCH_MEP_FALLBACK",
+  "selected_route": "EXACT_CURRENT_REFRESH_EXTERNAL_ENTITY_CONFIRMATION",
+  "source_staging": {
+    "artifact": "CRM_UNIVERSE_STAGING_2026-08-28_v11.xlsx",
+    "authority_note": "Historical staging is stale against the recovered 690/690 authority and remains discovery-only."
+  },
+  "batch": {
+    "records_attempted": 4,
+    "current_external_entity_confirmed": 4,
+    "exact_hotelleriesuisse_member_scope_confirmed": 0,
+    "member_scope_unresolved": 4
+  },
+  "records": [
+    {
+      "name": "Hotel Cervus",
+      "city": "St. Moritz",
+      "previous_state": "REFRESH_REQUIRED_EXACT_DETAIL_NOT_RETRIEVED_IN_CURRENT_PROBE",
+      "refresh_state": "CURRENT_EXTERNAL_ENTITY_CONFIRMED_MEMBER_SCOPE_UNRESOLVED",
+      "source_scope": "CURRENT_DESTINATION_DIRECTORY",
+      "source_url": "https://www.stmoritz.com/en/directory/hotels/hotel-cervus",
+      "source_observation": "Current St. Moritz destination directory exposes Hotel Cervus at Via Giovanni Segantini 32, 7500 St. Moritz with live hotel contact and opening information.",
+      "hotelleriesuisse_member_scope": "UNRESOLVED",
+      "canonical_id_state": "NO_H_ID_RESERVED",
+      "authority_advanced": false,
+      "h_id_allocated": false,
+      "outbound_opened": false,
+      "send_allowed": 0
+    },
+    {
+      "name": "Hotel Chasa Nova",
+      "city": "Samnaun Dorf",
+      "previous_state": "SCOPE_RECONCILE_EXACT_MEMBER_DETAIL_NOT_LOCATED",
+      "refresh_state": "CURRENT_EXTERNAL_ENTITY_CONFIRMED_MEMBER_SCOPE_UNRESOLVED",
+      "source_scope": "CURRENT_DESTINATION_DIRECTORY",
+      "source_url": "https://www.samnaun.ch/de/hotel-chasa-nova",
+      "source_observation": "Current Samnaun destination directory exposes Hotel Chasa Nova at Suedstrasse 20, 7563 Samnaun Dorf; independent Engadin destination surface corroborates the same property.",
+      "hotelleriesuisse_member_scope": "UNRESOLVED",
+      "canonical_id_state": "NO_H_ID_RESERVED",
+      "authority_advanced": false,
+      "h_id_allocated": false,
+      "outbound_opened": false,
+      "send_allowed": 0
+    },
+    {
+      "name": "Hotel Marmotte",
+      "city": "Saas-Fee",
+      "previous_state": "EXACT_MEMBER_DETAIL_NOT_LOCATED",
+      "refresh_state": "CURRENT_EXTERNAL_ENTITY_CONFIRMED_MEMBER_SCOPE_UNRESOLVED",
+      "source_scope": "CURRENT_EXTERNAL_HOSPITALITY_LISTING",
+      "source_url": "https://www.booking.com/hotel/ch/marmotte.html",
+      "source_observation": "Current 2026 accommodation listing confirms Hotel Marmotte remains an operating property in Saas-Fee; no exact HotellerieSuisse member-detail proof was retrieved in this bounded probe.",
+      "hotelleriesuisse_member_scope": "UNRESOLVED",
+      "canonical_id_state": "NO_H_ID_RESERVED",
+      "authority_advanced": false,
+      "h_id_allocated": false,
+      "outbound_opened": false,
+      "send_allowed": 0
+    },
+    {
+      "name": "Hotel Matterhorn Inn",
+      "city": "Taesch",
+      "previous_state": "EXACT_MEMBER_DETAIL_NOT_LOCATED",
+      "refresh_state": "CURRENT_EXTERNAL_ENTITY_CONFIRMED_MEMBER_SCOPE_UNRESOLVED",
+      "source_scope": "CURRENT_OFFICIAL_PROPERTY_SITE",
+      "source_url": "https://en.matterhorn-inn.com/",
+      "source_observation": "Current official property site confirms Matterhorn Inn at Kantonsstrasse 171, 3929 Taesch with operating hotel, restaurant and contact information.",
+      "hotelleriesuisse_member_scope": "UNRESOLVED",
+      "canonical_id_state": "NO_H_ID_RESERVED",
+      "authority_advanced": false,
+      "h_id_allocated": false,
+      "outbound_opened": false,
+      "send_allowed": 0
+    }
+  ],
+  "qa": {
+    "historical_cache_promoted": false,
+    "member_scope_inferred_from_external_entity_presence": false,
+    "canonical_id_reservations": 0,
+    "authority_advanced": false,
+    "outbound_opened": false,
+    "send_allowed": 0
+  },
+  "next": "Consume the fresh coherent HSLCA member-directory manifest when available; use it to resolve member-scope status for these identities by source-record identity, then feed only the coherent frozen source universe through CMI/CWP/ECV/SMC/SRR."
+}

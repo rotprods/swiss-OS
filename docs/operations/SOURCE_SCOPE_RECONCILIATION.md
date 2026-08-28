@@ -53,7 +53,7 @@ Must contain:
 3. EXACT_NAME_CITY
 ```
 
-All matching layers require uniqueness. Ambiguity fails closed.
+All matching layers require uniqueness. Ambiguity within either source is itself a typed conflict and fails closed.
 
 ## Scope states
 
@@ -135,16 +135,65 @@ H_ID_ALLOCATIONS = 0
 OUTBOUND_OPENED = FALSE
 ```
 
+## Candidate → mass-ingest bridge
+
+A reconciled candidate can be deterministically transformed into the input schema consumed by CMI-1.0:
+
+```bash
+python -m swiss_os.candidate_export \
+  crm-candidate-snapshot.json \
+  api-manifest.json \
+  --out crm-ingest-records.json
+```
+
+The bridge verifies:
+
+```text
+candidate crm_freeze_eligible = true
+candidate snapshot_state = FROZEN_CANDIDATE
+candidate api_snapshot_id = API snapshot_id
+API capture_valid = true
+API records_count = exported record count
+source_record_key uniqueness
+non-empty source name
+```
+
+It exports:
+
+```text
+source_url
+raw_name
+raw_city
+detail_url
+provider_record_key
+```
+
+and still guarantees:
+
+```text
+H_ID_ALLOCATIONS = 0
+AUTHORITY_ADVANCED = FALSE
+```
+
+The resulting file can be passed directly to:
+
+```bash
+swiss-os crm-ingest stage DB_PATH SNAPSHOT_ID crm-ingest-records.json --observed-at <ISO8601>
+```
+
+This closes the executable handoff from structured acquisition to deterministic anti-join/scheduler while keeping authority separate.
+
 ## Relationship to CUP-1.1
 
 ```text
 discover.swiss acquisition
 → SSR-1.0 source-scope reconciliation
 → FROZEN_CANDIDATE
-→ snapshot freeze validation
-→ snapshot-record materialization
-→ CRM mass anti-join
+→ candidate_export
+→ CRM mass anti-join + scheduler
+→ exact-current / entity-resolution work
 → terminal mappings
+→ snapshot freeze verification
 → authority-eligible commit
 → cross-plane reconciliation
 → CRM_UNIVERSE_COMPLETE

@@ -2,7 +2,6 @@
 
 ## G-0001 — North Star
 
-**State:** ACTIVE  
 **Priority:** P0
 
 Secure for Roberto a real Swiss job offer that is legal, truthful, verifiable, compatible with his real profile, economically viable, sustainable for relocation, acceptable to Roberto and capable of supporting long-term life in Switzerland.
@@ -15,76 +14,99 @@ P(verified viable Swiss offer × Roberto accepts × relocation succeeds)
 
 Hotel counts, scraping volume, outreach volume and dashboards are infrastructure, not the mission.
 
-## Goal tree
+## Goal tree contract
 
 ```text
-G-0001  Verified viable Swiss offer + sustainable relocation [ACTIVE]
-├── G-0500  Canonical Swiss hotel universe [ACTIVE_SCALE_WAVE_B]
-│   └── CP-0750  686 active / 750 [ACTIVE]
-├── G-0600  Candidate readiness [BLOCKED_USER_INPUT]
-├── G-0700  Full Swiss Hotel Intelligence L9 OS [ACTIVE_PARALLEL]
-│   └── final progress 0 / 2050 L9 packages
-└── G-0800  Maximum Swiss Employment Acquisition OS [ACTIVE_MAXIMUM]
-    ├── active Graph/Intelligence 686 / 686
-    └── CP-0800-CURRENT-L4 105 / 686 [ACTIVE]
+G-0001  Verified viable Swiss offer + sustainable relocation
+├── G-0500  Canonical Swiss hotel universe / entity parity
+├── G-0600  Candidate readiness and truthful lane assets
+├── G-0700  Full Swiss Hotel Intelligence / outreach-readiness OS
+└── G-0800  Maximum Swiss Employment Acquisition OS
 ```
 
-## Active canonical checkpoint
-
-`SV2-059 / CP0750-BATCH05`
-
-Current constrained state:
+The live state, active checkpoint, counts, current entity epoch, constrained parent and next scheduler task are **mutable operational state** and MUST be read from:
 
 ```text
-entity epoch = HS_ENTITY_EPOCH_2026-08-25_E4
-physical hotel lineage rows = 690
-superseded duplicate aliases = 4
-active canonical entities = 686
-remaining active entities to CP-0750 = 64
-next physical ID = H-0691
+1. live Drive/Sheets GOAL_STATE + CHECKPOINT_REGISTRY + scheduler
+2. latest authority-eligible constrained manifest
+3. STATE.md public-safe pointer
 ```
 
-The previous `SV2-058` Batch04 committed thirteen support-scoped current T1 entities (`H-0678..H-0690`) through the DB-first E4/V12 path. Evidence scope remains explicit: regional-association support is not presented as exact member-directory detail.
+This document deliberately does not duplicate mutable frontier counters.
 
-Every subsequent promotion follows:
+## G-0500 — Canonical market system
+
+Purpose:
+
+- maintain a deduplicated, provenance-backed Swiss hotel/entity universe;
+- preserve immutable IDs and alias lineage;
+- distinguish current exact entity evidence, current scoped support, historical discovery and unresolved scope;
+- synchronize constrained DB, Sheets mirror, Graph/Intelligence and checkpoint observability.
+
+Canonical promotion follows the Wave Operating Protocol:
 
 ```text
 DISCOVER
 → NORMALIZE
-→ DEDUPE / ALIAS ANTI-JOIN
+→ DEDUPE / ALIAS / GROUP RESOLUTION
 → RECONCILE EVIDENCE SCOPE
 → STAGE
 → CANARY
+→ VALIDATE
 → DB COMMIT
-→ SHEETS MIRROR
-→ GRAPH / INTELLIGENCE SYNC
-→ QA / INVARIANTS
-→ OBSERVABILITY / HANDOFF
+→ SHEETS PK MIRROR
+→ GRAPH / INTELLIGENCE
+→ QA / INVARIANTS / SLO
+→ OBSERVABILITY / HANDOFF / RECOVERY
 ```
 
-`OPERATIONAL_DB_SHADOW_MANIFEST_V12` is the current constrained parent pointer for the next canonical commit. A new commit must independently prove integrity, FK, active-set, mirror, replay/restore and semantic gates.
+## G-0600 — Candidate readiness
 
-## Intelligence frontier
+Purpose:
 
-E4 adds thirteen L1 identity seeds only. Therefore:
+Maintain truthful, lane-specific candidate readiness for:
 
 ```text
-active Intelligence coverage = 686 / 686
-active Graph coverage = 686 / 686
-L4 resolved = 105 / 686
-L4 remaining = 581
-L9 = 0 / 2050
+ENTRY
+HYBRID
+CREATIVE
+PORTAL
 ```
 
-## Candidate and outbound gates
+Do not fabricate phone, language CEFR, availability, LinkedIn, portfolio URLs, metrics, employment or case-study claims.
 
-`G-0600` remains lane-specific and truth-constrained. ENTRY must not wait on CREATIVE/HYBRID-only assets where irrelevant.
+ENTRY must not be blocked by CREATIVE/HYBRID-only assets where irrelevant.
 
-Outbound remains **CLOSED** and `send_allowed = 0`. No email, portal submission, DM, WhatsApp or follow-up may execute without all applicable evidence, freshness, channel, suppression, idempotency, candidate-asset and explicit-user-authorization gates.
+## G-0700 — Intelligence system
+
+Purpose:
+
+Progressively resolve hotel intelligence with evidence-aware semantics across identity, web/careers, vacancies, housing, people, channels, social/digital/creative/tech, proposition and routing dimensions.
+
+L1/L4/L9 counts are operational metrics and therefore live in the control plane/STATE pointer, not in this stable goal contract.
+
+## G-0800 — Maximum acquisition readiness
+
+Purpose:
+
+Bring market, candidate, evidence, routing, asset, graph, scheduler and governance systems to maximum truthful pre-outbound readiness while keeping irreversible external action independently gated.
+
+## Outbound hard lock
+
+Outbound defaults to:
+
+```text
+OUTBOUND = CLOSED
+send_allowed = 0
+```
+
+No email, portal submission, DM, WhatsApp or follow-up may execute without all applicable evidence, freshness, channel, suppression, idempotency, candidate-asset and explicit-user-authorization gates.
 
 ## Checkpoint semantics
 
-A checkpoint is never complete because a counter reaches target. Completion requires applicable integrity, QA, restore/replay, DB↔Sheets reconciliation, scheduler, observability and governance gates to pass.
+A checkpoint is never complete because a counter reaches target.
+
+Completion requires all applicable integrity, QA, restore/replay, DB↔Sheets, Graph/Intelligence, scheduler, observability, persistence and governance gates in `docs/operations/WAVE_OPERATING_PROTOCOL.md`.
 
 ## Definition of success
 

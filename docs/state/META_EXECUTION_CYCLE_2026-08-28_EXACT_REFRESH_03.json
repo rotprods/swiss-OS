@@ -1,0 +1,30 @@
+{
+  "graph_type": "PROJECT_MEMORY_META_GRAPH_DELTA",
+  "schema_version": "1.3",
+  "project": "SWITZERLAND_JOB_OS",
+  "cycle_id": "META-20260828-EXACT-REFRESH-03",
+  "generated_at": "2026-08-28T22:12:00+02:00",
+  "authority_mutation": false,
+  "nodes": [
+    {"id":"META-20260828-EXACT-REFRESH-03","type":"META_CYCLE","route":"EXACT_CURRENT_REFRESH_EXTERNAL_ENTITY_CONFIRMATION"},
+    {"id":"AUTHORITY-E4-ISSUE89-RECOVERED","type":"AUTHORITY_STATE","active":690,"physical":690,"aliases":0},
+    {"id":"ARTIFACT-EXACT-REFRESH-03","type":"EVIDENCE_BATCH","records":4,"member_scope_unresolved":4},
+    {"id":"PR-97-LIVE-HSLCA","type":"SOURCE_QUALIFICATION","state":"IN_PROGRESS_AT_CAPTURE_TIME"},
+    {"id":"GATE-CRM-UNIVERSE-COMPLETE","type":"GATE","state":false},
+    {"id":"OUTBOUND","type":"GATE","state":"CLOSED","send_allowed":0}
+  ],
+  "edges": [
+    ["META-20260828-EXACT-REFRESH-03","IMPLEMENTS","GATE-CRM-UNIVERSE-COMPLETE"],
+    ["META-20260828-EXACT-REFRESH-03","PRODUCED","ARTIFACT-EXACT-REFRESH-03"],
+    ["ARTIFACT-EXACT-REFRESH-03","REQUIRES_SCOPE_RESOLUTION_FROM","PR-97-LIVE-HSLCA"],
+    ["AUTHORITY-E4-ISSUE89-RECOVERED","UNCHANGED_BY","META-20260828-EXACT-REFRESH-03"],
+    ["GATE-CRM-UNIVERSE-COMPLETE","BLOCKS","OUTBOUND"]
+  ],
+  "invariants": {
+    "canonical_id_reservations": 0,
+    "authority_advanced": false,
+    "external_entity_presence_is_not_member_scope_proof": true,
+    "outbound_opened": false,
+    "send_allowed": 0
+  }
+}

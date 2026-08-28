@@ -1,59 +1,90 @@
 {
   "schema_version": "NPP-1.0",
   "project": "SWITZERLAND_JOB_OS",
-  "generated_at": "2026-08-28T16:19:00+02:00",
-  "cycle_id": "META-20260828-EXACT-REFRESH-04",
-  "parent_git_sha": "efbd1c24eff17d24c391b2d6224a600ed0f1b4ec",
+  "generated_at": "2026-08-28T18:52:00+02:00",
+  "cycle_id": "META-20260828-ACTIVATION-02-FINAL",
+  "parent_git_sha": "78816d0f53951db1d7e34d0d2ee47200e82bd271",
   "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
   "authority_parent": "OPERATIONAL_DB_SHADOW_MANIFEST_V13",
   "authority_parent_sha256": "0e605b412f29893ca1775f1e8fccd5987d0613baab4ac29b6699988cde0fdfe5",
   "execution_mode": "READ_ONLY_RESEARCH",
-  "selected_route": "EXACT_CURRENT_REFRESH",
-  "next_route": "EXACT_CURRENT_REFRESH",
+  "selected_route": "FRESH_HSLCA_COHERENT_CAPTURE",
+  "next_route": "FRESH_HSLCA_COHERENT_CAPTURE_THEN_PCF_IF_COUNTLESS",
   "goal_id": "G-0500",
   "checkpoint_id": "CRM_UNIVERSE_COMPLETE",
   "hard_blockers": [
     "DISCOVER_SWISS_SUBSCRIPTION_KEY_UNAVAILABLE",
-    "MEMBER_DIRECTORY_COHERENT_CURRENT_SNAPSHOT_NOT_YET_ACQUIRABLE_FROM_AVAILABLE_WEB_SURFACES"
+    "COHERENT_COMPLETE_CURRENT_MEMBER_DIRECTORY_SNAPSHOT_NOT_YET_ACCEPTED"
   ],
   "resolved_capabilities": [
-    "NATIVE_SHEETS_IN_PLACE_WRITE_AVAILABLE_AND_HOTELS_MASTER_CANARY_VERIFIED"
+    "NATIVE_HOTELS_MASTER_WRITER_VERIFIED",
+    "HSLCA_R1_0_PROVIDER_AWARE_CAPTURE_AVAILABLE",
+    "MDC_1_1_LIVE_CARD_IDENTITY_FIXED",
+    "PCF_1_0_COUNTLESS_PARTITION_DENOMINATOR_AVAILABLE",
+    "CWP_1_0_MERGED",
+    "ECV_1_0_MERGED",
+    "SMC_1_0_MERGED",
+    "SRR_1_1_MERGED"
   ],
-  "dependencies": [
-    "Continue exact-current resolution from Historical_Missing_Seed after batches 01-04",
-    "Acquire one coherent complete MDM snapshot or a valid discover.swiss dsod-hs capture",
-    "After terminal frozen-source mapping, run an authoritative WOP promotion from the then-current verified constrained parent"
+  "source_diagnostics": {
+    "first_live_canary": {
+      "run_id": 33187779427,
+      "result": "FAIL_CLOSED_HTTP_429",
+      "observed_pages": 8,
+      "expected_pages": 172
+    },
+    "second_live_canary": {
+      "run_id": 33188955280,
+      "snapshot_id": "HS-DIRECTORY-DE-20260828T161347Z",
+      "observed_pages": 172,
+      "expected_pages": 172,
+      "materialized_records": 2061,
+      "unique_detail_urls": 2061,
+      "page_errors": 0,
+      "accepted_for_entity_resolution": false,
+      "reason": "MDC-1.0 name/city field-order defect; fixed by MDC-1.1. Provider aggregate count was also absent."
+    }
+  },
+  "exact_current_activation_02": {
+    "batches": "05-12",
+    "records_attempted": 90,
+    "current_exact_member_detail": 72,
+    "indexed_exact_refresh_required": 8,
+    "scope_reconcile": 10,
+    "canonical_id_reservations": 0
+  },
+  "productive_fallbacks": [
+    "Continue EXACT_CURRENT_REFRESH only on populated unprocessed staging identities.",
+    "Run ECV over exact-detail identities needing live verification when work packets are available.",
+    "Run SMC/SRR-1.1 review on pre-authority mappings without allocating H-IDs.",
+    "Run source-lineage/recovery/QA work if provider-safe re-entry is not yet appropriate."
   ],
   "required_inputs": [
+    "OPERATIONAL_DB_SHADOW_MANIFEST_V13.json",
     "CRM_UNIVERSE_STAGING_2026-08-28_v11.xlsx",
-    "EXACT_CURRENT_REFRESH_BATCH_2026-08-28_01.json",
-    "EXACT_CURRENT_REFRESH_BATCH_2026-08-28_02.json",
-    "EXACT_CURRENT_REFRESH_BATCH_2026-08-28_03.json",
-    "EXACT_CURRENT_REFRESH_BATCH_2026-08-28_04.json",
-    "OPERATIONAL_DB_SHADOW_MANIFEST_V13.json"
-  ],
-  "capabilities_required": [
-    "web_research",
-    "drive_read",
-    "native_sheets_write",
-    "github_read_write_ci"
+    "EXACT_CURRENT_REFRESH_BATCHES_05_12.zip",
+    "MDC_LIVE_CAPTURE_DIAGNOSTIC_2026-08-28_RUN_33188955280.json",
+    "HSLCA-R1.0 / MDC-1.1 / PCF-1.0 / MDM / CMI / CWP / ECV / SMC / SRR-1.1 contracts"
   ],
   "graph_impact": "META",
   "authority_advance_allowed": false,
   "canonical_id_allocation_allowed": false,
   "outbound_allowed": false,
   "resume_instructions": [
-    "Re-read GitHub main and compare parent_git_sha; if it moved, reconstruct ancestry before branching.",
-    "Reconstruct E4 authority from live HOTELS_MASTER and V13 (or a later fully synchronized verified successor).",
-    "Re-probe discover.swiss key and coherent member-directory-manifest capability.",
-    "If structured/coherent acquisition is still unavailable, continue exact-current refresh from the first unprocessed Historical_Missing_Seed identity after batch04.",
-    "Persist exact/support/unresolved states; do not convert read-only evidence into canonical authority.",
-    "Never reserve H-IDs from staging.",
+    "Re-read GitHub main and compare parent_git_sha; if it moved, reconstruct ancestry before work.",
+    "Reconstruct E4/V13 authority or its later fully synchronized verified successor before any canonical mutation.",
+    "Respect provider-safe re-entry. Run one fresh current-locale HSLCA-R1.0 capture using MDC-1.1 identity semantics; do not hammer the provider immediately after a recent full crawl.",
+    "If an aggregate provider count is present, use the normal MDM path.",
+    "If the provider count remains absent and REPORTED_RECORDS_UNRESOLVED is the sole capture violation, run PCF-1.0 only when all pages were captured inside the same current capture window, partition cardinality is stable and every PCF gate passes.",
+    "Validate MDM coverage_complete=true before CMI.",
+    "Execute CMI anti-join -> CWP -> ECV -> SMC -> SRR-1.1 entirely pre-authority.",
+    "Acquire discover.swiss dsod-hs when the subscription credential becomes available and execute SSR-1.0.",
+    "Never reserve H-IDs from staging; NEW_CANONICAL remains authority work only.",
     "Keep OUTBOUND=CLOSED and send_allowed=0."
   ],
   "done_when": [
-    "A coherent target source universe is captured and source-scope reconciled EXACT or evidence-backed EXPLAINED.",
-    "Every frozen source record has one terminal mapping and unmapped=0 / RECONCILE_REQUIRED=0.",
-    "All affected DB, HOTELS_MASTER, Intelligence, Operational Graph, observability and recovery layers reconcile before CRM_UNIVERSE_COMPLETE can become true."
+    "One coherent target source universe is captured and source-scope reconciled EXACT or evidence-backed EXPLAINED.",
+    "Every frozen source record has exactly one terminal mapping with unmapped=0 and RECONCILE_REQUIRED=0.",
+    "DB, HOTELS_MASTER, Intelligence, Operational Graph, observability and recovery reconcile exactly in a bounded authoritative WOP wave before CRM_UNIVERSE_COMPLETE becomes true."
   ]
 }

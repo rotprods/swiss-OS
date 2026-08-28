@@ -1,14 +1,12 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest chained Meta Execution reconciliation: **2026-08-28T22:23:12Z**.  
-Reconstructed GitHub `main` parent for this reconciliation: **`da15654cc7433c05f341a561b0b523dee735c3b4`**.  
+Latest chained Meta Execution reconciliation: **2026-08-28T22:48:00Z**.  
+GitHub parent at wave start: **`0c3770e6226074e846b7526dd521ef63040f85d9`**.  
 Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**.  
 Open GitHub issues labelled `P0`: **0**.  
 Frozen current CRM source snapshot: **`HS-MEMBER-DE-33206402141`**.
 
-## 1. Authoritative operational state
-
-Issue #89 remains recovered and closed. Authority is still the semantically reconciled E4 state established by ASR/ARR/CCP and the HOTELS_MASTER cross-plane transaction. Every later CRM/ECV wave is pre-authority evidence only.
+## 1. Authoritative operational state — unchanged
 
 ```text
 physical HOTELS rows            690
@@ -27,53 +25,55 @@ OUTBOUND                        CLOSED
 send_allowed                      0
 ```
 
-Immutable V13 base SHA-256 remains `0e605b412f29893ca1775f1e8fccd5987d0613baab4ac29b6699988cde0fdfe5`; deterministic repaired constrained-parent materialization SHA-256 remains `70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`. No HSLCA/MDM/CMI/CWP/ECV/SRR pre-authority wave has allocated an H-ID or changed this authority.
+Immutable V13 base SHA-256: `0e605b412f29893ca1775f1e8fccd5987d0613baab4ac29b6699988cde0fdfe5`. Repaired constrained-parent SHA-256: `70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`. No source/ECV/SRR/overlay wave may advance authority from staging, cache, Library, provider response or canary state.
 
-**Authority/canary invariant:** cache, Library, staging, research, diagnostic, provider-response or canary artifacts are non-authoritative and can never promote canonical IDs, denominators or cross-plane authority by themselves.
-
-## 2. Coherent current HotellerieSuisse source — QUALIFIED
-
-The qualified source capture remains `HS-MEMBER-DE-33206402141`:
+## 2. Qualified current source
 
 ```text
+snapshot                         HS-MEMBER-DE-33206402141
 Actions capture run             33206402141
 artifact                        9700376482
 artifact ZIP SHA-256            721f9ff9f84e2d5d9df62c6b22f12e7354cef3a298cb8990be66a202e1e769ce
-contiguous pages                172
-materialized records            2061
+pages                           172
+records                         2061
 unique detail URLs              2061
 canonical MDM records SHA-256   b02c6fae1215643088eafec0af8b2b139506e4e46dec9e81277a1a9e5e4e897f
 canonical MDM manifest SHA-256  e5c7e2d52eed1dd585a9a00f1bd98015997ec902e8890d0abcb89cdc87aeb74f
 CMI records SHA-256             22bfc4ee304b37b426e6e8f4da03ca73febc7d2283882caf58fd13edaee5081f
 ```
 
-Raw HSLCA pagination drift was fail-closed; HPCB/PCCN/PCF qualified the bounded one-page metadata drift without erasing the raw observation. The frozen 2061-record source remains the current source parent for CRM reconciliation; do not rerun bulk acquisition merely to manufacture progress.
+Raw pagination metadata drift remains preserved as an observation; HPCB/PCCN/PCF qualified the coherent 2061-record source. discover.swiss subscription access is unavailable, so HotellerieSuisse remains the MEP fallback source rather than idling.
 
-Drive acceptance artifact: `HSLCA_LIVE_ACCEPTANCE_33206402141`, ID `1bcIj_Ab2ajjjND3n7p9ES2IDjp7_Jy81S-IFn9LtlCI`.
+## 3. Source mapping frontier
 
-## 3. Canonical MDM / CMI / mapping frontier
+Pinned base mapping candidate:
 
 ```text
 source records                         2061
-MATCH_EXISTING_CANONICAL anti-join      624
-CANDIDATE_NEW_ENTITY_PREAUTH            1437
-exact-match conflicts                      0
-reverse E4 without exact source match      66  (RECONCILE_REQUIRED_NOT_EXCLUSION)
-terminal source mappings                 624
-RECONCILE_REQUIRED                      1437
-unmapped source records                    0
-terminal mapping coverage          30.2766%
-anti-join payload SHA-256        c50a2b2b70677d6651f89e94fe19382d525c72c52111c91b8291c15887729d2a
+base terminal mappings                  624
+base RECONCILE_REQUIRED                1437
+base terminal coverage             30.2766%
+base candidate SHA-256          2f9413318c410eb0f0443de260213d31e9ab2bdc1058581c0fa9c0340474aa27
+anti-join SHA-256               c50a2b2b70677d6651f89e94fe19382d525c72c52111c91b8291c15887729d2a
 CWP packet SHA-256              6ae41038683c185a51e482c2f979dc1a52b9348cc172a367bf5dc1311efd9249
+reverse authority/source gaps           66  RECONCILE_REQUIRED_NOT_EXCLUSION
 ```
 
-`unmapped=0` is not universe completion. Every `RECONCILE_REQUIRED` source record must reach exactly one justified terminal mapping before CRM_UNIVERSE_COMPLETE can become true.
+SMO-1.0 now persists the two previously reviewed `MATCH_EXISTING` transitions as a replayable, pre-authority terminal-mapping overlay:
 
-Drive control summary: `CMI_HSLCA_2061_PREAUTH_SUMMARY_2026-08-28`, ID `1-n34KObY-1AUv6AB8Tm7Mzp2WHDk2f_d0OoVqeITm94`.
+```text
+MD-025e7888dfc33e19723a -> H-0686
+MD-0672b5697de8a818d65b -> H-0022
+overlay SHA-256                 e966d5ab0e70ce92fc0a690409cd2e910281e3584d09aeb1a098f198bd5bc01e
+effective terminal mappings             626
+effective RECONCILE_REQUIRED            1435
+effective terminal coverage         30.373605%
+materialization state            OVERLAY_VALIDATED_BASE_REBUILD_PENDING
+```
 
-## 4. Exact-current verification / entity-resolution frontier
+The overlay is terminal source-mapping state for its two exact source keys, but not canonical authority. The full 2061-record mapping must be replayed/materialized before SSR or authority eligibility.
 
-Six bounded CWP-derived ECV subbatches are now durably persisted. The latest durable result is `ECV_BATCH_0001_SUB0006_RESULT.json` from main `da15654cc7433c05f341a561b0b523dee735c3b4`.
+## 4. Exact-current verification frontier
 
 ```text
 ECV verified frontier             120 / 1437
@@ -81,62 +81,49 @@ ECV remaining never verified      1317
 ECV pending requeue                  0
 latest batch                       HS-MEMBER-DE-33206402141:WORK:0001:SUB:0006
 latest packet SHA-256              9a97b4f1187a8c075e7a8d5c502adbfbf9eb4d76b921d1e1b570ef7ee3ab0308
-latest batch CURRENT_DETAIL_VERIFIED 20 / 20
 ```
 
-Every ECV result through sub0006 preserves `authority_advanced=false`, `h_id_allocations=0`, `OUTBOUND=CLOSED`, `send_allowed=0`. `CURRENT_DETAIL_VERIFIED` is evidence, not a terminal source mapping and not permission to allocate `H-0691`.
+All six persisted ECV waves are evidence-only and preserve `authority_advanced=false`, `h_id_allocations=0`, `OUTBOUND=CLOSED`, `send_allowed=0`.
 
-Two explicit high-confidence `MATCH_EXISTING` source-resolution reviews are durably ready for SRR-1.1 application:
+## 5. CWP recovery diagnostic
 
-```text
-MD-025e7888dfc33e19723a -> H-0686  Victoria – Alpine Boutique Hotel & Fine Dining / Meiringen
-MD-0672b5697de8a818d65b -> H-0022  BaseCamp Hotel & Apartements / Zermatt
-```
+The original raw source artifact and current E4 HOTELS_MASTER were physically recovered. Re-running the published `normalize_text` exact name+city semantics produces 623 current exact matches / 1438 candidate rows versus the pinned historical 624 / 1437. Crucially, the reconstructed first 100 candidate rows hash exactly to the historical batch-0001 SHA `458acbb69354bdb00ce4bbf82c6464f4bcb4ea5686919f3daffe6751ce8dabbe`, and all persisted first 120 candidate keys match reconstruction.
 
-Both are supported by current exact member-detail evidence plus stable identity evidence. Their terminal mapping effect remains **NONE until the SRR mapping is rebuilt and validated**; do not silently decrement `RECONCILE_REQUIRED` merely because a review exists.
+Because the single historical classification delta has not yet been identified, ECV SUB0007 is fail-closed: offset 120..139 may not be selected until the discrepancy is resolved or proved to occur after that slice. Durable diagnostic: `docs/state/CWP_RECOVERY_DIAGNOSTIC_2026-08-29.json`.
 
-## 5. Protocol / capability state
+## 6. Protocol / capability state
 
 ```text
 MEP-2.0 / COLETTE / WOP                  ACTIVE
-durable NEXT protocol                    ACTIVE
-ASR-1.0                                  EXACT on authority parent
+ASR-1.0                                  EXACT
 SSR-1.0 / SRR-1.1                        AVAILABLE
-GitHub read/write/PR/CI                  AVAILABLE
-web/current-source research              AVAILABLE
-Drive read/write + native Sheets         AVAILABLE
-HOTELS_MASTER current E4                 AVAILABLE (690 active / 0 aliases)
-coherent HotellerieSuisse source         AVAILABLE / QUALIFIED
-discover.swiss subscription key          UNAVAILABLE (alternate-source limitation)
-Library historical staging               AVAILABLE / NON-AUTHORITATIVE
-open GitHub P0 issues                     0
+SMO-1.0                                  ACTIVE PRE-AUTHORITY
+handoff frontier guard                   ACTIVE IN CI
+GitHub branch/PR/CI/review/merge          AVAILABLE
+Drive + native Sheets                     AVAILABLE
+web/current-source research               AVAILABLE
+discover.swiss subscription key           UNAVAILABLE / NON-BLOCKING FALLBACK
+Library historical staging                NON-AUTHORITATIVE
 ```
 
-A missing discover.swiss subscription key does not justify idle time: the qualified HotellerieSuisse member-directory capture is the active MEP fallback source. Historical Library workbooks may be used only as recovery/research evidence and must never advance authority.
-
-## 6. Highest-value safe NEXT
-
-Immediate route is a chained pre-authority resolution wave, then continued exact-current verification:
+## 7. NEXT
 
 ```text
-apply/validate the 2 ready explicit SRR reviews as a bounded pre-authority mapping delta
-→ persist their terminal decision journal without authority mutation
-→ recover the next untouched CWP candidate slice from the fingerprinted CWP/CMI parent
-→ stage ECV SUB0007 only from that lineage-compatible slice
-→ exact-current verify
-→ entity resolution / source terminalization
-→ repeat bounded waves
-→ resolve the 66 reverse authority/source discrepancies
+identify the one-record 623/1438 vs 624/1437 anti-join delta
+→ reproduce pinned CWP lineage or prove delta position
+→ recover untouched CWP offset 120..139
+→ ECV SUB0007
+→ entity resolution / SMO terminalization
+→ replay/materialize full source mapping
+→ resolve reverse gaps 66
 → RECONCILE_REQUIRED = 0
-→ SSR / source-scope reconciliation
-→ authority-eligible cross-plane candidate only then
+→ SSR-1.0
+→ only then construct an authority-eligible cross-plane candidate
 ```
 
-Exact dependency for ECV SUB0007: the next untouched 20 records must be recovered from CWP packet SHA `6ae41038683c185a51e482c2f979dc1a52b9348cc172a367bf5dc1311efd9249` / CMI SHA `22bfc4ee304b37b426e6e8f4da03ca73febc7d2283882caf58fd13edaee5081f`, excluding all records already present in persisted ECV sub0001..sub0006. If the original packet artifact cannot be materialized, rebuild the candidate slice deterministically from the frozen 2061-record parent and verify the same parent hashes before use; never substitute stale Library row order.
+If exact CWP lineage remains unavailable, continue safe entity resolution on already verified ECV records and persist further SMO overlays; do not idle and do not allocate H-IDs.
 
-No source candidate may reserve `H-0691` or any later ID. Any later authority mutation requires a fresh bounded DB → HOTELS_MASTER → Intelligence → Graph → scheduler/checkpoint/metrics/SLO transaction with ASR and restore/replay/idempotency gates.
-
-Canonical continuation pointer: `docs/state/NEXT.json`. Drive cold-recovery pointer must be refreshed after this GitHub frontier is merged; an older Drive pointer remains recovery-only until then.
+Canonical continuation pointer: `docs/state/NEXT.json`.
 
 ```text
 authority_advance_allowed = FALSE

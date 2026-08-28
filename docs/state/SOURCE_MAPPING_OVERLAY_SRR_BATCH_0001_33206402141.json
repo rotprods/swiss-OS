@@ -1,0 +1,37 @@
+{
+  "authority_advanced": false,
+  "base_candidate_sha256": "2f9413318c410eb0f0443de260213d31e9ab2bdc1058581c0fa9c0340474aa27",
+  "base_reconcile_required": 1437,
+  "base_source_records": 2061,
+  "base_terminal_mappings": 624,
+  "crm_universe_complete": false,
+  "effective_reconcile_required": 1435,
+  "effective_terminal_mapping_coverage_pct": 0.30373605046094126,
+  "effective_terminal_mappings": 626,
+  "h_id_allocations": 0,
+  "materialization_state": "OVERLAY_VALIDATED_BASE_REBUILD_PENDING",
+  "outbound": "CLOSED",
+  "overlay_sha256": "e966d5ab0e70ce92fc0a690409cd2e910281e3584d09aeb1a098f198bd5bc01e",
+  "schema_version": "CRM-SOURCE-MAPPING-OVERLAY-1.0",
+  "send_allowed": 0,
+  "snapshot_id": "HS-MEMBER-DE-33206402141",
+  "terminal_deltas": [
+    {
+      "canonical_hotel_id": "H-0686",
+      "evidence_ref": "ECV_BATCH_0001_SUB0002_RESULT.json#packet=2426d1c1b80ba959891d31c5d406b37f47d35323f1e114b27ec630e19aa1f4f0|ECV_RESPONSE_SHA256=330bb01dbffaa313c8698834acc565ccf6772b35d0e91a3b5a2b6ec1ca013dbc|HOTELS_MASTER:H-0686|https://www.victoria-meiringen.ch/",
+      "from_mapping_state": "RECONCILE_REQUIRED",
+      "reason_code": "CURRENT_EXACT_DETAIL_AND_STABLE_IDENTITY_NAME_VARIANT",
+      "source_record_key": "MD-025e7888dfc33e19723a",
+      "to_mapping_state": "ACTIVE_CANONICAL"
+    },
+    {
+      "canonical_hotel_id": "H-0022",
+      "evidence_ref": "ECV_BATCH_0001_SUB0003_RESULT.json#packet=48632d17698772a6c5c17a24fa5c906eed05c957337758bbe18927b6ae6a30d8|ECV_RESPONSE_SHA256=82c45fdfded05f08917c26e83a714c2e8ef7c4985e6ead66392499f6ce423381|HOTELS_MASTER:H-0022|https://hotel-basecamp.ch/",
+      "from_mapping_state": "RECONCILE_REQUIRED",
+      "reason_code": "CURRENT_EXACT_DETAIL_AND_STABLE_IDENTITY_SPELLING_VARIANT",
+      "source_record_key": "MD-0672b5697de8a818d65b",
+      "to_mapping_state": "ACTIVE_CANONICAL"
+    }
+  ],
+  "terminal_deltas_count": 2
+}

@@ -1,0 +1,40 @@
+{
+  "schema_version": "CWP-RECOVERY-DIAGNOSTIC-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "generated_at": "2026-08-28T22:48:00Z",
+  "snapshot_id": "HS-MEMBER-DE-33206402141",
+  "source_artifact_id": 9700376482,
+  "source_artifact_sha256": "721f9ff9f84e2d5d9df62c6b22f12e7354cef3a298cb8990be66a202e1e769ce",
+  "source_records": 2061,
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "authority_rows": 690,
+  "authority_aliases": 0,
+  "hotels_master_export_sha256": "0a9c8fa845613f450e22de96c52cc1607d14a72c50be87e9143e7a47d703c9cb",
+  "historical_anti_join": {
+    "exact_existing": 624,
+    "candidate_new_entity_preauth": 1437,
+    "conflicts": 0,
+    "payload_sha256": "c50a2b2b70677d6651f89e94fe19382d525c72c52111c91b8291c15887729d2a",
+    "work_packet_sha256": "6ae41038683c185a51e482c2f979dc1a52b9348cc172a367bf5dc1311efd9249",
+    "batch_0001_items_sha256": "458acbb69354bdb00ce4bbf82c6464f4bcb4ea5686919f3daffe6751ce8dabbe"
+  },
+  "deterministic_reconstruction": {
+    "normalization_contract": "snapshot_freeze.normalize_text: strip + whitespace collapse + casefold",
+    "current_exact_name_city_matches": 623,
+    "current_candidate_rows": 1438,
+    "conflicts": 0,
+    "historical_count_delta": 1,
+    "first_100_candidate_items_sha256": "458acbb69354bdb00ce4bbf82c6464f4bcb4ea5686919f3daffe6751ce8dabbe",
+    "first_100_match_historical_batch_0001": true,
+    "persisted_first_120_candidate_keys_match_reconstruction": true,
+    "safe_next_untouched_offset": 120,
+    "sub0007_lineage_eligible": false,
+    "blocker": "ONE_RECORD_ANTI_JOIN_CLASSIFICATION_DISCREPANCY_MUST_BE_IDENTIFIED_BEFORE_SELECTING_OFFSET_120_139"
+  },
+  "recovery_rule": "Do not stage ECV SUB0007 until the historical 624/1437 anti-join is reproduced or the single classification delta is identified and proven to occur after the selected slice. Never use stale Library row order as a substitute.",
+  "authority_advanced": false,
+  "h_id_allocations": 0,
+  "crm_universe_complete": false,
+  "outbound": "CLOSED",
+  "send_allowed": 0
+}

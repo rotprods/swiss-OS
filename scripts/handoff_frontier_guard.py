@@ -68,14 +68,21 @@ def latest_ecv_frontier(root: Path = ROOT) -> EcvFrontier:
 
     frontiers: list[EcvFrontier] = []
     seen_cumulative: dict[int, tuple[int, int]] = {}
+    frontier_keys = (
+        "cumulative_current_detail_verified",
+        "remaining_never_verified",
+        "pending_requeue",
+    )
+
     for path in paths:
         payload = _load_json(path)
         if payload.get("schema_version") != "ECV-RESULT-SUMMARY-1.0":
             continue
+
+        # All persisted summaries, including early legacy summaries, are still
+        # safety-bearing evidence and must remain fail-closed.
         _validate_safety(payload, path)
-        cumulative = _require_nonnegative_int(payload, "cumulative_current_detail_verified", path)
-        remaining = _require_nonnegative_int(payload, "remaining_never_verified", path)
-        pending = _require_nonnegative_int(payload, "pending_requeue", path)
+
         batch_id = payload.get("batch_id")
         packet = payload.get("ecv_packet_sha256")
         if not isinstance(batch_id, str) or not batch_id:
@@ -83,21 +90,32 @@ def latest_ecv_frontier(root: Path = ROOT) -> EcvFrontier:
         if not isinstance(packet, str) or not re.fullmatch(r"[0-9a-f]{64}", packet):
             raise FrontierError(f"{path}: ecv_packet_sha256 must be lowercase sha256")
 
+        present = [key in payload for key in frontier_keys]
+        if not any(present):
+            # ECV-RESULT-SUMMARY-1.0 predates cumulative frontier fields for the
+            # earliest batches. They are valid durable evidence but cannot by
+            # themselves define the current handoff frontier.
+            continue
+        if not all(present):
+            missing = [key for key, is_present in zip(frontier_keys, present) if not is_present]
+            raise FrontierError(f"{path}: partial cumulative frontier; missing {', '.join(missing)}")
+
+        cumulative = _require_nonnegative_int(payload, "cumulative_current_detail_verified", path)
+        remaining = _require_nonnegative_int(payload, "remaining_never_verified", path)
+        pending = _require_nonnegative_int(payload, "pending_requeue", path)
+
         prior = seen_cumulative.setdefault(cumulative, (remaining, pending))
         if prior != (remaining, pending):
             raise FrontierError(
                 f"{path}: conflicting ECV frontier for cumulative={cumulative}: "
                 f"{prior} vs {(remaining, pending)}"
             )
-        frontiers.append(
-            EcvFrontier(cumulative, remaining, pending, batch_id, path.name, packet)
-        )
+        frontiers.append(EcvFrontier(cumulative, remaining, pending, batch_id, path.name, packet))
 
     if not frontiers:
-        raise FrontierError("no ECV-RESULT-SUMMARY-1.0 result summaries found")
+        raise FrontierError("no ECV result summary contains cumulative frontier fields")
 
-    latest = max(frontiers, key=lambda item: (item.cumulative_verified, -item.remaining_never_verified, item.batch_id))
-    return latest
+    return max(frontiers, key=lambda item: (item.cumulative_verified, -item.remaining_never_verified, item.batch_id))
 
 
 def validate_handoff(root: Path = ROOT) -> list[str]:
@@ -156,9 +174,7 @@ def validate_handoff(root: Path = ROOT) -> list[str]:
         if verified != frontier.cumulative_verified:
             errors.append(f"STATE.md: ECV verified frontier={verified}, expected {frontier.cumulative_verified}")
         if total != frontier.cumulative_verified + frontier.remaining_never_verified:
-            errors.append(
-                "STATE.md: ECV candidate denominator must equal verified + remaining-never-verified"
-            )
+            errors.append("STATE.md: ECV candidate denominator must equal verified + remaining-never-verified")
 
     state_remaining = re.search(r"^ECV remaining never verified\s+(\d+)\s*$", state_text, re.M)
     if not state_remaining:

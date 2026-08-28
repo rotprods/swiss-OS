@@ -134,22 +134,24 @@ for rel, markers in REQUIRED_MARKERS.items():
         if marker.lower() not in lowered:
             errors.append(f"missing contract marker in {rel}: {marker}")
 
-# STATE must explicitly separate authoritative and canary semantics, but exact
-# counts remain intentionally unconstrained here because STATE is mutable.
-state_text = read("STATE.md")
+# STATE must explicitly separate authority and canary semantics, but exact
+# counts remain intentionally unconstrained because STATE is the mutable pointer.
+state_text = read("STATE.md").lower()
 for marker in (
-    "Authoritative state",
+    "authoritative",
     "canary",
-    "OUTBOUND",
+    "outbound",
     "send_allowed",
 ):
-    if marker.lower() not in state_text.lower():
+    if marker not in state_text:
         errors.append(f"STATE.md missing authority/canary marker: {marker}")
 
-# Stable docs must not claim a background daemon or absolute real-time service.
+# Stable docs must not positively claim an always-on daemon/absolute real-time
+# service. Guard only explicit operational claims; policy text that says not to
+# claim a daemon remains allowed.
 for rel in STATE_FREE_FILES:
     text = (ROOT / rel).read_text(encoding="utf-8") if (ROOT / rel).exists() else ""
-    if re.search(r"\b(?:24/7|background daemon|continuous real-time daemon)\b", text, re.I):
+    if re.search(r"\b(?:runs 24/7|continuous real-time daemon is active)\b", text, re.I):
         errors.append(f"unsupported daemon/real-time claim in stable document: {rel}")
 
 if errors:

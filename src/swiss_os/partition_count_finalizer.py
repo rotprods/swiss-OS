@@ -98,6 +98,7 @@ def finalize_materialized_partition_count(capture_payload: object) -> dict[str, 
 
     seen_positions: set[int] = set()
     seen_detail_urls: set[str] = set()
+    records_per_page: dict[int, int] = {}
     materialized_records = 0
     for page in pages:
         assert isinstance(page, Mapping)
@@ -126,6 +127,7 @@ def finalize_materialized_partition_count(capture_payload: object) -> dict[str, 
             raise PartitionCountFinalizerError(f"page {position} source_url missing")
         if not isinstance(records, list) or not records:
             raise PartitionCountFinalizerError(f"page {position} records must be non-empty")
+        records_per_page[position] = len(records)
         for record in records:
             if not isinstance(record, Mapping):
                 raise PartitionCountFinalizerError(
@@ -159,11 +161,32 @@ def finalize_materialized_partition_count(capture_payload: object) -> dict[str, 
     if materialized_records <= 0 or materialized_records != len(seen_detail_urls):
         raise PartitionCountFinalizerError("materialized record parity failed")
 
+    # Without an independent provider count, partition cardinality is part of
+    # the completeness proof. Every non-last page must expose one stable page
+    # size and the final page must contain 1..page_size records. This prevents
+    # a missing card on an intermediate page from being silently absorbed into
+    # a lower materialized denominator.
+    if expected_pages > 1:
+        non_last_counts = [records_per_page[pos] for pos in range(1, expected_pages)]
+        page_size = non_last_counts[0]
+        if page_size <= 0 or any(count != page_size for count in non_last_counts):
+            raise PartitionCountFinalizerError(
+                "non-last partition cardinality is not stable"
+            )
+        last_count = records_per_page[expected_pages]
+        if not 1 <= last_count <= page_size:
+            raise PartitionCountFinalizerError(
+                "last partition cardinality exceeds inferred page size"
+            )
+    else:
+        page_size = records_per_page[1]
+
     finalized_capture = dict(capture_payload)
     finalized_capture.update(
         {
             "declared_raw_records": materialized_records,
             "record_count_basis": "MATERIALIZED_PARTITION_TOTAL",
+            "inferred_page_size": page_size,
             "capture_violations": [],
             "capture_mode": "LIVE_COMPLETE_MATERIALIZED_COUNT",
             "coverage_claim": "COMPLETE",
@@ -184,6 +207,7 @@ def finalize_materialized_partition_count(capture_payload: object) -> dict[str, 
         "schema_version": _SCHEMA,
         "capture_id": capture_id,
         "expected_pages": expected_pages,
+        "inferred_page_size": page_size,
         "materialized_records": materialized_records,
         "record_count_basis": "MATERIALIZED_PARTITION_TOTAL",
         "finalized_capture": finalized_capture,
@@ -217,6 +241,10 @@ def validate_finalizer(payload: Mapping[str, object]) -> tuple[str, ...]:
         violations.append("OUTBOUND_NOT_CLOSED")
     if payload.get("record_count_basis") != "MATERIALIZED_PARTITION_TOTAL":
         violations.append("INVALID_RECORD_COUNT_BASIS")
+    for key in ("expected_pages", "inferred_page_size", "materialized_records"):
+        value = payload.get(key)
+        if isinstance(value, bool) or not isinstance(value, int) or value <= 0:
+            violations.append(f"INVALID_{key.upper()}")
     expected_sha = _sha256(
         {key: value for key, value in payload.items() if key != "finalizer_sha256"}
     )
@@ -248,6 +276,7 @@ def main(argv: list[str] | None = None) -> int:
                         "valid": True,
                         "capture_id": result["capture_id"],
                         "expected_pages": result["expected_pages"],
+                        "inferred_page_size": result["inferred_page_size"],
                         "materialized_records": result["materialized_records"],
                         "record_count_basis": result["record_count_basis"],
                         "coverage_complete": True,

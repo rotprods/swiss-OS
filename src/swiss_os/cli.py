@@ -13,7 +13,8 @@ from .crm_universe import (
 from .db import connect, foreign_key_violations, initialize, integrity_check
 from .invariants import run_manifest_invariants
 from .manifest import OperationalManifest
-from .snapshot_freeze import SnapshotFreezeCandidate, validate_snapshot_freeze
+from .mass_ingest import classify_batch, stage_decisions, staging_metrics
+from .snapshot_freeze import SnapshotFreezeCandidate, SnapshotSourceRecord, validate_snapshot_freeze
 
 
 def cmd_manifest_validate(path: str) -> int:
@@ -115,6 +116,34 @@ def cmd_crm_snapshot_freeze_validate(path: str) -> int:
     return 0 if result.eligible else 2
 
 
+def cmd_crm_ingest_stage(db_path: str, snapshot_id: str, records_path: str, observed_at: str) -> int:
+    payload = json.loads(Path(records_path).read_text(encoding="utf-8"))
+    if not isinstance(payload, list):
+        raise ValueError("records payload must be a JSON array")
+    records = [
+        SnapshotSourceRecord(
+            source_url=str(item.get("source_url", "")),
+            raw_name=str(item.get("raw_name", "")),
+            raw_city=str(item.get("raw_city", "")),
+            detail_url=str(item.get("detail_url", "")),
+            provider_record_key=str(item.get("provider_record_key", "")),
+        )
+        for item in payload
+    ]
+    with connect(db_path) as conn:
+        decisions = classify_batch(conn, snapshot_id, records)
+        stage_decisions(conn, decisions, observed_at)
+    output = {
+        "snapshot_id": snapshot_id,
+        "authority_advanced": False,
+        "h_id_allocations": 0,
+        "metrics": staging_metrics(decisions),
+        "decisions": [d.as_dict() for d in decisions],
+    }
+    print(json.dumps(output, indent=2, sort_keys=True))
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="swiss-os")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -131,10 +160,7 @@ def build_parser() -> argparse.ArgumentParser:
     check = db_sub.add_parser("check")
     check.add_argument("path")
 
-    crm = sub.add_parser(
-        "crm-universe",
-        help="Inspect and evaluate the CUP-1.0 CRM universe contract",
-    )
+    crm = sub.add_parser("crm-universe", help="Inspect and evaluate the CUP-1.0 CRM universe contract")
     crm_sub = crm.add_subparsers(dest="crm_command", required=True)
     crm_validate = crm_sub.add_parser("validate")
     crm_validate.add_argument("path", help="Path to a JSON CRM-universe metrics payload")
@@ -142,13 +168,18 @@ def build_parser() -> argparse.ArgumentParser:
     crm_inspect.add_argument("db_path", help="Path to the constrained SQLite database")
     crm_inspect.add_argument("snapshot_id", help="CRM snapshot ID to inspect")
 
-    snapshot = sub.add_parser(
-        "crm-snapshot",
-        help="Validate coherent snapshot freeze candidates",
-    )
+    snapshot = sub.add_parser("crm-snapshot", help="Validate coherent snapshot freeze candidates")
     snapshot_sub = snapshot.add_subparsers(dest="snapshot_command", required=True)
     freeze_validate = snapshot_sub.add_parser("freeze-validate")
     freeze_validate.add_argument("path", help="Path to a JSON snapshot candidate payload")
+
+    ingest = sub.add_parser("crm-ingest", help="Classify and persist non-authoritative CRM staging")
+    ingest_sub = ingest.add_subparsers(dest="ingest_command", required=True)
+    ingest_stage = ingest_sub.add_parser("stage")
+    ingest_stage.add_argument("db_path")
+    ingest_stage.add_argument("snapshot_id")
+    ingest_stage.add_argument("records_path", help="JSON array of source records")
+    ingest_stage.add_argument("--observed-at", required=True)
     return parser
 
 
@@ -166,6 +197,8 @@ def main(argv: list[str] | None = None) -> int:
         return cmd_crm_universe_inspect_db(args.db_path, args.snapshot_id)
     if args.command == "crm-snapshot" and args.snapshot_command == "freeze-validate":
         return cmd_crm_snapshot_freeze_validate(args.path)
+    if args.command == "crm-ingest" and args.ingest_command == "stage":
+        return cmd_crm_ingest_stage(args.db_path, args.snapshot_id, args.records_path, args.observed_at)
     return 2
 
 

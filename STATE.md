@@ -2,7 +2,8 @@
 
 Last full operational control-plane reconciliation: **2026-08-27T17:12:40+02:00**.  
 Latest Drive-mount CRM staging: **2026-08-28 v11**.  
-Latest source-acquisition capability: **discover.swiss adapter DSA-1.0 / PR #20 merged**.
+Latest source-acquisition capability: **discover.swiss adapter DSA-1.0 / PR #20 merged**.  
+Latest source-scope capability: **SSR-1.0 + candidate-to-ingest bridge / PR #25 merged**.
 
 ## Authoritative operational state
 
@@ -76,40 +77,62 @@ deterministic records SHA-256
 zero API-key leakage to manifests/GitHub
 ```
 
-PR #20 CI:
+A successful `dsod-hs` API capture deliberately remains non-authoritative until member-directory scope reconciliation completes. Count equality alone is insufficient.
+
+Live API execution requires a discover.swiss **Infocenter Open** subscription key through `DISCOVER_SWISS_SUBSCRIPTION_KEY`; the key must never enter repository state, logs or public artifacts.
+
+## SSR-1.0 source-scope reconciliation
+
+PR `#25` passed CI and merged at:
 
 ```text
-repo_guard                  PASS
-system_contract_guard       PASS
-unit tests                  44 / 44 PASS
-manifest semantics canary   PASS
+d77282ad12c718ce6091d436cc86be851aed18ce
 ```
 
-A successful `dsod-hs` API capture deliberately exits as:
+Contract:
+
+`docs/operations/SOURCE_SCOPE_RECONCILIATION.md`.
+
+A valid discover.swiss capture can now be reconciled against one complete coherent member-directory evidence manifest using deterministic precedence:
 
 ```text
-scope_state = HOTELLERIESUISSE_API_CAPTURED_MEMBER_DIRECTORY_RECONCILIATION_REQUIRED
-member_directory_scope_reconciled = FALSE
-crm_freeze_eligible = FALSE
+EXACT_HSID
+→ EXACT_DETAIL_URL
+→ EXACT_NAME_CITY
 ```
 
-until the structured API set is reconciled against the intended HotellerieSuisse public member-directory scope. Count equality alone is insufficient.
-
-Live API execution requires a discover.swiss **Infocenter Open** subscription key. This is an external runtime secret, not repository state. The adapter reads it from:
+Ambiguity within either source is a typed conflict. Source-scope states are:
 
 ```text
-DISCOVER_SWISS_SUBSCRIPTION_KEY
+EXACT
+EXPLAINED
+UNRESOLVED
 ```
 
-The key must never be committed, logged into public artifacts or pasted into GitHub issues.
+`EXPLAINED` requires an evidence-backed reason for every unmatched source record. Unexplained deltas or conflicts fail closed.
 
-If no key is available, the member-directory harvest remains the safe fallback/reconciliation path and historical caches remain discovery-only.
+Only a fully reconciled scope can emit:
+
+```text
+snapshot_state = FROZEN_CANDIDATE
+crm_freeze_eligible = TRUE
+```
+
+This still means:
+
+```text
+AUTHORITY_ADVANCED = FALSE
+H_ID_ALLOCATIONS = 0
+OUTBOUND_OPENED = FALSE
+```
+
+The candidate-to-ingest bridge now converts that reconciled candidate into the exact CMI-1.0 record schema and verifies snapshot lineage, capture validity, provider-key uniqueness and record-count parity before mass anti-join/scheduler execution.
 
 ## Drive capability
 
-Google Drive is readable through the authenticated `/Google Drive` Library mount. `HOTELS_MASTER` can be listed/materialized and versioned create-only artifacts can be written into the real project folders.
+The authenticated Drive connector became unavailable during the latest wave. The previously verified v11/authority facts remain the last known persistent state, but the v11 workbook was not reread in that execution. Native in-place Google Sheets mutation remains tracked by issue `#12`.
 
-Native in-place Google Sheets mutation remains unavailable in this runtime. Issue `#12` tracks that writer capability. This is not a total Drive outage.
+No new Drive-dependent counter, authority transition or scope-completeness claim was made while the connector was unavailable.
 
 ## Snapshot semantics
 
@@ -136,15 +159,11 @@ stable provider/source-record identity
 
 For API-backed HotellerieSuisse capture, prefer `hs:<hsId>` while retaining the discover.swiss identifier.
 
-The current executable snapshot-freeze contract independently rejects incomplete page coverage, raw/materialized mismatch, duplicate source keys, unresolved snapshot conflicts and missing record identity.
-
 Historical page caches remain discovery/anti-join evidence only.
 
 ## Constrained E4 recovery lineage
 
-`OPERATIONAL_DB_SHADOW_MANIFEST_V12.json` and `switzerland_job_os_operational_shadow_v12.sqlite` are physically discoverable in Drive under `11_OPERATIONAL_DB_SNAPSHOTS`.
-
-Independent verification performed 2026-08-28:
+`OPERATIONAL_DB_SHADOW_MANIFEST_V12.json` and `switzerland_job_os_operational_shadow_v12.sqlite` were previously physically verified in Drive under `11_OPERATIONAL_DB_SNAPSHOTS`.
 
 ```text
 V12 declared epoch        HS_ENTITY_EPOCH_2026-08-25_E4
@@ -154,13 +173,10 @@ V12 expected physical     690
 V12 next physical ID      H-0691
 V12 integrity             ok
 V12 FK violations          0
-V12 SHA-256               a5d979814ef6c4c9bf44566ec4577d94f6c2660f9ead9934f1173f2903e7fef6
 manifest SHA match        TRUE
 ```
 
-V12 is a physically verified E4 constrained artifact; **its presence does not independently promote authority**. E4 remains the authority pointer. A future authoritative write wave must reconcile the selected constrained parent against live HOTELS_MASTER/control-plane state immediately before commit.
-
-The V13 reconstruction remains valid historical recovery evidence but is no longer the only known physical representation of the E4 state.
+V12 is constrained recovery evidence; its presence does not independently promote authority. E4 remains the authority pointer.
 
 ## V16 canary
 
@@ -168,15 +184,7 @@ The V13 reconstruction remains valid historical recovery evidence but is no long
 
 ## CRM mass-ingestion staging v11
 
-Latest artifact:
-
-```text
-CRM_UNIVERSE_STAGING_2026-08-28_v11.xlsx
-SHA-256 97486f7e4ae176f447ab8b57ab5ec199cdf3eb5bba556dfb8569235a87f482a1
-Drive external-gdrive:file:1kqKPZtWziaERbYbHbBBjPaFAbI_wGD-S
-```
-
-Validated staging metrics:
+Last verified staging metrics:
 
 ```text
 current Drive physical rows              690
@@ -195,16 +203,14 @@ canonical H-ID reservations                 0
 formula errors                              0
 ```
 
-The v11 fallback harvest added:
+Artifact last verified before Drive outage:
 
 ```text
-page 94  DE  2067 / 173  → 12 observations → 8 true missing, 4 overlaps
-page 145 FR  2060 / 172  → 12 observations → 0 true missing, 12 overlaps
+CRM_UNIVERSE_STAGING_2026-08-28_v11.xlsx
+SHA-256 97486f7e4ae176f447ab8b57ab5ec199cdf3eb5bba556dfb8569235a87f482a1
 ```
 
-The strong overlap on page 145 is positive anti-join evidence; it does not independently prove current snapshot completion.
-
-All historical-cache missing identities remain:
+Historical-cache missing identities remain:
 
 ```text
 HISTORICAL_CACHE_DISCOVERY_ONLY
@@ -212,61 +218,37 @@ HISTORICAL_CACHE_DISCOVERY_ONLY
 → NO_H_ID_RESERVED
 ```
 
-Staging precedence remains:
-
-```text
-V16 / current exact reserve
-> historical cache staging
-```
-
-The import queue remains zero-duplicate by normalized name+city.
-
-Pointers / recovery:
-
-- Library: `/SWITZERLAND_JOB_OS/CRM_UNIVERSE_STAGING_2026-08-28_v11.xlsx`
-- Library: `/SWITZERLAND_JOB_OS/CRM_UNIVERSE_STAGING_LATEST.xlsx`
-- Library: `/SWITZERLAND_JOB_OS/LATEST_CRM_UNIVERSE.json`
-- Drive Hospitality: `CRM_UNIVERSE_STAGING_2026-08-28_v11.xlsx`
-- production tracker: issue `#14`.
-
 ## Production priority
 
-Primary path when the Infocenter Open key is available:
+Primary next milestone:
 
 ```text
-DISCOVER.SWISS dsod-hs FULL CAPTURE
-→ CAPTURE QA / COUNT / TOKENS / hsId / PROVENANCE
-→ MEMBER-DIRECTORY SCOPE RECONCILIATION
-→ FREEZE VERIFIED TARGET SNAPSHOT
-→ SNAPSHOT-SCOPED SOURCE RECORD IDs
-→ BULK CRM ANTI-JOIN
-→ EXACT-CURRENT REFRESH OF AMBIGUOUS / TRUE-MISSING RECORDS
-→ ENTITY / ALIAS / EXCLUSION RESOLUTION
-→ DB-FIRST AUTHORITATIVE COMMIT
-→ HOTELS_MASTER PK MIRROR
-→ INTELLIGENCE SEEDS
-→ OPERATIONAL GRAPH
-→ COVERAGE RECOMPUTE
+FULL discover.swiss dsod-hs CAPTURE
++
+COMPLETE COHERENT MEMBER-DIRECTORY MANIFEST
+        ↓
+SSR-1.0 SOURCE-SCOPE RECONCILIATION
+        ↓
+EXACT | EXPLAINED
+        ↓
+FROZEN_CANDIDATE
+        ↓
+CANDIDATE → CMI-1.0 EXPORT
+        ↓
+MASS CRM ANTI-JOIN + SCHEDULER
+        ↓
+EXACT-CURRENT REFRESH / ENTITY RESOLUTION / EXCLUSION REVIEW
+        ↓
+TERMINAL SOURCE MAPPINGS
+        ↓
+RECONCILE_REQUIRED = 0
+UNMAPPED = 0
 ```
 
-Fallback while API access is unavailable:
+Then, before any canonical promotion:
 
-```text
-CONTINUE VALIDATED MEMBER-DIRECTORY HARVEST
-→ CACHE = DISCOVERY ONLY
-→ NO H-ID RESERVATION
-→ FEED THE SAME SNAPSHOT/ANTI-JOIN CONTRACT
-```
-
-Deep vacancy/housing/people/channel enrichment may run after seeding but must not block CRM-universe coverage.
-
-## Next authoritative wave
-
-Before any canonical CRM promotion, both are required:
-
-1. native HOTELS_MASTER write capability or an explicitly approved verified successor mirror path;
-2. `/wave recover` re-reading live HOTELS_MASTER/control-plane authority and the chosen constrained parent.
-
-Then anti-join all staging/API source records, allocate H-IDs only at commit time, and execute the full DB → Sheets/CRM → Intelligence → Operational Graph → observability → recovery chain.
+1. restore native HOTELS_MASTER write capability or an explicitly approved verified successor mirror path;
+2. `/wave recover` the live control-plane authority and constrained parent;
+3. execute DB → Sheets/CRM → Intelligence → Operational Graph → observability → recovery atomically by bounded wave.
 
 Only 100% mapped frozen-snapshot coverage may set `CRM_UNIVERSE_COMPLETE = TRUE`.

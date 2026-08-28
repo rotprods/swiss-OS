@@ -16,6 +16,8 @@ REQUIRED = [
     "pyproject.toml",
     "docs/operations/WAVE_OPERATING_PROTOCOL.md",
     "docs/operations/PRODUCTION_READINESS_GAUNTLET.md",
+    "docs/operations/CRM_UNIVERSE_PROTOCOL.md",
+    "docs/operations/DISCOVER_SWISS_SNAPSHOT_ADAPTER.md",
     "docs/architecture/ENGINE_REGISTRY.md",
     "docs/architecture/AUTHORITY_MODEL.md",
     "docs/architecture/SYSTEM_MAP.md",
@@ -24,9 +26,11 @@ REQUIRED = [
     "src/swiss_os/invariants.py",
     "src/swiss_os/reconcile.py",
     "src/swiss_os/scheduler.py",
+    "src/swiss_os/discover_swiss.py",
     "scripts/system_contract_guard.py",
     "tests/test_manifest.py",
     "tests/test_restore.py",
+    "tests/test_discover_swiss.py",
 ]
 FORBIDDEN_SUFFIXES = {".sqlite", ".sqlite3", ".db", ".pem", ".p12"}
 FORBIDDEN_NAMES = {".env", "credentials.json"}

@@ -41,9 +41,9 @@ It prevents continuation from depending on chat memory.
 }
 ```
 
-## Hard defaults
+## Hard fail-closed rule
 
-Every pointer defaults to:
+Every persisted NEXT pointer MUST contain:
 
 ```text
 authority_advance_allowed = FALSE
@@ -51,7 +51,9 @@ canonical_id_allocation_allowed = FALSE
 outbound_allowed = FALSE
 ```
 
-A pointer cannot pre-authorize a future irreversible action.
+These are not merely defaults. NPP-1.0 rejects a pointer with any of the three set to `TRUE`.
+
+A continuation pointer cannot pre-authorize a future authority transition, canonical ID allocation or irreversible external action. The resumed activation must reconstruct those gates independently.
 
 ## Resume semantics
 
@@ -147,6 +149,8 @@ AUTHORITY_RECOVERY
 ```
 
 MEP may select a safe fallback when the preferred route lacks capability.
+
+After the CRM-universe hard gate closes, MEP returns control to the global North-Star scheduler rather than idling or assuming outbound is authorized.
 
 ## Closure rule
 

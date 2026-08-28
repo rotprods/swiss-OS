@@ -1,0 +1,55 @@
+{
+  "graph_type": "PROJECT_MEMORY_META_GRAPH_DELTA",
+  "schema_version": "1.3",
+  "project": "SWITZERLAND_JOB_OS",
+  "wave_id": "WAVE-20260828-ASR-REPAIR-CANARY-01",
+  "generated_at": "2026-08-28T20:08:00+02:00",
+  "graph_impact": "BOTH_CANARY_PLAN_ONLY",
+  "authority_mutation": false,
+  "nodes": [
+    {"id": "G-0500", "type": "GOAL"},
+    {"id": "ISSUE-89", "type": "P0", "state": "OPEN_RECONCILE_REQUIRED"},
+    {"id": "PROTO-ASR-1.0", "type": "PROTOCOL", "state": "MERGED"},
+    {"id": "PR-90", "type": "PULL_REQUEST", "state": "MERGED"},
+    {"id": "COMMIT-377744d9", "type": "GIT_COMMIT", "sha": "377744d9860e89861f0c80d045d774dcb58eb03b"},
+    {"id": "AUTHORITY-E4-V13", "type": "AUTHORITY_PARENT", "physical": 690, "alias_semantics": "RECONCILE_REQUIRED"},
+    {"id": "CANARY-ASR-REPAIR-V1", "type": "RECOVERY_CANARY", "physical": 690, "candidate_active": 690, "authoritative": false, "sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6"},
+    {"id": "DRIVE-ASR-REPORT-V1", "type": "RECOVERY_ARTIFACT", "drive_id": "1AACvFVJx7WvgEnme9nibCqQgebSYZ_qDrwkg43aAdAY"},
+    {"id": "NEXT", "type": "CONTINUATION_POINTER", "route": "ALIAS_SEMANTIC_ATOMIC_RECOVERY_PREFLIGHT"},
+    {"id": "OUTBOUND", "type": "GATE", "state": "CLOSED", "send_allowed": 0}
+  ],
+  "edges": [
+    ["ISSUE-89", "BLOCKS", "AUTHORITY-E4-V13"],
+    ["PROTO-ASR-1.0", "DETECTS", "ISSUE-89"],
+    ["PR-90", "MERGED_AS", "COMMIT-377744d9"],
+    ["CANARY-ASR-REPAIR-V1", "DERIVED_FROM", "AUTHORITY-E4-V13"],
+    ["CANARY-ASR-REPAIR-V1", "PROVES_REPAIR_PATH_FOR", "ISSUE-89"],
+    ["CANARY-ASR-REPAIR-V1", "PERSISTED_AS", "DRIVE-ASR-REPORT-V1"],
+    ["ISSUE-89", "BLOCKS", "G-0500"],
+    ["G-0500", "REQUIRES", "NEXT"],
+    ["NEXT", "CONTINUES", "ALIAS_SEMANTIC_ATOMIC_RECOVERY_PREFLIGHT"],
+    ["G-0500", "BLOCKS_UNTIL_COMPLETE", "OUTBOUND"]
+  ],
+  "invalid_alias_edges": [
+    ["H-0610", "H-0656"],
+    ["H-0624", "H-0639"],
+    ["H-0629", "H-0638"],
+    ["H-0630", "H-0640"]
+  ],
+  "canary_checks": {
+    "sqlite_integrity_check": "ok",
+    "foreign_key_violations": 0,
+    "logical_tables_changed": ["hotels", "hotel_aliases"],
+    "hotels_rows_changed": 4,
+    "hotel_alias_rows_removed": 4,
+    "other_table_differences": 0,
+    "idempotency_replay": "PASS"
+  },
+  "invariants": {
+    "authority_advanced": false,
+    "canonical_id_allocations": 0,
+    "crm_universe_complete": false,
+    "outbound_opened": false,
+    "send_allowed": 0
+  }
+}

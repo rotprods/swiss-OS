@@ -18,6 +18,10 @@ concurrency:
 
 jobs:
   capture:
+    # Temporary branch-local drain gate. Two captures started before concurrency
+    # existed and cannot be cancelled by the available connector. This prevents
+    # adding a third concurrent request stream while those runs terminate.
+    if: ${{ false }}
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     env:

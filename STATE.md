@@ -1,7 +1,7 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest Meta Execution reconciliation: **2026-08-28T18:24:00+02:00**.  
-Latest reconstructed GitHub `main`: **`ccd15735e82fe22806f28b32ea548d7fc7822fae`**.  
+Latest Meta Execution reconciliation: **2026-08-28T18:28:00+02:00**.  
+Latest reconstructed GitHub `main`: **`c57b0b391ac0744fd2b4dad082b31c2393295c40`**.  
 Latest physically verified constrained parent: **`OPERATIONAL_DB_SHADOW_MANIFEST_V13`**.  
 Latest Drive CRM staging: **v11**.  
 Latest exact-current frontier in this activation: **batch 12**.
@@ -26,7 +26,7 @@ OUTBOUND                        CLOSED
 send_allowed                      0
 ```
 
-No research batch, source canary, historical cache, CMI packet, ECV result or SMC candidate is authority by itself. Staging reserves **zero** H-IDs.
+No research batch, source canary, historical cache, CMI packet, ECV result, SMC candidate or SRR proposal is authority by itself. Staging reserves **zero** H-IDs.
 
 ## 2. CRM-universe completion contract
 
@@ -60,11 +60,12 @@ CWP-1.0  PR #46 → 857c26a3cf4fc73733030ee6187069f933ad5e10
 ECV-1.0  PR #47 → 65f0e98cd82ff640022523a779b6785c4144dc85
 CWP compat PR #77 → 09f95805e18b9c6847071f02b7129f367eed77c9
 SMC-1.0  PR #48 → ccd15735e82fe22806f28b32ea548d7fc7822fae
+SRR-1.0  PR #80 → c57b0b391ac0744fd2b4dad082b31c2393295c40
 ```
 
 Each merged change passed repository guard, stable-contract guard, unit tests, manifest canary and adversarial review.
 
-Pipeline semantics now exist end to end up to pre-authority exhaustive accounting:
+Pipeline semantics now exist end to end up to deterministic pre-authority resolution planning:
 
 ```text
 coherent member-directory capture (MDC)
@@ -73,10 +74,11 @@ coherent member-directory capture (MDC)
 → deterministic CWP work packets
 → exact-current official verification (ECV)
 → exhaustive source mapping candidate (SMC)
+→ source-resolution review/proposals (SRR)
 → terminalization / constrained authority promotion only when all gates pass
 ```
 
-SMC may legitimately reach `unmapped=0` while `RECONCILE_REQUIRED>0`; that state is still incomplete and cannot promote CRM authority.
+SMC may legitimately reach `unmapped=0` while `RECONCILE_REQUIRED>0`. SRR may produce `NEW_CANONICAL` work items but still allocates no H-ID and advances no authority. Neither state implies CRM completion.
 
 ## 4. Source acquisition capability
 
@@ -91,7 +93,7 @@ DSA-1.0 remains preferred when the key becomes available. No API data is fabrica
 
 ### HotellerieSuisse member-directory path
 
-MDC-1.0 is now merged and a remote read-only actuator is under PR #78.
+MDC-1.0 is merged and a remote read-only actuator is under PR #78.
 
 First live canary result:
 
@@ -109,7 +111,7 @@ root cause                       provider HTTP 429 after page 8
 manifest SHA-256                 48053c711e1b1e32e37ddcc7cabddd1514d92b8843760886000e0825962b65a6
 ```
 
-This failed closed exactly as required: authority/H-ID/outbound values remained unchanged. The actuator was then adapted conservatively to a 3-second inter-request delay and 5 attempts.
+This failed closed exactly as required: authority/H-ID/outbound values remained unchanged. The actuator was adapted conservatively to a 3-second inter-request delay and 5 attempts.
 
 Second rate-limit-aware canary:
 
@@ -120,6 +122,8 @@ state at this handoff            IN_PROGRESS
 ```
 
 Until that run finishes and its artifacts pass the MDC/MDM gauntlet, **no coherent complete member-directory snapshot is claimed**. PR #78 must not merge before the live result is reviewed and its branch-only push trigger is removed.
+
+A separate resumable-capture experiment exists in PR #79, but its current CI is red because it depends on the unmerged `directory_manifest` adapter line. It is not an authority path and must not bypass the canonical MDC/MDM gates.
 
 Current indexed directory observations remain evidence only. Different locale/cache epochs have exposed different denominators; page number is never source-record identity.
 
@@ -168,6 +172,8 @@ The processed seed block is non-contiguous in the workbook; blank worksheet rows
 
 ## 7. Concurrency / stale-branch hygiene
 
+This activation detected concurrent `main` advancement and reconstructed ancestry rather than force-writing. The concurrent SRR-1.0 commit was adopted into this handoff.
+
 Stale duplicate branches were removed from the active merge surface:
 
 ```text
@@ -176,7 +182,7 @@ PR #74 closed — superseded/stale MEP implementation
 PR #75 closed — superseded by cleaner MDMA line
 ```
 
-PR #76 (MDMA recovery adapter) remains open but is **not merge-ready** until strict integer coercion gaps are hardened and it is revalidated against current main. MDC-1.0 is the canonical current acquisition route.
+PR #76 (MDMA recovery adapter) remains open but is **not merge-ready** until strict integer coercion gaps are hardened and it is revalidated against current main. MDC-1.0 remains the canonical current acquisition route.
 
 ## 8. Current MEP route
 
@@ -195,6 +201,7 @@ MDC coherent manifest
 → CWP
 → ECV
 → SMC
+→ SRR
 → terminal mapping remainder
 ```
 
@@ -218,7 +225,7 @@ outbound_allowed = FALSE
 
 ```text
 inspect live MDC canary #33188955280
-→ if coherent: validate manifest and execute pre-authority directory→CMI→CWP→ECV→SMC chain
+→ if coherent: validate manifest and execute pre-authority directory→CMI→CWP→ECV→SMC→SRR chain
 → if throttled: record provider boundary; avoid repeated aggressive capture; use safe acquisition fallback
 → continue exact-current work on populated unprocessed staging records
 → acquire discover.swiss structured snapshot when credential becomes available

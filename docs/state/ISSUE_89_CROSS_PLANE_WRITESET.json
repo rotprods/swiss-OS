@@ -1,0 +1,194 @@
+{
+  "schema_version": "ASR_CROSS_PLANE_WRITESET_V1",
+  "project": "SWITZERLAND_JOB_OS",
+  "issue": 89,
+  "generated_at": "2026-08-28T20:25:00+02:00",
+  "git_parent_sha": "60606dc36bf88883d6a2eb9e1c7903e03dc29bc8",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "authority_parent": "OPERATIONAL_DB_SHADOW_MANIFEST_V13",
+  "spreadsheet_id": "1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w",
+  "observed_spreadsheet_revision": "488",
+  "rollback_copy_id": "1bu1SjxxG4fF4yx7H2rshOiw-tnJZMcHxIL3S8ipyQKk",
+  "historical_truth_revision": "464",
+  "execution_authorized": false,
+  "resolution_rule": "Resolve every live row by stable PK/entity_key/edge_id immediately before mutation. Observed row numbers are diagnostics only and MUST NOT be used as authority.",
+  "entities": [
+    {
+      "hotel_id": "H-0610",
+      "invalid_target": "H-0656",
+      "hotel_name": "Hôtel Alpe Fleurie",
+      "city": "Villars-sur-Ollon"
+    },
+    {
+      "hotel_id": "H-0624",
+      "invalid_target": "H-0639",
+      "hotel_name": "Hôtel Le Mont Paisible",
+      "city": "Crans-Montana"
+    },
+    {
+      "hotel_id": "H-0629",
+      "invalid_target": "H-0638",
+      "hotel_name": "Stiftung Lilienberg Unternehmerforum",
+      "city": "Ermatingen"
+    },
+    {
+      "hotel_id": "H-0630",
+      "invalid_target": "H-0640",
+      "hotel_name": "Strandhotel Iseltwald",
+      "city": "Iseltwald"
+    }
+  ],
+  "planes": {
+    "constrained_db": {
+      "action": "REPLAY_ARR_1_0_FROM_EXACT_V13_PARENT",
+      "repair_plan": "docs/state/ISSUE_89_ASR_REPAIR_PLAN.json",
+      "expected_output_sha256_observation": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+      "active_denominator_after_replay": null,
+      "denominator_state": "RECONCILE_REQUIRED_CROSS_PLANE"
+    },
+    "HOTELS_V2": {
+      "key": "hotel_id",
+      "mutations": [
+        {
+          "keys": ["H-0610", "H-0624", "H-0629", "H-0630"],
+          "precondition_state_pattern": "SUPERSEDED_DUPLICATE→<invalid_target>",
+          "set": {
+            "state": "CANONICAL_CURRENT_RECONCILED"
+          },
+          "historical_evidence": "HOTELS_MASTER revision 464"
+        }
+      ]
+    },
+    "HOTEL_INTELLIGENCE_V1": {
+      "key": "hotel_id",
+      "mutations": [
+        {
+          "keys": ["H-0610", "H-0624", "H-0629", "H-0630"],
+          "precondition_identity_state_pattern": "SUPERSEDED_DUPLICATE→<invalid_target>",
+          "set": {
+            "enrichment_level": "L1",
+            "identity_state": "CANONICAL_INDEXED_RECONCILE_SEED",
+            "notes": ""
+          },
+          "preserve": [
+            "vacancy_state",
+            "housing_state",
+            "people_state",
+            "channel_state",
+            "social_state",
+            "digital_audit_state",
+            "tech_audit_state",
+            "scores_and_evidence_fields"
+          ],
+          "historical_evidence": "HOTELS_MASTER revision 464"
+        }
+      ]
+    },
+    "GRAPH_NODES_V2": {
+      "key": "node_id",
+      "mutations": [
+        {
+          "keys": [
+            "HOTEL:H-0610", "HOTEL:H-0624", "HOTEL:H-0629", "HOTEL:H-0630",
+            "INTEL:H-0610", "INTEL:H-0624", "INTEL:H-0629", "INTEL:H-0630"
+          ],
+          "precondition_state": "SUPERSEDED_DUPLICATE",
+          "clear_fields": ["state", "blocked", "block_reason", "updated_at", "notes"],
+          "preserve_identity_fields": true,
+          "historical_evidence": "HOTELS_MASTER revision 464; current unaffected peer nodes"
+        }
+      ]
+    },
+    "GRAPH_EDGES_V2": {
+      "key": "edge_id",
+      "mutations": [
+        {
+          "action": "REMOVE_INVALID_ALIAS_EDGE",
+          "keys": [
+            "EDGE:ALIAS:H-0610:H-0656",
+            "EDGE:ALIAS:H-0624:H-0639",
+            "EDGE:ALIAS:H-0629:H-0638",
+            "EDGE:ALIAS:H-0630:H-0640"
+          ],
+          "precondition_edge_type": "ALIASES_TO",
+          "precondition_state": "ACTIVE"
+        },
+        {
+          "action": "RESTORE_EXISTING_EDGE_FIELDS",
+          "keys": [
+            "EDGE:HOTEL_INTEL:H-0610",
+            "EDGE:HOTEL_INTEL:H-0624",
+            "EDGE:HOTEL_INTEL:H-0629",
+            "EDGE:HOTEL_INTEL:H-0630"
+          ],
+          "precondition_state": "SUPERSEDED_ALIAS",
+          "clear_fields": ["state", "updated_at", "notes"],
+          "preserve": ["from_node", "to_node", "edge_type"],
+          "historical_evidence": "HOTELS_MASTER revision 464"
+        }
+      ]
+    },
+    "ENTITY_RESOLUTION": {
+      "key": "entity_id",
+      "records": ["ER-CP0650-001", "ER-CP0650-002", "ER-CP0650-003", "ER-CP0650-004"],
+      "action": "PRESERVE_RESEARCH_ANTI_JOIN_EVIDENCE",
+      "rule": "Do not use these rows as proof that H-0610/H-0624/H-0629/H-0630 are physical aliases. Correct misleading notes only after the same recovery transaction can persist all planes."
+    },
+    "STATE_TRANSITIONS": {
+      "action": "APPEND_ONLY_CORRECTIVE_TRANSITIONS",
+      "preserve_original_transition_ids": [
+        "TR-20260825-H0610-SUPERSEDE",
+        "TR-20260825-H0624-SUPERSEDE",
+        "TR-20260825-H0629-SUPERSEDE",
+        "TR-20260825-H0630-SUPERSEDE"
+      ],
+      "append_template": {
+        "entity_type": "HOTEL",
+        "from_state": "SUPERSEDED_DUPLICATE",
+        "to_state": "CANONICAL_CURRENT_RECONCILED",
+        "reason_code": "INVALID_ALIAS_LINEAGE_REPAIR",
+        "evidence_ref": "GitHub issue #89|ASR-1.0|ARR-1.0|HOTELS_MASTER revision 464",
+        "actor": "AUTHORITY_RECONCILIATION_ENGINE",
+        "reversible": true,
+        "rollback_state": "SUPERSEDED_DUPLICATE",
+        "checkpoint_id": "CP-0750",
+        "state": "ACTIVE"
+      },
+      "checkpoint_denominator_transition": "DERIVE_ONLY_AFTER_EXACT_DB_SHEETS_INTELLIGENCE_GRAPH_RECONCILIATION"
+    },
+    "observability_and_scheduler": {
+      "action": "RECOMPUTE_AFTER_DATA_PLANES_PASS",
+      "required": [
+        "active denominator",
+        "Intelligence denominator",
+        "Operational Graph denominator",
+        "checkpoint state",
+        "scheduler tasks",
+        "engine metrics",
+        "SLO/invariant state",
+        "run log",
+        "decision ledger"
+      ]
+    }
+  },
+  "promotion_gates": [
+    "Git main ancestry unchanged at commit boundary or recovery-reconciled",
+    "V13 parent SHA exact",
+    "durable repaired constrained DB and rollback path available",
+    "all four live identities still match expected name+city",
+    "all invalid alias targets still match the issue-89 write set",
+    "SQLite integrity_check = ok and FK violations = 0",
+    "ASR-1.0 = EXACT after repair",
+    "DB↔HOTELS_V2 exact",
+    "HOTEL_INTELLIGENCE_V1 denominator exact",
+    "Operational Graph denominator exact",
+    "restore/replay/idempotency PASS",
+    "production readiness gauntlet PASS"
+  ],
+  "current_blocker": "REPAIRED_SQLITE_BINARY_EGRESS_UNAVAILABLE_IN_CURRENT_RUNTIME",
+  "authority_advance_allowed": false,
+  "canonical_id_allocation_allowed": false,
+  "crm_universe_complete": false,
+  "outbound_allowed": false,
+  "send_allowed": 0
+}

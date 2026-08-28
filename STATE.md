@@ -1,14 +1,14 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest operational reconciliation: **2026-08-28T16:19:00+02:00**.  
-Latest GitHub ancestry reconstructed before this state wave: **`efbd1c24eff17d24c391b2d6224a600ed0f1b4ec`**.  
-Latest physically reverified constrained parent: **`OPERATIONAL_DB_SHADOW_MANIFEST_V13`**.  
-Latest Drive-mount CRM staging: **v11**.  
-Latest Meta Execution frontier: **EXACT_CURRENT_REFRESH batch 04**.
+Latest Meta Execution reconciliation: **2026-08-28T18:24:00+02:00**.  
+Latest reconstructed GitHub `main`: **`ccd15735e82fe22806f28b32ea548d7fc7822fae`**.  
+Latest physically verified constrained parent: **`OPERATIONAL_DB_SHADOW_MANIFEST_V13`**.  
+Latest Drive CRM staging: **v11**.  
+Latest exact-current frontier in this activation: **batch 12**.
 
 ## 1. Authoritative operational state
 
-Authority is unchanged:
+Authority has **not** advanced during this activation:
 
 ```text
 entity epoch                    HS_ENTITY_EPOCH_2026-08-25_E4
@@ -18,7 +18,6 @@ physical HOTELS rows            690
 superseded duplicate aliases      4
 active canonical                686
 next physical H-ID              H-0691
-CP-0750                         686 / 750 ACTIVE — intermediate only
 Intelligence                    686 / 686
 Operational Graph               686 / 686
 L4                              105 / 686
@@ -27,262 +26,187 @@ OUTBOUND                        CLOSED
 send_allowed                      0
 ```
 
-No API capture, historical cache, research batch, PAB result, MDM result, canary or staging artifact may advance these values by itself.
+No research batch, source canary, historical cache, CMI packet, ECV result or SMC candidate is authority by itself. Staging reserves **zero** H-IDs.
 
-### V13 physical recovery verification
+## 2. CRM-universe completion contract
 
-V13 was retrieved from Drive and independently reverified in the current activation:
-
-```text
-manifest                         OPERATIONAL_DB_SHADOW_MANIFEST_V13.json
-SQLite                           switzerland_job_os_operational_shadow_v13.sqlite
-manifest / SQLite SHA match      TRUE
-SQLite integrity_check           ok
-foreign_key_check violations       0
-physical identities              690
-active identities                686
-aliases                            4
-next physical ID                 H-0691
-```
-
-`SOURCE_SNAPSHOTS`, `GOAL_STATE` and the historical `RUN_LOG` already pointed to V13. Older GitHub handoffs that named V12 as the active constrained parent are stale lineage pointers, not current authority.
-
-## 2. CRM-universe hard gate
-
-Before outbound can even be evaluated, one explicitly frozen/versioned target source universe must map every source record exactly once to:
+Outbound cannot even be evaluated until one explicitly frozen/versioned source universe is fully reconciled and every source record maps exactly once to a terminal state.
 
 ```text
-ACTIVE_CANONICAL
-ALIAS_TO_CANONICAL
-EXCLUDED_WITH_REASON
-```
-
-Required terminal conditions:
-
-```text
-RECONCILE_REQUIRED = 0
+source scope = EXACT | evidence-backed EXPLAINED
 unmapped source records = 0
+RECONCILE_REQUIRED = 0
 unresolved duplicate conflicts = 0
 invalid alias targets = 0
-source scope = EXACT | evidence-backed EXPLAINED
-DB / CRM / Intelligence / Operational Graph reconciliation = PASS
+DB / HOTELS_MASTER / Intelligence / Operational Graph = exact
 CRM_UNIVERSE_COMPLETE = TRUE
 ```
 
-Even then, outbound remains independently gated and requires explicit user authorization.
+Even after that, outbound remains independently gated and requires explicit authorization.
 
-Canonical source contracts:
+## 3. Meta Execution / executable source pipeline
 
-- `docs/operations/CRM_UNIVERSE_PROTOCOL.md` — CUP-1.1
-- `docs/operations/DISCOVER_SWISS_SNAPSHOT_ADAPTER.md` — DSA-1.0
-- `docs/operations/MEMBER_DIRECTORY_MANIFEST.md` — MDM-1.0
-- `docs/operations/SOURCE_SCOPE_RECONCILIATION.md` — SSR-1.0
-- `docs/operations/PRE_AUTHORITY_BUNDLE.md` — PAB-1.0
-
-## 3. Continuous Meta Execution
-
-Canonical continuity stack:
+Canonical continuity remains:
 
 ```text
-MEP-2.0
-→ NPP-1.0 NEXT
-→ WOP-1.1 bounded wave
-→ affected engines
-→ PRG gauntlet
-→ control-plane / Git / recovery persistence
-→ NEXT
-→ immediate next safe COLETTE cycle while runtime remains available
+MEP-2.0 → NPP-1.0 NEXT → WOP-1.1 → PRG gauntlet → persistence → NEXT → repeat
 ```
 
-COLETTE:
+The executable pre-authority source pipeline materially advanced in this activation:
 
 ```text
-COLLECT
-→ OBSERVE
-→ LOCATE
-→ EXECUTE
-→ TEST
-→ TRANSACT / PERSIST
-→ EVOLVE / NEXT / REPEAT
+MDC-1.0  PR #43 → d5d5c73b75742f0a78b3fedc81d97e6e9bd48d4a
+CWP-1.0  PR #46 → 857c26a3cf4fc73733030ee6187069f933ad5e10
+ECV-1.0  PR #47 → 65f0e98cd82ff640022523a779b6785c4144dc85
+CWP compat PR #77 → 09f95805e18b9c6847071f02b7129f367eed77c9
+SMC-1.0  PR #48 → ccd15735e82fe22806f28b32ea548d7fc7822fae
 ```
 
-A completed wave is not a stop condition. Recoverable capability failures trigger the next safe route.
+Each merged change passed repository guard, stable-contract guard, unit tests, manifest canary and adversarial review.
 
-Recent system milestones:
+Pipeline semantics now exist end to end up to pre-authority exhaustive accounting:
 
 ```text
-MEP/NPP                             PR #27
-MDM compiler                        PR #28
-directory coverage planner          PR #29
-PAB-1.0 bundle                      PR #30
-MEP/MDM fallback hardening          PR #34
-durable NEXT / batch01 state        PR #37
-strict MDM page input hardening     PR #38
+coherent member-directory capture (MDC)
+→ MDM / source-scope evidence
+→ CMI anti-join decisions
+→ deterministic CWP work packets
+→ exact-current official verification (ECV)
+→ exhaustive source mapping candidate (SMC)
+→ terminalization / constrained authority promotion only when all gates pass
 ```
 
-## 4. Runtime capability
+SMC may legitimately reach `unmapped=0` while `RECONCILE_REQUIRED>0`; that state is still incomplete and cannot promote CRM authority.
 
-### Structured source
+## 4. Source acquisition capability
 
-Preferred bulk acquisition remains discover.swiss / `dsod-hs`.
+### discover.swiss structured path
 
 ```text
 DISCOVER_SWISS_SUBSCRIPTION_KEY     UNAVAILABLE
-valid discover.swiss capture        NOT PRESENT
+valid dsod-hs capture               NOT PRESENT
 ```
 
-No API data is fabricated.
+DSA-1.0 remains preferred when the key becomes available. No API data is fabricated.
 
-### Member-directory source
+### HotellerieSuisse member-directory path
 
-Accessible web surfaces still represent multiple cache epochs / denominators. Page number is not source-record identity.
+MDC-1.0 is now merged and a remote read-only actuator is under PR #78.
+
+First live canary result:
 
 ```text
-coherent complete MDM snapshot      NOT YET ACQUIRED
-MDM coverage_complete               FALSE / not claimed
-SSR executable with complete pair   FALSE
-FROZEN_CANDIDATE                    not claimed
+run                              33187779427
+snapshot                         HS-DIRECTORY-DE-20260828T155917Z
+robots_allowed                   TRUE
+max_page                         172
+observed_pages                     8
+page_errors                      164
+unique_records                    96
+mdm_coverage_complete            FALSE
+violation                        PARTITION_COVERAGE_MISMATCH
+root cause                       provider HTTP 429 after page 8
+manifest SHA-256                 48053c711e1b1e32e37ddcc7cabddd1514d92b8843760886000e0825962b65a6
 ```
 
-Historical caches remain discovery/anti-join evidence only.
+This failed closed exactly as required: authority/H-ID/outbound values remained unchanged. The actuator was then adapted conservatively to a 3-second inter-request delay and 5 attempts.
 
-### Drive / Sheets / persistence
+Second rate-limit-aware canary:
 
-The prior native writer blocker is resolved:
+```text
+run                              33188955280
+head                             44a2ee24a35931fb38fa940ef957f3171114c958
+state at this handoff            IN_PROGRESS
+```
+
+Until that run finishes and its artifacts pass the MDC/MDM gauntlet, **no coherent complete member-directory snapshot is claimed**. PR #78 must not merge before the live result is reviewed and its branch-only push trigger is removed.
+
+Current indexed directory observations remain evidence only. Different locale/cache epochs have exposed different denominators; page number is never source-record identity.
+
+## 5. Drive / Sheets / persistence capability
 
 ```text
 authenticated Drive read            AVAILABLE
-Drive artifact creation             AVAILABLE
-native HOTELS_MASTER Sheets write   AVAILABLE / REVERSIBLE CANARY VERIFIED
+Drive/Docs durable handoff writes   AVAILABLE
+native HOTELS_MASTER Sheets write   AVAILABLE / reversible canary verified
 GitHub read/write/CI                AVAILABLE
 web research                        AVAILABLE
 ```
 
-The real `HOTELS_MASTER` was tested by creating a temporary `_WRITER_CANARY_20260828` tab, writing and reading back `HOTELS_MASTER_IN_PLACE_WRITER_PASS`, then deleting the temporary tab. No canonical data changed.
+Native Sheets availability removes the old writer blocker but does not authorize promotion before CUP/WOP gates pass.
 
-GitHub issue `#12` is closed as resolved. Writer availability does **not** authorize authority promotion; CUP/WOP gates still apply.
+## 6. CRM staging v11 and exact-current evidence frontier
 
-## 5. CRM staging v11 — non-authoritative
+`CRM_UNIVERSE_STAGING_2026-08-28_v11.xlsx` remains non-authoritative. Direct materialization found **228** `Historical_Missing_Seed` data rows; this is staging observability, not a canonical denominator.
 
-Artifact:
-
-```text
-CRM_UNIVERSE_STAGING_2026-08-28_v11.xlsx
-SHA-256 97486f7e4ae176f447ab8b57ab5ec199cdf3eb5bba556dfb8569235a87f482a1
-```
-
-Older persisted summary:
+Batches 05–12 executed in this activation over staged historical identities:
 
 ```text
-V16 exact-detail canary             25
-reserve candidates without ID        7
-CRM import/staging queue            248
-cache observations                  629
-reference crawl pages               171
-pages with cache evidence            57
-pages pending refresh               114
-snapshot conflicts                    4
-canonical H-ID reservations           0
+records attempted                                  90
+CURRENT_EXACT_MEMBER_DETAIL                        72
+exact member-detail identities needing live ECV     8
+scope-reconcile / support-only cases               10
+canonical H-ID reservations                         0
+authority advancement                               0
+outbound                                             0
 ```
 
-Direct materialization found `Historical_Missing_Seed` contains **228 data rows**. That mismatch is staging-observability drift only; it is not an authority change.
-
-All historical missing rows remain:
+Artifacts and SHA-256:
 
 ```text
-HISTORICAL_CACHE_DISCOVERY_ONLY
-→ REFRESH_EXACT_CURRENT_THEN_ENTITY_RESOLVE
-→ NO_H_ID_RESERVED
+batch05  5ee2b6c4a8bc434b0a4dd9afef5c2f040e54ef0493a60fd5b48b4a57faf3adf1
+batch06  e2e9a0dc3e0bc03139395e20e075d21e6338f43e53aa2ad92d80b84cf0eb91ec
+batch07  ab363402e934edd757464669f6b1b1281af50cc38713e2aab8696c06bdf0ce6b
+batch08  6509daa21cc78f4241b8909eb50c4cdcabefc38cbd310006145c9ad43a51aaf2
+batch09  3bad3b5bf2d6691152814d80f6e7038eec2ab3400d59c6a14e28461a82d47975
+batch10  d7687da0feca76a8e1f2fd4934227855aec86d59ac3da840de44f2a85930a1db
+batch11  0b7b0b4da8cad38e74d34997600934a874bfd40b0959734952407addf0b54c36
+batch12  4e054d6df87b09ea51312a7f44a7a24629d1acdd00f6cf24c8c628a7128f23e0
 ```
 
-## 6. EXACT_CURRENT_REFRESH frontier
+The processed seed block is non-contiguous in the workbook; blank worksheet rows are not inferred as missing hotels. Later historical seed records remain and must be selected by actual populated rows, not row arithmetic.
 
-All batches are read-only evidence work. They allocate no H-IDs and advance no authority.
+## 7. Concurrency / stale-branch hygiene
 
-### Batch 01
+Stale duplicate branches were removed from the active merge surface:
 
 ```text
-attempted                                           12
-CURRENT_EXACT_MEMBER_DETAIL                          9
-industry-detail scope reconcile                      1
-unresolved / exact-detail still required             2
+PR #73 closed — superseded MEP implementation
+PR #74 closed — superseded/stale MEP implementation
+PR #75 closed — superseded by cleaner MDMA line
 ```
 
-### Batch 02
+PR #76 (MDMA recovery adapter) remains open but is **not merge-ready** until strict integer coercion gaps are hardened and it is revalidated against current main. MDC-1.0 is the canonical current acquisition route.
 
-Durably recovered from Library:
+## 8. Current MEP route
+
+Until live canary `33188955280` reaches a terminal reviewed state:
 
 ```text
-attempted                                           12
-CURRENT_EXACT_MEMBER_DETAIL                         10
-unresolved exact detail                              2
+primary dependency     INSPECT_LIVE_MDC_CANARY_33188955280
+productive fallback    EXACT_CURRENT_REFRESH
 ```
 
-### Batches 03 + 04
-
-Current activation:
+If the canary yields a coherent complete manifest:
 
 ```text
-attempted                                           24
-exact member-detail identity evidence               20
-support-only / exact-detail unresolved               4
-canonical H-ID reservations                          0
-authority advancement                                0
-outbound                                              0
+MDC coherent manifest
+→ directory-to-CMI canary / mass anti-join
+→ CWP
+→ ECV
+→ SMC
+→ terminal mapping remainder
 ```
 
-The real control plane records:
+SSR remains blocked until a valid discover.swiss capture exists, unless an evidence-backed source-scope path explicitly satisfies the canonical contract.
 
-```text
-RUN-2026-08-28-NATIVE-SHEETS-WRITER-RECOVERY
-RUN-2026-08-28-EXACT-REFRESH-03-04
-ISS-054 RESOLVED_NATIVE_WRITER_PASS
-DEC-0100 V13 constrained-parent reconciliation
-DEC-0101 native writer capability recovery
-TR-20260828-WRITER-RECOVERY
-TR-20260828-CONSTRAINED-PARENT-V13
-```
+If the canary again hits provider throttling, do not hammer the provider. Persist the typed rate-limit boundary and move to resumable/rate-aware acquisition engineering only if epoch coherence can still be proven; otherwise continue exact-current evidence reduction.
 
-## 7. Current MEP route
+## 9. Durable NEXT
 
-Selected safe route remains:
+Machine-readable continuation pointer: `docs/state/NEXT.json`.
 
-```text
-EXACT_CURRENT_REFRESH
-```
-
-Reason:
-
-- structured discover.swiss acquisition still lacks its key;
-- no coherent complete MDM source snapshot is yet available;
-- exact member-detail research continues to reduce evidence debt;
-- native Sheets is now available for the later synchronized promotion chain once CRM source mapping is actually complete.
-
-Fallback priority:
-
-```text
-if structured capture becomes available
-→ STRUCTURED_SOURCE_CAPTURE
-
-if a coherent complete member-directory snapshot becomes available
-→ MEMBER_DIRECTORY_MANIFEST
-→ PAB / SSR
-
-otherwise
-→ EXACT_CURRENT_REFRESH
-→ ENTITY RESOLUTION / terminal mapping where evidence is sufficient
-→ QA / recovery
-```
-
-## 8. Durable NEXT
-
-Machine-readable continuation pointer:
-
-```text
-docs/state/NEXT.json
-```
-
-NEXT always preserves:
+Hard permissions remain:
 
 ```text
 authority_advance_allowed = FALSE
@@ -290,39 +214,19 @@ canonical_id_allocation_allowed = FALSE
 outbound_allowed = FALSE
 ```
 
-Every activation rereads GitHub `main`, V13/E4 authority and runtime capabilities before executing NEXT.
-
-## 9. Production objective
-
-Continue chained COLETTE cycles:
+## 10. Next production objective
 
 ```text
-EXACT_CURRENT_REFRESH batches
-→ persist exact/support/unresolved evidence states
-→ continuously re-probe discover.swiss / coherent MDM acquisition
-→ MDM + DSA when source capability permits
-→ PAB-1.0
-→ SSR EXACT | EXPLAINED
-→ FROZEN_CANDIDATE
-→ candidate → CMI export
-→ mass anti-join / scheduler
-→ exact-current / entity-resolution remainder
-→ terminal source mappings
-→ unmapped = 0
-→ RECONCILE_REQUIRED = 0
+inspect live MDC canary #33188955280
+→ if coherent: validate manifest and execute pre-authority directory→CMI→CWP→ECV→SMC chain
+→ if throttled: record provider boundary; avoid repeated aggressive capture; use safe acquisition fallback
+→ continue exact-current work on populated unprocessed staging records
+→ acquire discover.swiss structured snapshot when credential becomes available
+→ source-scope reconciliation EXACT | evidence-backed EXPLAINED
+→ terminal mappings: unmapped=0, RECONCILE_REQUIRED=0
+→ bounded authoritative WOP promotion from current verified parent
+→ DB ↔ HOTELS_MASTER ↔ Intelligence ↔ Operational Graph ↔ observability exact
+→ CRM_UNIVERSE_COMPLETE=TRUE only after all gates pass
 ```
 
-Writer capability is no longer the blocker. When the frozen source universe is terminally mapped, perform one bounded authoritative WOP promotion from V13 or its then-current verified successor:
-
-```text
-re-read live parent + concurrency anti-join
-→ constrained DB
-→ HOTELS_MASTER / CRM mirror by PK
-→ Intelligence
-→ Operational Graph
-→ observability / scheduler / checkpoints / transitions
-→ GitHub / Drive / recovery persistence
-→ final exact reconciliation
-```
-
-Only that fully reconciled state may set `CRM_UNIVERSE_COMPLETE = TRUE`. `OUTBOUND` remains separately CLOSED.
+`OUTBOUND` remains CLOSED independently.

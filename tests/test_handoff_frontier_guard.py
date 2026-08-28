@@ -70,6 +70,42 @@ class HandoffFrontierGuardTests(unittest.TestCase):
     def test_accepts_current_frontier(self) -> None:
         self.assertEqual(MODULE.validate_handoff(self._root()), [])
 
+    def test_accepts_safe_legacy_summary_without_cumulative_fields(self) -> None:
+        root = self._root()
+        payload = {
+            "schema_version": "ECV-RESULT-SUMMARY-1.0",
+            "project": "SWITZERLAND_JOB_OS",
+            "batch_id": "SNAP:WORK:0001:LEGACY",
+            "ecv_packet_sha256": f"{99:064x}",
+            "authority_advanced": False,
+            "h_id_allocations": 0,
+            "outbound": "CLOSED",
+            "send_allowed": 0,
+        }
+        (root / "docs" / "state" / "ECV_BATCH_0001_LEGACY_RESULT.json").write_text(
+            json.dumps(payload), encoding="utf-8"
+        )
+        self.assertEqual(MODULE.validate_handoff(root), [])
+
+    def test_rejects_partial_cumulative_frontier(self) -> None:
+        root = self._root()
+        payload = {
+            "schema_version": "ECV-RESULT-SUMMARY-1.0",
+            "project": "SWITZERLAND_JOB_OS",
+            "batch_id": "SNAP:WORK:0001:PARTIAL",
+            "cumulative_current_detail_verified": 41,
+            "ecv_packet_sha256": f"{98:064x}",
+            "authority_advanced": False,
+            "h_id_allocations": 0,
+            "outbound": "CLOSED",
+            "send_allowed": 0,
+        }
+        (root / "docs" / "state" / "ECV_BATCH_0001_PARTIAL_RESULT.json").write_text(
+            json.dumps(payload), encoding="utf-8"
+        )
+        errors = MODULE.validate_handoff(root)
+        self.assertTrue(any("partial cumulative frontier" in error for error in errors))
+
     def test_rejects_stale_next(self) -> None:
         errors = MODULE.validate_handoff(self._root(next_verified=20))
         self.assertTrue(any("current_detail_verified" in error for error in errors))

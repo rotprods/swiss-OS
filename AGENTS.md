@@ -12,11 +12,12 @@ Before material work:
 4. reconcile against live Drive/Sheets + the latest authority-eligible constrained manifest;
 5. read relevant invariants, issues, SLOs, TTL state and scheduler tasks;
 6. identify affected engines using `docs/architecture/ENGINE_REGISTRY.md`;
-7. select/declare an execution mode and `GRAPH_IMPACT`;
-8. fail closed on lineage ambiguity, stale parent state or partial writes;
-9. preserve outbound CLOSED unless separately and explicitly authorized.
+7. when work affects hotel-universe coverage, CRM seeding or outbound readiness, read `docs/operations/CRM_UNIVERSE_PROTOCOL.md`;
+8. select/declare an execution mode and `GRAPH_IMPACT`;
+9. fail closed on lineage ambiguity, stale parent state or partial writes;
+10. preserve outbound CLOSED unless separately and explicitly authorized.
 
-Before checkpoint promotion, production continuation, architecture release or a user-requested “perfect/full-system” review, also run the applicable gates in `docs/operations/PRODUCTION_READINESS_GAUNTLET.md`.
+Before checkpoint promotion, production continuation, architecture release or a user-requested full-system review, also run the applicable gates in `docs/operations/PRODUCTION_READINESS_GAUNTLET.md`.
 
 ## Authority
 
@@ -126,7 +127,9 @@ Every authoritative entity/evidence/task mutation must update the affected opera
 - No PII/operational binaries in the public repository.
 - No checkpoint promotion without validation and state transition.
 - No canary count may be reported as authoritative.
-- No outbound without explicit authorization.
+- **No outbound gate may open before `CRM_UNIVERSE_COMPLETE = TRUE` for the frozen verified target snapshot.**
+- A partial checkpoint, shortlist or deeply enriched sample never substitutes for complete CRM source-record coverage.
+- No outbound without explicit authorization after all independent gates pass.
 - Do not claim background/real-time daemons unless they actually exist.
 
 ## Closure

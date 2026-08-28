@@ -1,0 +1,26 @@
+{
+  "authority_mutation": false,
+  "cycle_id": "META-20260829-ECV-SUB0009-TO-SUB0010",
+  "edges": [
+    ["ECV-SUB0009","VERIFIED_SLICE_OF","CWP-IMMUTABLE-1438"],
+    ["ECV-SUB0009","ADVANCES_EVIDENCE_FRONTIER_TO",180],
+    ["ECV-SUB0009","CHAINS_TO","ECV-SUB0010"],
+    ["ECV-SUB0010","DERIVED_FROM_OFFSETS","180..199"],
+    ["NEXT","CONTINUES","ECV-SUB0010"]
+  ],
+  "generated_at": "2026-08-28T23:57:56Z",
+  "graph_impact": "META",
+  "graph_type": "PROJECT_MEMORY_META_GRAPH_DELTA",
+  "invariants": {"authority_advanced":false,"h_id_allocations":0,"outbound":"CLOSED","send_allowed":0},
+  "metrics": {"ecv_remaining":1258,"ecv_total":1438,"ecv_verified":180,"effective_reconcile_required":1435,"effective_terminal_mappings":626,"sub0009_verified":20,"sub0010_staged":20},
+  "nodes": [
+    {"active":690,"aliases":0,"id":"AUTHORITY-E4","physical":690,"type":"AUTHORITY_STATE"},
+    {"id":"ECV-SUB0009","state":"COMPLETE_READ_ONLY","type":"EVIDENCE_WAVE","verified":20},
+    {"id":"ECV-SUB0010","items":20,"state":"STAGED","type":"EVIDENCE_WAVE"},
+    {"id":"CWP-IMMUTABLE-1438","state":"RECOVERED_EXACT","type":"CANDIDATE_ORDER"},
+    {"id":"NEXT","route":"RUN_ECV_SUB0010","type":"CONTINUATION_POINTER"},
+    {"id":"OUTBOUND","send_allowed":0,"state":"CLOSED","type":"GATE"}
+  ],
+  "project": "SWITZERLAND_JOB_OS",
+  "schema_version": "1.3"
+}

@@ -31,6 +31,73 @@ CREATE TABLE IF NOT EXISTS entity_aliases (
     UNIQUE(canonical_hotel_id, alias_name, alias_city)
 );
 
+CREATE TABLE IF NOT EXISTS crm_snapshots (
+    snapshot_id TEXT PRIMARY KEY,
+    source_url TEXT NOT NULL,
+    locale TEXT NOT NULL,
+    observed_at TEXT NOT NULL,
+    raw_directory_count INTEGER NOT NULL CHECK (raw_directory_count > 0),
+    page_count INTEGER CHECK (page_count IS NULL OR page_count > 0),
+    source_scope TEXT NOT NULL,
+    snapshot_state TEXT NOT NULL CHECK (
+        snapshot_state IN ('DISCOVERED','STAGED','FROZEN_CANDIDATE','FROZEN_VERIFIED','SUPERSEDED')
+    ),
+    created_at TEXT NOT NULL,
+    frozen_at TEXT,
+    CHECK (
+        (snapshot_state = 'FROZEN_VERIFIED' AND frozen_at IS NOT NULL)
+        OR snapshot_state <> 'FROZEN_VERIFIED'
+    )
+);
+
+CREATE TABLE IF NOT EXISTS crm_snapshot_records (
+    snapshot_record_id TEXT PRIMARY KEY,
+    snapshot_id TEXT NOT NULL REFERENCES crm_snapshots(snapshot_id) ON DELETE CASCADE,
+    source_record_key TEXT NOT NULL,
+    source_url TEXT NOT NULL,
+    source_page_key TEXT,
+    raw_name TEXT NOT NULL CHECK (length(trim(raw_name)) > 0),
+    raw_city TEXT NOT NULL DEFAULT '',
+    normalized_name TEXT NOT NULL CHECK (length(trim(normalized_name)) > 0),
+    normalized_city TEXT NOT NULL DEFAULT '',
+    detail_url TEXT,
+    observed_at TEXT NOT NULL,
+    evidence_ref TEXT NOT NULL,
+    UNIQUE(snapshot_id, source_record_key)
+);
+
+CREATE INDEX IF NOT EXISTS ix_crm_snapshot_records_snapshot
+ON crm_snapshot_records(snapshot_id);
+
+CREATE TABLE IF NOT EXISTS crm_source_mappings (
+    snapshot_record_id TEXT PRIMARY KEY REFERENCES crm_snapshot_records(snapshot_record_id) ON DELETE CASCADE,
+    mapping_state TEXT NOT NULL CHECK (
+        mapping_state IN ('ACTIVE_CANONICAL','ALIAS_TO_CANONICAL','EXCLUDED_WITH_REASON','RECONCILE_REQUIRED')
+    ),
+    canonical_hotel_id TEXT REFERENCES canonical_hotels(hotel_id),
+    exclusion_reason TEXT,
+    reconcile_reason TEXT,
+    confidence REAL CHECK (confidence IS NULL OR (confidence >= 0.0 AND confidence <= 1.0)),
+    evidence_ref TEXT NOT NULL,
+    run_id TEXT,
+    mapped_at TEXT NOT NULL,
+    CHECK (
+        (mapping_state IN ('ACTIVE_CANONICAL','ALIAS_TO_CANONICAL') AND canonical_hotel_id IS NOT NULL)
+        OR (mapping_state NOT IN ('ACTIVE_CANONICAL','ALIAS_TO_CANONICAL') AND canonical_hotel_id IS NULL)
+    ),
+    CHECK (
+        (mapping_state = 'EXCLUDED_WITH_REASON' AND exclusion_reason IS NOT NULL AND length(trim(exclusion_reason)) > 0)
+        OR mapping_state <> 'EXCLUDED_WITH_REASON'
+    ),
+    CHECK (
+        (mapping_state = 'RECONCILE_REQUIRED' AND reconcile_reason IS NOT NULL AND length(trim(reconcile_reason)) > 0)
+        OR mapping_state <> 'RECONCILE_REQUIRED'
+    )
+);
+
+CREATE INDEX IF NOT EXISTS ix_crm_source_mappings_state
+ON crm_source_mappings(mapping_state);
+
 CREATE TABLE IF NOT EXISTS scheduler_tasks (
     task_id TEXT PRIMARY KEY,
     scope_id TEXT NOT NULL,

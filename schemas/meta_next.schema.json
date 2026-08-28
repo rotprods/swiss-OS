@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/rotprods/swiss-OS/schemas/meta_next.schema.json",
+  "title": "SWITZERLAND_JOB_OS Durable NEXT Pointer",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "generated_at",
+    "project",
+    "activation_id",
+    "last_wave_id",
+    "last_closure_state",
+    "parent_main_sha",
+    "authority_epoch",
+    "authority_manifest",
+    "active_goal_id",
+    "active_checkpoint_id",
+    "selected_route",
+    "route_status",
+    "route_priority",
+    "route_prerequisites",
+    "blocked_capabilities",
+    "fallback_order",
+    "required_inputs",
+    "recovery_artifacts",
+    "next_action",
+    "disposition",
+    "stop_reason",
+    "outbound",
+    "send_allowed",
+    "issue_create_locked",
+    "content_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "MEP-NEXT-1.0"},
+    "generated_at": {"type": "string", "format": "date-time"},
+    "project": {"const": "SWITZERLAND_JOB_OS"},
+    "activation_id": {"type": "string", "minLength": 1},
+    "last_wave_id": {"type": "string"},
+    "last_closure_state": {"type": "string"},
+    "parent_main_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "authority_epoch": {"type": "string", "minLength": 1},
+    "authority_manifest": {"type": "string"},
+    "active_goal_id": {"type": "string", "minLength": 1},
+    "active_checkpoint_id": {"type": "string"},
+    "selected_route": {
+      "type": ["string", "null"],
+      "enum": [
+        "API_CAPTURE",
+        "DIRECTORY_MANIFEST",
+        "RECOVERY_IMPORT",
+        "CACHE_HARVEST",
+        "SOURCE_SCOPE_RECONCILIATION",
+        "CANDIDATE_EXPORT",
+        "MASS_STAGE",
+        "EXACT_CURRENT_REFRESH",
+        "ENTITY_RESOLUTION",
+        "TERMINAL_MAPPING",
+        "AUTHORITATIVE_RECONCILE",
+        "REPO_ENGINEERING",
+        null
+      ]
+    },
+    "route_status": {"enum": ["READY", "BLOCKED", "COMPLETE", "UNSAFE"]},
+    "route_priority": {"type": ["integer", "null"], "minimum": 0, "maximum": 100},
+    "route_prerequisites": {"type": "array", "items": {"type": "string"}},
+    "blocked_capabilities": {"type": "array", "items": {"type": "string"}},
+    "fallback_order": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "API_CAPTURE",
+          "DIRECTORY_MANIFEST",
+          "RECOVERY_IMPORT",
+          "CACHE_HARVEST",
+          "SOURCE_SCOPE_RECONCILIATION",
+          "CANDIDATE_EXPORT",
+          "MASS_STAGE",
+          "EXACT_CURRENT_REFRESH",
+          "ENTITY_RESOLUTION",
+          "TERMINAL_MAPPING",
+          "AUTHORITATIVE_RECONCILE",
+          "REPO_ENGINEERING"
+        ]
+      }
+    },
+    "required_inputs": {"type": "array", "items": {"type": "string"}},
+    "recovery_artifacts": {"type": "array", "items": {"type": "string"}},
+    "next_action": {"type": "string", "minLength": 1},
+    "disposition": {"enum": ["NEXT_CONTINUE", "NEXT_WAIT", "NEXT_COMPLETE"]},
+    "stop_reason": {
+      "type": ["string", "null"],
+      "enum": [
+        "COMPLETE_GOAL",
+        "ALL_ROUTES_BLOCKED_P0",
+        "AUTHORIZATION_REQUIRED",
+        "PROVIDER_OR_LEGAL_BOUNDARY",
+        "NO_SAFE_PRODUCTIVE_WORK",
+        "SUPERSEDED_PARENT",
+        "RUNTIME_BUDGET_EXHAUSTED",
+        null
+      ]
+    },
+    "outbound": {"const": "CLOSED"},
+    "send_allowed": {"const": 0},
+    "issue_create_locked": {"type": "boolean"},
+    "content_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

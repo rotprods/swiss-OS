@@ -33,6 +33,18 @@ class NextPointerTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "cannot pre-authorize outbound"):
             NextPointer.from_mapping({**BASE, "outbound_allowed": True})
 
+    def test_authority_cannot_be_pre_authorized(self) -> None:
+        with self.assertRaisesRegex(ValueError, "cannot pre-authorize authority advancement"):
+            NextPointer.from_mapping({**BASE, "authority_advance_allowed": True})
+
+    def test_canonical_ids_cannot_be_pre_authorized(self) -> None:
+        with self.assertRaisesRegex(ValueError, "cannot pre-authorize canonical ID allocation"):
+            NextPointer.from_mapping({**BASE, "canonical_id_allocation_allowed": True})
+
+    def test_boolean_strings_are_rejected(self) -> None:
+        with self.assertRaisesRegex(ValueError, "JSON boolean"):
+            NextPointer.from_mapping({**BASE, "outbound_allowed": "false"})
+
     def test_missing_required_field_fails(self) -> None:
         payload = dict(BASE)
         payload["next_route"] = ""

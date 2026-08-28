@@ -1,0 +1,28 @@
+{
+  "schema_version": "ECV-RESULT-SUMMARY-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "source_snapshot_id": "HS-MEMBER-DE-33206402141",
+  "batch_id": "HS-MEMBER-DE-33206402141:WORK:0001:SUB:0003:REQUEUE:0001",
+  "input_items": 3,
+  "input_items_sha256": "56dba89923a77164c3e53bf9ee5c8393bec6b45408cf792a023f8efd2652014a",
+  "github_actions_run_id": 33212466359,
+  "github_actions_job_id": 98988644264,
+  "artifact_id": 9702111115,
+  "artifact_zip_sha256": "80879c51176b9416cc927a79c774a22b63b10d592038e9c8d73b672b79947a56",
+  "results_count": 3,
+  "counts_by_state": {
+    "CURRENT_DETAIL_VERIFIED": 3
+  },
+  "all_verified": true,
+  "ecv_packet_sha256": "c37b72e85ce9ee0d78d86cd3e754fc710c09e8b56bc410444ee14f7287c874d5",
+  "validation_violations": [],
+  "cumulative_current_detail_verified": 60,
+  "remaining_never_verified": 1377,
+  "pending_requeue": 0,
+  "authority_advanced": false,
+  "h_id_allocations": 0,
+  "outbound": "CLOSED",
+  "send_allowed": 0,
+  "terminal_mapping_effect": "NONE_UNTIL_ENTITY_RESOLUTION",
+  "note": "All three HTTP-429 tail records from sub0003 verified successfully on the bounded requeue. Provider throttling created no absence, novelty, exclusion, canonical allocation or authority inference."
+}

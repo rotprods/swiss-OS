@@ -1,266 +1,131 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest Meta Execution reconciliation: **2026-08-28T20:25:00+02:00**.  
-Latest reconstructed GitHub `main`: **`60606dc36bf88883d6a2eb9e1c7903e03dc29bc8`**.  
-Latest physically verified constrained parent: **`OPERATIONAL_DB_SHADOW_MANIFEST_V13`**.  
-Latest semantic-authority gate: **ASR-1.0 / issue #89 = RECONCILE_REQUIRED**.  
-Latest deterministic recovery capability: **ARR-1.0**.  
-Latest exact repair evidence: **ASR_REPAIR_CANARY_2026-08-28_V1 + issue-89 public-safe repair/write-set plans**.
+Latest Meta Execution reconciliation: **2026-08-28T21:53:40+02:00**.  
+Reconstructed GitHub parent before this state wave: **`1676bb22b5407f590de7fe47cd1e369ec5a7d7b0`**.  
+Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**.  
+Authority parent: **issue-89 CCP/ARR materializable repaired constrained parent**.  
+Latest live HOTELS_MASTER revision after reconciliation: **497**.
 
-## 1. Authority posture — fail closed
+## 1. Authority — issue #89 recovered
 
-The V13 parent remains the latest physically verified synchronized recovery parent, but its four persisted H-ID alias/supersession edges are semantically corrupt. Structural SQLite integrity is not enough to make the prior active denominator safe.
+The four persisted alias/supersession edges identified by issue #89 were semantic row/H-ID drift, not duplicate physical hotel identities. Recovery was performed by stable H-ID/PK and reconciled across constrained DB materialization, HOTELS_MASTER, Intelligence, Operational Graph and control-plane surfaces.
 
 ```text
 entity epoch                    HS_ENTITY_EPOCH_2026-08-25_E4
-constrained recovery parent     OPERATIONAL_DB_SHADOW_MANIFEST_V13
-constrained parent SHA-256      0e605b412f29893ca1775f1e8fccd5987d0613baab4ac29b6699988cde0fdfe5
+immutable constrained base      OPERATIONAL_DB_SHADOW_MANIFEST_V13
+base SHA-256                    0e605b412f29893ca1775f1e8fccd5987d0613baab4ac29b6699988cde0fdfe5
+repair protocol                 ARR-1.0
+constrained-parent protocol     CCP-1.0
+semantic alias gate             ASR-1.0 = EXACT
+repaired materialization SHA    70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6
 physical HOTELS rows            690
-persisted H-ID alias edges        4
-alias semantics                 RECONCILE_REQUIRED
-prior reported active           686 — NOT SAFE TO ADVANCE FROM
-safe current active denominator RECONCILE_REQUIRED / no numeric promotion claim
-canonical H-ID allocation       FORBIDDEN
-CRM authority promotion         FORBIDDEN
+active canonical                690
+persisted H-ID alias edges        0
+HOTEL_INTELLIGENCE_V1           690 / 690
+Graph HOTEL nodes               690 / 690
+Graph INTEL nodes               690 / 690
+HAS_INTELLIGENCE edges          690 / 690
+L4                              105 / 690
+CP-0750                         690 / 750
+next physical ID                H-0691
 CRM_UNIVERSE_COMPLETE           FALSE
 OUTBOUND                        CLOSED
 send_allowed                      0
 ```
 
-Do **not** infer an authoritative `690 active` merely by removing four alias edges. A repaired DB or Sheets canary is not authority until DB → HOTELS_MASTER → Intelligence → Operational Graph → observability/recovery reconcile atomically and ASR-1.0 returns `EXACT`.
+No new H-ID was allocated by the repair. The four affected physical identities were restored to their prior canonical state and their historical Intelligence depth only: `L1 / CANONICAL_INDEXED_RECONCILE_SEED`. Four corrective `STATE_TRANSITIONS` preserve the bad supersession lineage rather than deleting history.
 
-## 2. P0 #89 — semantic alias identity corruption
+## 2. Deterministic constrained-parent recovery
 
-Persisted invalid edges:
-
-```text
-H-0610 Hôtel Alpe Fleurie — Villars-sur-Ollon
-→ H-0656 Hotel Murtenhof & Krone — Murten
-
-H-0624 Hôtel Le Mont Paisible — Crans-Montana
-→ H-0639 Hotel Alpbach — Meiringen
-
-H-0629 Stiftung Lilienberg Unternehmerforum — Ermatingen
-→ H-0638 Jugendherberge Seelisberg — Seelisberg
-
-H-0630 Strandhotel Iseltwald — Iseltwald
-→ H-0640 Hotel Central Luzern — Luzern
-```
-
-`ENTITY_RESOLUTION:ER-CP0650-001..004` correctly identifies the target names/cities as duplicate discovery candidates anti-joinable to existing canonical targets, but the notes incorrectly attached unrelated physical H-IDs as superseded rows.
-
-Historical HOTELS_MASTER revision `464` (`2026-08-23T18:40:27.970Z`) proves all four source-side H-IDs were distinct `CANONICAL_CURRENT_RECONCILED` hotels before the supersession run. It also proves their Intelligence seed state was `L1 / CANONICAL_INDEXED_RECONCILE_SEED` and their HOTEL→INTEL edges existed as ordinary `HAS_INTELLIGENCE` relations.
-
-Root class:
+The immutable V13 base remains preserved in Drive. `ARR-1.0` deterministically materializes the repaired constrained parent from that exact base and the pinned issue-89 repair plan. The materialization was rerun in this activation and reproduced the precommitted digest exactly:
 
 ```text
-candidate / H-ID lineage drift
-→ duplicate discovery candidate correctly resolves to existing target
-→ unrelated physical H-ID incorrectly receives supersession mutation
+expected repaired SHA-256       70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6
+observed repaired SHA-256       70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6
+SQLite integrity_check          ok
+foreign-key violations            0
+hotel rows                      690
+alias rows                        0
+superseded rows                   0
+second replay mutations           0
+idempotency                     PASS
 ```
 
-Issue: `#89`.
+Canonical public-safe recovery artifacts:
 
-## 3. ASR-1.0 semantic gate
+- `docs/state/ISSUE_89_ASR_REPAIR_PLAN.json`
+- `docs/state/ISSUE_89_CROSS_PLANE_WRITESET.json`
+- `docs/state/ISSUE_89_COMPOSITE_CONSTRAINED_PARENT.json`
+- `docs/operations/ALIAS_SEMANTIC_RECONCILIATION.md`
+- `docs/operations/ALIAS_REPAIR_REPLAY.md`
+- `docs/operations/COMPOSITE_CONSTRAINED_PARENT.md`
 
-ASR-1.0 merged previously in PR `#90` as:
+## 3. HOTELS_MASTER cross-plane transaction
+
+Native Sheets mutation is available and was used only after a fresh rollback copy existed.
 
 ```text
-377744d9860e89861f0c80d045d774dcb58eb03b
+HOTELS_MASTER ID                 1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w
+pre-wave revision               489
+post-reconciliation revision    497
+rollback copy ID                1KPaM2gIA3C_CNulDPSI7KRFHIem50Thx-2q4BJXdrgk
+rollback title                  HOTELS_MASTER_ROLLBACK_PRE_ASR_RECOVERY_2026-08-28_2137
 ```
 
-Contract: `docs/operations/ALIAS_SEMANTIC_RECONCILIATION.md`.  
-Validator: `src/swiss_os/alias_semantics.py`.
-
-ASR requires every persisted alias edge to prove semantic identity, not merely PK/FK validity. It fails closed on missing/ambiguous evidence, mismatched physical identity, target mismatch, self-aliases or unproved real-world equivalence.
-
-## 4. ARR-1.0 deterministic repair replay
-
-PR `#92` passed repository guards, stable-contract guard, unit tests and manifest canary, then merged as:
+Readback after reconciliation proves:
 
 ```text
-60606dc36bf88883d6a2eb9e1c7903e03dc29bc8
+HOTELS_V2 H-ID rows                         690
+HOTELS_V2 SUPERSEDED_DUPLICATE                0
+HOTEL_INTELLIGENCE_V1 H-ID rows             690
+GRAPH_NODES_V2 HOTEL:H-*                    690
+GRAPH_NODES_V2 INTEL:H-*                    690
+GRAPH_EDGES_V2 HAS_INTELLIGENCE             690
+GRAPH_EDGES_V2 ALIASES_TO                     0
 ```
 
-Contract: `docs/operations/ALIAS_REPAIR_REPLAY.md`.  
-Executable: `src/swiss_os/alias_repair.py`.
+Control-plane readback now reports `690` consistently in active E4 rows for `ENGINE_METRICS`, `GOAL_STATE`, `CHECKPOINT_REGISTRY`, `SOURCE_SNAPSHOTS`, `ENGINE_HEALTH`, `SLO_REGISTRY` and `EXECUTION_SCHEDULER_V2`. Historical rows remain immutable history and may still describe the old 686/4-alias state.
 
-ARR-1.0 provides a portable copy-on-write repair path with:
+Run ledger: `RUN-2026-08-28-2148-ASR-ISSUE89-AUTHORITY-RECOVERY`.  
+Decision ledger: `DEC-0102`.  
+System issue mirror: `ISS-055 = RESOLVED_ASR_CROSS_PLANE_PASS`; prior `ISS-051` is retained but corrected by issue #89.
+
+## 4. Safety invariants after recovery
+
+Issue #89 authority recovery does **not** complete the CRM source universe and does not authorize outbound.
 
 ```text
-exact parent SHA lock
-+ expected alias identity
-+ expected target identity
-+ expected persisted target/state
-+ mutation cardinality gates
-+ integrity/FK pre/post checks
-+ atomic temp → replace publication
-+ no overwrite / no in-place mutation
-+ idempotent replay
+canonical IDs from staging          FORBIDDEN
+cache/canary authority promotion    FORBIDDEN
+CRM_UNIVERSE_COMPLETE               FALSE
+OUTBOUND                            CLOSED
+send_allowed                          0
 ```
 
-ARR deliberately does **not** infer the post-repair active denominator:
+Future alias/supersession writes must pass ASR-1.0 semantic equivalence using stable identity evidence. Row position or candidate ordering is never authority.
 
-```text
-candidate_active_canonical = null
-active_denominator_state   = RECONCILE_REQUIRED_CROSS_PLANE
-authority_advanced         = false
-h_id_allocations           = 0
-outbound_opened            = false
-send_allowed               = 0
-```
+## 5. Current CRM-universe frontier
 
-Public-safe deterministic plan: `docs/state/ISSUE_89_ASR_REPAIR_PLAN.json`.  
-Public-safe cross-plane plan: `docs/state/ISSUE_89_CROSS_PLANE_WRITESET.json`.
-
-## 5. Exact V13 replay evidence — non-authoritative
-
-V13 was reread from Drive by exact file ID and reverified in this activation:
-
-```text
-Drive file ID                 1rIL6x_bmBoCbxVSAGFvdjoKnUqSX3YnT
-SHA-256                       0e605b412f29893ca1775f1e8fccd5987d0613baab4ac29b6699988cde0fdfe5
-SQLite integrity_check       ok
-FK violations                  0
-physical rows                690
-invalid alias rows             4
-```
-
-Deterministic repair of those exact bytes reproduces the prior canary artifact exactly:
-
-```text
-repaired SHA-256              70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6
-physical rows                 690
-hotel_aliases after repair      0
-superseded rows after repair    0
-SQLite integrity_check        ok
-FK violations                   0
-idempotency replay            PASS / 0 additional logical mutations
-active denominator            NOT INFERRED
-```
-
-Logical SQLite differences remain exactly four state restorations plus four invalid `hotel_aliases` removals. No H-ID is created, deleted, reused or renumbered.
-
-## 6. Live HOTELS_MASTER recovery preflight
-
-The native Google Sheet is reachable and writable:
-
-```text
-spreadsheet ID                 1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w
-latest observed revision       488
-```
-
-A full rollback copy was created **before any live mutation**:
-
-```text
-HOTELS_MASTER_ROLLBACK_PRE_ASR_2026-08-28_2011
-Drive ID 1bu1SjxxG4fF4yx7H2rshOiw-tnJZMcHxIL3S8ipyQKk
-```
-
-No live repair mutation has been performed.
-
-Exact affected live surfaces have been reconstructed by stable keys:
-
-```text
-HOTELS_V2
-  H-0610 / H-0624 / H-0629 / H-0630
-
-HOTEL_INTELLIGENCE_V1
-  H-0610 / H-0624 / H-0629 / H-0630
-
-GRAPH_NODES_V2
-  HOTEL:<four IDs>
-  INTEL:<four IDs>
-
-GRAPH_EDGES_V2
-  four invalid EDGE:ALIAS:* relations
-  four HOTEL→INTEL relations currently marked SUPERSEDED_ALIAS
-
-ENTITY_RESOLUTION
-  ER-CP0650-001..004 retained as research anti-join evidence
-
-STATE_TRANSITIONS
-  TR-20260825-H0610-SUPERSEDE
-  TR-20260825-H0624-SUPERSEDE
-  TR-20260825-H0629-SUPERSEDE
-  TR-20260825-H0630-SUPERSEDE
-  preserved; repair requires append-only corrective transitions
-```
-
-Drive durable preflight: `ASR_ATOMIC_RECOVERY_PREFLIGHT_2026-08-28_V2`, Doc ID `13G_a1kj3uhu_XmH5xK253d0DBPeUiLl-dwkOiHHdLZU`.
-
-## 7. Current atomic-promotion blocker
-
-This runtime can read the exact V13 binary and construct the exact repaired SQLite, but the Google Drive connector rejects egress of the newly generated SQLite with:
-
-```text
-BLOCKED_FILE_REFERENCE
-```
-
-Therefore the system MUST NOT mutate HOTELS_V2/Intelligence/Graph alone. That would create a forbidden cross-plane partial authority state.
-
-Current durable strategy:
-
-```text
-immutable V13 Drive parent
-+ ARR-1.0 deterministic replay
-+ exact parent SHA
-+ exact expected repaired SHA observation
-+ public-safe repair plan
-+ public-safe cross-plane write set
-+ HOTELS_MASTER rollback copy
-+ Drive preflight report
-```
-
-A persistent operator environment that can write the repaired SQLite can reproduce the exact repair without relying on chat context.
-
-## 8. Required bounded recovery transaction
-
-Before authority can move, one recovery wave must execute and reconcile:
-
-```text
-fresh Git ancestry + V13 parent check
-→ durable ARR repaired constrained DB
-→ resolve all Sheet rows again by PK/key
-→ HOTELS_V2 four state restorations
-→ HOTEL_INTELLIGENCE_V1 restore L1 / CANONICAL_INDEXED_RECONCILE_SEED without inventing enrichment
-→ GRAPH_NODES_V2 remove invalid supersession state
-→ GRAPH_EDGES_V2 remove invalid ALIASES_TO relations
-→ restore four ordinary HAS_INTELLIGENCE edge semantics
-→ preserve ER records but remove their interpretation as physical supersession evidence
-→ append four corrective STATE_TRANSITIONS
-→ derive checkpoint/active denominator only after data-plane reconciliation
-→ scheduler / metrics / health / SLO / invariant reconciliation
-→ ASR-1.0 EXACT
-→ DB ↔ Sheets ↔ Intelligence ↔ Graph exact
-→ restore/replay/idempotency gauntlet
-→ recovery persistence
-```
-
-Any parent/revision/key drift switches the wave back to `RECOVERY_RECONCILE`; no force-write is permitted.
-
-## 9. Source-universe work remains valid but lower priority than #89
-
-The pre-authority CRM pipeline on `main` remains available:
+The pre-authority source pipeline remains:
 
 ```text
 HSLCA-R1.0 / MDC-1.1
-→ PCF-1.0 when provider aggregate count is absent
+→ HPCB-1.0 provenance bridge when needed
+→ PCF-1.0 if provider aggregate count is absent
 → MDM
 → CMI
 → CWP
 → ECV
 → SMC
 → SRR-1.1
+→ terminal source mappings
 ```
 
-A prior live directory canary acquired `172/172` pages and `2061` unique detail URLs but was diagnostic because MDC-1.0 reversed city/name fields; MDC-1.1 fixed that parser. `discover.swiss` remains unavailable without `DISCOVER_SWISS_SUBSCRIPTION_KEY`.
+`discover.swiss` remains unavailable without `DISCOVER_SWISS_SUBSCRIPTION_KEY`, so the current high-value fallback is a fresh coherent HotellerieSuisse member-directory capture. PR #88 contains HPCB/HSLCA→PCF work but is based on stale ancestry and must not be merged as-is. Its live-source acceptance criteria remain useful and should be ported/requalified from fresh `main` if the source path is selected.
 
-Open PR `#88` remains unmerged until its required live-source qualification passes. Repository CI alone is insufficient.
+Existing read-only evidence work is still non-authoritative: exact-current batches reduce evidence debt but do not reserve H-IDs or advance authority.
 
-Read-only source-universe research may continue while #89 blocks authority/H-ID allocation, but it may not bypass the semantic-authority P0.
-
-## 10. Runtime capability
+## 6. Runtime capability
 
 ```text
 GitHub read/write/CI                         AVAILABLE
@@ -269,50 +134,44 @@ authenticated Drive read                     AVAILABLE
 Drive/Docs durable writes                    AVAILABLE
 native HOTELS_MASTER in-place Sheets write   AVAILABLE
 V13 raw parent recovery                      AVAILABLE / SHA verified
-repaired SQLite local construction           AVAILABLE / deterministic
-repaired SQLite connector egress             BLOCKED_FILE_REFERENCE
-Library durable write                        not proven in this activation
+ARR repaired SQLite local materialization    AVAILABLE / deterministic
+Library durable write                        not required for authority claim in this wave
 ```
 
-Do not claim Library synchronization unless a real write actuator succeeds.
+The prior repaired-binary egress blocker is no longer an authority blocker because CCP-1.0 defines a durable content-addressed materializable constrained parent, and this activation reproduced its exact expected digest before cross-plane reconciliation.
 
-## 11. Current MEP route
+## 7. Current MEP route
 
-Highest-value route:
+Issue #89 no longer blocks productive source-universe work. Highest-value next route:
 
 ```text
-ASR_REPAIR_ARTIFACT_EGRESS_OR_PERSISTENT_OPERATOR_REPLAY
+FRESH_HSLCA_COHERENT_CAPTURE
+→ HPCB / PCF if count-less
+→ MDM coverage_complete=true
+→ CMI candidate export
+→ CWP / ECV / SMC / SRR
 ```
 
-If durable repaired-DB persistence becomes available:
+Fallback lattice:
 
 ```text
-/wave recover
-→ reread main/V13/Sheets revision
-→ ARR replay
-→ atomic cross-plane write set
-→ ASR EXACT
-→ gauntlet
-→ authority reconciliation
+if discover.swiss credential becomes available
+→ STRUCTURED_SOURCE_CAPTURE → SSR
+
+else if fresh HSLCA coherent capture can execute
+→ HSLCA → HPCB/PCF → MDM
+
+else
+→ EXACT_CURRENT_REFRESH / entity-resolution evidence debt reduction
 ```
 
-If that capability remains unavailable, continue safe work that reduces future execution risk:
+Any source failure is a route change, not permission to allocate canonical IDs from staging.
 
-```text
-repair-plan validation
-→ cross-plane precondition validation
-→ historical-revision proof
-→ source-universe read-only qualification
-→ QA/recovery engineering
-```
+## 8. Durable NEXT
 
-Do not partially repair live mirrors.
+Canonical machine-readable continuation pointer: `docs/state/NEXT.json`.
 
-## 12. Durable NEXT
-
-Canonical machine-readable pointer: `docs/state/NEXT.json`.
-
-Permissions remain:
+Permissions remain fail-closed for the next pre-authority source wave:
 
 ```text
 authority_advance_allowed = FALSE
@@ -320,21 +179,18 @@ canonical_id_allocation_allowed = FALSE
 outbound_allowed = FALSE
 ```
 
-## 13. North-star continuation
-
-After #89 is atomically reconciled:
+## 9. North-star continuation
 
 ```text
-resume fresh coherent HSLCA capture
-→ provider count OR strict PCF materialized denominator
+fresh coherent source universe
 → MDM coverage_complete=true
-→ discover.swiss / SSR when credential exists
+→ source-scope reconciliation
 → CMI → CWP → ECV → SMC → SRR
-→ all frozen source records terminally mapped
+→ every frozen source record terminally maps to ACTIVE_CANONICAL | ALIAS_TO_CANONICAL | EXCLUDED_WITH_REASON
 → unmapped = 0
 → RECONCILE_REQUIRED = 0
-→ authoritative DB/Sheets/Intelligence/Graph reconciliation
+→ authoritative DB / HOTELS_MASTER / Intelligence / Graph reconciliation
 → CRM_UNIVERSE_COMPLETE = TRUE only when every independent gate passes
 ```
 
-`OUTBOUND` remains separately CLOSED and still requires explicit authorization even after CRM completion.
+Even after CRM completion, outbound remains a separate explicit-authorization gate.

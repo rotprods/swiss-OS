@@ -18,6 +18,7 @@ from .ingest_scheduler import enqueue_ingest_work
 from .invariants import run_manifest_invariants
 from .manifest import OperationalManifest
 from .mass_ingest import classify_batch, stage_decisions, staging_metrics
+from .member_directory import build_member_directory_manifest, validate_member_directory_manifest
 from .meta_execution import MetaCapabilities, choose_meta_route
 from .snapshot_freeze import SnapshotFreezeCandidate, SnapshotSourceRecord, validate_snapshot_freeze
 from .source_scope import ScopeExplanation, build_candidate_snapshot, reconcile_source_scope
@@ -84,6 +85,65 @@ def cmd_meta_next(path: str) -> int:
     }
     print(json.dumps(out, indent=2, sort_keys=True))
     return 2 if decision.execution_mode.value == "BLOCKED_P0" else 0
+
+
+def cmd_member_directory_build(args: argparse.Namespace) -> int:
+    payload = _read_json(args.records_json)
+    if not isinstance(payload, list) or not all(isinstance(item, dict) for item in payload):
+        raise ValueError("member-directory records input must be a JSON array of objects")
+    manifest = build_member_directory_manifest(
+        payload,
+        snapshot_id=args.snapshot_id,
+        observed_at=args.observed_at,
+        locale=args.locale,
+        source_url=args.source_url,
+        declared_raw_records=args.declared_raw_records,
+        expected_pages=args.expected_pages,
+        observed_pages=args.observed_pages,
+        coverage_complete_requested=args.coverage_complete,
+    )
+    _write_json(args.out, manifest)
+    print(
+        json.dumps(
+            {
+                "snapshot_id": manifest["snapshot_id"],
+                "coverage_complete": manifest["coverage_complete"],
+                "coverage_violations": manifest["coverage_violations"],
+                "materialized_records": manifest["materialized_records"],
+                "records_sha256": manifest["records_sha256"],
+                "authority_advanced": False,
+                "h_id_allocations": 0,
+                "outbound_opened": False,
+                "out": args.out,
+            },
+            indent=2,
+            sort_keys=True,
+        )
+    )
+    return 0
+
+
+def cmd_member_directory_validate(path: str, require_complete: bool) -> int:
+    payload = _read_json(path)
+    if not isinstance(payload, dict):
+        raise ValueError("member-directory manifest must be a JSON object")
+    errors = validate_member_directory_manifest(payload)
+    complete = payload.get("coverage_complete") is True
+    out = {
+        "snapshot_id": str(payload.get("snapshot_id", "")),
+        "valid": not errors,
+        "coverage_complete": complete,
+        "errors": list(errors),
+        "authority_advanced": False,
+        "h_id_allocations": 0,
+        "outbound_opened": False,
+    }
+    print(json.dumps(out, indent=2, sort_keys=True))
+    if errors:
+        return 2
+    if require_complete and not complete:
+        return 2
+    return 0
 
 
 def cmd_crm_universe_validate(path: str) -> int:
@@ -263,6 +323,23 @@ def build_parser() -> argparse.ArgumentParser:
     meta_next = meta_sub.add_parser("next")
     meta_next.add_argument("capabilities_json")
 
+    member = sub.add_parser("member-directory", help="Build/validate coherent member-directory manifests for SSR-1.0")
+    member_sub = member.add_subparsers(dest="member_command", required=True)
+    member_build = member_sub.add_parser("build")
+    member_build.add_argument("records_json")
+    member_build.add_argument("--snapshot-id", required=True)
+    member_build.add_argument("--observed-at", required=True)
+    member_build.add_argument("--locale", required=True)
+    member_build.add_argument("--source-url", required=True)
+    member_build.add_argument("--declared-raw-records", type=int, required=True)
+    member_build.add_argument("--expected-pages", type=int, required=True)
+    member_build.add_argument("--observed-pages", type=int, required=True)
+    member_build.add_argument("--coverage-complete", action="store_true")
+    member_build.add_argument("--out", required=True)
+    member_validate = member_sub.add_parser("validate")
+    member_validate.add_argument("manifest_json")
+    member_validate.add_argument("--require-complete", action="store_true")
+
     crm = sub.add_parser("crm-universe", help="Inspect and evaluate the CUP CRM universe contract")
     crm_sub = crm.add_subparsers(dest="crm_command", required=True)
     crm_validate = crm_sub.add_parser("validate")
@@ -314,6 +391,10 @@ def main(argv: list[str] | None = None) -> int:
         return cmd_db_check(args.path)
     if args.command == "meta" and args.meta_command == "next":
         return cmd_meta_next(args.capabilities_json)
+    if args.command == "member-directory" and args.member_command == "build":
+        return cmd_member_directory_build(args)
+    if args.command == "member-directory" and args.member_command == "validate":
+        return cmd_member_directory_validate(args.manifest_json, args.require_complete)
     if args.command == "crm-universe" and args.crm_command == "validate":
         return cmd_crm_universe_validate(args.path)
     if args.command == "crm-universe" and args.crm_command == "inspect-db":

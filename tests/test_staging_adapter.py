@@ -7,6 +7,7 @@ import zipfile
 from xml.sax.saxutils import escape
 
 from swiss_os.staging_adapter import (
+    StagingAdapterError,
     build_cohort_registry,
     cache_records_from_rows,
     extract_workbook,
@@ -17,6 +18,7 @@ from swiss_os.staging_adapter import (
 
 OBSERVED_AT = "2026-08-28T14:30:00+02:00"
 V16_EPOCH = "SV2-059-V16-CANARY-2026-08-27"
+EXACT_FR = "https://www.hotelleriesuisse.ch/fr/association-et-siege-admin/membres/liste-des-membres/hotel-hotel-exact"
 
 
 def _col(index: int) -> str:
@@ -68,12 +70,7 @@ def _write_tiny_workbook(path: Path) -> None:
     ]
     v16_rows = [
         ["proposed_id", "name", "city", "evidence"],
-        [
-            "H-0691",
-            "Hotel Exact",
-            "Genève",
-            "https://www.hotelleriesuisse.ch/fr/member/hotel-exact | https://hotel.test",
-        ],
+        ["H-0691", "Hotel Exact", "Genève", f"{EXACT_FR} | https://hotel.test"],
         ["H-0692", "Hotel Reject", "Basel", "https://hotel-reject.test"],
     ]
     content_types = """<?xml version="1.0" encoding="UTF-8"?>
@@ -138,20 +135,52 @@ class StagingAdapterTests(unittest.TestCase):
         self.assertEqual(records[0].detail_url, "")
         self.assertEqual(records[0].locale, "de")
 
-    def test_v16_requires_exact_hotelleriesuisse_url(self) -> None:
+    def test_cache_row_cannot_escalate_its_evidence_scope(self) -> None:
+        rows = [
+            {
+                "_row_number": 2,
+                "source_page": "28",
+                "city": "Bern",
+                "hotel_name": "Hotel Cache",
+                "source_url": "https://www.hotelleriesuisse.ch/de/verband-und-geschaeftsstelle/mitglieder/mitgliederverzeichnis/hotel-page-28",
+                "observed_count": "2069",
+                "cache_age": "CACHE_5_MONTHS",
+                "evidence_scope": "CURRENT_EXACT_ENTITY_DETAIL",
+            }
+        ]
+        records, rejects = cache_records_from_rows(rows, "workbook.xlsx", OBSERVED_AT)
+        self.assertEqual(records, ())
+        self.assertEqual(len(rejects), 1)
+        self.assertEqual(rejects[0].reason_code, "INVALID_CACHE_EVIDENCE_SCOPE")
+
+    def test_v16_requires_exact_hotelleriesuisse_member_detail_url(self) -> None:
         rows = [
             {
                 "_row_number": 2,
                 "proposed_id": "H-0691",
                 "name": "Hotel Exact",
                 "city": "Genève",
-                "evidence": "https://www.hotelleriesuisse.ch/fr/member/hotel-exact | https://hotel.test",
+                "evidence": f"{EXACT_FR} | https://hotel.test",
             },
             {
                 "_row_number": 3,
                 "proposed_id": "H-0692",
-                "name": "Hotel Reject",
+                "name": "Hotel Page",
                 "city": "Basel",
+                "evidence": "https://www.hotelleriesuisse.ch/de/verband-und-geschaeftsstelle/mitglieder/mitgliederverzeichnis/hotel-page-28",
+            },
+            {
+                "_row_number": 4,
+                "proposed_id": "H-0693",
+                "name": "Industry Detail",
+                "city": "Lugano",
+                "evidence": "https://www.hotelleriesuisse.ch/it/settore-e-politica/elenco-dellindustria/hotel-hotel-atlantico-self-check-in",
+            },
+            {
+                "_row_number": 5,
+                "proposed_id": "H-0694",
+                "name": "Other Domain",
+                "city": "Bern",
                 "evidence": "https://hotel-reject.test",
             },
         ]
@@ -161,9 +190,12 @@ class StagingAdapterTests(unittest.TestCase):
         self.assertEqual(len(records), 1)
         self.assertEqual(records[0].locale, "fr")
         self.assertEqual(records[0].evidence_scope, "CURRENT_EXACT_ENTITY_DETAIL")
-        self.assertEqual(len(rejects), 1)
-        self.assertEqual(
-            rejects[0].reason_code, "NO_EXACT_HOTELLERIESUISSE_DETAIL_URL"
+        self.assertEqual(len(rejects), 3)
+        self.assertTrue(
+            all(
+                reject.reason_code == "NO_EXACT_HOTELLERIESUISSE_MEMBER_DETAIL_URL"
+                for reject in rejects
+            )
         )
 
     def test_registry_hard_locks_and_cohort_separation(self) -> None:
@@ -185,7 +217,7 @@ class StagingAdapterTests(unittest.TestCase):
                 "proposed_id": "H-0691",
                 "name": "Hotel Exact",
                 "city": "Genève",
-                "evidence": "https://www.hotelleriesuisse.ch/fr/member/hotel-exact",
+                "evidence": EXACT_FR,
             }
         ]
         cache_records, cache_rejects = cache_records_from_rows(
@@ -211,6 +243,14 @@ class StagingAdapterTests(unittest.TestCase):
             self.assertEqual(registry["outbound"], "CLOSED")
             self.assertEqual(registry["send_allowed"], 0)
             self.assertTrue((Path(tmpdir) / "STAGING_EVIDENCE_REGISTRY.json").is_file())
+
+    def test_registry_rejects_coerced_partition_and_count_values(self) -> None:
+        for expected, declared in (("171", 2050), (171, "2050"), (True, 2050), (171, False)):
+            with tempfile.TemporaryDirectory() as tmpdir:
+                with self.assertRaisesRegex(StagingAdapterError, "positive JSON integer"):
+                    build_cohort_registry(
+                        (), (), tmpdir, OBSERVED_AT, expected, declared, "b" * 64
+                    )
 
     def test_end_to_end_extract_workbook(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:

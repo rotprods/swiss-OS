@@ -1,0 +1,24 @@
+{
+  "schema_version": "ECV-RESULT-SUMMARY-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "source_snapshot_id": "HS-MEMBER-DE-33206402141",
+  "batch_id": "HS-MEMBER-DE-33206402141:WORK:0001:SUB:0002",
+  "input_items": 20,
+  "input_items_sha256": "398b337644c611ff6edddddcdbf879cd7b5ef8acb52409a6ff65d8447d8662ea",
+  "github_actions_run_id": 33210520687,
+  "github_actions_job_id": 98982364354,
+  "artifact_id": 9701412030,
+  "artifact_zip_sha256": "10c9ca00a09d9b33579895265ca8d1dad12b47b6cffe9b3d21039ccbaffccb57",
+  "results_count": 20,
+  "counts_by_state": {
+    "CURRENT_DETAIL_VERIFIED": 20
+  },
+  "all_verified": true,
+  "ecv_packet_sha256": "2426d1c1b80ba959891d31c5d406b37f47d35323f1e114b27ec630e19aa1f4f0",
+  "authority_advanced": false,
+  "h_id_allocations": 0,
+  "outbound": "CLOSED",
+  "send_allowed": 0,
+  "terminal_mapping_effect": "NONE_UNTIL_ENTITY_RESOLUTION",
+  "note": "All 20 exact current detail pages verified. CURRENT_DETAIL_VERIFIED remains evidence only; each record stays RECONCILE_REQUIRED until entity-resolution/source-mapping evidence is terminal."
+}

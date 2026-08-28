@@ -18,6 +18,7 @@ REQUIRED_FILES = [
     "docs/operations/DISCOVER_SWISS_SNAPSHOT_ADAPTER.md",
     "docs/operations/MEMBER_DIRECTORY_MANIFEST.md",
     "docs/operations/SOURCE_SCOPE_RECONCILIATION.md",
+    "docs/operations/ALIAS_SEMANTIC_RECONCILIATION.md",
     "docs/architecture/ENGINE_REGISTRY.md",
     "docs/architecture/AUTHORITY_MODEL.md",
     "docs/architecture/SYSTEM_MAP.md",
@@ -38,6 +39,7 @@ STATE_FREE_FILES = [
     "docs/operations/DISCOVER_SWISS_SNAPSHOT_ADAPTER.md",
     "docs/operations/MEMBER_DIRECTORY_MANIFEST.md",
     "docs/operations/SOURCE_SCOPE_RECONCILIATION.md",
+    "docs/operations/ALIAS_SEMANTIC_RECONCILIATION.md",
 ]
 
 MUTABLE_FRONTIER_PATTERNS = [
@@ -59,6 +61,8 @@ REQUIRED_MARKERS = {
         "Operational Graph",
         "Library",
         "No-idle rule",
+        "ALIAS_SEMANTIC_RECONCILIATION.md",
+        "ASR-1.0",
     ],
     "GOAL.md": ["OUTBOUND = CLOSED", "send_allowed = 0", "WAVE_OPERATING_PROTOCOL.md", "CRM_UNIVERSE_COMPLETE = TRUE", "CRM_UNIVERSE_PROTOCOL.md"],
     "docs/operations/META_EXECUTION_PROTOCOL.md": [
@@ -97,6 +101,15 @@ REQUIRED_MARKERS = {
         "outbound_opened = false",
     ],
     "docs/operations/SOURCE_SCOPE_RECONCILIATION.md": ["SSR-1.0", "EXACT_HSID", "EXACT_DETAIL_URL", "EXACT_NAME_CITY", "FROZEN_CANDIDATE", "H_ID_ALLOCATIONS = 0"],
+    "docs/operations/ALIAS_SEMANTIC_RECONCILIATION.md": [
+        "ASR-1.0",
+        "ALIAS_IDENTITY_MISMATCH",
+        "RECONCILE_REQUIRED",
+        "authority_advanced = false",
+        "h_id_allocations = 0",
+        "OUTBOUND = CLOSED",
+        "send_allowed = 0",
+    ],
     "docs/architecture/ENGINE_REGISTRY.md": ["Mission Commander", "Authority & Reconciliation Engine", "Entity Resolution Engine", "Evidence Engine", "Operational Graph Engine", "Scheduler & TTL Engine", "QA / Governance Engine", "Recovery & Persistence Engine", "Git / CI Engine"],
     "docs/architecture/SYSTEM_MAP.md": ["Operational Graph", "Project Memory Meta Graph", "Library", "DEGRADED_CANARY", "MEP-2.0", "COLETTE"],
     "docs/architecture/AUTHORITY_MODEL.md": ["authority-eligible", "ChatGPT Library", "RECOVERY_RECONCILE", "CI PASS never proves runtime"],

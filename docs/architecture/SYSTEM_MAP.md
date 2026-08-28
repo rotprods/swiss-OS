@@ -10,6 +10,17 @@ Mutable counts, active tasks, current epochs and operational parent versions do 
                          │ verified viable offer │
                          └───────────┬───────────┘
                                      │
+                         META EXECUTION PROTOCOL
+                              MEP-2.0 / COLETTE
+                                     │
+                  ┌──────────────────┼──────────────────┐
+                  │                  │                  │
+                  ▼                  ▼                  ▼
+              Ancestry         Capability Matrix   Bottleneck / P0
+            Reconstruction       + Fallbacks       / SLO / TTL scan
+                  │                  │                  │
+                  └──────────────────┼──────────────────┘
+                                     ▼
                              Mission Commander
                                      │
                          Authority / Reconciliation
@@ -54,7 +65,23 @@ Aliases/Groups                Claim QA                      People/Channels
                  ▼                       ▼                       ▼
               GitHub              Project Meta Graph      Recovery / Library
         code/contracts/CI       goals/waves/artifacts      cold persistence
+                 │                       │                       │
+                 └───────────────────────┼───────────────────────┘
+                                         ▼
+                                 MEP LEARN / NEXT ROUTE
+                                         │
+                                         └──────→ next COLETTE cycle
 ```
+
+## Meta execution scope
+
+MEP-2.0 is a cross-engine routing/control contract, not a separate operational authority database and not a new daemon.
+
+It selects the next safe productive route after reconstructing Git ancestry, operational authority, capabilities and the current bottleneck.
+
+A recoverable capability outage triggers an alternative safe route when one exists. Examples include structured source acquisition, source-scope reconciliation, mass staging, exact-current refresh, engineering QA and recovery persistence.
+
+MEP never lowers WOP/CUP/SSR/PRG/privacy/outbound gates.
 
 ## Two graph scopes
 
@@ -66,9 +93,11 @@ It is PK-keyed constrained operational state. Authoritative operational mutation
 
 ### Project Memory Meta Graph
 
-Represents goals, checkpoints, releases, waves, decisions, architecture and artifact lineage.
+Represents goals, checkpoints, releases, waves, meta-cycles, protocols, capability blockers, decisions, architecture and artifact lineage.
 
 It is project memory and must never be mistaken for the complete operational hotel graph.
+
+Material MEP routing/protocol/blocker decisions belong to this scope.
 
 ## Persistence planes
 
@@ -77,14 +106,30 @@ GitHub          = source of versioning / executable contracts
 Drive / Sheets  = human control plane + operational mirror
 SQLite          = constrained operational state backend
 OperationalGraph= PK-keyed operational relationships
-Meta Graph      = project/release/wave/decision memory
+Meta Graph      = project/release/wave/meta-cycle/decision memory
 Library         = recovery / cold persistence
 Local workspace = execution cache, not shared authority
 ```
 
+Create-only Drive persistence is not equivalent to native in-place Sheets mutation. Capability semantics must be explicit.
+
+## Meta-cycle path
+
+```text
+COLLECT authority + Git ancestry + capabilities
+→ OBSERVE drift / blockers / scheduler / SLO / TTL
+→ LOCATE highest-value safe bottleneck
+→ SELECT MEP ROUTE
+→ EXECUTE WOP WAVE
+→ TEST / GAUNTLET / ADVERSARIAL QA
+→ TRANSACT + PERSIST every affected available durable plane
+→ FINAL RECONCILIATION
+→ EVOLVE state / next route
+```
+
 ## Promotion path
 
-Every canonical material mutation follows the Wave Operating Protocol:
+Every canonical material mutation still follows the Wave Operating Protocol:
 
 ```text
 AUTHORITY BOOTSTRAP
@@ -105,4 +150,4 @@ AUTHORITY BOOTSTRAP
 → WAVE CLOSE
 ```
 
-If a required authority plane is unavailable, the wave switches to `DEGRADED_CANARY`; canonical authority cannot advance.
+If a required authority plane is unavailable, the wave switches to `DEGRADED_CANARY` or `RECOVERY_RECONCILE`; canonical authority cannot advance. MEP then selects another safe route if one can still reduce the bottleneck.

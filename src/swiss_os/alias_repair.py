@@ -5,11 +5,14 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
+import re
 import shutil
 import sqlite3
 from typing import Iterable, Mapping
 
 from .alias_semantics import identity_key
+
+_SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 
 
 @dataclass(frozen=True)
@@ -104,6 +107,8 @@ def apply_alias_repair(
         raise ValueError("in-place repair is forbidden")
     if not source.exists():
         raise FileNotFoundError(source)
+    if not isinstance(expected_parent_sha256, str) or not _SHA256_RE.fullmatch(expected_parent_sha256):
+        raise ValueError("expected_parent_sha256 must be lowercase SHA-256 hex")
     actual_parent_sha = sha256_file(source)
     if actual_parent_sha != expected_parent_sha256:
         raise ValueError("parent SHA-256 mismatch")
@@ -116,52 +121,60 @@ def apply_alias_repair(
         raise ValueError("duplicate alias_hotel_id in repair plan")
 
     output.parent.mkdir(parents=True, exist_ok=True)
-    shutil.copy2(source, output)
+    if output.exists():
+        raise FileExistsError(output)
+    temp_output = output.with_name(output.name + ".tmp")
+    if temp_output.exists():
+        temp_output.unlink()
+    shutil.copy2(source, temp_output)
 
-    with sqlite3.connect(output) as conn:
-        if str(conn.execute("PRAGMA integrity_check").fetchone()[0]).lower() != "ok":
-            raise ValueError("source copy failed integrity_check")
-        if conn.execute("PRAGMA foreign_key_check").fetchall():
-            raise ValueError("source copy has FK violations")
+    try:
+        with sqlite3.connect(temp_output) as conn:
+            if str(conn.execute("PRAGMA integrity_check").fetchone()[0]).lower() != "ok":
+                raise ValueError("source copy failed integrity_check")
+            if conn.execute("PRAGMA foreign_key_check").fetchall():
+                raise ValueError("source copy has FK violations")
 
-        statuses = {item.alias_hotel_id: _verify_instruction(conn, item) for item in items}
-        conn.execute("BEGIN IMMEDIATE")
-        mutations = 0
-        for item in items:
-            if statuses[item.alias_hotel_id] == "ALREADY_REPAIRED":
-                continue
-            cur = conn.execute(
-                "UPDATE hotels SET state=? WHERE hotel_id=? AND state=?",
-                (
-                    item.restore_state,
-                    item.alias_hotel_id,
-                    f"SUPERSEDED_DUPLICATE→{item.canonical_hotel_id}",
-                ),
+            statuses = {item.alias_hotel_id: _verify_instruction(conn, item) for item in items}
+            conn.execute("BEGIN IMMEDIATE")
+            mutations = 0
+            for item in items:
+                if statuses[item.alias_hotel_id] == "ALREADY_REPAIRED":
+                    continue
+                cur = conn.execute(
+                    "UPDATE hotels SET state=? WHERE hotel_id=? AND state=?",
+                    (
+                        item.restore_state,
+                        item.alias_hotel_id,
+                        f"SUPERSEDED_DUPLICATE→{item.canonical_hotel_id}",
+                    ),
+                )
+                if cur.rowcount != 1:
+                    raise ValueError(f"state repair cardinality failed: {item.alias_hotel_id}")
+                cur = conn.execute(
+                    "DELETE FROM hotel_aliases WHERE alias_hotel_id=? AND canonical_hotel_id=?",
+                    (item.alias_hotel_id, item.canonical_hotel_id),
+                )
+                if cur.rowcount != 1:
+                    raise ValueError(f"alias delete cardinality failed: {item.alias_hotel_id}")
+                mutations += 2
+            conn.commit()
+
+            for item in items:
+                if _verify_instruction(conn, item) != "ALREADY_REPAIRED":
+                    raise ValueError(f"post-repair verification failed: {item.alias_hotel_id}")
+
+            integrity = str(conn.execute("PRAGMA integrity_check").fetchone()[0])
+            fk_violations = len(conn.execute("PRAGMA foreign_key_check").fetchall())
+            physical_rows = int(conn.execute("SELECT COUNT(*) FROM hotels").fetchone()[0])
+            alias_rows = int(conn.execute("SELECT COUNT(*) FROM hotel_aliases").fetchone()[0])
+            superseded_rows = int(
+                conn.execute("SELECT COUNT(*) FROM hotels WHERE state LIKE 'SUPERSEDED_DUPLICATE%'").fetchone()[0]
             )
-            if cur.rowcount != 1:
-                raise ValueError(f"state repair cardinality failed: {item.alias_hotel_id}")
-            cur = conn.execute(
-                "DELETE FROM hotel_aliases WHERE alias_hotel_id=? AND canonical_hotel_id=?",
-                (item.alias_hotel_id, item.canonical_hotel_id),
-            )
-            if cur.rowcount != 1:
-                raise ValueError(f"alias delete cardinality failed: {item.alias_hotel_id}")
-            mutations += 2
-        conn.commit()
-
-        for item in items:
-            status = _verify_instruction(conn, item)
-            if status != "ALREADY_REPAIRED":
-                raise ValueError(f"post-repair verification failed: {item.alias_hotel_id}")
-
-        integrity = str(conn.execute("PRAGMA integrity_check").fetchone()[0])
-        fk_violations = len(conn.execute("PRAGMA foreign_key_check").fetchall())
-        physical_rows = int(conn.execute("SELECT COUNT(*) FROM hotels").fetchone()[0])
-        alias_rows = int(conn.execute("SELECT COUNT(*) FROM hotel_aliases").fetchone()[0])
-        superseded_rows = int(
-            conn.execute("SELECT COUNT(*) FROM hotels WHERE state LIKE 'SUPERSEDED_DUPLICATE%'").fetchone()[0]
-        )
-        candidate_active = physical_rows - superseded_rows
+        temp_output.replace(output)
+    except Exception:
+        temp_output.unlink(missing_ok=True)
+        raise
 
     return {
         "schema_version": "ASR_REPAIR_REPLAY_V1",
@@ -174,7 +187,8 @@ def apply_alias_repair(
         "physical_rows": physical_rows,
         "alias_rows": alias_rows,
         "superseded_rows": superseded_rows,
-        "candidate_active_canonical": candidate_active,
+        "candidate_active_canonical": None,
+        "active_denominator_state": "RECONCILE_REQUIRED_CROSS_PLANE",
         "authority_advanced": False,
         "h_id_allocations": 0,
         "outbound_opened": False,
@@ -187,8 +201,8 @@ def _load_plan(path: str | Path) -> tuple[str, tuple[AliasRepairInstruction, ...
     if not isinstance(raw, dict):
         raise ValueError("repair plan must be a JSON object")
     parent_sha = raw.get("expected_parent_sha256")
-    if not isinstance(parent_sha, str) or len(parent_sha) != 64:
-        raise ValueError("expected_parent_sha256 must be a 64-character string")
+    if not isinstance(parent_sha, str) or not _SHA256_RE.fullmatch(parent_sha):
+        raise ValueError("expected_parent_sha256 must be lowercase SHA-256 hex")
     rows = raw.get("instructions")
     if not isinstance(rows, list) or not rows:
         raise ValueError("instructions must be a non-empty JSON array")

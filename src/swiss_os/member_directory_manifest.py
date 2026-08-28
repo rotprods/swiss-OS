@@ -30,9 +30,11 @@ class MemberDirectoryObservation:
         hs_id = str(value.get("hs_id", "") or "").strip()
         detail_url = normalize_url(str(value.get("detail_url", "") or ""))
         raw_page = value.get("page")
-        if isinstance(raw_page, bool):
-            raise ValueError(f"observation {index} page must be a positive integer")
-        page = int(raw_page) if raw_page not in (None, "") else None
+        page = (
+            None
+            if raw_page in (None, "")
+            else _require_positive_int(f"observation {index} page", raw_page)
+        )
         if not name:
             raise ValueError(f"observation {index} is missing name")
         if not evidence_ref:
@@ -41,8 +43,6 @@ class MemberDirectoryObservation:
             raise ValueError(f"observation {index} is missing locale")
         if not epoch:
             raise ValueError(f"observation {index} is missing epoch")
-        if page is not None and page <= 0:
-            raise ValueError(f"observation {index} page must be positive")
         record_id = str(value.get("record_id", "") or "").strip()
         if not record_id:
             identity = hs_id or detail_url or f"{normalize_text(name)}|{normalize_text(city)}"

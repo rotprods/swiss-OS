@@ -1,6 +1,9 @@
 import unittest
 
-from swiss_os.member_directory_manifest import compile_member_directory_manifest
+from swiss_os.member_directory_manifest import (
+    MemberDirectoryObservation,
+    compile_member_directory_manifest,
+)
 
 
 class MemberDirectoryManifestTests(unittest.TestCase):
@@ -66,6 +69,33 @@ class MemberDirectoryManifestTests(unittest.TestCase):
             compile_member_directory_manifest(self._rows(), snapshot_id="MD", observed_at="now", expected_pages=True, declared_raw_records=2)
         with self.assertRaisesRegex(ValueError, "positive integer"):
             compile_member_directory_manifest(self._rows(), snapshot_id="MD", observed_at="now", expected_pages=2, declared_raw_records="2")
+
+    def test_page_is_a_strict_positive_integer_without_coercion(self):
+        for invalid in (True, False, 1.0, 1.5, "1", 0, -1):
+            with self.subTest(invalid=invalid):
+                rows = self._rows()
+                rows[0]["page"] = invalid
+                with self.assertRaisesRegex(ValueError, "positive integer"):
+                    compile_member_directory_manifest(
+                        rows,
+                        snapshot_id="MD-STRICT-PAGE",
+                        observed_at="now",
+                        expected_pages=2,
+                        declared_raw_records=2,
+                    )
+
+    def test_absent_page_remains_none_without_coercion(self):
+        observation = MemberDirectoryObservation.from_mapping(
+            {
+                "name": "Non-page evidence",
+                "city": "Bern",
+                "evidence_ref": "official:detail",
+                "locale": "de",
+                "epoch": "E1",
+            },
+            0,
+        )
+        self.assertIsNone(observation.page)
 
     def test_non_object_observation_is_rejected(self):
         with self.assertRaisesRegex(ValueError, "observations must be objects"):

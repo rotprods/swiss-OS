@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import copy
 import unittest
 
 from swiss_os.page_count_consensus import (
@@ -89,7 +88,14 @@ class PageCountConsensusTests(unittest.TestCase):
     def test_unreported_drift_fails_closed(self) -> None:
         payload = _capture()
         payload["pages"][50]["observed_expected_pages"] = 99  # type: ignore[index]
-        with self.assertRaisesRegex(PageCountConsensusError, "absent from capture_violations"):
+        with self.assertRaisesRegex(PageCountConsensusError, "declaration does not match"):
+            normalize_page_count_consensus(payload)
+
+    def test_drift_declaration_must_match_observed_histogram(self) -> None:
+        payload = _capture()
+        payload["pages"][50]["observed_expected_pages"] = 99  # type: ignore[index]
+        payload["capture_violations"].append("PAGE_COUNT_DRIFT:98,100")  # type: ignore[union-attr]
+        with self.assertRaisesRegex(PageCountConsensusError, "declaration does not match"):
             normalize_page_count_consensus(payload)
 
     def test_false_declared_drift_fails_closed(self) -> None:

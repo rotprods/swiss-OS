@@ -1,7 +1,7 @@
 # STATE — LIVE HANDOFF POINTER
 
 Last full operational control-plane reconciliation: **2026-08-27T17:12:40+02:00**.  
-Latest Drive-mount read recovery / CRM-universe wave: **2026-08-28**.  
+Latest Drive-mount read recovery / CRM-universe staging: **2026-08-28 v5**.  
 Latest constrained local canary: **SV2-059 / V16**.
 
 ## 1. Authoritative operational state — DO NOT INFER FROM CANARY
@@ -33,15 +33,13 @@ H-0630 → H-0640
 
 No canary/staging count advances authority until the full affected-plane promotion chain reconciles.
 
-## 2. Full CRM universe is now the pre-outbound hard gate
-
-User requirement and historical Drive goal are aligned:
+## 2. Full CRM universe is the pre-outbound hard gate
 
 ```text
 CRM_UNIVERSE_COMPLETE = FALSE
 ```
 
-Outbound must remain CLOSED until **100% of a frozen verified target directory snapshot** is represented in CRM and every source record is deterministically mapped.
+Outbound remains CLOSED until **100% of a frozen verified target directory snapshot** is represented in CRM and every source record is deterministically mapped.
 
 Intermediate checkpoints such as CP-0750 are scale milestones only. They cannot be interpreted as outbound readiness.
 
@@ -51,27 +49,23 @@ Governing contract:
 
 ## 3. Drive recovery capability
 
-The direct Google Drive connector is disabled in this runtime. However, Google Drive is mounted read-only through ChatGPT Library at `/Google Drive`.
+The direct Google Drive connector is disabled in this runtime. Google Drive is nevertheless mounted through ChatGPT Library at `/Google Drive`.
 
-Recovered project path:
+Recovered live CRM/control-plane:
 
-`/Google Drive/01_AI_SYSTEMS_AGENTS/00_AGENTIC_SYSTEMS_OS/01_PROJECTS/SWITZERLAND_JOB_OS`
+`/Google Drive/01_AI_SYSTEMS_AGENTS/00_AGENTIC_SYSTEMS_OS/01_PROJECTS/SWITZERLAND_JOB_OS/01_HOSPITALITY_VERTICAL/HOTELS_MASTER`
 
-Recovered live CRM/control-plane Sheet:
-
-`01_HOSPITALITY_VERTICAL/HOTELS_MASTER`
-
-Capabilities in this runtime:
+Capabilities:
 
 ```text
 Drive mount listing/read/materialize       AVAILABLE
 HOTELS_MASTER physical read                AVAILABLE
-create-only new artifacts into Drive mount AVAILABLE
+create-only new Drive artifacts            AVAILABLE
 native Sheets in-place mutation            UNAVAILABLE
 AUTHORITATIVE_WRITE to HOTELS_MASTER       BLOCKED
 ```
 
-Therefore the current wave runs `RECOVERY_RECONCILE → DEGRADED_CANARY` for CRM ingestion staging.
+Issue `#12` tracks only the missing native writer capability.
 
 ## 4. CRM target / snapshot state
 
@@ -84,20 +78,18 @@ working reference records  2050
 working reference pages     171
 ```
 
-Older indexed HotellerieSuisse pages expose different historical totals, confirming that the source denominator changes over time. The completion denominator therefore must be a frozen/versioned snapshot rather than a timeless hard-coded number.
+Historical indexed member-directory pages expose different totals across crawl dates, confirming that completion must use a newly frozen/versioned snapshot rather than a timeless hard-coded denominator.
 
-Current gate state:
+Current gate:
 
 ```text
-working reference          2050 / 171 pages
-fresh frozen snapshot      NOT YET RECONSTRUCTED
+working reference           2050 / 171 pages
+fresh frozen snapshot       NOT YET RECONSTRUCTED
 source records fully mapped NO
-CRM_UNIVERSE_COMPLETE       FALSE
+CRM_UNIVERSE_COMPLETE        FALSE
 ```
 
 ## 5. Latest physically verified constrained authority parent
-
-A deterministic constrained **V13** is the latest physically verified authority parent:
 
 ```text
 V13 physical rows          690
@@ -111,8 +103,6 @@ SHA-256  0e605b412f29893ca1775f1e8fccd5987d0613baab4ac29b6699988cde0fdfe5
 ```
 
 ## 6. V16 acceleration canary — NON-AUTHORITATIVE
-
-V16 remains staging/canary only:
 
 ```text
 local physical rows                         715
@@ -129,38 +119,48 @@ external actions                              0
 send_allowed                                  0
 ```
 
-Previously proposed IDs are not reservations. Reallocation is mandatory if the live frontier changes before commit.
+Previously proposed H-IDs are not reservations.
 
-## 7. Mass CRM ingestion artifact
+## 7. CRM mass-ingestion staging v5
 
-Created in this recovery wave:
+Latest staging artifact:
 
-`CRM_UNIVERSE_STAGING_2026-08-28.xlsx`
+`CRM_UNIVERSE_STAGING_2026-08-28_v5.xlsx`
 
-Contents include:
+SHA-256:
+
+`db719f9c16aad80bb7b097ccb7b17148552bb5a60db27ae48fb7e5e669ad9cab`
+
+Drive artifact ID:
+
+`external-gdrive:file:1xBk3c7BWhKv8yM7ET85XDMA6pUy0a6Pr`
+
+Staging metrics:
 
 ```text
-690 mounted Drive HOTELS_V2 physical rows
-25 V16 canary candidates
-7 no-ID reserve candidates
-171-page directory crawl queue
-historical indexed page observations typed discovery-only
-existing discovery registry mirror
-Drive source-snapshot / goal / checkpoint recovery context
-CRM import staging queue
+current mounted Drive physical rows    690
+V16 exact-detail canary                  25
+reserve candidates without ID             7
+historical-cache missing identities       61
+CRM import queue                           93
+reference directory crawl pages          171
+canonical H-ID reservations                0
+formula errors                              0
 ```
 
-This artifact is an ingestion/recovery package, not an authority database.
+The 61 historical-cache identities are **discovery-only**. They passed exact normalized name+city anti-join against the current CRM/staging but still require current exact entity refresh and full entity resolution before any promotion.
 
-Public-safe wave detail:
+The historical cache has already shown its intended acceleration value: in one 84-observation harvest, 57 observations were already current/staged and 27 were new missing identities. Historical cache therefore accelerates discovery without being treated as current membership authority.
 
-`docs/state/CRM_UNIVERSE_WAVE_2026-08-28.md`
+Latest recovery pointers are persisted to both Library and Drive:
+
+- `LATEST_CRM_UNIVERSE.json` in Library;
+- `LATEST_CRM_UNIVERSE_2026-08-28_v5.json` in Drive;
+- `CRM_UNIVERSE_META_GRAPH_DELTA_2026-08-28_v5.json` in Drive Context Hub + Library.
 
 ## 8. Production priority
 
-The production bottleneck is now **CRM universe seeding**, not deep enrichment of bounded hotel batches.
-
-Canonical strategy:
+The bottleneck is **CRM universe seeding**, not deep enrichment of bounded hotel batches.
 
 ```text
 FREEZE/REFRESH DIRECTORY SNAPSHOT
@@ -176,6 +176,8 @@ FREEZE/REFRESH DIRECTORY SNAPSHOT
 ```
 
 Deep vacancy/housing/people/channel/digital enrichment may proceed in parallel after seeding; it must not block the remaining directory universe from entering CRM.
+
+Primary production issue: `#14 — P0 CRM universe: map 100% frozen hotel snapshot before outbound`.
 
 ## 9. Next authoritative execution frontier
 
@@ -198,7 +200,7 @@ When native Sheets write is available:
 → CRM_UNIVERSE_COMPLETE only at 100% mapped snapshot
 ```
 
-Only after `CRM_UNIVERSE_COMPLETE = TRUE` may the separate outbound gate be evaluated. Candidate readiness, channel/evidence freshness, suppression/idempotency and explicit user authorization remain independent requirements.
+Only after `CRM_UNIVERSE_COMPLETE = TRUE` may the separate outbound gate be evaluated. Candidate readiness, evidence/channel freshness, suppression/idempotency and explicit user authorization remain independent requirements.
 
 ## 10. Source precedence
 
@@ -210,7 +212,7 @@ PHYSICAL + CONSTRAINED AUTHORITY-ELIGIBLE DATA
 > historical release/handoff prose
 ```
 
-A local canary is excluded from authority until full promotion.
+A local canary or cache-derived staging row is excluded from authority until full promotion.
 
 ## 11. Public/private boundary
 

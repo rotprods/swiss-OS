@@ -10,10 +10,12 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 
 REQUIRED_FILES = [
+    "docs/operations/META_EXECUTION_PROTOCOL.md",
     "docs/operations/WAVE_OPERATING_PROTOCOL.md",
     "docs/operations/PRODUCTION_READINESS_GAUNTLET.md",
     "docs/operations/CRM_UNIVERSE_PROTOCOL.md",
     "docs/operations/DISCOVER_SWISS_SNAPSHOT_ADAPTER.md",
+    "docs/operations/SOURCE_SCOPE_RECONCILIATION.md",
     "docs/architecture/ENGINE_REGISTRY.md",
     "docs/architecture/AUTHORITY_MODEL.md",
     "docs/architecture/SYSTEM_MAP.md",
@@ -28,8 +30,10 @@ STATE_FREE_FILES = [
     "docs/architecture/AUTHORITY_MODEL.md",
     "docs/architecture/SYSTEM_MAP.md",
     "docs/architecture/EXECUTABLE_CORE.md",
+    "docs/operations/META_EXECUTION_PROTOCOL.md",
     "docs/operations/CRM_UNIVERSE_PROTOCOL.md",
     "docs/operations/DISCOVER_SWISS_SNAPSHOT_ADAPTER.md",
+    "docs/operations/SOURCE_SCOPE_RECONCILIATION.md",
 ]
 
 MUTABLE_FRONTIER_PATTERNS = [
@@ -42,12 +46,34 @@ MUTABLE_FRONTIER_PATTERNS = [
 
 REQUIRED_MARKERS = {
     "README.md": ["WAVE_OPERATING_PROTOCOL.md", "STATE.md", "only mutable current-state pointer"],
-    "AGENTS.md": ["WAVE_OPERATING_PROTOCOL.md", "DEGRADED_CANARY", "COMPLETE_AUTHORITY", "Operational Graph", "Library"],
+    "AGENTS.md": [
+        "META_EXECUTION_PROTOCOL.md",
+        "COLETTE",
+        "WAVE_OPERATING_PROTOCOL.md",
+        "DEGRADED_CANARY",
+        "COMPLETE_AUTHORITY",
+        "Operational Graph",
+        "Library",
+        "No-idle rule",
+    ],
     "GOAL.md": ["OUTBOUND = CLOSED", "send_allowed = 0", "WAVE_OPERATING_PROTOCOL.md", "CRM_UNIVERSE_COMPLETE = TRUE", "CRM_UNIVERSE_PROTOCOL.md"],
+    "docs/operations/META_EXECUTION_PROTOCOL.md": [
+        "MEP-2.0",
+        "COLETTE",
+        "No-idle rule",
+        "AUTHORITY_RECOVERY",
+        "STRUCTURED_SOURCE_CAPTURE",
+        "SOURCE_SCOPE_RECONCILIATION",
+        "MASS_INGEST_STAGING",
+        "AUTHORITATIVE_PROMOTION",
+        "BLOCKED_P0",
+        "OUTBOUND = CLOSED",
+    ],
     "docs/operations/WAVE_OPERATING_PROTOCOL.md": ["AUTHORITATIVE_WRITE", "READ_ONLY_RESEARCH", "DEGRADED_CANARY", "RECOVERY_RECONCILE", "GRAPH_IMPACT", "COMPLETE_AUTHORITY", "SAFE_STOP_CANARY", "Library"],
     "docs/operations/PRODUCTION_READINESS_GAUNTLET.md": ["G00", "G20", "system_contract_guard.py", "OUTBOUND = CLOSED"],
     "docs/operations/CRM_UNIVERSE_PROTOCOL.md": ["CRM_UNIVERSE_COMPLETE = TRUE", "snapshot_raw_records", "snapshot_unmapped_records = 0", "ALIAS_TO_CANONICAL", "RECONCILE_REQUIRED", "OUTBOUND", "discover.swiss", "member-directory scope"],
     "docs/operations/DISCOVER_SWISS_SNAPSHOT_ADAPTER.md": ["DSA-1.0", "dsod-hs", "continuationToken", "hsId", "member_directory_scope_reconciled", "DISCOVER_SWISS_SUBSCRIPTION_KEY"],
+    "docs/operations/SOURCE_SCOPE_RECONCILIATION.md": ["SSR-1.0", "EXACT_HSID", "EXACT_DETAIL_URL", "EXACT_NAME_CITY", "FROZEN_CANDIDATE", "H_ID_ALLOCATIONS = 0"],
     "docs/architecture/ENGINE_REGISTRY.md": ["Mission Commander", "Authority & Reconciliation Engine", "Entity Resolution Engine", "Evidence Engine", "Operational Graph Engine", "Scheduler & TTL Engine", "QA / Governance Engine", "Recovery & Persistence Engine", "Git / CI Engine"],
     "docs/architecture/SYSTEM_MAP.md": ["Operational Graph", "Project Memory Meta Graph", "Library", "DEGRADED_CANARY"],
     "docs/architecture/AUTHORITY_MODEL.md": ["authority-eligible", "ChatGPT Library", "RECOVERY_RECONCILE", "CI PASS never proves runtime"],
@@ -83,10 +109,17 @@ for rel, markers in REQUIRED_MARKERS.items():
             errors.append(f"missing contract marker in {rel}: {marker}")
 
 state_text = read("STATE.md").lower()
-for marker in ("authoritative", "canary", "outbound", "send_allowed"):
+for marker in (
+    "authoritative",
+    "canary",
+    "outbound",
+    "send_allowed",
+):
     if marker not in state_text:
         errors.append(f"STATE.md missing authority/canary marker: {marker}")
 
+# Stable docs must not positively claim an always-on daemon/absolute real-time
+# service. Policy text explaining that no daemon is claimed remains allowed.
 for rel in STATE_FREE_FILES:
     path = ROOT / rel
     text = path.read_text(encoding="utf-8") if path.exists() else ""

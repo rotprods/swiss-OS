@@ -43,6 +43,7 @@ def _capture() -> dict[str, object]:
                 "capture_id": "CAPTURE-NO-COUNT",
                 "locale": "de",
                 "surface": "member-directory",
+                "captured_at": "2026-08-28T10:01:00Z",
                 "observed_reported_records": None,
                 "observed_expected_pages": 2,
                 "records": [
@@ -57,6 +58,7 @@ def _capture() -> dict[str, object]:
                 "capture_id": "CAPTURE-NO-COUNT",
                 "locale": "de",
                 "surface": "member-directory",
+                "captured_at": "2026-08-28T10:02:00Z",
                 "observed_reported_records": None,
                 "observed_expected_pages": 2,
                 "records": [
@@ -71,10 +73,38 @@ def _capture() -> dict[str, object]:
     }
 
 
+def _three_page_capture() -> dict[str, object]:
+    payload = _capture()
+    payload["expected_pages"] = 3
+    payload["pages"][0]["observed_expected_pages"] = 3
+    payload["pages"][1]["observed_expected_pages"] = 3
+    payload["pages"][1]["records"].append(
+        _record("hs:4", "Hotel Delta", "Zürich", "https://example.test/hotel-delta", 2)
+    )
+    payload["pages"].append(
+        {
+            "page_id": "CAPTURE-NO-COUNT:page:0003",
+            "page_position": 3,
+            "source_url": "https://example.test/directory/hotel-page-3",
+            "capture_id": "CAPTURE-NO-COUNT",
+            "locale": "de",
+            "surface": "member-directory",
+            "captured_at": "2026-08-28T10:03:00Z",
+            "observed_reported_records": None,
+            "observed_expected_pages": 3,
+            "records": [
+                _record("hs:5", "Hotel Epsilon", "Lugano", "https://example.test/hotel-epsilon", 3)
+            ],
+        }
+    )
+    return payload
+
+
 class PartitionCountFinalizerTests(unittest.TestCase):
     def test_materialized_partition_total_can_finalize_countless_capture(self) -> None:
         result = finalize_materialized_partition_count(_capture())
         self.assertEqual(result["materialized_records"], 3)
+        self.assertEqual(result["inferred_page_size"], 2)
         self.assertEqual(result["record_count_basis"], "MATERIALIZED_PARTITION_TOTAL")
         self.assertTrue(result["coverage_complete"])
         self.assertTrue(result["member_directory_manifest"]["coverage_complete"])
@@ -110,6 +140,29 @@ class PartitionCountFinalizerTests(unittest.TestCase):
         payload = _capture()
         payload["reported_records"] = 3
         with self.assertRaisesRegex(PartitionCountFinalizerError, "provider-reported count"):
+            finalize_materialized_partition_count(payload)
+
+    def test_mixed_run_checkpoint_is_rejected(self) -> None:
+        payload = _capture()
+        payload["pages"][1]["captured_at"] = "2026-08-28T09:59:00Z"
+        with self.assertRaisesRegex(PartitionCountFinalizerError, "outside current capture window"):
+            finalize_materialized_partition_count(payload)
+
+    def test_non_last_partition_cardinality_must_be_stable(self) -> None:
+        payload = _three_page_capture()
+        payload["pages"][1]["records"].pop()
+        with self.assertRaisesRegex(PartitionCountFinalizerError, "non-last partition cardinality"):
+            finalize_materialized_partition_count(payload)
+
+    def test_last_partition_cannot_exceed_inferred_page_size(self) -> None:
+        payload = _three_page_capture()
+        payload["pages"][2]["records"].extend(
+            [
+                _record("hs:6", "Hotel Zeta", "Chur", "https://example.test/hotel-zeta", 3),
+                _record("hs:7", "Hotel Eta", "Davos", "https://example.test/hotel-eta", 3),
+            ]
+        )
+        with self.assertRaisesRegex(PartitionCountFinalizerError, "last partition cardinality"):
             finalize_materialized_partition_count(payload)
 
     def test_tampering_is_detected(self) -> None:

@@ -1,0 +1,22 @@
+{
+  "events": [
+    {
+      "sequence": 1,
+      "wave_id": "WAVE-EXAMPLE-001",
+      "action_class": "SOURCE_RESEARCH",
+      "route": "CACHE_HARVEST",
+      "progress_token": "pages_with_evidence:10",
+      "artifact_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "closure_state": "COMPLETE_READ_ONLY"
+    },
+    {
+      "sequence": 2,
+      "wave_id": "WAVE-EXAMPLE-002",
+      "action_class": "SOURCE_RESEARCH",
+      "route": "CACHE_HARVEST",
+      "progress_token": "pages_with_evidence:20",
+      "artifact_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "closure_state": "COMPLETE_READ_ONLY"
+    }
+  ]
+}

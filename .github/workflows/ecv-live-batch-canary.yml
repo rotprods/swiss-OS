@@ -71,7 +71,7 @@ jobs:
           PYTHONPATH=src python -m swiss_os.exact_current_verify verify \
             "$BATCH_PATH" \
             --out .artifacts/ECV_RESULT.json \
-            --delay 0.35 \
+            --delay 3.0 \
             --timeout 30 \
             --attempts 3 \
             > .artifacts/ECV_RUNTIME.json

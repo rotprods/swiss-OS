@@ -1,15 +1,15 @@
 {
   "schema_version": "NPP-1.0",
   "project": "SWITZERLAND_JOB_OS",
-  "generated_at": "2026-08-28T20:52:30Z",
-  "cycle_id": "META-20260828-CRM-SOURCE-2061-ECV-01",
-  "parent_git_sha": "7c667b94a7460ea2262dc0d12ba983eeb124863b",
+  "generated_at": "2026-08-28T22:23:12Z",
+  "cycle_id": "META-20260829-CRM-ECV120-SRR01",
+  "parent_git_sha": "da15654cc7433c05f341a561b0b523dee735c3b4",
   "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
   "authority_parent": "ISSUE_89_COMPOSITE_CONSTRAINED_PARENT",
   "authority_parent_materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
   "execution_mode": "PRE_AUTHORITY_SOURCE_RECONCILIATION",
-  "selected_route": "ECV_ENTITY_RESOLUTION_SOURCE_TERMINALIZATION",
-  "next_route": "ECV_REMAINING_CWP_BATCHES_THEN_ENTITY_RESOLUTION",
+  "selected_route": "APPLY_READY_SRR_REVIEWS_THEN_CONTINUE_ECV",
+  "next_route": "SRR_PREAUTH_DELTA_2_THEN_ECV_SUB0007",
   "goal_id": "G-0500",
   "checkpoint_id": "CRM_UNIVERSE_COMPLETE",
   "authority_state": {
@@ -56,17 +56,40 @@
     "unmapped_source_records": 0,
     "terminal_mapping_coverage_pct": 30.2766,
     "anti_join_payload_sha256": "c50a2b2b70677d6651f89e94fe19382d525c72c52111c91b8291c15887729d2a",
-    "cwp_packet_sha256": "6ae41038683c185a51e482c2f979dc1a52b9348cc172a367bf5dc1311efd9249"
+    "cwp_packet_sha256": "6ae41038683c185a51e482c2f979dc1a52b9348cc172a367bf5dc1311efd9249",
+    "terminal_effect_from_ready_reviews": "NONE_UNTIL_SRR_REBUILD_AND_VALIDATION"
   },
   "ecv_frontier": {
     "candidate_records_total": 1437,
-    "current_detail_verified": 20,
-    "remaining_unverified": 1417,
-    "first_subbatch_id": "HS-MEMBER-DE-33206402141:WORK:0001:SUB:0001",
-    "first_subbatch_items_sha256": "82a58723a538e0c33c5e501f5896dad060f09fc37d775454f6d5b2e0b2b48f0c",
-    "first_subbatch_packet_sha256": "0b0d10ac7fbe118fcbdf434b89b298759e911dda3c9adf5d11124f462b435586",
-    "first_subbatch_state": "CURRENT_DETAIL_VERIFIED_20_OF_20",
+    "current_detail_verified": 120,
+    "remaining_unverified": 1317,
+    "pending_requeue": 0,
+    "latest_subbatch_id": "HS-MEMBER-DE-33206402141:WORK:0001:SUB:0006",
+    "latest_subbatch_items_sha256": "085f20a4be4ed9356cb7780c81f2c75ee5a9427d3bcd0fc763b75364a544b632",
+    "latest_subbatch_packet_sha256": "9a97b4f1187a8c075e7a8d5c502adbfbf9eb4d76b921d1e1b570ef7ee3ab0308",
+    "latest_subbatch_state": "CURRENT_DETAIL_VERIFIED_20_OF_20",
     "terminal_mapping_effect": "NONE_UNTIL_ENTITY_RESOLUTION"
+  },
+  "source_resolution_frontier": {
+    "explicit_reviews_ready": 2,
+    "review_artifact": "docs/state/SOURCE_RESOLUTION_REVIEW_BATCH_0001_33206402141.json",
+    "review_state": "READY_FOR_SRR_APPLICATION",
+    "ready_decisions": [
+      {
+        "source_record_key": "MD-025e7888dfc33e19723a",
+        "action": "MATCH_EXISTING",
+        "canonical_hotel_id": "H-0686",
+        "authority_action": "NONE_PREAUTH_REVIEW"
+      },
+      {
+        "source_record_key": "MD-0672b5697de8a818d65b",
+        "action": "MATCH_EXISTING",
+        "canonical_hotel_id": "H-0022",
+        "authority_action": "NONE_PREAUTH_REVIEW"
+      }
+    ],
+    "next_action": "VALIDATE_AND_PERSIST_PREAUTH_SRR_DELTA",
+    "mapping_counts_must_not_change_until_rebuild": true
   },
   "parallel_exact_refresh": {
     "batches": 8,
@@ -82,30 +105,36 @@
     "REVERSE_AUTHORITY_SOURCE_DISCREPANCIES_66_REQUIRE_RESOLUTION",
     "DISCOVER_SWISS_SUBSCRIPTION_KEY_UNAVAILABLE_AS_ALTERNATE_SOURCE_ONLY"
   ],
+  "current_dependencies": [
+    "Apply the 2 READY_FOR_SRR_APPLICATION reviews through SRR-1.1 or a validated pre-authority decision-delta path before claiming terminal mapping effect.",
+    "For ECV SUB0007, recover the next untouched 20 CWP records from the fingerprinted CWP/CMI parent; the public state directory does not contain the full 1437-record sensitive work packet.",
+    "If the original CWP artifact is unavailable, deterministically rebuild the slice from the frozen 2061-record MDM/CMI parent and verify parent hashes before use."
+  ],
   "required_inputs": [
     "GitHub main at or after parent_git_sha",
-    "E4 HOTELS_V2 690 canonical / 0 aliases",
+    "E4 HOTELS_V2 690 canonical / 0 aliases / ASR EXACT",
+    "HOTELS_MASTER Drive spreadsheet 1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w",
     "HS-MEMBER-DE-33206402141 canonical MDM / CMI hashes above",
-    "CWP-1.1 work frontier with 1437 VERIFY_NEW_ENTITY records",
-    "ECV-1.0 current-detail verifier",
-    "source_mapping.py terminal mapping validator",
-    "exact-current batches 01..08 as non-authoritative supporting evidence",
+    "CWP-1.1 work frontier packet SHA 6ae41038683c185a51e482c2f979dc1a52b9348cc172a367bf5dc1311efd9249",
+    "ECV result summaries sub0001..sub0006 with cumulative 120 verified / 1317 never verified",
+    "SOURCE_RESOLUTION_REVIEW_BATCH_0001_33206402141.json with 2 ready MATCH_EXISTING decisions",
+    "src/swiss_os/source_resolution.py SRR-1.1 contract",
     "Drive CMI summary spreadsheet 1-n34KObY-1AUv6AB8Tm7Mzp2WHDk2f_d0OoVqeITm94"
   ],
   "route_priority": [
-    "Continue bounded ECV batches for the remaining 1417 unverified CWP candidates.",
-    "For CURRENT_DETAIL_VERIFIED records, run entity resolution against E4 using stable name/city/detail/source evidence; do not infer novelty from anti-join alone.",
-    "Update source-mapping candidates only to terminal ACTIVE_CANONICAL, ALIAS_TO_CANONICAL or EXCLUDED_WITH_REASON when evidence is sufficient; otherwise retain RECONCILE_REQUIRED.",
+    "Validate and persist the two ready MATCH_EXISTING reviews as a bounded pre-authority SRR decision delta; do not mutate authority or decrement the global reconcile count until the source mapping is rebuilt and validated.",
+    "Recover the next untouched CWP slice and continue bounded exact-current verification from 120/1437 toward 1437/1437.",
+    "Immediately feed verified records into entity resolution using stable name/city/detail/source evidence; never infer novelty from anti-join alone.",
+    "Rebuild and validate source mapping periodically so justified decisions become terminal ACTIVE_CANONICAL, ALIAS_TO_CANONICAL or EXCLUDED_WITH_REASON exactly once.",
     "Resolve the 66 reverse authority/source discrepancies without interpreting absence as exclusion.",
-    "Recompute terminal mapping coverage after each bounded batch and persist NEXT.",
-    "If exact-current source access degrades, use existing exact-refresh evidence or a safe alternative provider route; never allocate an H-ID from staging."
+    "If the exact-current provider degrades, route through existing exact-refresh evidence or another safe source; never allocate an H-ID from cache, canary or staging."
   ],
   "promotion_preconditions": [
-    "No H-ID may be reserved or allocated from HSLCA, MDM, CMI, CWP, ECV, cache or staging.",
-    "Every frozen source record must have exactly one terminal mapping: ACTIVE_CANONICAL, ALIAS_TO_CANONICAL or EXCLUDED_WITH_REASON.",
+    "No H-ID may be reserved or allocated from HSLCA, MDM, CMI, CWP, ECV, SRR journal, cache or staging.",
+    "Every frozen source record must have exactly one validated terminal mapping: ACTIVE_CANONICAL, ALIAS_TO_CANONICAL or EXCLUDED_WITH_REASON.",
     "RECONCILE_REQUIRED must equal 0.",
     "All reverse authority/source discrepancies must be explained or superseded by stronger source-scope evidence.",
-    "CRM source-scope reconciliation / SRR must pass.",
+    "CRM source-scope reconciliation / SSR must pass.",
     "Any later authority promotion must use a fresh bounded DB -> HOTELS_MASTER -> Intelligence -> Graph -> scheduler/checkpoints/metrics/SLO transaction with ASR and restore/replay/idempotency gates."
   ],
   "graph_impact": "META",
@@ -115,9 +144,9 @@
   "resume_instructions": [
     "Re-read GitHub main; if it moved, reconstruct ancestry and retain only evidence that remains lineage-compatible.",
     "Verify E4 still reads 690 physical / 690 active / 0 aliases / ASR EXACT before any cross-plane work.",
-    "Do not rerun bulk HSLCA acquisition unless source freshness or lineage requires it; the current 2061-record frozen source is already qualified.",
-    "Continue ECV from the next unverified CWP records and persist each bounded result.",
-    "Immediately route verified records into entity-resolution/source-mapping terminalization where evidence is sufficient.",
+    "Run the durable handoff frontier guard; NEXT/STATE must match the maximum persisted ECV cumulative frontier.",
+    "Apply the two ready SRR reviews without changing authority; persist a decision delta or rebuilt SRR result only after validation.",
+    "Continue ECV from an untouched CWP slice recovered from the fingerprinted parent, not from stale Library row order.",
     "Never reserve H-IDs from pre-authority work and keep OUTBOUND=CLOSED / send_allowed=0."
   ],
   "done_when": [

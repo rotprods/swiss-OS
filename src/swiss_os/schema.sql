@@ -16,10 +16,7 @@ CREATE TABLE IF NOT EXISTS canonical_hotels (
     identity_confidence REAL CHECK (identity_confidence IS NULL OR (identity_confidence >= 0.0 AND identity_confidence <= 1.0)),
     CHECK ((state = 'SUPERSEDED_DUPLICATE' AND superseded_by IS NOT NULL) OR state <> 'SUPERSEDED_DUPLICATE')
 );
-
-CREATE UNIQUE INDEX IF NOT EXISTS ux_active_hotel_domain
-ON canonical_hotels(lower(canonical_domain))
-WHERE canonical_domain IS NOT NULL AND state = 'ACTIVE';
+CREATE UNIQUE INDEX IF NOT EXISTS ux_active_hotel_domain ON canonical_hotels(lower(canonical_domain)) WHERE canonical_domain IS NOT NULL AND state = 'ACTIVE';
 
 CREATE TABLE IF NOT EXISTS entity_aliases (
     alias_id TEXT PRIMARY KEY,
@@ -39,15 +36,10 @@ CREATE TABLE IF NOT EXISTS crm_snapshots (
     raw_directory_count INTEGER NOT NULL CHECK (raw_directory_count > 0),
     page_count INTEGER CHECK (page_count IS NULL OR page_count > 0),
     source_scope TEXT NOT NULL,
-    snapshot_state TEXT NOT NULL CHECK (
-        snapshot_state IN ('DISCOVERED','STAGED','FROZEN_CANDIDATE','FROZEN_VERIFIED','SUPERSEDED')
-    ),
+    snapshot_state TEXT NOT NULL CHECK (snapshot_state IN ('DISCOVERED','STAGED','FROZEN_CANDIDATE','FROZEN_VERIFIED','SUPERSEDED')),
     created_at TEXT NOT NULL,
     frozen_at TEXT,
-    CHECK (
-        (snapshot_state = 'FROZEN_VERIFIED' AND frozen_at IS NOT NULL)
-        OR snapshot_state <> 'FROZEN_VERIFIED'
-    )
+    CHECK ((snapshot_state = 'FROZEN_VERIFIED' AND frozen_at IS NOT NULL) OR snapshot_state <> 'FROZEN_VERIFIED')
 );
 
 CREATE TABLE IF NOT EXISTS crm_snapshot_records (
@@ -65,15 +57,11 @@ CREATE TABLE IF NOT EXISTS crm_snapshot_records (
     evidence_ref TEXT NOT NULL,
     UNIQUE(snapshot_id, source_record_key)
 );
-
-CREATE INDEX IF NOT EXISTS ix_crm_snapshot_records_snapshot
-ON crm_snapshot_records(snapshot_id);
+CREATE INDEX IF NOT EXISTS ix_crm_snapshot_records_snapshot ON crm_snapshot_records(snapshot_id);
 
 CREATE TABLE IF NOT EXISTS crm_source_mappings (
     snapshot_record_id TEXT PRIMARY KEY REFERENCES crm_snapshot_records(snapshot_record_id) ON DELETE CASCADE,
-    mapping_state TEXT NOT NULL CHECK (
-        mapping_state IN ('ACTIVE_CANONICAL','ALIAS_TO_CANONICAL','EXCLUDED_WITH_REASON','RECONCILE_REQUIRED')
-    ),
+    mapping_state TEXT NOT NULL CHECK (mapping_state IN ('ACTIVE_CANONICAL','ALIAS_TO_CANONICAL','EXCLUDED_WITH_REASON','RECONCILE_REQUIRED')),
     canonical_hotel_id TEXT REFERENCES canonical_hotels(hotel_id),
     exclusion_reason TEXT,
     reconcile_reason TEXT,
@@ -81,22 +69,27 @@ CREATE TABLE IF NOT EXISTS crm_source_mappings (
     evidence_ref TEXT NOT NULL,
     run_id TEXT,
     mapped_at TEXT NOT NULL,
-    CHECK (
-        (mapping_state IN ('ACTIVE_CANONICAL','ALIAS_TO_CANONICAL') AND canonical_hotel_id IS NOT NULL)
-        OR (mapping_state NOT IN ('ACTIVE_CANONICAL','ALIAS_TO_CANONICAL') AND canonical_hotel_id IS NULL)
-    ),
-    CHECK (
-        (mapping_state = 'EXCLUDED_WITH_REASON' AND exclusion_reason IS NOT NULL AND length(trim(exclusion_reason)) > 0)
-        OR mapping_state <> 'EXCLUDED_WITH_REASON'
-    ),
-    CHECK (
-        (mapping_state = 'RECONCILE_REQUIRED' AND reconcile_reason IS NOT NULL AND length(trim(reconcile_reason)) > 0)
-        OR mapping_state <> 'RECONCILE_REQUIRED'
-    )
+    CHECK ((mapping_state IN ('ACTIVE_CANONICAL','ALIAS_TO_CANONICAL') AND canonical_hotel_id IS NOT NULL) OR (mapping_state NOT IN ('ACTIVE_CANONICAL','ALIAS_TO_CANONICAL') AND canonical_hotel_id IS NULL)),
+    CHECK ((mapping_state = 'EXCLUDED_WITH_REASON' AND exclusion_reason IS NOT NULL AND length(trim(exclusion_reason)) > 0) OR mapping_state <> 'EXCLUDED_WITH_REASON'),
+    CHECK ((mapping_state = 'RECONCILE_REQUIRED' AND reconcile_reason IS NOT NULL AND length(trim(reconcile_reason)) > 0) OR mapping_state <> 'RECONCILE_REQUIRED')
 );
+CREATE INDEX IF NOT EXISTS ix_crm_source_mappings_state ON crm_source_mappings(mapping_state);
 
-CREATE INDEX IF NOT EXISTS ix_crm_source_mappings_state
-ON crm_source_mappings(mapping_state);
+CREATE TABLE IF NOT EXISTS crm_ingest_staging (
+    snapshot_record_id TEXT PRIMARY KEY,
+    snapshot_id TEXT NOT NULL,
+    source_record_key TEXT NOT NULL,
+    staging_class TEXT NOT NULL CHECK (staging_class IN ('ACTIVE_MATCH','ALIAS_MATCH','TRUE_MISSING','CONFLICT','EXCLUSION_CANDIDATE')),
+    matched_hotel_id TEXT REFERENCES canonical_hotels(hotel_id),
+    reason_code TEXT NOT NULL,
+    normalized_name TEXT NOT NULL,
+    normalized_city TEXT NOT NULL DEFAULT '',
+    normalized_detail_url TEXT NOT NULL DEFAULT '',
+    observed_at TEXT NOT NULL,
+    CHECK ((staging_class IN ('ACTIVE_MATCH','ALIAS_MATCH') AND matched_hotel_id IS NOT NULL) OR (staging_class NOT IN ('ACTIVE_MATCH','ALIAS_MATCH') AND matched_hotel_id IS NULL)),
+    UNIQUE(snapshot_id, source_record_key)
+);
+CREATE INDEX IF NOT EXISTS ix_crm_ingest_staging_snapshot_class ON crm_ingest_staging(snapshot_id, staging_class);
 
 CREATE TABLE IF NOT EXISTS scheduler_tasks (
     task_id TEXT PRIMARY KEY,
@@ -111,10 +104,7 @@ CREATE TABLE IF NOT EXISTS scheduler_tasks (
     created_at TEXT NOT NULL,
     completed_at TEXT
 );
-
-CREATE UNIQUE INDEX IF NOT EXISTS ux_scheduler_active_task
-ON scheduler_tasks(scope_id, task_type, freshness_key)
-WHERE state IN ('READY','ACTIVE');
+CREATE UNIQUE INDEX IF NOT EXISTS ux_scheduler_active_task ON scheduler_tasks(scope_id, task_type, freshness_key) WHERE state IN ('READY','ACTIVE');
 
 CREATE TABLE IF NOT EXISTS state_transitions (
     transition_id TEXT PRIMARY KEY,

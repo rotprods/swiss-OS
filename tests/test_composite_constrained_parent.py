@@ -1,12 +1,16 @@
 from __future__ import annotations
 
 import hashlib
+import json
 from pathlib import Path
 import sqlite3
 import tempfile
 import unittest
 
 from swiss_os.composite_constrained_parent import validate_composite_parent, verify_materialized_sqlite
+
+
+ROOT = Path(__file__).resolve().parents[1]
 
 
 def _sqlite(path: Path) -> str:
@@ -80,6 +84,17 @@ class CompositeConstrainedParentTests(unittest.TestCase):
         self.assertIs(result["outbound_opened"], False)
         self.assertEqual(result["send_allowed"], 0)
 
+    def test_issue_89_ccp_manifest_satisfies_contract(self) -> None:
+        payload = json.loads((ROOT / "docs/state/ISSUE_89_COMPOSITE_CONSTRAINED_PARENT.json").read_text())
+        result = validate_composite_parent(payload)
+        self.assertTrue(result["valid"])
+        self.assertEqual(result["base_replica_count"], 2)
+        self.assertIs(result["authority_eligible"], False)
+        self.assertIsNone(result["active_denominator"])
+        self.assertEqual(result["canonical_id_allocations"], 0)
+        self.assertIs(result["outbound_opened"], False)
+        self.assertEqual(result["send_allowed"], 0)
+
     def test_materialized_sqlite_must_match_precommitted_sha(self) -> None:
         result = verify_materialized_sqlite(self.db, _manifest(self.output_sha))
         self.assertEqual(result["materialization_state"], "EXACT")
@@ -108,6 +123,9 @@ class CompositeConstrainedParentTests(unittest.TestCase):
     def test_replica_semantics_fail_closed(self) -> None:
         cases = [
             ([{"provider": "LOCAL", "file_id": "x", "size_bytes": 1024}], "unsupported durable provider"),
+            ([{"provider": "PERSISTENT_OPERATOR", "file_id": "x", "size_bytes": 1024}], "unsupported durable provider"),
+            ([{"provider": "GOOGLE_DRIVE", "file_id": "/tmp/base.sqlite", "size_bytes": 1024}], "provider-owned durable identifier"),
+            ([{"provider": "GOOGLE_DRIVE", "file_id": "file:/tmp/base.sqlite", "size_bytes": 1024}], "provider-owned durable identifier"),
             ([{"provider": "GOOGLE_DRIVE", "file_id": "x", "size_bytes": 1}], "size differs"),
             (
                 [

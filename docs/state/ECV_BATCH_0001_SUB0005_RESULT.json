@@ -1,0 +1,27 @@
+{
+  "schema_version": "ECV-RESULT-SUMMARY-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "source_snapshot_id": "HS-MEMBER-DE-33206402141",
+  "batch_id": "HS-MEMBER-DE-33206402141:WORK:0001:SUB:0005",
+  "input_items": 20,
+  "input_items_sha256": "2834bb0032e1045a943d40a78a18f94fce2187d730010c07e9060bbf620e5f32",
+  "github_actions_run_id": 33214778508,
+  "github_actions_job_id": 98995855325,
+  "artifact_id": 9702956357,
+  "artifact_zip_sha256": "8e28de3f86598458a2fb77d1987e370f71d5a216aece45569ba253bccc8f12f3",
+  "results_count": 20,
+  "counts_by_state": {
+    "CURRENT_DETAIL_VERIFIED": 20
+  },
+  "all_verified": true,
+  "ecv_packet_sha256": "252bddba5e81e7ed43ed82900e2f91ef143e83a3f89a5f24eb3d28635a137b46",
+  "cumulative_current_detail_verified": 100,
+  "remaining_never_verified": 1337,
+  "pending_requeue": 0,
+  "authority_advanced": false,
+  "h_id_allocations": 0,
+  "outbound": "CLOSED",
+  "send_allowed": 0,
+  "terminal_mapping_effect": "NONE_UNTIL_ENTITY_RESOLUTION",
+  "note": "All 20 exact current detail pages verified. CURRENT_DETAIL_VERIFIED remains evidence only; every source record remains pre-authority until source-resolution/entity-resolution evidence is terminal. H-0691 remains unallocated."
+}

@@ -20,6 +20,11 @@ class EcvWorkflowContractTests(unittest.TestCase):
         self.assertIn('push-triggered ECV requires exactly one changed CMI work batch', self.workflow)
         self.assertIn('docs/state/CMI_WORK_BATCH_*.json) ;;', self.workflow)
 
+    def test_live_provider_pacing_is_conservative(self) -> None:
+        self.assertIn('--delay 3.0', self.workflow)
+        self.assertIn('--attempts 3', self.workflow)
+        self.assertIn('timeout-minutes: 30', self.workflow)
+
     def test_safety_lock_remains_explicit(self) -> None:
         self.assertIn("assert p['authority_advanced'] is False", self.workflow)
         self.assertIn("assert p['h_id_allocations'] == 0", self.workflow)

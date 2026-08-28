@@ -1,9 +1,9 @@
 {
   "schema_version": "NPP-1.0",
   "project": "SWITZERLAND_JOB_OS",
-  "generated_at": "2026-08-28T18:24:00+02:00",
+  "generated_at": "2026-08-28T18:28:00+02:00",
   "cycle_id": "META-20260828-ACTIVATION-02",
-  "parent_git_sha": "ccd15735e82fe22806f28b32ea548d7fc7822fae",
+  "parent_git_sha": "c57b0b391ac0744fd2b4dad082b31c2393295c40",
   "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
   "authority_parent": "OPERATIONAL_DB_SHADOW_MANIFEST_V13",
   "authority_parent_sha256": "0e605b412f29893ca1775f1e8fccd5987d0613baab4ac29b6699988cde0fdfe5",
@@ -24,14 +24,15 @@
   "productive_fallbacks": [
     "Continue EXACT_CURRENT_REFRESH on populated unprocessed Historical_Missing_Seed records",
     "Run ECV over indexed exact-detail identities requiring stricter live verification when work packets are available",
-    "Resolve typed scope-reconcile cases without allocating canonical IDs"
+    "Run SRR over SMC RECONCILE_REQUIRED mappings to produce explicit pre-authority review proposals without allocating canonical IDs"
   ],
   "resolved_capabilities": [
     "NATIVE_SHEETS_IN_PLACE_WRITE_AVAILABLE_AND_HOTELS_MASTER_CANARY_VERIFIED",
     "MDC_1_0_MERGED",
     "CWP_1_0_MERGED",
     "ECV_1_0_MERGED",
-    "SMC_1_0_MERGED"
+    "SMC_1_0_MERGED",
+    "SRR_1_0_MERGED"
   ],
   "latest_live_source_canaries": [
     {
@@ -86,7 +87,7 @@
     "Re-read GitHub main and compare parent_git_sha; reconstruct ancestry if it moved.",
     "Reconstruct E4/V13 authority before any canonical mutation.",
     "Inspect GitHub Actions run 33188955280 and download/validate its MDC artifact if terminal.",
-    "If coherent complete: remove the PR #78 branch-only push trigger, rerun repository CI, adversarially review and merge; then execute directory-to-CMI canary → CWP → ECV → SMC without authority promotion.",
+    "If coherent complete: remove the PR #78 branch-only push trigger, rerun repository CI, adversarially review and merge; then execute directory-to-CMI canary → CWP → ECV → SMC → SRR without authority promotion.",
     "If provider throttling persists: record the typed boundary, avoid aggressive repeated capture, and continue the highest-value safe exact-current or rate-aware acquisition route.",
     "Select only populated unprocessed staging rows; blank worksheet rows are not entities.",
     "Never reserve H-IDs from staging and never promote cache/canary evidence.",

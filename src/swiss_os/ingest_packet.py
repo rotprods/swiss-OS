@@ -14,6 +14,10 @@ class IngestPacketError(ValueError):
 
 
 TERMINAL_MATCH = "MATCHED_EXISTING"
+# Public compatibility alias: downstream pre-authority engines may refer to
+# the serialized state name directly. Both constants intentionally resolve to
+# the same immutable work-state value.
+MATCHED_EXISTING = TERMINAL_MATCH
 RECONCILE = "RECONCILE_REQUIRED"
 VERIFY_NEW = "VERIFY_NEW_ENTITY"
 REVIEW_UNKNOWN = "REVIEW_UNKNOWN_DECISION"
@@ -150,7 +154,7 @@ def _extract_decisions(payload: object) -> list[Mapping[str, object]]:
     if not isinstance(raw, list):
         raise IngestPacketError("CMI payload must contain a decisions array")
     if not all(isinstance(item, Mapping) for item in raw):
-        raise IngestPacketError("CMI decisions must contain only objects")
+        raise IngestPacketError("CMI decisions must contain only JSON objects")
     return list(raw)
 
 

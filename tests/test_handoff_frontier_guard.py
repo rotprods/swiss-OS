@@ -3,6 +3,7 @@ from __future__ import annotations
 import importlib.util
 import json
 from pathlib import Path
+import sys
 import tempfile
 import unittest
 
@@ -11,6 +12,7 @@ MODULE_PATH = Path(__file__).resolve().parents[1] / "scripts" / "handoff_frontie
 SPEC = importlib.util.spec_from_file_location("handoff_frontier_guard", MODULE_PATH)
 assert SPEC and SPEC.loader
 MODULE = importlib.util.module_from_spec(SPEC)
+sys.modules[SPEC.name] = MODULE
 SPEC.loader.exec_module(MODULE)
 
 

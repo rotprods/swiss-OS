@@ -56,10 +56,15 @@ class NextPointer:
             errors.append(f"unsupported schema_version: {self.schema_version}")
         if self.graph_impact not in {"NONE", "META", "OPERATIONAL", "BOTH"}:
             errors.append(f"invalid graph_impact: {self.graph_impact}")
+
+        # NEXT is resumable state, never authority or authorization. Future runs
+        # must independently reconstruct/revalidate all three gates.
+        if self.authority_advance_allowed:
+            errors.append("NEXT pointer cannot pre-authorize authority advancement")
+        if self.canonical_id_allocation_allowed:
+            errors.append("NEXT pointer cannot pre-authorize canonical ID allocation")
         if self.outbound_allowed:
             errors.append("NEXT pointer cannot pre-authorize outbound")
-        if self.authority_advance_allowed and not self.canonical_id_allocation_allowed:
-            errors.append("authority advance cannot be pre-authorized without canonical allocation gate")
         return tuple(errors)
 
     def as_dict(self) -> dict[str, Any]:
@@ -105,18 +110,21 @@ class NextPointer:
             "resume_instructions",
             "done_when",
         }
+        boolean_fields = {
+            "authority_advance_allowed",
+            "canonical_id_allocation_allowed",
+            "outbound_allowed",
+        }
         kwargs: dict[str, Any] = {}
         for key, value in payload.items():
             if key in tuple_fields:
                 if not isinstance(value, (list, tuple)):
                     raise ValueError(f"NEXT field {key} must be an array")
                 kwargs[key] = tuple(str(item) for item in value)
-            elif key in {
-                "authority_advance_allowed",
-                "canonical_id_allocation_allowed",
-                "outbound_allowed",
-            }:
-                kwargs[key] = bool(value)
+            elif key in boolean_fields:
+                if not isinstance(value, bool):
+                    raise ValueError(f"NEXT field {key} must be a JSON boolean")
+                kwargs[key] = value
             else:
                 kwargs[key] = str(value)
         pointer = cls(**kwargs)

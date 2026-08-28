@@ -98,6 +98,29 @@ CREATE TABLE IF NOT EXISTS crm_source_mappings (
 CREATE INDEX IF NOT EXISTS ix_crm_source_mappings_state
 ON crm_source_mappings(mapping_state);
 
+CREATE TABLE IF NOT EXISTS crm_ingest_staging (
+    snapshot_record_id TEXT PRIMARY KEY,
+    snapshot_id TEXT NOT NULL,
+    source_record_key TEXT NOT NULL,
+    staging_class TEXT NOT NULL CHECK (
+        staging_class IN ('ACTIVE_MATCH','ALIAS_MATCH','TRUE_MISSING','CONFLICT','EXCLUSION_CANDIDATE')
+    ),
+    matched_hotel_id TEXT REFERENCES canonical_hotels(hotel_id),
+    reason_code TEXT NOT NULL,
+    normalized_name TEXT NOT NULL,
+    normalized_city TEXT NOT NULL DEFAULT '',
+    normalized_detail_url TEXT NOT NULL DEFAULT '',
+    observed_at TEXT NOT NULL,
+    CHECK (
+        (staging_class IN ('ACTIVE_MATCH','ALIAS_MATCH') AND matched_hotel_id IS NOT NULL)
+        OR (staging_class NOT IN ('ACTIVE_MATCH','ALIAS_MATCH') AND matched_hotel_id IS NULL)
+    ),
+    UNIQUE(snapshot_id, source_record_key)
+);
+
+CREATE INDEX IF NOT EXISTS ix_crm_ingest_staging_snapshot_class
+ON crm_ingest_staging(snapshot_id, staging_class);
+
 CREATE TABLE IF NOT EXISTS scheduler_tasks (
     task_id TEXT PRIMARY KEY,
     scope_id TEXT NOT NULL,

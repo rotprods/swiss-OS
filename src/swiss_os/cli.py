@@ -11,6 +11,13 @@ from .crm_universe import (
     validate_crm_universe_gate,
 )
 from .db import connect, foreign_key_violations, initialize, integrity_check
+from .discover_swiss import (
+    DiscoverSwissConfig,
+    DiscoverSwissError,
+    fetch_hotelleriesuisse_snapshot,
+    resolve_subscription_key,
+    write_snapshot_manifest,
+)
 from .invariants import run_manifest_invariants
 from .manifest import OperationalManifest
 from .snapshot_freeze import SnapshotFreezeCandidate, validate_snapshot_freeze
@@ -115,6 +122,51 @@ def cmd_crm_snapshot_freeze_validate(path: str) -> int:
     return 0 if result.eligible else 2
 
 
+def cmd_discover_swiss_snapshot(args: argparse.Namespace) -> int:
+    config = DiscoverSwissConfig(
+        project=args.project,
+        language=args.language,
+        top=args.top,
+        timeout_seconds=args.timeout,
+        subscription_key_env=args.key_env,
+    )
+    try:
+        subscription_key = resolve_subscription_key(config)
+        manifest = fetch_hotelleriesuisse_snapshot(config, subscription_key)
+        write_snapshot_manifest(args.out, manifest)
+    except (DiscoverSwissError, ValueError) as exc:
+        print(
+            json.dumps(
+                {
+                    "capture_valid": False,
+                    "error": str(exc),
+                    "output_written": False,
+                },
+                sort_keys=True,
+            ),
+            file=sys.stderr,
+        )
+        return 2
+
+    summary = {
+        "snapshot_id": manifest["snapshot_id"],
+        "capture_valid": manifest["capture_valid"],
+        "reported_count": manifest["reported_count"],
+        "records_count": manifest["records_count"],
+        "api_pages": manifest["api_pages"],
+        "records_sha256": manifest["records_sha256"],
+        "scope_state": manifest["scope_state"],
+        "member_directory_scope_reconciled": manifest[
+            "member_directory_scope_reconciled"
+        ],
+        "crm_freeze_eligible": manifest["crm_freeze_eligible"],
+        "out": str(args.out),
+        "capture_violations": manifest["capture_violations"],
+    }
+    print(json.dumps(summary, indent=2, sort_keys=True))
+    return 0 if manifest["capture_valid"] else 2
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="swiss-os")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -149,6 +201,26 @@ def build_parser() -> argparse.ArgumentParser:
     snapshot_sub = snapshot.add_subparsers(dest="snapshot_command", required=True)
     freeze_validate = snapshot_sub.add_parser("freeze-validate")
     freeze_validate.add_argument("path", help="Path to a JSON snapshot candidate payload")
+
+    discover = sub.add_parser(
+        "discover-swiss",
+        help="Acquire structured HotellerieSuisse source data from discover.swiss",
+    )
+    discover_sub = discover.add_subparsers(dest="discover_command", required=True)
+    discover_snapshot = discover_sub.add_parser(
+        "snapshot",
+        help="Enumerate a dsod-hs lodgingbusinesses source snapshot",
+    )
+    discover_snapshot.add_argument("--out", required=True, help="Private JSON output path")
+    discover_snapshot.add_argument("--project", default="dsod-hs")
+    discover_snapshot.add_argument("--language", default="de")
+    discover_snapshot.add_argument("--top", type=int, default=-1)
+    discover_snapshot.add_argument(
+        "--key-env",
+        default="DISCOVER_SWISS_SUBSCRIPTION_KEY",
+        help="Environment variable containing the Infocenter subscription key",
+    )
+    discover_snapshot.add_argument("--timeout", type=float, default=30.0)
     return parser
 
 
@@ -166,6 +238,8 @@ def main(argv: list[str] | None = None) -> int:
         return cmd_crm_universe_inspect_db(args.db_path, args.snapshot_id)
     if args.command == "crm-snapshot" and args.snapshot_command == "freeze-validate":
         return cmd_crm_snapshot_freeze_validate(args.path)
+    if args.command == "discover-swiss" and args.discover_command == "snapshot":
+        return cmd_discover_swiss_snapshot(args)
     return 2
 
 

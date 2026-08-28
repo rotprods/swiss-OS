@@ -1,0 +1,49 @@
+{
+  "graph_type": "PROJECT_MEMORY_META_GRAPH_DELTA",
+  "schema_version": "1.0",
+  "wave_id": "WAVE-20260828-CRM-UNIVERSE-01",
+  "generated_at": "2026-08-28",
+  "graph_impact": "META",
+  "authority_mutation": false,
+  "nodes": [
+    {"id":"G-0500","type":"GOAL","label":"Canonical Swiss hotel universe / CRM parity"},
+    {"id":"GATE-CRM-UNIVERSE-COMPLETE","type":"GATE","state":"FALSE","label":"CRM_UNIVERSE_COMPLETE"},
+    {"id":"WAVE-20260828-CRM-UNIVERSE-01","type":"WAVE","mode":"RECOVERY_RECONCILE_TO_DEGRADED_CANARY"},
+    {"id":"PR-13","type":"PULL_REQUEST","state":"MERGED"},
+    {"id":"COMMIT-b37fd909","type":"GIT_COMMIT","sha":"b37fd9092045665c35ad0ccbc475b661b145a088"},
+    {"id":"ISSUE-12","type":"ISSUE","state":"OPEN","label":"Native Sheets writer unavailable"},
+    {"id":"ISSUE-14","type":"ISSUE","state":"OPEN","label":"Map 100% frozen hotel snapshot before outbound"},
+    {"id":"ARTIFACT-CRM-STAGING-V5","type":"ARTIFACT","state":"CANARY_STAGING","sha256":"db719f9c16aad80bb7b097ccb7b17148552bb5a60db27ae48fb7e5e669ad9cab"},
+    {"id":"SNAPSHOT-HS-2026-08-19-WORKING","type":"SOURCE_SNAPSHOT","state":"IMMUTABLE_PRIOR_REFERENCE","raw_records":2050,"pages":171},
+    {"id":"AUTHORITY-E4","type":"AUTHORITY_STATE","physical":690,"aliases":4,"active":686},
+    {"id":"OUTBOUND","type":"GATE","state":"CLOSED","send_allowed":0}
+  ],
+  "edges": [
+    ["WAVE-20260828-CRM-UNIVERSE-01","IMPLEMENTS","G-0500"],
+    ["G-0500","REQUIRES","GATE-CRM-UNIVERSE-COMPLETE"],
+    ["GATE-CRM-UNIVERSE-COMPLETE","BLOCKS","OUTBOUND"],
+    ["WAVE-20260828-CRM-UNIVERSE-01","PRODUCED","ARTIFACT-CRM-STAGING-V5"],
+    ["ARTIFACT-CRM-STAGING-V5","DERIVED_FROM","AUTHORITY-E4"],
+    ["ARTIFACT-CRM-STAGING-V5","USES_REFERENCE","SNAPSHOT-HS-2026-08-19-WORKING"],
+    ["WAVE-20260828-CRM-UNIVERSE-01","MERGED_AS","PR-13"],
+    ["PR-13","RESULTED_IN","COMMIT-b37fd909"],
+    ["ISSUE-12","BLOCKS","AUTHORITATIVE_SHEETS_WRITE"],
+    ["ISSUE-14","TRACKS","GATE-CRM-UNIVERSE-COMPLETE"],
+    ["ISSUE-14","DEPENDS_ON","ISSUE-12"]
+  ],
+  "staging_metrics": {
+    "v16_canary": 25,
+    "reserve_no_id": 7,
+    "historical_cache_missing_staged": 61,
+    "crm_import_queue": 93,
+    "crawl_pages_queued": 171,
+    "canonical_id_reservations": 0
+  },
+  "invariants": {
+    "canonical_authority_unchanged": true,
+    "crm_universe_complete": false,
+    "outbound_closed": true,
+    "send_allowed": 0,
+    "historical_cache_discovery_only": true
+  }
+}

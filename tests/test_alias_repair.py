@@ -3,8 +3,8 @@ from __future__ import annotations
 import hashlib
 from pathlib import Path
 import sqlite3
-
-import pytest
+import tempfile
+import unittest
 
 from swiss_os.alias_repair import AliasRepairInstruction, apply_alias_repair
 
@@ -59,122 +59,133 @@ def _instruction(**overrides: str) -> AliasRepairInstruction:
     return AliasRepairInstruction(**values)
 
 
-def test_repair_is_copy_on_write_and_fail_closed(tmp_path: Path) -> None:
-    source = tmp_path / "parent.sqlite"
-    parent_sha = _db(source)
-    out = tmp_path / "repaired.sqlite"
+class AliasRepairTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.tmp = tempfile.TemporaryDirectory()
+        self.root = Path(self.tmp.name)
 
-    result = apply_alias_repair(source, out, [_instruction()], expected_parent_sha256=parent_sha)
+    def tearDown(self) -> None:
+        self.tmp.cleanup()
 
-    assert hashlib.sha256(source.read_bytes()).hexdigest() == parent_sha
-    assert result["mutations"] == 2
-    assert result["alias_rows"] == 0
-    assert result["superseded_rows"] == 0
-    assert result["candidate_active_canonical"] is None
-    assert result["active_denominator_state"] == "RECONCILE_REQUIRED_CROSS_PLANE"
-    assert result["integrity_check"].lower() == "ok"
-    assert result["foreign_key_violations"] == 0
-    assert result["authority_advanced"] is False
-    assert result["h_id_allocations"] == 0
-    assert result["outbound_opened"] is False
-    assert result["send_allowed"] == 0
+    def test_repair_is_copy_on_write_and_fail_closed(self) -> None:
+        source = self.root / "parent.sqlite"
+        parent_sha = _db(source)
+        out = self.root / "repaired.sqlite"
 
-    with sqlite3.connect(out) as conn:
-        assert conn.execute("SELECT state FROM hotels WHERE hotel_id='H-0001'").fetchone()[0] == "CANONICAL_CURRENT_RECONCILED"
-        assert conn.execute("SELECT COUNT(*) FROM hotel_aliases").fetchone()[0] == 0
+        result = apply_alias_repair(source, out, [_instruction()], expected_parent_sha256=parent_sha)
 
+        self.assertEqual(hashlib.sha256(source.read_bytes()).hexdigest(), parent_sha)
+        self.assertEqual(result["mutations"], 2)
+        self.assertEqual(result["alias_rows"], 0)
+        self.assertEqual(result["superseded_rows"], 0)
+        self.assertIsNone(result["candidate_active_canonical"])
+        self.assertEqual(result["active_denominator_state"], "RECONCILE_REQUIRED_CROSS_PLANE")
+        self.assertEqual(str(result["integrity_check"]).lower(), "ok")
+        self.assertEqual(result["foreign_key_violations"], 0)
+        self.assertIs(result["authority_advanced"], False)
+        self.assertEqual(result["h_id_allocations"], 0)
+        self.assertIs(result["outbound_opened"], False)
+        self.assertEqual(result["send_allowed"], 0)
 
-def test_parent_sha_mismatch_rejects_without_output(tmp_path: Path) -> None:
-    source = tmp_path / "parent.sqlite"
-    _db(source)
-    out = tmp_path / "repaired.sqlite"
-    with pytest.raises(ValueError, match="parent SHA-256 mismatch"):
-        apply_alias_repair(source, out, [_instruction()], expected_parent_sha256="0" * 64)
-    assert not out.exists()
+        with sqlite3.connect(out) as conn:
+            self.assertEqual(
+                conn.execute("SELECT state FROM hotels WHERE hotel_id='H-0001'").fetchone()[0],
+                "CANONICAL_CURRENT_RECONCILED",
+            )
+            self.assertEqual(conn.execute("SELECT COUNT(*) FROM hotel_aliases").fetchone()[0], 0)
 
+    def test_parent_sha_mismatch_rejects_without_output(self) -> None:
+        source = self.root / "parent.sqlite"
+        _db(source)
+        out = self.root / "repaired.sqlite"
+        with self.assertRaisesRegex(ValueError, "parent SHA-256 mismatch"):
+            apply_alias_repair(source, out, [_instruction()], expected_parent_sha256="0" * 64)
+        self.assertFalse(out.exists())
 
-@pytest.mark.parametrize(
-    "field,value,match",
-    [
-        ("expected_alias_name", "Different", "alias identity drift"),
-        ("expected_alias_city", "Basel", "alias identity drift"),
-        ("expected_target_name", "Different", "target identity drift"),
-        ("expected_target_city", "Basel", "target identity drift"),
-        ("canonical_hotel_id", "H-9999", "hotel missing"),
-    ],
-)
-def test_identity_or_target_drift_fails_closed(tmp_path: Path, field: str, value: str, match: str) -> None:
-    source = tmp_path / "parent.sqlite"
-    parent_sha = _db(source)
-    out = tmp_path / "repaired.sqlite"
-    with pytest.raises(ValueError, match=match):
-        apply_alias_repair(source, out, [_instruction(**{field: value})], expected_parent_sha256=parent_sha)
+    def test_identity_drift_fails_closed(self) -> None:
+        source = self.root / "parent.sqlite"
+        parent_sha = _db(source)
+        for field, value, match in (
+            ("expected_alias_name", "Different", "alias identity drift"),
+            ("expected_alias_city", "Basel", "alias identity drift"),
+            ("expected_target_name", "Different", "target identity drift"),
+            ("expected_target_city", "Basel", "target identity drift"),
+            ("canonical_hotel_id", "H-9999", "hotel missing"),
+        ):
+            out = self.root / f"{field}.sqlite"
+            with self.subTest(field=field), self.assertRaisesRegex(ValueError, match):
+                apply_alias_repair(
+                    source,
+                    out,
+                    [_instruction(**{field: value})],
+                    expected_parent_sha256=parent_sha,
+                )
+            self.assertFalse(out.exists())
+            self.assertFalse((self.root / f"{field}.sqlite.tmp").exists())
 
+    def test_wrong_persisted_target_fails_closed(self) -> None:
+        source = self.root / "parent.sqlite"
+        _db(source)
+        with sqlite3.connect(source) as conn:
+            conn.execute("UPDATE hotel_aliases SET canonical_hotel_id='H-0001' WHERE alias_hotel_id='H-0001'")
+        parent_sha = hashlib.sha256(source.read_bytes()).hexdigest()
+        out = self.root / "repaired.sqlite"
+        with self.assertRaisesRegex(ValueError, "alias target drift"):
+            apply_alias_repair(source, out, [_instruction()], expected_parent_sha256=parent_sha)
 
-def test_wrong_persisted_target_fails_closed(tmp_path: Path) -> None:
-    source = tmp_path / "parent.sqlite"
-    _db(source)
-    with sqlite3.connect(source) as conn:
-        conn.execute("UPDATE hotel_aliases SET canonical_hotel_id='H-0001' WHERE alias_hotel_id='H-0001'")
-    parent_sha = hashlib.sha256(source.read_bytes()).hexdigest()
-    out = tmp_path / "repaired.sqlite"
-    with pytest.raises(ValueError, match="alias target drift"):
-        apply_alias_repair(source, out, [_instruction()], expected_parent_sha256=parent_sha)
+    def test_idempotent_replay_from_already_repaired_parent(self) -> None:
+        source = self.root / "parent.sqlite"
+        parent_sha = _db(source)
+        first = self.root / "first.sqlite"
+        apply_alias_repair(source, first, [_instruction()], expected_parent_sha256=parent_sha)
 
-
-def test_idempotent_replay_from_already_repaired_parent(tmp_path: Path) -> None:
-    source = tmp_path / "parent.sqlite"
-    parent_sha = _db(source)
-    first = tmp_path / "first.sqlite"
-    apply_alias_repair(source, first, [_instruction()], expected_parent_sha256=parent_sha)
-
-    second = tmp_path / "second.sqlite"
-    result = apply_alias_repair(
-        first,
-        second,
-        [_instruction()],
-        expected_parent_sha256=hashlib.sha256(first.read_bytes()).hexdigest(),
-    )
-    assert result["mutations"] == 0
-    assert result["alias_rows"] == 0
-    assert result["superseded_rows"] == 0
-
-
-def test_in_place_repair_is_forbidden(tmp_path: Path) -> None:
-    source = tmp_path / "parent.sqlite"
-    parent_sha = _db(source)
-    with pytest.raises(ValueError, match="in-place repair is forbidden"):
-        apply_alias_repair(source, source, [_instruction()], expected_parent_sha256=parent_sha)
-
-
-def test_duplicate_alias_instruction_is_rejected(tmp_path: Path) -> None:
-    source = tmp_path / "parent.sqlite"
-    parent_sha = _db(source)
-    out = tmp_path / "repaired.sqlite"
-    with pytest.raises(ValueError, match="duplicate alias_hotel_id"):
-        apply_alias_repair(source, out, [_instruction(), _instruction()], expected_parent_sha256=parent_sha)
-
-
-def test_invalid_sha_format_rejected(tmp_path: Path) -> None:
-    source = tmp_path / "parent.sqlite"
-    _db(source)
-    out = tmp_path / "repaired.sqlite"
-    with pytest.raises(ValueError, match="lowercase SHA-256 hex"):
-        apply_alias_repair(source, out, [_instruction()], expected_parent_sha256="G" * 64)
-    assert not out.exists()
-    assert not (tmp_path / "repaired.sqlite.tmp").exists()
-
-
-def test_failed_identity_preflight_leaves_no_output_or_temp(tmp_path: Path) -> None:
-    source = tmp_path / "parent.sqlite"
-    parent_sha = _db(source)
-    out = tmp_path / "repaired.sqlite"
-    with pytest.raises(ValueError, match="alias identity drift"):
-        apply_alias_repair(
-            source,
-            out,
-            [_instruction(expected_alias_name="Wrong")],
-            expected_parent_sha256=parent_sha,
+        second = self.root / "second.sqlite"
+        result = apply_alias_repair(
+            first,
+            second,
+            [_instruction()],
+            expected_parent_sha256=hashlib.sha256(first.read_bytes()).hexdigest(),
         )
-    assert not out.exists()
-    assert not (tmp_path / "repaired.sqlite.tmp").exists()
+        self.assertEqual(result["mutations"], 0)
+        self.assertEqual(result["alias_rows"], 0)
+        self.assertEqual(result["superseded_rows"], 0)
+
+    def test_in_place_repair_is_forbidden(self) -> None:
+        source = self.root / "parent.sqlite"
+        parent_sha = _db(source)
+        with self.assertRaisesRegex(ValueError, "in-place repair is forbidden"):
+            apply_alias_repair(source, source, [_instruction()], expected_parent_sha256=parent_sha)
+
+    def test_duplicate_alias_instruction_is_rejected(self) -> None:
+        source = self.root / "parent.sqlite"
+        parent_sha = _db(source)
+        out = self.root / "repaired.sqlite"
+        with self.assertRaisesRegex(ValueError, "duplicate alias_hotel_id"):
+            apply_alias_repair(source, out, [_instruction(), _instruction()], expected_parent_sha256=parent_sha)
+
+    def test_invalid_sha_format_rejected(self) -> None:
+        source = self.root / "parent.sqlite"
+        _db(source)
+        out = self.root / "repaired.sqlite"
+        with self.assertRaisesRegex(ValueError, "lowercase SHA-256 hex"):
+            apply_alias_repair(source, out, [_instruction()], expected_parent_sha256="G" * 64)
+        self.assertFalse(out.exists())
+        self.assertFalse((self.root / "repaired.sqlite.tmp").exists())
+
+    def test_failed_identity_preflight_leaves_no_output_or_temp(self) -> None:
+        source = self.root / "parent.sqlite"
+        parent_sha = _db(source)
+        out = self.root / "repaired.sqlite"
+        with self.assertRaisesRegex(ValueError, "alias identity drift"):
+            apply_alias_repair(
+                source,
+                out,
+                [_instruction(expected_alias_name="Wrong")],
+                expected_parent_sha256=parent_sha,
+            )
+        self.assertFalse(out.exists())
+        self.assertFalse((self.root / "repaired.sqlite.tmp").exists())
+
+
+if __name__ == "__main__":
+    unittest.main()

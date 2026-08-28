@@ -30,6 +30,14 @@ _MAIN_NS = "http://schemas.openxmlformats.org/spreadsheetml/2006/main"
 _REL_NS = "http://schemas.openxmlformats.org/officeDocument/2006/relationships"
 _NS = {"m": _MAIN_NS, "r": _REL_NS}
 _URL_RE = re.compile(r"https?://[^\s|]+", re.IGNORECASE)
+_HISTORICAL_SCOPE = "HISTORICAL_CACHE_DISCOVERY_ONLY"
+_MEMBER_DIRECTORY_MARKERS = (
+    "/mitgliederverzeichnis/",
+    "/liste-des-membres/",
+    "/elenco-dei-soci/",
+    "/elenco-dei-membri/",
+    "/member-directory/",
+)
 
 
 def _required(value: object, field: str) -> str:
@@ -44,6 +52,12 @@ def _iso8601(value: str, field: str) -> str:
         datetime.fromisoformat(value.replace("Z", "+00:00"))
     except ValueError as exc:
         raise StagingAdapterError(f"{field} must be ISO-8601") from exc
+    return value
+
+
+def _strict_positive_int(value: object, field: str) -> int:
+    if type(value) is not int or value <= 0:
+        raise StagingAdapterError(f"{field} must be a positive JSON integer")
     return value
 
 
@@ -78,6 +92,18 @@ def _locale_from_url(url: str) -> str:
     return "unknown"
 
 
+def _is_hotelleriesuisse_member_detail_url(url: str) -> bool:
+    parts = urlsplit(url)
+    host = (parts.hostname or "").lower().rstrip(".")
+    if host not in {"hotelleriesuisse.ch", "www.hotelleriesuisse.ch"}:
+        return False
+    path = re.sub(r"/+", "/", parts.path or "/").lower().rstrip("/")
+    final_segment = path.rsplit("/", 1)[-1]
+    if not final_segment.startswith("hotel-") or final_segment.startswith("hotel-page-"):
+        return False
+    return any(marker in path for marker in _MEMBER_DIRECTORY_MARKERS)
+
+
 def _stable_id(prefix: str, parts: Iterable[object]) -> str:
     payload = "|".join(str(part or "").strip() for part in parts).encode("utf-8")
     return f"{prefix}:{hashlib.sha256(payload).hexdigest()[:20]}"
@@ -110,6 +136,12 @@ def read_xlsx_sheet(path: str | Path, sheet_name: str) -> list[dict[str, object]
 
     with zipfile.ZipFile(source) as archive:
         names = set(archive.namelist())
+        required_members = {"xl/workbook.xml", "xl/_rels/workbook.xml.rels"}
+        missing_members = sorted(required_members - names)
+        if missing_members:
+            raise StagingAdapterError(
+                f"workbook missing required package members: {missing_members}"
+            )
         shared: list[str] = []
         if "xl/sharedStrings.xml" in names:
             root = ET.fromstring(archive.read("xl/sharedStrings.xml"))
@@ -137,6 +169,10 @@ def read_xlsx_sheet(path: str | Path, sheet_name: str) -> list[dict[str, object]
             if sheet.attrib.get("name") != sheet_name:
                 continue
             relationship_id = sheet.attrib[f"{{{_REL_NS}}}id"]
+            if relationship_id not in relationship_map:
+                raise StagingAdapterError(
+                    f"sheet {sheet_name} has no workbook relationship"
+                )
             raw_target = relationship_map[relationship_id]
             target = (
                 f"xl/{raw_target.lstrip('/')}"
@@ -146,6 +182,10 @@ def read_xlsx_sheet(path: str | Path, sheet_name: str) -> list[dict[str, object]
             break
         if not target:
             raise StagingAdapterError(f"sheet not found: {sheet_name}")
+        if target not in names:
+            raise StagingAdapterError(
+                f"sheet package member missing for {sheet_name}: {target}"
+            )
 
         root = ET.fromstring(archive.read(target))
         raw_rows: list[list[object]] = []
@@ -240,9 +280,9 @@ def cache_records_from_rows(
         source_url = str(row.get("source_url", "")).strip()
         cache_age = str(row.get("cache_age", "UNKNOWN_CACHE_AGE")).strip()
         observed_count = str(row.get("observed_count", "")).strip()
-        evidence_scope = str(
-            row.get("evidence_scope", "HISTORICAL_CACHE_DISCOVERY_ONLY")
-        ).strip()
+        supplied_scope = str(
+            row.get("evidence_scope", _HISTORICAL_SCOPE)
+        ).strip() or _HISTORICAL_SCOPE
 
         if not (page and name and city and source_url):
             rejects.append(
@@ -250,6 +290,17 @@ def cache_records_from_rows(
                     "Directory_Cache_Observations",
                     row_number,
                     "MISSING_REQUIRED_CACHE_FIELD",
+                    name,
+                    city,
+                )
+            )
+            continue
+        if supplied_scope != _HISTORICAL_SCOPE:
+            rejects.append(
+                AdapterReject(
+                    "Directory_Cache_Observations",
+                    row_number,
+                    "INVALID_CACHE_EVIDENCE_SCOPE",
                     name,
                     city,
                 )
@@ -278,7 +329,7 @@ def cache_records_from_rows(
                     "source_epoch": source_epoch,
                     "partition_key": f"page:{page}",
                     "observed_at": observed_at,
-                    "evidence_scope": evidence_scope,
+                    "evidence_scope": _HISTORICAL_SCOPE,
                 }
             )
         )
@@ -305,7 +356,7 @@ def v16_records_from_rows(
         exact_urls = [
             url.rstrip(",.;)")
             for url in _URL_RE.findall(evidence)
-            if "hotelleriesuisse.ch" in url.lower()
+            if _is_hotelleriesuisse_member_detail_url(url.rstrip(",.;)"))
         ]
         if not (proposed_id and name and city):
             rejects.append(
@@ -323,7 +374,7 @@ def v16_records_from_rows(
                 AdapterReject(
                     "V16_Canary",
                     row_number,
-                    "NO_EXACT_HOTELLERIESUISSE_DETAIL_URL",
+                    "NO_EXACT_HOTELLERIESUISSE_MEMBER_DETAIL_URL",
                     name,
                     city,
                 )
@@ -372,6 +423,12 @@ def build_cohort_registry(
     workbook_sha256: str,
 ) -> dict[str, object]:
     _iso8601(observed_at, "observed_at")
+    expected_partitions = _strict_positive_int(
+        expected_partitions, "expected_partitions"
+    )
+    declared_raw_records = _strict_positive_int(
+        declared_raw_records, "declared_raw_records"
+    )
     target = Path(output_dir)
     target.mkdir(parents=True, exist_ok=True)
 
@@ -509,7 +566,7 @@ def main(argv: list[str] | None = None) -> int:
             )
             print(json.dumps(registry, ensure_ascii=False, indent=2, sort_keys=True))
             return 0
-    except (StagingAdapterError, ValueError, zipfile.BadZipFile) as exc:
+    except (StagingAdapterError, ValueError, zipfile.BadZipFile, KeyError) as exc:
         print(json.dumps({"valid": False, "error": str(exc)}, sort_keys=True), file=sys.stderr)
         return 2
     return 2

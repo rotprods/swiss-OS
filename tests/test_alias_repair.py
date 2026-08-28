@@ -70,7 +70,8 @@ def test_repair_is_copy_on_write_and_fail_closed(tmp_path: Path) -> None:
     assert result["mutations"] == 2
     assert result["alias_rows"] == 0
     assert result["superseded_rows"] == 0
-    assert result["candidate_active_canonical"] == 2
+    assert result["candidate_active_canonical"] is None
+    assert result["active_denominator_state"] == "RECONCILE_REQUIRED_CROSS_PLANE"
     assert result["integrity_check"].lower() == "ok"
     assert result["foreign_key_violations"] == 0
     assert result["authority_advanced"] is False
@@ -152,3 +153,28 @@ def test_duplicate_alias_instruction_is_rejected(tmp_path: Path) -> None:
     out = tmp_path / "repaired.sqlite"
     with pytest.raises(ValueError, match="duplicate alias_hotel_id"):
         apply_alias_repair(source, out, [_instruction(), _instruction()], expected_parent_sha256=parent_sha)
+
+
+def test_invalid_sha_format_rejected(tmp_path: Path) -> None:
+    source = tmp_path / "parent.sqlite"
+    _db(source)
+    out = tmp_path / "repaired.sqlite"
+    with pytest.raises(ValueError, match="lowercase SHA-256 hex"):
+        apply_alias_repair(source, out, [_instruction()], expected_parent_sha256="G" * 64)
+    assert not out.exists()
+    assert not (tmp_path / "repaired.sqlite.tmp").exists()
+
+
+def test_failed_identity_preflight_leaves_no_output_or_temp(tmp_path: Path) -> None:
+    source = tmp_path / "parent.sqlite"
+    parent_sha = _db(source)
+    out = tmp_path / "repaired.sqlite"
+    with pytest.raises(ValueError, match="alias identity drift"):
+        apply_alias_repair(
+            source,
+            out,
+            [_instruction(expected_alias_name="Wrong")],
+            expected_parent_sha256=parent_sha,
+        )
+    assert not out.exists()
+    assert not (tmp_path / "repaired.sqlite.tmp").exists()

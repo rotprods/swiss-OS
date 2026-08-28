@@ -7,13 +7,13 @@ from urllib.parse import urlsplit
 from .snapshot_freeze import SnapshotSourceRecord, build_snapshot_record_id, normalize_text, normalize_url
 
 
-MATCH_CANONICAL = "ACTIVE_MATCH"
-MATCH_ALIAS = "ALIAS_MATCH"
+ACTIVE_MATCH = "ACTIVE_MATCH"
+ALIAS_MATCH = "ALIAS_MATCH"
 TRUE_MISSING = "TRUE_MISSING"
 CONFLICT = "CONFLICT"
 EXCLUSION_CANDIDATE = "EXCLUSION_CANDIDATE"
 
-STAGING_CLASSES = {MATCH_CANONICAL, MATCH_ALIAS, TRUE_MISSING, CONFLICT, EXCLUSION_CANDIDATE}
+STAGING_CLASSES = {ACTIVE_MATCH, ALIAS_MATCH, TRUE_MISSING, CONFLICT, EXCLUSION_CANDIDATE}
 
 
 @dataclass(frozen=True)
@@ -114,7 +114,7 @@ def classify_source_record(
         candidates = by_domain[domain]
         if len(candidates) == 1:
             hotel_id = next(iter(candidates))
-            return IngestDecision(snapshot_record_id, snapshot_id, source_record_key, MATCH_CANONICAL, hotel_id, "EXACT_CANONICAL_DOMAIN", name, city, detail)
+            return IngestDecision(snapshot_record_id, snapshot_id, source_record_key, ACTIVE_MATCH, hotel_id, "EXACT_CANONICAL_DOMAIN", name, city, detail)
         return IngestDecision(snapshot_record_id, snapshot_id, source_record_key, CONFLICT, None, "AMBIGUOUS_CANONICAL_DOMAIN", name, city, detail)
 
     key = (name, city)
@@ -122,14 +122,14 @@ def classify_source_record(
     if canonical_candidates:
         if len(canonical_candidates) == 1:
             hotel_id = next(iter(canonical_candidates))
-            return IngestDecision(snapshot_record_id, snapshot_id, source_record_key, MATCH_CANONICAL, hotel_id, "EXACT_CANONICAL_NAME_CITY", name, city, detail)
+            return IngestDecision(snapshot_record_id, snapshot_id, source_record_key, ACTIVE_MATCH, hotel_id, "EXACT_CANONICAL_NAME_CITY", name, city, detail)
         return IngestDecision(snapshot_record_id, snapshot_id, source_record_key, CONFLICT, None, "AMBIGUOUS_CANONICAL_NAME_CITY", name, city, detail)
 
     alias_candidates = aliases_by_name_city.get(key, set())
     if alias_candidates:
         if len(alias_candidates) == 1:
             hotel_id = next(iter(alias_candidates))
-            return IngestDecision(snapshot_record_id, snapshot_id, source_record_key, MATCH_ALIAS, hotel_id, "EXACT_ALIAS_NAME_CITY", name, city, detail)
+            return IngestDecision(snapshot_record_id, snapshot_id, source_record_key, ALIAS_MATCH, hotel_id, "EXACT_ALIAS_NAME_CITY", name, city, detail)
         return IngestDecision(snapshot_record_id, snapshot_id, source_record_key, CONFLICT, None, "AMBIGUOUS_ALIAS_NAME_CITY", name, city, detail)
 
     return IngestDecision(snapshot_record_id, snapshot_id, source_record_key, TRUE_MISSING, None, "NO_EXACT_IDENTITY_MATCH", name, city, detail)

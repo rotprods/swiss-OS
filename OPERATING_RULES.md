@@ -1,4 +1,4 @@
-# OPERATING_RULES — V6.1
+# OPERATING_RULES — V6.2
 
 1. Truth > volume.
 2. Evidence > inference.
@@ -26,7 +26,7 @@
 24. Never bypass CAPTCHA, authentication, paywalls, robots, anti-bot systems or provider restrictions.
 25. Do not submit roles with hard unmet requirements unless the employer explicitly permits equivalents/flexibility.
 26. Employer-facing motivation stays positive; never frame relocation as political grievance.
-27. Overtime is flexibility for additional **paid** hours where lawful, never unpaid labor.
+27. Overtime is flexibility for additional paid hours where lawful, never unpaid labor.
 28. Financial fields distinguish published facts, sourced assumptions and personal reserves.
 29. Migrations follow STAGE → CANARY → VALIDATE → COMMIT → ROLLBACK.
 30. Google Sheets is the executive/control plane; operational state is constrained in SQLite or a verified successor backend.
@@ -39,6 +39,9 @@
 37. Every authoritative entity/evidence/task mutation synchronizes the affected operational graph in the same wave.
 38. ChatGPT Library is recovery/cold persistence, never operational truth.
 39. If a required authority layer is unavailable, switch to `DEGRADED_CANARY` or `READ_ONLY_RESEARCH`; fail closed on canonical promotion.
-40. "Real-time" means synchronous reconciliation before an authoritative wave closes; no background daemon is implied.
+40. “Real-time” means synchronous reconciliation before an authoritative wave closes; no background daemon is implied.
 41. Every material wave closes as `COMPLETE_AUTHORITY`, `COMPLETE_READ_ONLY`, `SAFE_STOP_CANARY`, `BLOCKED_P0`, or `SUPERSEDED`.
 42. Outbound remains independently hard-gated and CLOSED unless all applicable gates plus explicit authorization pass.
+43. The complete CRM universe is a hard prerequisite to outbound: `CRM_UNIVERSE_COMPLETE = TRUE` must be proven against a frozen verified directory snapshot before any send gate may open.
+44. CRM completeness means every snapshot source record is deterministically mapped; an intermediate canonical count or checkpoint can never substitute for 100% source-record coverage.
+45. A changing upstream directory count creates a new versioned snapshot observation; it never silently rewrites the denominator of an in-flight wave.

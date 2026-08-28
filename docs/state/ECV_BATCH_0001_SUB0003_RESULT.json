@@ -1,0 +1,35 @@
+{
+  "schema_version": "ECV-RESULT-SUMMARY-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "source_snapshot_id": "HS-MEMBER-DE-33206402141",
+  "batch_id": "HS-MEMBER-DE-33206402141:WORK:0001:SUB:0003",
+  "input_items": 20,
+  "input_items_sha256": "22faf4d991cd84652542c5472fe4d9e5124030a0b13b4639c735395a31946f76",
+  "github_actions_run_id": 33212199278,
+  "github_actions_job_id": 98987785828,
+  "artifact_id": 9702028998,
+  "artifact_zip_sha256": "7173371396e70661e82192f5fb45ea80c65f3d3552dc81db60fa31cdc6a91438",
+  "results_count": 20,
+  "counts_by_state": {
+    "CURRENT_DETAIL_VERIFIED": 17,
+    "FETCH_FAILED": 3
+  },
+  "all_verified": false,
+  "ecv_packet_sha256": "48632d17698772a6c5c17a24fa5c906eed05c957337758bbe18927b6ae6a30d8",
+  "validation_violations": [],
+  "requeue_reason": "HTTP_429_RATE_LIMIT_AFTER_17_VERIFIED",
+  "requeue_source_record_keys": [
+    "MD-0977f80246e0ec5bd184",
+    "MD-09c4fd9bb12fe4d861a8",
+    "MD-0a0fb9cc01d7f26ce603"
+  ],
+  "cumulative_current_detail_verified": 57,
+  "remaining_never_verified": 1380,
+  "pending_requeue": 3,
+  "authority_advanced": false,
+  "h_id_allocations": 0,
+  "outbound": "CLOSED",
+  "send_allowed": 0,
+  "terminal_mapping_effect": "NONE_UNTIL_ENTITY_RESOLUTION",
+  "note": "17 exact current HotellerieSuisse detail pages verified. Three terminal requests received HTTP 429 across all three attempts and are explicitly requeued; no absence or novelty inference is permitted from provider throttling."
+}

@@ -151,8 +151,12 @@ class _DirectoryParser(HTMLParser):
                 }
             )
             return
-        name = parts[0]
-        city = parts[-1]
+        # Live HotellerieSuisse member-directory cards render locality first and
+        # property name last (for example: ``Muralto @Home Hotel Locarno``).
+        # The public record model is name/city, so normalize that source order
+        # explicitly instead of silently reversing entity identity.
+        city = parts[0]
+        name = parts[-1]
         if not name or not city or name == city:
             self.rejects.append(
                 {

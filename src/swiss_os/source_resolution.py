@@ -91,15 +91,18 @@ def _strict_zero_int(payload: Mapping[str, object], key: str) -> None:
 def _require_smc(payload: object) -> Mapping[str, object]:
     if not isinstance(payload, Mapping):
         raise SourceResolutionError("SMC candidate must be a JSON object")
-    violations = validate_source_mapping_candidate(payload)
-    if violations:
-        raise SourceResolutionError("invalid SMC candidate: " + ", ".join(violations))
+    # Security/authority hard locks are type-strict and evaluated before the
+    # candidate digest. A tampered control field must never be hidden behind a
+    # secondary hash-mismatch diagnostic.
     _strict_bool(payload, "crm_universe_complete", False)
     _strict_bool(payload, "authority_advanced", False)
     _strict_zero_int(payload, "h_id_allocations")
     if payload.get("outbound") != "CLOSED":
         raise SourceResolutionError("SMC outbound must be CLOSED")
     _strict_zero_int(payload, "send_allowed")
+    violations = validate_source_mapping_candidate(payload)
+    if violations:
+        raise SourceResolutionError("invalid SMC candidate: " + ", ".join(violations))
     return payload
 
 

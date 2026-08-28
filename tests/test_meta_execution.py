@@ -49,6 +49,19 @@ class MetaExecutionTests(unittest.TestCase):
         self.assertEqual(decision.route, MetaRoute.STRUCTURED_SOURCE_CAPTURE)
         self.assertEqual(decision.execution_mode, ExecutionMode.DEGRADED_CANARY)
 
+    def test_directory_manifest_is_independent_fallback_without_api_capture(self) -> None:
+        decision = choose_meta_route(
+            MetaCapabilities(
+                discover_swiss_subscription=False,
+                discover_capture_valid=False,
+                member_directory_evidence=True,
+                web_research=True,
+            )
+        )
+        self.assertEqual(decision.route, MetaRoute.MEMBER_DIRECTORY_MANIFEST)
+        self.assertEqual(decision.execution_mode, ExecutionMode.READ_ONLY_RESEARCH)
+        self.assertIn("member_directory_evidence", decision.capabilities_used)
+
     def test_directory_manifest_follows_valid_capture(self) -> None:
         decision = choose_meta_route(
             MetaCapabilities(
@@ -119,9 +132,10 @@ class MetaExecutionTests(unittest.TestCase):
         self.assertEqual(decision.route, MetaRoute.TERMINAL_MAPPING)
         self.assertEqual(decision.execution_mode, ExecutionMode.DEGRADED_CANARY)
 
-    def test_unresolved_records_route_to_exact_current_refresh(self) -> None:
+    def test_unresolved_records_route_to_exact_current_refresh_after_manifest_complete(self) -> None:
         decision = choose_meta_route(
             MetaCapabilities(
+                member_directory_manifest_complete=True,
                 unresolved_source_records=50,
                 web_research=True,
             )
@@ -132,6 +146,7 @@ class MetaExecutionTests(unittest.TestCase):
     def test_drive_mount_is_safe_fallback_for_native_sheet_outage(self) -> None:
         decision = choose_meta_route(
             MetaCapabilities(
+                member_directory_manifest_complete=True,
                 drive_mount_read=True,
                 native_sheets_read=False,
             )
@@ -185,7 +200,7 @@ class MetaExecutionTests(unittest.TestCase):
             MetaCapabilities.from_mapping({"unresolved_source_records": -1})
 
     def test_no_safe_route_is_typed_p0(self) -> None:
-        decision = choose_meta_route(MetaCapabilities())
+        decision = choose_meta_route(MetaCapabilities(crm_universe_complete=True))
         self.assertEqual(decision.execution_mode, ExecutionMode.BLOCKED_P0)
         self.assertEqual(decision.route, MetaRoute.NO_SAFE_ROUTE)
         self.assertIn("NO_SAFE_PRODUCTIVE_ROUTE", decision.hard_blocks)

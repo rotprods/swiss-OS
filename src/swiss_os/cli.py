@@ -11,6 +11,7 @@ from .crm_universe import (
     validate_crm_universe_gate,
 )
 from .db import connect, foreign_key_violations, initialize, integrity_check
+from .ingest_scheduler import enqueue_ingest_work
 from .invariants import run_manifest_invariants
 from .manifest import OperationalManifest
 from .mass_ingest import classify_batch, stage_decisions, staging_metrics
@@ -133,11 +134,13 @@ def cmd_crm_ingest_stage(db_path: str, snapshot_id: str, records_path: str, obse
     with connect(db_path) as conn:
         decisions = classify_batch(conn, snapshot_id, records)
         stage_decisions(conn, decisions, observed_at)
+        scheduler = enqueue_ingest_work(conn, decisions)
     output = {
         "snapshot_id": snapshot_id,
         "authority_advanced": False,
         "h_id_allocations": 0,
         "metrics": staging_metrics(decisions),
+        "scheduler": scheduler,
         "decisions": [d.as_dict() for d in decisions],
     }
     print(json.dumps(output, indent=2, sort_keys=True))

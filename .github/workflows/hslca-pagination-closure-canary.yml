@@ -1,0 +1,90 @@
+name: hslca-pagination-closure-canary
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - ops/hslca-pagination-closure-v1
+
+permissions:
+  contents: read
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run resumable adaptive HSLCA capture
+        id: capture
+        shell: bash
+        run: |
+          set +e
+          mkdir -p .artifacts/hslca
+          CAPTURE_ID="HS-MEMBER-DE-${GITHUB_RUN_ID}"
+          PYTHONPATH=src python -m swiss_os.hotelleriesuisse_capture_runtime capture \
+            --capture-id "$CAPTURE_ID" \
+            --root-url "https://www.hotelleriesuisse.ch/de/verband-und-geschaeftsstelle/mitglieder/mitgliederverzeichnis" \
+            --locale de \
+            --out-dir .artifacts/hslca \
+            --delay 6 \
+            --timeout 45 \
+            --attempts 6 \
+            --base-backoff 15 \
+            --max-backoff 120 \
+            > .artifacts/HSLCA_RUNTIME.json 2> .artifacts/HSLCA_RUNTIME.err
+          rc=$?
+          set -e
+          echo "runtime_exit=$rc" >> "$GITHUB_OUTPUT"
+          if [[ ! -f .artifacts/hslca/capture.json ]]; then
+            echo "HSLCA did not reach a materialized capture bundle" >&2
+            exit "$rc"
+          fi
+      - name: Prove pagination closure when displayed count is absent
+        shell: bash
+        run: |
+          set -euo pipefail
+          if PYTHONPATH=src python -m swiss_os.pagination_closure prove \
+            .artifacts/hslca/capture.json \
+            --out-dir .artifacts/proved \
+            --expected-page-size 12 \
+            > .artifacts/PAGINATION_CLOSURE.json 2> .artifacts/PAGINATION_CLOSURE.err; then
+            cat .artifacts/PAGINATION_CLOSURE.json
+          else
+            runtime_exit='${{ steps.capture.outputs.runtime_exit }}'
+            if [[ "$runtime_exit" == "0" ]]; then
+              echo "Native HSLCA count path already completed; pagination closure was not required."
+            else
+              cat .artifacts/PAGINATION_CLOSURE.err >&2 || true
+              exit 2
+            fi
+          fi
+      - name: Assert pre-authority hard locks
+        shell: bash
+        run: |
+          PYTHONPATH=src python - <<'PY'
+          import json
+          from pathlib import Path
+
+          candidates = [
+              Path('.artifacts/proved/member-directory-manifest.json'),
+              Path('.artifacts/hslca/member-directory-manifest.json'),
+          ]
+          manifest = next((json.loads(p.read_text()) for p in candidates if p.exists()), None)
+          assert isinstance(manifest, dict), 'missing member-directory manifest'
+          assert manifest.get('authority_advanced') is False
+          assert manifest.get('h_id_allocations') == 0 and not isinstance(manifest.get('h_id_allocations'), bool)
+          assert manifest.get('outbound_opened') is False
+          assert manifest.get('send_allowed') == 0 and not isinstance(manifest.get('send_allowed'), bool)
+          PY
+      - name: Upload source evidence and diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hslca-pagination-closure-evidence
+          path: .artifacts
+          if-no-files-found: error
+          retention-days: 7

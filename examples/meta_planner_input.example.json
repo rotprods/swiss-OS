@@ -1,0 +1,65 @@
+{
+  "project": "SWITZERLAND_JOB_OS",
+  "activation_id": "ACT-EXAMPLE",
+  "last_wave_id": "WAVE-EXAMPLE",
+  "last_closure_state": "COMPLETE_READ_ONLY",
+  "parent_main_sha": "0000000000000000000000000000000000000000",
+  "authority_epoch": "EXAMPLE_EPOCH",
+  "authority_manifest": "EXAMPLE_MANIFEST",
+  "active_goal_id": "G-0500",
+  "active_checkpoint_id": "EXAMPLE_CHECKPOINT",
+  "outbound": "CLOSED",
+  "send_allowed": 0,
+  "budget": {
+    "max_waves": 8,
+    "max_system_definition_prs": 3,
+    "max_new_issues": 1,
+    "max_same_action_without_progress": 2,
+    "waves_used": 1,
+    "system_definition_prs_used": 0,
+    "new_issues_used": 0
+  },
+  "recovery_artifacts": ["EXAMPLE_RECOVERY_POINTER.json"],
+  "routes": [
+    {
+      "route": "API_CAPTURE",
+      "status": "BLOCKED",
+      "safe": true,
+      "score": {
+        "bottleneck_reduction": 100,
+        "prerequisite_unlock": 100,
+        "reversibility": 100,
+        "capability_fit": 0,
+        "evidence_quality": 100,
+        "persistence_gain": 80,
+        "authority_risk": 0,
+        "irreversibility": 0,
+        "lineage_ambiguity": 0,
+        "concurrency_risk": 0
+      },
+      "blocked_capabilities": ["DISCOVER_SWISS_SUBSCRIPTION_KEY"],
+      "fallback_order": ["RECOVERY_IMPORT", "DIRECTORY_MANIFEST", "CACHE_HARVEST"]
+    },
+    {
+      "route": "DIRECTORY_MANIFEST",
+      "status": "READY",
+      "safe": true,
+      "score": {
+        "bottleneck_reduction": 92,
+        "prerequisite_unlock": 95,
+        "reversibility": 100,
+        "capability_fit": 100,
+        "evidence_quality": 85,
+        "persistence_gain": 90,
+        "authority_risk": 0,
+        "irreversibility": 0,
+        "lineage_ambiguity": 15,
+        "concurrency_risk": 0
+      },
+      "prerequisites": ["explicit locale/surface/observation epoch"],
+      "required_inputs": ["member-directory evidence records"],
+      "fallback_order": ["CACHE_HARVEST", "REPO_ENGINEERING"],
+      "reason": "Build the coherent member-directory manifest required by SSR-1.0"
+    }
+  ]
+}

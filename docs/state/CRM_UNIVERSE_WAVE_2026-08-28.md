@@ -2,88 +2,76 @@
 
 Wave: `WAVE-20260828-CRM-UNIVERSE-01`  
 Mode: `RECOVERY_RECONCILE → DEGRADED_CANARY`  
-Graph impact: `META` now; `BOTH` when operational authority promotion resumes.
+Graph impact: `META` now; `BOTH` when authority promotion resumes.
 
 ## Objective
 
-Put **100% of the frozen target HotellerieSuisse directory snapshot into the CRM before any outbound**.
+Put **100% of the frozen target HotellerieSuisse directory snapshot into CRM before any outbound**.
 
-Intermediate scale checkpoints are not prospecting readiness.
-
-## Drive recovery result
-
-The direct Google Drive connector is disabled in the current runtime, but the authenticated Google Drive is mounted at `/Google Drive` through ChatGPT Library.
-
-The project and native `HOTELS_MASTER` were recovered read-only from:
-
-`/Google Drive/01_AI_SYSTEMS_AGENTS/00_AGENTIC_SYSTEMS_OS/01_PROJECTS/SWITZERLAND_JOB_OS/01_HOSPITALITY_VERTICAL/HOTELS_MASTER`
-
-The mount also permits create-only artifact persistence into the real Drive project folder. Native in-place Sheets mutation remains unavailable.
-
-## Reconciled authority
+## Authority unchanged
 
 ```text
-entity epoch                 HS_ENTITY_EPOCH_2026-08-25_E4
 HOTELS_V2 physical rows      690
-superseded duplicate aliases   4
+superseded aliases             4
 active canonical             686
 Intelligence                 686 / 686
 Operational Graph            686 / 686
+CRM_UNIVERSE_COMPLETE        FALSE
 OUTBOUND                     CLOSED
 send_allowed                   0
 ```
 
-No operational authority changed in this wave.
+## Drive recovery
 
-## Snapshot semantics
+The direct Google Drive connector is disabled, but `/Google Drive` is available through the authenticated Library mount. The actual `HOTELS_MASTER` was rehydrated read-only and new create-only artifacts can be persisted in the project. Native in-place Sheets writes remain unavailable.
 
-Drive's `HS_2026-08-19_WORKING` reference records:
+## Versioned snapshot reference
 
-```text
-working reference records   2050
-working reference pages      171
-```
+Drive `HS_2026-08-19_WORKING` records **2050 entries / 171 pages** as an immutable prior reference. Cached official pages expose changing totals over time; final CRM completeness therefore requires a fresh frozen verified snapshot rather than a timeless 2050 hard-code.
 
-Indexed HotellerieSuisse pages from different crawl dates expose different totals. Therefore directory count is a versioned observation and the final CRM gate requires a fresh `FROZEN_VERIFIED` snapshot.
-
-## Staging generations
-
-The wave deliberately preserves artifact lineage rather than silently overwriting Drive files.
-
-Latest validated generation:
+## Latest mass-ingestion staging
 
 ```text
-CRM_UNIVERSE_STAGING_2026-08-28_v5.xlsx
-SHA-256 db719f9c16aad80bb7b097ccb7b17148552bb5a60db27ae48fb7e5e669ad9cab
-Drive file external-gdrive:file:1xBk3c7BWhKv8yM7ET85XDMA6pUy0a6Pr
+artifact         CRM_UNIVERSE_STAGING_2026-08-28_v6.xlsx
+sha256           b383847b6a224f3859c14ea0edcfde92639cea44d58239c391facd4199efdd07
+drive_file       external-gdrive:file:1coRHt34VK6mTzIKcF8POK5r7qarVGjr1
 ```
 
-v5 contains:
+Validated contents:
 
 ```text
 690 current physical CRM rows
-25 V16 exact-detail canary candidates
-7 no-ID reserve candidates
-61 historical-cache missing identities
-93 total CRM import-queue entries
-171 reference pages queued for refresh
-43 cache observations retained as discovery-only
-0 canonical ID reservations
+25 V16 exact-detail canary rows
+7 reserve rows without canonical ID
+103 historical-cache missing identities
+135 total CRM import-queue entries
+163 typed cache observations
+171 directory pages in refresh/crawl queue
+0 canonical H-ID reservations
 0 formula errors
 ```
 
-### Cache harvest result
+### Harvest results
 
-A second anti-join wave evaluated 84 indexed directory observations from multiple member-directory pages. Result:
+Round 1 late-page harvest produced 34 missing discovery identities.
+
+Round 2 evaluated 84 indexed member-directory observations:
 
 ```text
-57 already present/current/staged
-27 new missing identities
+57 already current/staged
+27 new missing
 ```
 
-Combined with the first harvest, `Historical_Missing_Seed` now contains **61** exact normalized name+city misses.
+Round 3 evaluated 120 observations from ten additional unfiltered indexed member-directory pages:
 
-Every one remains:
+```text
+78 already current/staged
+42 new missing
+```
+
+Total historical-cache missing staging: **103**.
+
+All remain strictly:
 
 ```text
 HISTORICAL_CACHE_DISCOVERY_ONLY
@@ -91,17 +79,11 @@ HISTORICAL_CACHE_DISCOVERY_ONLY
 → NO_H_ID_RESERVED
 ```
 
-This is deliberate: cache pages are discovery accelerators, not current membership evidence.
+Filtered subsets and the broader `branchenverzeichnis` were deliberately excluded from the CRM snapshot lane to avoid scope contamination.
 
 ## CRM gate
 
-```text
-CRM_UNIVERSE_COMPLETE = FALSE
-OUTBOUND              = CLOSED
-send_allowed           = 0
-```
-
-The gate opens only when every source record in the fresh frozen snapshot is mapped to exactly one terminal state:
+Every record in the eventual `FROZEN_VERIFIED` member-directory snapshot must terminate as:
 
 ```text
 ACTIVE_CANONICAL
@@ -109,54 +91,42 @@ ALIAS_TO_CANONICAL
 EXCLUDED_WITH_REASON
 ```
 
-and:
+with unmapped = 0 and `RECONCILE_REQUIRED = 0`, plus exact DB↔Sheets/CRM and Graph/Intelligence reconciliation.
+
+Only then:
+
+`CRM_UNIVERSE_COMPLETE = TRUE`.
+
+## Persistence
+
+Latest pointers/artifacts are synchronized to:
+
+- ChatGPT Library `/SWITZERLAND_JOB_OS/`;
+- real Drive Hospitality folder;
+- Drive Context Hub meta-graph delta;
+- GitHub `STATE.md` / this wave handoff;
+- issue `#14` production tracker;
+- issue `#12` writer-capability tracker.
+
+## Next production operation
+
+Continue discovery/snapshot staging while safe. When native Sheets writer becomes available:
 
 ```text
-unmapped source records = 0
-RECONCILE_REQUIRED      = 0
-duplicate conflicts     = 0
-invalid alias targets   = 0
-DB ↔ Sheets/CRM         = EXACT
-Graph denominator       = active canonical denominator
-Intelligence denominator= active canonical denominator
-```
-
-## Production strategy
-
-The priority is **bulk CRM universe seeding**, not deep hotel-by-hotel enrichment.
-
-```text
-freeze/refresh directory snapshot
-→ enumerate every source record
-→ source-record staging IDs
-→ bulk normalize
-→ anti-join current CRM / aliases / groups / domains
-→ entity-resolution batches
-→ DB-first canonical/alias/exclusion commits
+/wave recover
+→ re-read live authority
+→ freeze current member-directory snapshot
+→ anti-join all staged source records
+→ allocate H-IDs only at DB commit
+→ DB-first canonical/alias/exclusion batches
 → Sheets/CRM PK mirror
-→ Operational Graph + Intelligence seed sync
-→ source-record coverage recompute
+→ Intelligence seed sync
+→ Operational Graph sync
+→ QA/metrics/scheduler/transitions
+→ recompute snapshot mapping coverage
+→ COMPLETE_AUTHORITY only when exact
 ```
-
-Vacancy/housing/people/channel/digital enrichment may run in parallel after a hotel has entered CRM.
-
-## Persistence / meta graph
-
-Persisted:
-
-- staging v5 to Drive + Library;
-- `LATEST_CRM_UNIVERSE_2026-08-28_v5.json` to Drive;
-- `LATEST_CRM_UNIVERSE.json` to Library;
-- `CRM_UNIVERSE_META_GRAPH_DELTA_2026-08-28_v5.json` to Drive Context Hub + Library;
-- GitHub issue `#14` as the primary P0 production tracker;
-- issue `#12` narrowed to native Sheets writer capability.
-
-## Current blocker
-
-Native Sheets writer capability is unavailable. Therefore staged source records cannot yet be atomically promoted through constrained DB → existing `HOTELS_MASTER` → Operational Graph/Intelligence.
 
 ## Closure
 
-`SAFE_STOP_CANARY`
-
-A large amount of discovery/ingestion staging is now ready, but canonical authority remains intentionally unchanged until native Sheet writes and final reconciliation are available.
+`SAFE_STOP_CANARY` for authoritative CRM writes; substantial read/staging production completed.

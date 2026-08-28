@@ -1,4 +1,4 @@
-# OPERATING_RULES — V6
+# OPERATING_RULES — V6.1
 
 1. Truth > volume.
 2. Evidence > inference.
@@ -29,6 +29,16 @@
 27. Overtime is flexibility for additional **paid** hours where lawful, never unpaid labor.
 28. Financial fields distinguish published facts, sourced assumptions and personal reserves.
 29. Migrations follow STAGE → CANARY → VALIDATE → COMMIT → ROLLBACK.
-30. Google Sheets is the executive/control plane; full operational graph scale moves to a constrained DB shadow.
+30. Google Sheets is the executive/control plane; operational state is constrained in SQLite or a verified successor backend.
 31. Every substantial run updates issues/invariants/metrics/health/run log and material-memory artifacts.
 32. No checkpoint is complete because a counter reached a target; invariants and quality gates must pass.
+33. Every material mutation executes inside a named WAVE under `docs/operations/WAVE_OPERATING_PROTOCOL.md`.
+34. A physically valid local canary is non-authoritative until the full synchronization chain passes.
+35. `AGENTS.md` must contain stable behavior only; mutable task/frontier state belongs in live control-plane data and `STATE.md`.
+36. Sheets mutations resolve canonical keys/PKs; blind positional writes are prohibited for authoritative data.
+37. Every authoritative entity/evidence/task mutation synchronizes the affected operational graph in the same wave.
+38. ChatGPT Library is recovery/cold persistence, never operational truth.
+39. If a required authority layer is unavailable, switch to `DEGRADED_CANARY` or `READ_ONLY_RESEARCH`; fail closed on canonical promotion.
+40. "Real-time" means synchronous reconciliation before an authoritative wave closes; no background daemon is implied.
+41. Every material wave closes as `COMPLETE_AUTHORITY`, `COMPLETE_READ_ONLY`, `SAFE_STOP_CANARY`, `BLOCKED_P0`, or `SUPERSEDED`.
+42. Outbound remains independently hard-gated and CLOSED unless all applicable gates plus explicit authorization pass.

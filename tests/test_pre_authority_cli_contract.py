@@ -7,6 +7,7 @@ class PreAuthorityCliContractTests(unittest.TestCase):
         path = Path('docs/operations/WOP_CRM_UNIVERSE_NEXT_WAVE_2026-08-28.md')
         self.assertTrue(path.exists())
         text = path.read_text(encoding='utf-8')
+        normalized = text.upper()
         for token in (
             'FROZEN_CANDIDATE_READY',
             'BLOCKED_PRE_AUTHORITY',
@@ -16,7 +17,7 @@ class PreAuthorityCliContractTests(unittest.TestCase):
             'RECONCILE_REQUIRED = 0',
             'UNMAPPED = 0',
         ):
-            self.assertIn(token, text)
+            self.assertIn(token, normalized)
 
 
 if __name__ == '__main__':

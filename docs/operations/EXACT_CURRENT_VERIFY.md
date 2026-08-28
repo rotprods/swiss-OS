@@ -115,6 +115,8 @@ send_allowed = 0
 
 ## Relationship to entity resolution
 
+ECV consumes the canonical CWP-1.0 work-packet contract now present on `main`; it does not redefine CWP classification semantics.
+
 ECV output feeds a later entity-resolution transition:
 
 ```text

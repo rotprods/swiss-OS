@@ -8,6 +8,11 @@ on:
         required: true
         type: string
         default: docs/state/CMI_WORK_BATCH_0001_33206402141.json
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/state/CMI_WORK_BATCH_*.json'
 
 permissions:
   contents: read
@@ -16,24 +21,50 @@ jobs:
   verify:
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    env:
-      BATCH_PATH: ${{ inputs.batch_path }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Validate batch path
+      - name: Resolve batch path
+        id: batch
         shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          DISPATCH_BATCH_PATH: ${{ inputs.batch_path }}
+          BEFORE_SHA: ${{ github.event.before }}
+          AFTER_SHA: ${{ github.sha }}
         run: |
           set -euo pipefail
-          case "$BATCH_PATH" in
-            docs/state/*.json) ;;
-            *) echo "batch_path must be a JSON file under docs/state" >&2; exit 2 ;;
+          if [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
+            batch_path="$DISPATCH_BATCH_PATH"
+          elif [[ "$EVENT_NAME" == "push" ]]; then
+            mapfile -t changed_batches < <(
+              git diff --name-only "$BEFORE_SHA" "$AFTER_SHA" -- 'docs/state/CMI_WORK_BATCH_*.json'
+            )
+            if [[ ${#changed_batches[@]} -ne 1 ]]; then
+              echo "push-triggered ECV requires exactly one changed CMI work batch; found ${#changed_batches[@]}" >&2
+              printf '%s\n' "${changed_batches[@]}" >&2
+              exit 2
+            fi
+            batch_path="${changed_batches[0]}"
+          else
+            echo "unsupported event: $EVENT_NAME" >&2
+            exit 2
+          fi
+
+          case "$batch_path" in
+            docs/state/CMI_WORK_BATCH_*.json) ;;
+            *) echo "batch_path must be a CMI work-batch JSON under docs/state" >&2; exit 2 ;;
           esac
-          test -f "$BATCH_PATH"
+          test -f "$batch_path"
+          echo "batch_path=$batch_path" >> "$GITHUB_OUTPUT"
       - name: Verify exact-current work batch
         shell: bash
+        env:
+          BATCH_PATH: ${{ steps.batch.outputs.batch_path }}
         run: |
           set -euo pipefail
           mkdir -p .artifacts

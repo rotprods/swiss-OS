@@ -1,0 +1,53 @@
+{
+  "schema_version": "MEMBER_DIRECTORY_CAPTURE_V1",
+  "capture_id": "EXAMPLE-HS-DE-COMPLETE",
+  "provider": "HotellerieSuisse",
+  "surface": "member-directory",
+  "locale": "de",
+  "capture_mode": "LIVE_COMPLETE",
+  "coverage_claim": "COMPLETE",
+  "started_at": "2026-08-28T10:00:00Z",
+  "completed_at": "2026-08-28T10:05:00Z",
+  "expected_pages": 2,
+  "reported_records": 3,
+  "pages": [
+    {
+      "page_id": "page-001",
+      "page_position": 1,
+      "source_url": "https://example.invalid/member-directory?filter=active&page=1",
+      "capture_id": "EXAMPLE-HS-DE-COMPLETE",
+      "locale": "de",
+      "surface": "member-directory",
+      "records": [
+        {
+          "name": "Example Hotel Alpha",
+          "city": "Bern",
+          "hs_id": "EXAMPLE-100",
+          "detail_url": "https://example.invalid/hotel/alpha",
+          "evidence_ref": "EXAMPLE-EVIDENCE-ALPHA"
+        },
+        {
+          "name": "Example Hôtel Bêta",
+          "city": "Genève",
+          "detail_url": "https://example.invalid/hotel/beta",
+          "evidence_ref": "EXAMPLE-EVIDENCE-BETA"
+        }
+      ]
+    },
+    {
+      "page_id": "page-002",
+      "page_position": 2,
+      "source_url": "https://example.invalid/member-directory?filter=active&page=2",
+      "capture_id": "EXAMPLE-HS-DE-COMPLETE",
+      "locale": "de",
+      "surface": "member-directory",
+      "records": [
+        {
+          "name": "Example Gasthaus Gamma",
+          "city": "Luzern",
+          "evidence_ref": "EXAMPLE-EVIDENCE-GAMMA"
+        }
+      ]
+    }
+  ]
+}

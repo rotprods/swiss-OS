@@ -69,7 +69,11 @@ def classify_work_state(decision: str, matched_hotel_id: str) -> str:
         return TERMINAL_MATCH
     if any(token in normalized for token in ("AMBIG", "CONFLICT", "RECONCILE")):
         return RECONCILE
-    if any(
+    # CMI-1.0's canonical no-match classification is TRUE_MISSING. Treat it as
+    # exactly the same pre-authority work state as the older/new-candidate
+    # compatibility spellings. This is routing only: it never authorizes H-ID
+    # allocation or canonical promotion.
+    if normalized == "TRUE_MISSING" or any(
         token in normalized
         for token in ("NEW", "UNMATCHED", "NO_MATCH", "MISSING_CANONICAL")
     ):
@@ -107,7 +111,14 @@ class IngestDecision:
             source_record_key = f"decision-index:{index:08d}"
         decision = _first(
             payload,
-            ("decision", "decision_type", "classification", "state", "outcome"),
+            (
+                "decision",
+                "decision_type",
+                "classification",
+                "staging_class",
+                "state",
+                "outcome",
+            ),
         ) or "UNKNOWN"
         matched_hotel_id = _first(
             payload,
@@ -116,9 +127,21 @@ class IngestDecision:
         work_state = classify_work_state(decision, matched_hotel_id)
         return cls(
             source_record_key=source_record_key,
-            name=_first(payload, ("raw_name", "name", "canonical_name", "hotel_name")),
-            city=_first(payload, ("raw_city", "city", "locality")),
-            detail_url=_first(payload, ("detail_url", "source_url", "url")),
+            name=_first(
+                payload,
+                (
+                    "raw_name",
+                    "name",
+                    "canonical_name",
+                    "hotel_name",
+                    "normalized_name",
+                ),
+            ),
+            city=_first(payload, ("raw_city", "city", "locality", "normalized_city")),
+            detail_url=_first(
+                payload,
+                ("detail_url", "source_url", "url", "normalized_detail_url"),
+            ),
             decision=decision,
             matched_hotel_id=matched_hotel_id,
             reason=_first(payload, ("reason", "reason_code", "notes", "explanation")),

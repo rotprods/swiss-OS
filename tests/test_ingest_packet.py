@@ -5,9 +5,9 @@ import unittest
 
 from swiss_os.ingest_packet import (
     IngestPacketError,
-    MATCHED_EXISTING,
     RECONCILE,
     REVIEW_UNKNOWN,
+    TERMINAL_MATCH,
     VERIFY_NEW,
     build_work_packet,
     classify_work_state,
@@ -17,7 +17,7 @@ from swiss_os.ingest_packet import (
 
 class WorkStateTests(unittest.TestCase):
     def test_matching_and_fallback_classification(self) -> None:
-        self.assertEqual(classify_work_state("EXACT_MATCH", "H-0001"), MATCHED_EXISTING)
+        self.assertEqual(classify_work_state("EXACT_MATCH", "H-0001"), TERMINAL_MATCH)
         self.assertEqual(classify_work_state("AMBIGUOUS_MATCH", "H-0001"), RECONCILE)
         self.assertEqual(classify_work_state("NEW_CANDIDATE", ""), VERIFY_NEW)
         self.assertEqual(classify_work_state("UNRECOGNIZED", ""), REVIEW_UNKNOWN)
@@ -112,7 +112,7 @@ class IngestPacketTests(unittest.TestCase):
 
     def test_terminal_match_cannot_enter_active_batch(self) -> None:
         packet = build_work_packet(self.payload(), snapshot_id="SNAPSHOT-1")
-        packet["batches"][0]["items"][0]["work_state"] = MATCHED_EXISTING
+        packet["batches"][0]["items"][0]["work_state"] = TERMINAL_MATCH
         violations = validate_work_packet(packet)
         self.assertIn("TERMINAL_MATCH_IN_ACTIVE_BATCH", violations)
 

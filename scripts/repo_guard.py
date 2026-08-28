@@ -6,10 +6,27 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 
 REQUIRED = [
-    "README.md", "GOAL.md", "STATE.md", "AGENTS.md", "OPERATING_RULES.md",
-    "RUNBOOK.md", "SECURITY.md", "pyproject.toml", "src/swiss_os/schema.sql",
-    "src/swiss_os/manifest.py", "src/swiss_os/invariants.py", "src/swiss_os/reconcile.py",
-    "src/swiss_os/scheduler.py", "tests/test_manifest.py",
+    "README.md",
+    "GOAL.md",
+    "STATE.md",
+    "AGENTS.md",
+    "OPERATING_RULES.md",
+    "RUNBOOK.md",
+    "SECURITY.md",
+    "pyproject.toml",
+    "docs/operations/WAVE_OPERATING_PROTOCOL.md",
+    "docs/operations/PRODUCTION_READINESS_GAUNTLET.md",
+    "docs/architecture/ENGINE_REGISTRY.md",
+    "docs/architecture/AUTHORITY_MODEL.md",
+    "docs/architecture/SYSTEM_MAP.md",
+    "src/swiss_os/schema.sql",
+    "src/swiss_os/manifest.py",
+    "src/swiss_os/invariants.py",
+    "src/swiss_os/reconcile.py",
+    "src/swiss_os/scheduler.py",
+    "scripts/system_contract_guard.py",
+    "tests/test_manifest.py",
+    "tests/test_restore.py",
 ]
 FORBIDDEN_SUFFIXES = {".sqlite", ".sqlite3", ".db", ".pem", ".p12"}
 FORBIDDEN_NAMES = {".env", "credentials.json"}

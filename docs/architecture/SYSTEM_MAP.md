@@ -1,39 +1,108 @@
-# System Map
+# SYSTEM MAP — SWITZERLAND_JOB_OS
+
+Status: **STABLE ARCHITECTURE MAP**
+
+Mutable counts, active tasks, current epochs and operational parent versions do not live in this document. Read `STATE.md` and reconcile against the live authority plane for current state.
 
 ```text
-                    ┌─────────────────────┐
-                    │      G-0001         │
-                    │ verified Swiss offer│
-                    └──────────┬──────────┘
-                               │
-           ┌───────────────────┼───────────────────┐
-           │                   │                   │
-     Canonical Market     Candidate Truth     Intelligence OS
-       G-0500               G-0600             G-0700/G-0800
-           │                   │                   │
-           └──────────────┬────┴──────────────┬────┘
-                          │                   │
-                    Governance / QA      Scheduler V2
-                          │                   │
-                          └────────┬──────────┘
-                                   │
-                ┌──────────────────┼──────────────────┐
-                │                  │                  │
-            SQLite/DB          Sheets/Drive       Graph V2
-          constrained truth    control plane      relationships
-                │                  │                  │
-                └──────────────────┼──────────────────┘
-                                   │
-                             GitHub contracts
+                         ┌───────────────────────┐
+                         │        G-0001         │
+                         │ verified viable offer │
+                         └───────────┬───────────┘
+                                     │
+                             Mission Commander
+                                     │
+                         Authority / Reconciliation
+                                     │
+                              WAVE TRANSACTION
+                                     │
+       ┌─────────────────────────────┼─────────────────────────────┐
+       │                             │                             │
+       ▼                             ▼                             ▼
+Canonical Market              Candidate Truth               Intelligence OS
+Discovery/Evidence            Lane Assets                   Domain Research
+Entity Resolution             Templates                     Vacancy/Housing
+Aliases/Groups                Claim QA                      People/Channels
+       │                             │                       Digital/Tech/etc.
+       └──────────────────────┬──────┴───────────────┬─────────────┘
+                              │                      │
+                              ▼                      ▼
+                         Scheduler / TTL       Scoring / Priority
+                              │                      │
+                              └──────────┬───────────┘
+                                         ▼
+                                 Stage / Canary
+                                         │
+                                         ▼
+                              Constrained SQLite
+                                         │
+                      ┌──────────────────┼──────────────────┐
+                      │                  │                  │
+                      ▼                  ▼                  ▼
+                Drive / Sheets      Intelligence      Operational Graph
+                control mirror      PK packages       PK-keyed relations
+                      │                  │                  │
+                      └──────────────────┼──────────────────┘
+                                         ▼
+                              QA / Governance / SLO
+                                         │
+                                         ▼
+                                Observability Engine
+                                         │
+                 ┌───────────────────────┼───────────────────────┐
+                 │                       │                       │
+                 ▼                       ▼                       ▼
+              GitHub              Project Meta Graph      Recovery / Library
+        code/contracts/CI       goals/waves/artifacts      cold persistence
 ```
 
-## Current scale
+## Two graph scopes
 
-- Canonical: 677
-- Intelligence: 677
-- Graph V2: 677
-- L4 resolved: 105
-- Target checkpoint: CP-0750
-- Next canonical task: SV2-058
+### Operational Graph
 
-The graph and intelligence layers may enrich the current canonical set while canonical discovery continues toward the full frozen entity epoch.
+Represents operational relationships among canonical hotels/entities, aliases/groups, evidence, vacancies, housing, people, channels, tasks, applications and outcomes.
+
+It is PK-keyed constrained operational state. Authoritative operational mutations synchronize it in the same wave.
+
+### Project Memory Meta Graph
+
+Represents goals, checkpoints, releases, waves, decisions, architecture and artifact lineage.
+
+It is project memory and must never be mistaken for the complete operational hotel graph.
+
+## Persistence planes
+
+```text
+GitHub          = source of versioning / executable contracts
+Drive / Sheets  = human control plane + operational mirror
+SQLite          = constrained operational state backend
+OperationalGraph= PK-keyed operational relationships
+Meta Graph      = project/release/wave/decision memory
+Library         = recovery / cold persistence
+Local workspace = execution cache, not shared authority
+```
+
+## Promotion path
+
+Every canonical material mutation follows the Wave Operating Protocol:
+
+```text
+AUTHORITY BOOTSTRAP
+→ SCHEDULER / SCOPE
+→ DISCOVER / VERIFY
+→ NORMALIZE / RESOLVE
+→ STAGE / CANARY
+→ VALIDATE
+→ DB COMMIT
+→ SHEETS PK MIRROR
+→ INTELLIGENCE
+→ OPERATIONAL GRAPH
+→ QA / INVARIANTS / SLO
+→ METRICS / HEALTH / SCHEDULER / TRANSITIONS
+→ GITHUB HANDOFF
+→ RECOVERY PERSISTENCE
+→ FINAL RECONCILIATION
+→ WAVE CLOSE
+```
+
+If a required authority plane is unavailable, the wave switches to `DEGRADED_CANARY`; canonical authority cannot advance.

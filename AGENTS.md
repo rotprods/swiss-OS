@@ -11,9 +11,12 @@ Before material work:
 3. read `STATE.md`;
 4. reconcile against live Drive/Sheets + the latest authority-eligible constrained manifest;
 5. read relevant invariants, issues, SLOs, TTL state and scheduler tasks;
-6. select/declare an execution mode;
-7. fail closed on lineage ambiguity, stale parent state or partial writes;
-8. preserve outbound CLOSED unless separately and explicitly authorized.
+6. identify affected engines using `docs/architecture/ENGINE_REGISTRY.md`;
+7. select/declare an execution mode and `GRAPH_IMPACT`;
+8. fail closed on lineage ambiguity, stale parent state or partial writes;
+9. preserve outbound CLOSED unless separately and explicitly authorized.
+
+Before checkpoint promotion, production continuation, architecture release or a user-requested “perfect/full-system” review, also run the applicable gates in `docs/operations/PRODUCTION_READINESS_GAUNTLET.md`.
 
 ## Authority
 
@@ -23,25 +26,35 @@ Only the last fully synchronized authority-eligible constrained commit may advan
 
 Mutable frontier counts/tasks MUST NOT be hardcoded in this file. Read them from the live control plane and `STATE.md` after reconciliation.
 
-## Core roles
+## Core roles / engines
+
+The canonical engine taxonomy and interfaces live in `docs/architecture/ENGINE_REGISTRY.md`. Major roles include:
 
 - Mission Commander — goal hierarchy, wave scope and release integrity.
-- Market Mapper — current entity universe and snapshot reconciliation.
+- Authority & Reconciliation Engine — reconstruct authority and detect cross-plane drift.
+- Wave Transaction Engine — bound scope, mode, gates and closure.
+- Market Mapper / Discovery Engine — current entity universe and discovery evidence.
 - Entity Resolution Engine — canonical identity, aliases, groups and conflicts.
 - Evidence Engine — provenance, scope, freshness and typed unknowns.
 - Vacancy Engine — current vacancy/careers state.
 - Housing Engine — vacancy-linked vs employer-policy housing evidence.
 - People Engine — public-professional decision-maker resolution.
 - Channel Engine — recruitment/contact routing and channel policy.
+- Intelligence Engine — evidence-backed depth/dimension resolution.
+- Operational Graph Engine — PK-keyed entity/evidence/task relationships.
+- Project Memory Meta Graph Engine — goals/checkpoints/waves/releases/artifacts/decisions.
+- Scheduler & TTL Engine — state-driven tasks, anti-joins and refresh work.
 - Scoring Engine — versioned 0–100 heuristic priority rankings.
-- Candidate Engine — truthful lane-specific assets and claims.
+- Candidate Truth & Asset Engine — truthful lane-specific facts/assets.
 - Template/Message Engine — evidence-backed deterministic renders.
 - Data Engine — constrained DB, migrations, restore/replay, DB↔Sheets reconciliation.
-- Graph Engine — PK-keyed operational graph synchronization.
-- Scheduler Engine — state-driven tasks, anti-joins and TTL refresh.
 - QA/Governance Engine — invariants, SLOs, gates, transitions and fail-closed promotion.
 - Observability Engine — metrics, health, run logs and drift.
-- Recovery Engine — Library bundles, authority/canary lineage and outage recovery.
+- Recovery & Persistence Engine — Library/Drive bundles, manifests and lineage.
+- Git/CI Engine — branch/PR/tests/guards/versioning.
+- Security/Privacy/Outbound Gate Engine — public boundary, suppression, idempotency and authorization.
+
+Do not invent an additional engine unless it owns a distinct persistent responsibility or authority/invariant boundary.
 
 ## Mandatory wave loop
 
@@ -51,6 +64,7 @@ WAVE OPEN
 → RECONCILE
 → ISSUE/SLO/TTL SCAN
 → SELECT CURRENT SCHEDULER TASK
+→ DISPATCH AFFECTED ENGINES
 → DISCOVER / VERIFY
 → NORMALIZE
 → DEDUPE / ALIAS / GROUP RESOLUTION
@@ -64,7 +78,7 @@ WAVE OPEN
 → METRICS + HEALTH + SCHEDULER + ISSUES
 → TRANSITIONS + RUN LOG
 → GITHUB STATE/HANDOFF
-→ LIBRARY RECOVERY PERSISTENCE
+→ LIBRARY / DRIVE RECOVERY PERSISTENCE
 → FINAL RECONCILIATION
 → WAVE CLOSE
 ```
@@ -93,7 +107,7 @@ Every authoritative entity/evidence/task mutation must update the affected opera
 - **Drive/Sheets:** human control plane and operational mirror.
 - **SQLite:** constrained state backend.
 - **ChatGPT Library:** durable recovery/cold persistence, not operational truth.
-- **Local workspace/Git:** execution cache only unless running in Roberto's persistent environment; never sufficient for authority by itself.
+- **Local workspace/Git:** execution cache only unless running in a persistent operator environment; never sufficient for authority by itself.
 
 ## Hard rules
 

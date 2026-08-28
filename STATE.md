@@ -1,16 +1,17 @@
 # STATE — LIVE HANDOFF POINTER
 
-Last full control-plane reconciliation: **2026-08-27T17:12:40+02:00**.  
+Last full operational control-plane reconciliation: **2026-08-27T17:12:40+02:00**.  
+Latest system architecture/production-readiness audit: **2026-08-28**.  
 Latest constrained local canary: **SV2-059 / V16**.
 
-## 1. Authoritative state — DO NOT INFER FROM CANARY
+## 1. Authoritative operational state — DO NOT INFER FROM CANARY
 
 The last state fully synchronized through Drive/Sheets, constrained DB, Intelligence, Graph and governance remains:
 
 ```text
 entity epoch              HS_ENTITY_EPOCH_2026-08-25_E4
 physical HOTELS rows      690
-superseded aliases          4
+superseded duplicate aliases 4
 active canonical          686
 CP-0750                   686 / 750 ACTIVE
 remaining                  64
@@ -19,11 +20,11 @@ Intelligence              686 / 686
 Graph V2                  686 / 686
 L4                        105 / 686
 G-0700 L9                   0 / 2050
-outbound                  CLOSED
+OUTBOUND                  CLOSED
 send_allowed                0
 ```
 
-Alias lineage is immutable:
+Alias lineage remains immutable:
 
 ```text
 H-0610 → H-0656
@@ -32,9 +33,11 @@ H-0629 → H-0638
 H-0630 → H-0640
 ```
 
-## 2. Latest physically verified authoritative parent
+No later canary may advance these counters until DB, Sheets mirror, Graph/Intelligence, metrics, scheduler, checkpoints and persistent handoff all reconcile.
 
-The E4 control plane referenced a V12 shadow that was not physically discoverable during recovery. V13 was reconstructed deterministically from the last persisted V9 plus authoritative E3/E4 deltas and the four alias mappings.
+## 2. Latest physically verified authority parent
+
+The E4 control plane referenced a shadow that was not physically discoverable during recovery. A deterministic constrained **V13** was rebuilt from the last persisted valid parent plus authoritative deltas and explicit alias mappings.
 
 ```text
 V13 physical rows          690
@@ -47,11 +50,11 @@ send_allowed                 0
 SHA-256  0e605b412f29893ca1775f1e8fccd5987d0613baab4ac29b6699988cde0fdfe5
 ```
 
-V13 is the authoritative constrained parent until a later full synchronization succeeds.
+V13 remains the latest physically verified constrained authority parent until a later full synchronization succeeds.
 
-## 3. SV2-059 / V16 local acceleration canary
+## 3. SV2-059 / V16 acceleration canary — NON-AUTHORITATIVE
 
-Batch05 has reached the configured bounded ceiling: **25 exact member/entity-detail identities** staged as non-authoritative canary rows.
+Batch05 reached its bounded ceiling with exact-detail candidate research.
 
 ```text
 local physical rows                         715
@@ -62,89 +65,123 @@ FK violations                                 0
 ID gaps                                       0
 name+city duplicates                          0
 non-empty domain duplicates                   0
-idempotency replay new inserts                0
+idempotency replay unintended inserts         0
 external actions                              0
 send_allowed                                  0
 restore tables compared                      63
 restore logical differences                   0
 ```
 
-Projection **only if** the future synchronized commit revalidates the allocation:
+Projection only if a future synchronized recovery wave revalidates the allocation:
 
 ```text
 711 / 750
 39 remaining
-next ID H-0716
+next provisional physical ID H-0716
 ```
 
-These projection values are **not current authority**.
+These are **not current authority values**. Provisional IDs are not reservations.
 
-Full public-safe V16 detail:
+Public-safe detail:
 
-`docs/state/SV2_059_V16_CANARY.md`
+- `docs/state/SV2_059_V16_CANARY.md`
+- `docs/intelligence/SV2_059_INTELLIGENCE_PREFETCH.md`
 
-## 4. Intelligence prefetch
+## 4. System architecture readiness
 
-Public-safe staging research for the same 25-ID execution lane is persisted at:
+The 2026-08-28 meta-audit introduced/validated:
 
-`docs/intelligence/SV2_059_INTELLIGENCE_PREFETCH.md`
+```text
+WAVE_OPERATING_PROTOCOL
+ENGINE_REGISTRY
+PRODUCTION_READINESS_GAUNTLET
+stable-document state-drift CI guard
+state-free SYSTEM_MAP / AUTHORITY_MODEL / RUNBOOK
+historical-document authority banners
+Library recovery pointers
+```
 
-Strongest current Batch05 signal: Hotel Crystal St. Moritz has a current official careers/open-positions route. Other discovered general contacts, brand-level career portals and group relationships remain separately typed and do not earn L4 by themselves.
+Canonical contracts:
 
-Authoritative L4 remains **105 / 686**. Prefetch L4 promotions = **0**.
+- `docs/operations/WAVE_OPERATING_PROTOCOL.md`
+- `docs/operations/PRODUCTION_READINESS_GAUNTLET.md`
+- `docs/architecture/ENGINE_REGISTRY.md`
+- `docs/audits/SYSTEM_AUDIT_AND_PRODUCTION_PLAN_2026-08-28.md`
 
-## 5. Restore invariant
+Repository/architecture readiness is production-oriented subject to PR/CI completion.
 
-SQLite binary SHA equality is a transfer invariant, not the restore-equivalence invariant.
+## 5. Current runtime blocker
 
-Restore PASS requires:
+In the 2026-08-28 audit session the Google Drive connector returned **disabled**.
 
-- source and restore `integrity_check = ok`;
-- zero FK violations on both;
-- identical operational schema objects;
-- identical table sets and row counts;
+Consequences:
+
+```text
+AUTHORITATIVE_WRITE          BLOCKED in this runtime
+RECOVERY_RECONCILE           required when Drive returns
+READ_ONLY_RESEARCH           allowed when safe
+DEGRADED_CANARY              allowed when safe
+canonical authority advance  forbidden
+Drive audit-doc replication  pending
+```
+
+GitHub and ChatGPT Library remain available. This capability outage does not justify changing canonical counts.
+
+## 6. Recovery semantics
+
+SQLite restore PASS means logical operational equivalence:
+
+- both databases pass `integrity_check`;
+- both have zero FK violations;
+- schema objects match;
+- table sets and row counts match;
 - `source EXCEPT restore = ∅` for every table;
 - `restore EXCEPT source = ∅` for every table.
 
-Executable contract: `swiss_os.db.sqlite_logical_differences()`.
+Binary SHA equality verifies transfer identity of one artifact but is not required for SQLite logical backup/restore equivalence.
 
-## 6. Authority blocker
+## 7. Next authoritative execution frontier
 
-The Google Drive/Sheets write plane became unavailable during SV2-059. Under `INV-025`, DB-only state cannot become canonical.
-
-Before promotion, execute exactly:
+Next write-capable execution begins:
 
 ```text
-REHYDRATE LIVE DRIVE/SHEETS
-→ ANTI-JOIN ALL 25 CANDIDATES + ALIASES + DOMAINS
-→ REALLOCATE IDs IF THE LIVE FRONTIER MOVED
-→ CONSTRAINED DB COMMIT
-→ SHEETS PK MIRROR
-→ INTELLIGENCE L1
-→ GRAPH V2
-→ ENTITY EPOCH
-→ METRICS / HEALTH / SLO
-→ CHECKPOINT / SCHEDULER
-→ STATE TRANSITIONS / RUN LOG
-→ PERSISTENT HANDOFF
+/wave recover
+→ RECOVERY_RECONCILE
+→ re-read live Drive/Sheets authority
+→ inspect parent/epoch/concurrent writes
+→ anti-join all V16 provisional identities + aliases + domains + task keys
+→ reallocate provisional IDs if frontier moved
+→ rebuild canary from actual live parent
+→ constrained DB commit
+→ Sheets PK mirror
+→ Intelligence
+→ Operational Graph
+→ epoch/snapshot
+→ invariants/SLO
+→ metrics/health/scheduler/issues/checkpoints
+→ transitions/run log
+→ GitHub STATE/handoff
+→ Library + Drive recovery persistence
+→ final reconciliation
+→ COMPLETE_AUTHORITY only if exact
 ```
 
-No provisional `H-0691..H-0715` ID is reserved until that chain succeeds.
+Until then, safe research/canary work may continue but may not report a new authoritative canonical count.
 
-## 7. Active execution frontier
-
-`SV2-059 / CP0750-BATCH05`
-
-Discovery quota for this bounded batch is complete at **25/25 exact-detail**. Do not continue blind canonical allocation beyond the batch ceiling. Use remaining time for evidence/intelligence prefetch, QA and recovery hardening until the live authority plane can be re-read.
-
-## Source precedence
+## 8. Source precedence
 
 ```text
-PHYSICAL + CONSTRAINED DATA
-> live Sheets registries / active control plane
-> latest validated operational manifest
-> repository STATE.md
-> historical release prose / handoffs
+PHYSICAL + CONSTRAINED AUTHORITY-ELIGIBLE DATA
+> live control plane
+> validated authority-eligible manifest
+> GitHub STATE pointer
+> historical release/handoff prose
 ```
 
-GitHub stores public-safe executable contracts and handoff state only. Operational SQLite payloads, people/channels, candidate private data and raw evidence stay outside the public repository.
+A local canary is excluded from authority until full promotion.
+
+## 9. Public/private boundary
+
+GitHub stores public-safe executable contracts and state/handoff pointers only. Operational SQLite payloads, contacts, candidate-private data and sensitive raw evidence remain outside the public repository.
+
+ChatGPT Library is durable recovery/cold persistence, never operational truth.

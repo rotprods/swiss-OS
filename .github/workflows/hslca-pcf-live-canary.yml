@@ -1,0 +1,121 @@
+name: hslca-pcf-live-canary
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run polite resumable HSLCA-R1.0 capture with MDC-1.1 identity semantics
+        id: hslca
+        shell: bash
+        run: |
+          set +e
+          mkdir -p .artifacts/hslca
+          CAPTURE_ID="HS-MEMBER-DE-${GITHUB_RUN_ID}"
+          PYTHONPATH=src python -m swiss_os.hslca_mdc_runtime capture \
+            --capture-id "$CAPTURE_ID" \
+            --root-url "https://www.hotelleriesuisse.ch/de/verband-und-geschaeftsstelle/mitglieder/mitgliederverzeichnis" \
+            --locale de \
+            --out-dir .artifacts/hslca \
+            --delay 6 \
+            --timeout 45 \
+            --attempts 6 \
+            --base-backoff 15 \
+            --max-backoff 120 \
+            > .artifacts/HSLCA_RUNTIME.json 2> .artifacts/HSLCA_RUNTIME.err
+          rc=$?
+          set -e
+          echo "runtime_exit=$rc" >> "$GITHUB_OUTPUT"
+          if [[ ! -f .artifacts/hslca/capture.json ]]; then
+            echo "HSLCA did not reach a finalized capture bundle" >&2
+            if [[ "$rc" -eq 0 ]]; then
+              exit 2
+            fi
+            exit "$rc"
+          fi
+      - name: Finalize count-less capture through HPCB, PCCN and PCF
+        if: steps.hslca.outputs.runtime_exit != '0'
+        shell: bash
+        run: |
+          set -euo pipefail
+          PYTHONPATH=src python -m swiss_os.hslca_pcf_bridge bridge \
+            .artifacts/hslca/capture.json \
+            --pages-dir .artifacts/hslca/pages \
+            --out .artifacts/hslca/capture-with-checkpoint-times.json \
+            > .artifacts/HSLCA_PCF_BRIDGE.json
+          PYTHONPATH=src python -m swiss_os.page_count_consensus \
+            .artifacts/hslca/capture-with-checkpoint-times.json \
+            --out .artifacts/hslca/capture-pccn-normalized.json \
+            > .artifacts/PCCN_NORMALIZE.json
+          PYTHONPATH=src python -m swiss_os.partition_count_finalizer build \
+            .artifacts/hslca/capture-pccn-normalized.json \
+            --out .artifacts/PARTITION_COUNT_FINALIZER.json \
+            > .artifacts/PCF_BUILD.json
+          PYTHONPATH=src python -m swiss_os.partition_count_finalizer validate \
+            .artifacts/PARTITION_COUNT_FINALIZER.json \
+            > .artifacts/PCF_VALIDATE.json
+          PYTHONPATH=src python - <<'PY'
+          import json
+          from pathlib import Path
+          payload = json.loads(Path('.artifacts/PARTITION_COUNT_FINALIZER.json').read_text())
+          Path('.artifacts/FINAL_MEMBER_DIRECTORY_MANIFEST.json').write_text(
+              json.dumps(payload['member_directory_manifest'], ensure_ascii=False, indent=2, sort_keys=True) + '\n'
+          )
+          Path('.artifacts/FINALIZED_HSLCA_CAPTURE.json').write_text(
+              json.dumps(payload['finalized_capture'], ensure_ascii=False, indent=2, sort_keys=True) + '\n'
+          )
+          PY
+      - name: Select and validate final current member-directory manifest
+        shell: bash
+        run: |
+          set -euo pipefail
+          PYTHONPATH=src python - <<'PY'
+          import json
+          from pathlib import Path
+          pcf = Path('.artifacts/FINAL_MEMBER_DIRECTORY_MANIFEST.json')
+          native = Path('.artifacts/hslca/member-directory-manifest.json')
+          selected = pcf if pcf.exists() else native
+          manifest = json.loads(selected.read_text())
+          assert manifest.get('coverage_complete') is True, manifest.get('violations')
+          assert manifest.get('authority_advanced') is False
+          assert manifest.get('h_id_allocations') == 0 and not isinstance(manifest.get('h_id_allocations'), bool)
+          assert manifest.get('outbound_opened') is False
+          assert manifest.get('send_allowed') == 0 and not isinstance(manifest.get('send_allowed'), bool)
+          records = manifest.get('records')
+          assert isinstance(records, list) and records
+          for row in records:
+              assert isinstance(row.get('name'), str) and row['name'].strip()
+              assert isinstance(row.get('city'), str) and row['city'].strip()
+              assert isinstance(row.get('detail_url'), str) and row['detail_url'].strip()
+          Path('.artifacts/SELECTED_MANIFEST_PATH.txt').write_text(str(selected) + '\n')
+          print(json.dumps({
+              'selected_manifest': str(selected),
+              'snapshot_id': manifest.get('snapshot_id'),
+              'records_count': len(records),
+              'coverage_complete': True,
+              'identity_parser': 'MDC-1.1',
+              'authority_advanced': False,
+              'h_id_allocations': 0,
+              'outbound': 'CLOSED',
+              'send_allowed': 0,
+          }, indent=2, sort_keys=True))
+          PY
+      - name: Upload current-source evidence and diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hslca-pcf-live-evidence
+          path: .artifacts
+          if-no-files-found: error
+          include-hidden-files: true
+          retention-days: 7

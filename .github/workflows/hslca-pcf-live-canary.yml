@@ -2,9 +2,6 @@ name: hslca-pcf-live-canary
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - source/hslca-pcf-live-fresh-main-20260828
 
 permissions:
   contents: read
@@ -46,7 +43,7 @@ jobs:
             fi
             exit "$rc"
           fi
-      - name: Finalize count-less capture through checkpoint provenance and PCF-1.0
+      - name: Finalize count-less capture through checkpoint provenance and PCF
         if: steps.hslca.outputs.runtime_exit != '0'
         shell: bash
         run: |

@@ -23,7 +23,7 @@ from typing import Mapping
 
 _SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 _GIT_SHA_RE = re.compile(r"^[0-9a-f]{40}$")
-_ALLOWED_PROVIDER = {"GOOGLE_DRIVE", "S3", "GCS", "AZURE_BLOB", "PERSISTENT_OPERATOR"}
+_ALLOWED_PROVIDER = {"GOOGLE_DRIVE", "S3", "GCS", "AZURE_BLOB"}
 
 
 def _strict_positive_int(value: object, field: str) -> int:
@@ -102,6 +102,8 @@ def validate_composite_parent(payload: Mapping[str, object]) -> dict[str, object
         if provider not in _ALLOWED_PROVIDER:
             raise ValueError(f"unsupported durable provider: {provider}")
         file_id = _nonempty(replica.get("file_id"), f"base_replicas[{idx}].file_id")
+        if file_id.startswith(("/", "./", "../", "file:", "sandbox:")):
+            raise ValueError("base replica file_id must be a provider-owned durable identifier")
         size = _strict_positive_int(replica.get("size_bytes"), f"base_replicas[{idx}].size_bytes")
         if size != base_size:
             raise ValueError("base replica size differs from base_size_bytes")

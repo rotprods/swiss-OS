@@ -1,12 +1,15 @@
 # V11 Active-Set Reconciliation
 
+> **HISTORICAL RECONCILIATION RECORD — NOT CURRENT AUTHORITY.**  
+> This file preserves lineage for the V11 active-set correction. Statements such as “next parent” were true only at the time of the run and are superseded by later authority-eligible state. Current execution MUST reconstruct authority via WOP + live control plane + latest authority-eligible manifest + `STATE.md`.
+
 Run: `RUN-2026-08-25-1718-CANONICAL-SUPERSESSION-RECONCILE`
 
 ## Why
 
-The control plane had conflated 677 physical hotel IDs with active canonical entity count. A newer constrained identity registry resolved four physical IDs as duplicate aliases.
+The control plane had conflated physical hotel IDs with active canonical entity count. A newer constrained identity registry resolved four physical IDs as duplicate aliases.
 
-## Result
+## Historical result
 
 ```text
 physical lineage rows: 677
@@ -17,7 +20,7 @@ SQLite integrity: ok
 FK violations: 0
 restore: PASS
 send_allowed: 0
-next physical ID: H-0678
+next physical ID at that time: H-0678
 ```
 
 Mappings:
@@ -29,14 +32,14 @@ H-0629 -> H-0638
 H-0630 -> H-0640
 ```
 
-No physical ID was deleted or reused. Graph alias nodes remain for audit lineage and are excluded from active coverage.
+No physical ID was deleted or reused. Alias lineage remains explicit and excluded from active canonical coverage.
 
-## V11 lineage
+## Historical V11 lineage
 
-V11 is a monotonic wrapper over the newest constrained active-set state and removes the operational ambiguity created by a later-generated `V4` existing alongside an older `V10` naming sequence.
+V11 was introduced to remove an operational ambiguity in the then-current constrained lineage.
 
-V11 SHA-256:
+Historical V11 SHA-256:
 
 `10157eacf4a180ca2781b9b68bbf605c13b7db89282eab2928cb791ec5b1b283`
 
-The next canonical transaction must use V11 as its sole constrained parent.
+**Do not use V11 as a current parent merely because this file names it.** Parent selection is a runtime authority decision under `docs/operations/WAVE_OPERATING_PROTOCOL.md`.

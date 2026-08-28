@@ -1,21 +1,19 @@
 # WAVE OPERATING PROTOCOL — SWITZERLAND_JOB_OS
 
-Version: **WOP-1.0**  
+Version: **WOP-1.1**  
 Status: **CANONICAL OPERATING CONTRACT**
 
-## 1. Purpose
+## 1. Definition
 
-A **WAVE** is the smallest bounded unit of material execution in SWITZERLAND_JOB_OS.
+A **WAVE** is the smallest bounded unit of material execution.
 
-Any operation that can mutate canonical data, constrained DB state, Sheets/control-plane state, Graph/Intelligence, GitHub system memory, checkpoint state, scheduler state or recovery artifacts MUST execute inside a named wave.
+Any operation that can mutate canonical data, constrained DB state, Drive/Sheets, Graph/Intelligence, scheduler/checkpoints, GitHub system memory or recovery artifacts MUST execute inside a named wave.
 
-A wave is not a chat turn. It is a transaction-like execution envelope with explicit authority, scope, gates and closure semantics.
+A wave is not a chat turn. It is a transaction-like envelope with explicit authority, scope, gates and closure.
 
-The North Star remains G-0001: secure a truthful, legal, economically viable Swiss job offer that Roberto accepts and can sustainably relocate for.
+## 2. Wave header
 
-## 2. Wave identity
-
-Every material wave MUST declare or derive:
+Every material wave declares or derives:
 
 ```text
 wave_id
@@ -30,6 +28,7 @@ batch_limit
 execution_mode
 started_at
 owner/agent
+graph_impact
 ```
 
 Recommended IDs:
@@ -41,9 +40,7 @@ RUN-YYYYMMDD-HHMM-<slug>
 
 No anonymous material mutation is permitted.
 
-## 3. Canonical command semantics
-
-Agents may interpret these conversational commands:
+## 3. Command semantics
 
 ```text
 /wave
@@ -56,29 +53,32 @@ Agents may interpret these conversational commands:
 `/wave` with no parameters means:
 
 1. reconstruct authority;
-2. read scheduler/issues/SLO/TTL state;
-3. select the highest-value unblocked canonical task;
+2. scan drift/issues/SLO/TTL;
+3. select the highest-value unblocked scheduler task;
 4. execute one bounded wave;
-5. reconcile every required persistence layer before claiming authority.
+5. reconcile all required persistence layers before claiming authority.
 
-`/wave recover` ALWAYS runs reconciliation before new discovery or allocation.
+`/wave recover` always reconciles before new discovery/allocation.
 
-## 4. Authority model
+## 4. Authority
 
-Only an **authority-eligible fully synchronized commit** can advance canonical state.
+Only the **last fully synchronized authority-eligible constrained commit** may advance canonical state.
+
+A local SQLite file may be physically valid and still be **NON-AUTHORITATIVE**.
+
+Authority eligibility requires, where affected:
 
 ```text
-LAST FULLY SYNCHRONIZED CONSTRAINED COMMIT
-  = constrained DB validated
-  + Sheets/control plane reconciled
-  + Graph/Intelligence reconciled where affected
-  + metrics/checkpoints/scheduler/transitions updated
-  + persistent handoff emitted
+constrained DB validated
++ Drive/Sheets reconciled
++ Graph/Intelligence reconciled
++ metrics/health/SLO updated
++ scheduler/issues/checkpoints updated
++ transitions/run log emitted
++ persistent handoff emitted
 ```
 
-A local SQLite file may be physically valid and still be **NON-AUTHORITATIVE** if the synchronization chain is incomplete.
-
-Within authority-eligible artifacts, precedence remains:
+Within authority-eligible artifacts:
 
 ```text
 PHYSICAL + CONSTRAINED DATA
@@ -88,74 +88,59 @@ PHYSICAL + CONSTRAINED DATA
 > HISTORICAL PROSE
 ```
 
-Local canaries are explicitly excluded from the first line until promoted.
+Local canaries are excluded from authority until promotion completes.
 
-## 5. Storage responsibility matrix
+## 5. Storage roles
 
-### GitHub — version control / executable system memory
+### GitHub
 
-Stores:
+Version-control and executable-contract plane:
 
 - code;
-- schemas;
-- migrations;
-- tests;
-- CI;
-- architecture contracts;
-- operating protocol;
-- public-safe run/state handoffs;
+- schemas/migrations;
+- tests/CI;
+- architecture/operating contracts;
+- public-safe state/handoffs;
 - public-safe intelligence summaries.
 
-Does NOT store:
+Never store operational SQLite, credentials, raw contacts, candidate-private assets, PII or sensitive raw evidence in the public repo.
 
-- operational SQLite payloads;
-- PII;
-- raw contacts;
-- candidate-private assets;
-- sensitive raw evidence;
-- credentials.
+### Drive / Sheets
 
-GitHub is the source of versioning, not the operational database.
+Human control plane + operational mirror:
 
-### Drive / Sheets — human control plane + operational mirror
-
-Stores/mirrors:
-
-- GOAL_STATE;
-- CHECKPOINT_REGISTRY;
+- GOAL_STATE / CHECKPOINT_REGISTRY;
 - scheduler;
 - issues;
 - metrics/health/SLO;
-- run log/transitions;
-- hotel/entity control-plane tables;
-- human-reviewable Graph/Intelligence projections;
+- RUN_LOG / STATE_TRANSITIONS;
+- entity/control-plane tables;
+- Graph/Intelligence human mirrors;
 - persistent project documents.
 
-Writes MUST be by canonical PK/key resolution, never blind row offsets.
+Authoritative writes resolve canonical keys/PKs. Blind positional row writes are prohibited.
 
 ### SQLite constrained backend
 
-Stores operational constrained state and enforces PK/FK/UNIQUE/CHECK/idempotency semantics.
+Operational state backend enforcing PK/FK/UNIQUE/CHECK/idempotency semantics.
 
-It is the constrained state backend, but a new local DB version becomes authoritative only after the full synchronization gate passes.
+A new local DB version is authority only after the synchronization gate passes.
 
 ### Operational Graph
 
-Operational graph truth belongs in constrained PK-keyed data structures/tables.
-
-Entity/evidence/task mutations update the operational graph in the same wave before authority promotion.
+PK-keyed operational truth for hotels, aliases/groups, evidence, vacancies, people/channels, housing, tasks, applications and outcomes.
 
 ### Project Memory Meta Graph
 
-Tracks goals, checkpoints, releases, waves, decisions, artifacts, architecture and lineage.
+Goals, checkpoints, releases, waves, decisions, artifacts and architecture.
 
-`graph_registry.json` or equivalent is a project-memory graph/pointer, not the entire hotel operational graph.
+`graph_registry.json` or equivalent is meta/project memory, not the entire operational graph.
 
-### ChatGPT Library — recovery / cold persistence
+### ChatGPT Library
 
-Library is a durable recovery surface, NOT operational truth.
+Durable recovery/cold-persistence surface, not operational truth.
 
-Every material DB/schema/recovery wave SHOULD persist:
+Material DB/schema/recovery waves should persist:
 
 ```text
 WAVE_<id>_RECOVERY_BUNDLE.zip
@@ -163,125 +148,111 @@ manifest.json
 state_digest.json
 ```
 
-Research-only waves may persist a compact handoff instead of a full SQLite bundle.
-
 ### Local execution workspace / Git local
 
-Local execution state is a cache/workspace, never authority by itself.
+Execution cache only.
 
-In ChatGPT sandbox, local filesystem and Git CLI persistence/network access are not guaranteed. GitHub connector operations are therefore the canonical VCS actuator in this environment.
+In the ChatGPT sandbox, filesystem persistence and Git CLI network access are not guaranteed; GitHub connector operations are the VCS actuator.
 
-When executing from Roberto's persistent Mac/Codex environment, a normal local clone may be used, but remote GitHub remains the shared version-control authority.
+In a persistent Mac/Codex environment, a normal local clone may be used, but remote GitHub remains the shared VCS authority.
 
 ## 6. Execution modes
 
-A wave MUST operate in one of four explicit modes.
+### AUTHORITATIVE_WRITE
 
-### A. AUTHORITATIVE_WRITE
+All required planes available; preflight passes; canonical promotion allowed.
 
-Required planes are available and preflight passes.
+### READ_ONLY_RESEARCH
 
-May perform canonical promotion.
+Evidence/research/staging only; no canonical mutation intended.
 
-### B. READ_ONLY_RESEARCH
+### DEGRADED_CANARY
 
-No canonical mutation intended.
+One or more required authority planes unavailable.
 
-May collect evidence/intelligence and stage future work.
-
-### C. DEGRADED_CANARY
-
-One or more required authority planes are unavailable.
-
-Permitted:
+Allowed:
 
 - research;
 - staging;
 - local constrained canary;
-- QA;
-- restore/replay testing;
+- QA/restore/replay;
 - GitHub public-safe engineering;
 - Library recovery persistence.
 
 Forbidden:
 
-- claiming new canonical count;
-- allocating IDs as reserved;
+- canonical-count promotion;
+- reserved-ID claims;
 - checkpoint promotion;
-- pretending Graph/Sheets are synchronized;
+- claiming Graph/Sheets synchronization;
 - outbound.
 
-Closure state MUST be `SAFE_STOP_CANARY`.
+Closes `SAFE_STOP_CANARY`.
 
-### D. RECOVERY_RECONCILE
+### RECOVERY_RECONCILE
 
-Mandatory after any outage, ambiguous partial write, concurrent-agent uncertainty or stale handoff.
+Mandatory after outage, partial write, stale parent, concurrent-agent uncertainty or ambiguous lineage.
 
-No new canonical discovery allocation until live authority is reconstructed and provisional work is anti-joined.
+No new canonical allocation until live authority is reconstructed and provisional work is anti-joined.
 
-## 7. Mandatory wave lifecycle
+## 7. Mandatory lifecycle
 
 ```text
-0  WAVE OPEN
-1  AUTHORITY BOOTSTRAP
-2  DRIFT / ISSUE / SLO / TTL SCAN
-3  SCHEDULER SELECTION
-4  DISCOVER / VERIFY
-5  NORMALIZE
-6  DEDUPE / ALIAS / GROUP RESOLUTION
-7  STAGE
-8  CANARY
-9  VALIDATE
-10 COMMIT CONSTRAINED DB
-11 MIRROR SHEETS BY PK
-12 SYNC INTELLIGENCE
-13 SYNC OPERATIONAL GRAPH
-14 UPDATE ENTITY/SNAPSHOT EPOCH
-15 RUN QA + INVARIANTS + SLO
-16 UPDATE METRICS / HEALTH
-17 UPDATE SCHEDULER / ISSUES
-18 EMIT STATE TRANSITIONS / RUN LOG
-19 UPDATE GOAL / CHECKPOINT IF WARRANTED
-20 UPDATE GITHUB STATE/HANDOFF
-21 PERSIST LIBRARY RECOVERY ARTIFACTS
-22 FINAL RECONCILIATION
-23 WAVE CLOSE
+WAVE OPEN
+→ AUTHORITY BOOTSTRAP
+→ DRIFT / ISSUE / SLO / TTL SCAN
+→ SCHEDULER SELECTION
+→ DISCOVER / VERIFY
+→ NORMALIZE
+→ DEDUPE / ALIAS / GROUP RESOLUTION
+→ STAGE
+→ CANARY
+→ VALIDATE
+→ COMMIT CONSTRAINED DB
+→ MIRROR SHEETS BY PK
+→ SYNC INTELLIGENCE
+→ SYNC OPERATIONAL GRAPH
+→ UPDATE ENTITY/SNAPSHOT EPOCH
+→ QA + INVARIANTS + SLO
+→ METRICS / HEALTH
+→ SCHEDULER / ISSUES
+→ STATE TRANSITIONS / RUN LOG
+→ GOAL / CHECKPOINT IF WARRANTED
+→ GITHUB STATE/HANDOFF
+→ LIBRARY RECOVERY
+→ FINAL RECONCILIATION
+→ WAVE CLOSE
 ```
 
-Steps 10–23 are one logical promotion chain. If a required step fails, authority does not advance.
+From DB COMMIT onward, the chain is one logical promotion transaction. If a required step fails, authority does not advance.
 
-## 8. Bootstrap contract
+## 8. Bootstrap minimum
 
-Before material execution, reconstruct at minimum:
+Reconstruct:
 
 ```text
 release
-active_goal_id
-active_checkpoint_id
-authority_epoch
-latest authority-eligible DB manifest
-physical row count
+active goal/checkpoint
+authority epoch
+latest authority-eligible manifest
+physical count
 active canonical count
-alias/superseded count
-DB integrity
-FK violations
-snapshot state/drift
-Graph active denominator
-Intelligence active denominator
+aliases/superseded count
+DB integrity / FK violations
+snapshot drift
+Graph denominator
+Intelligence denominator
 open P0 issues
 active scheduler tasks
 stale send-critical facts
-send_allowed count
-outbound state
+send_allowed / outbound
 GitHub STATE pointer
-Library latest recovery pointer
+Library recovery pointer
 ```
 
-Never trust counts copied from the prompt without reconciliation.
+Never trust prompt-copied counts without reconciliation.
 
-## 9. Write protocol
-
-Canonical entity writes use:
+## 9. Canonical write protocol
 
 ```text
 DISCOVER
@@ -293,7 +264,7 @@ DISCOVER
 → VALIDATE
 → DB COMMIT
 → SHEETS PK MIRROR
-→ GRAPH / INTELLIGENCE SYNC
+→ GRAPH / INTELLIGENCE
 → INVARIANTS
 → OBSERVABILITY
 → PERSISTENCE
@@ -305,200 +276,183 @@ Never:
 discover → append rows → declare success
 ```
 
-All IDs are immutable. Superseded IDs remain lineage and map explicitly to canonical targets.
+IDs are immutable. Superseded IDs remain lineage with explicit canonical targets.
 
-## 10. Required gauntlet for canonical promotion
+## 10. Promotion gauntlet
 
-Applicable tests MUST include:
+Applicable checks include:
 
 ```text
 SQLite integrity_check = ok
 FK violations = 0
 canonical IDs valid
 unexplained ID gaps = 0
-active name+city duplicate conflicts = 0
+active name+city conflicts = 0
 active non-empty domain duplicates = 0
 alias targets valid
 active duplicate QA states = 0
-metric active-key duplicates = 0
+active metric-key duplicates = 0
 snapshot drift = 0
 DB ↔ Sheets PK reconciliation exact
-Graph active denominator = canonical active count
-Intelligence active denominator = canonical active count
-stale send-critical facts without refresh task = 0
+Graph denominator = active canonical count
+Intelligence denominator = active canonical count
+stale send-critical facts without refresh = 0
 invalid UNKNOWN_AFTER_SEARCH = 0 for new V3 data
 score-scale violations = 0
-idempotency replay creates 0 unintended rows
+idempotency replay unintended inserts = 0
 restore logical differences = 0
-send_allowed = 0 unless a separately authorized outbound gate exists
+send_allowed = 0 unless separately authorized
 release/checkpoint/control-plane agreement = PASS
 ```
 
-SQLite restore equivalence is logical, not binary-file SHA equality.
+SQLite restore equivalence is logical, not binary SHA equality.
 
-## 11. Graph synchronization contract
+## 11. Graph contract
 
-Every wave classifies graph impact:
+Every wave declares:
 
 ```text
 GRAPH_IMPACT = NONE | META | OPERATIONAL | BOTH
 ```
 
-META updates are required when changing:
+META required for changes to goals, checkpoints, releases, waves, decisions, architecture or artifact lineage.
 
-- goal;
-- checkpoint;
-- release;
-- decision;
-- wave/run;
-- architecture;
-- artifact lineage.
+OPERATIONAL required for changes to entities, aliases/groups, evidence, vacancies, people/channels, housing, tasks, applications or outcomes.
 
-OPERATIONAL updates are required when changing:
+No authoritative operational mutation may leave its graph representation behind.
 
-- hotel/entity;
-- alias/group;
-- evidence/claim;
-- vacancy;
-- person/channel;
-- housing;
-- task;
-- application/outcome.
+## 12. Agent contract
 
-No authoritative entity write may leave its operational graph node/edges behind.
+`AGENTS.md` stores stable behavior/roles only.
 
-## 12. Agent synchronization contract
+It MUST NOT hardcode mutable frontier counts or current tasks.
 
-`AGENTS.md` contains **stable operating rules and role contracts only**.
-
-It MUST NOT hardcode mutable frontier counts/tasks because that creates stale-agent drift.
-
-Mutable state lives in:
+Mutable state belongs in:
 
 ```text
 live Drive/Sheets control plane
 latest authority-eligible manifest
-STATE.md pointer
+STATE.md
 ```
 
-Agents MUST read `WAVE_OPERATING_PROTOCOL.md` + `GOAL.md` + `STATE.md` before material work and then reconcile against the live authority plane.
+Agents read:
+
+```text
+WAVE_OPERATING_PROTOCOL.md
+→ GOAL.md
+→ STATE.md
+→ AGENTS.md
+→ OPERATING_RULES.md
+→ live authority reconciliation
+```
+
+before material work.
 
 ## 13. Git protocol
 
-Architecture/code/schema/protocol changes use:
+Architecture/code/schema/protocol changes:
 
 ```text
-issue when materially useful
+issue when useful
 → branch
 → implementation
 → tests
 → PR
 → CI
-→ review/diff check
+→ diff/review
 → merge
 → operational adoption/reconciliation
 ```
 
-One wave may create several commits but SHOULD create one coherent PR per architectural concern.
+Data-only waves never require private operational data in GitHub.
 
-Data-only operational waves do not require committing private operational data to GitHub; update public-safe `STATE.md`/state docs after full authority synchronization.
-
-CI success proves repository contracts/tests, not that Drive/DB runtime state is synchronized.
+CI success validates repository contracts/tests. It does NOT prove Drive/DB runtime synchronization.
 
 ## 14. Library protocol
 
-For every material wave with DB/schema/recovery impact:
+For material DB/schema/recovery waves:
 
-1. generate recovery bundle;
-2. generate manifest with SHA-256 and authority/canary status;
-3. upload to `/SWITZERLAND_JOB_OS/`;
+1. build recovery bundle;
+2. build manifest with SHA and `AUTHORITATIVE` vs `CANARY` state;
+3. upload under `/SWITZERLAND_JOB_OS/`;
 4. update `LATEST_RECOVERY.json` or equivalent pointer;
-5. never label a canary bundle as authoritative.
+5. never label canary as authority.
 
-Library failure does not invalidate a fully synchronized operational commit, but it creates a persistence issue that must be recorded and repaired.
+Library failure creates a persistence issue but does not rewrite operational authority.
 
-## 15. Degraded/outage protocol
+## 15. Outage protocol
 
-If Drive/Sheets, DB parent, GitHub or another required plane fails:
+If a required authority layer fails:
 
 ```text
 DETECT
 → STOP AUTHORITY PROMOTION
 → REGISTER BLOCKED LAYER
-→ CONTINUE ONLY SAFE RESEARCH/CANARY WORK
-→ PERSIST PUBLIC-SAFE GITHUB HANDOFF
-→ PERSIST LIBRARY RECOVERY BUNDLE
+→ CONTINUE SAFE RESEARCH/CANARY ONLY
+→ GITHUB PUBLIC-SAFE HANDOFF
+→ LIBRARY RECOVERY BUNDLE
 → CLOSE SAFE_STOP_CANARY
 ```
 
-When the layer returns:
+When it returns:
 
 ```text
 /wave recover
-→ read live authority
-→ compare provisional candidates
+→ re-read live authority
+→ compare provisional work
 → anti-join IDs/names/cities/domains/aliases/tasks
 → reallocate provisional IDs if frontier moved
-→ rerun canary from the live parent
-→ only then execute AUTHORITATIVE_WRITE
+→ rerun canary from live parent
+→ AUTHORITATIVE_WRITE only after reconciliation
 ```
 
 No provisional local ID is a reservation.
 
-## 16. Concurrency protocol
+## 16. Concurrency
 
-Before any canonical commit:
+Immediately before canonical commit:
 
-- re-read the live frontier;
-- anti-join active canonical entities;
+- re-read live frontier;
+- anti-join canonical entities;
 - anti-join aliases/superseded IDs;
 - anti-join domains;
-- anti-join active scheduler task keys;
-- confirm parent manifest/epoch has not changed.
+- anti-join active task keys;
+- confirm parent manifest/epoch unchanged.
 
-If the parent moved, the wave re-enters `RECOVERY_RECONCILE` rather than force-writing stale assumptions.
+If the parent moved, transition to `RECOVERY_RECONCILE` rather than force-writing.
 
-## 17. Observability emitted by every material wave
+## 17. Wave observability
 
-At minimum:
+Emit at minimum:
 
 ```text
-wave_id
-run_id
-goal_id
-checkpoint_id
+wave_id / run_id
+goal_id / checkpoint_id
 execution_mode
-authority_parent
-authority_epoch
+authority_parent / authority_epoch
 canonical_before
 canonical_after_authoritative
 canary_candidate_count
-physical_before
-physical_after_authoritative
-tasks_attempted
-tasks_completed
-tasks_failed
-issues_opened
-issues_resolved
+physical_before / physical_after_authoritative
+tasks attempted/completed/failed
+issues opened/resolved
 SLO breaches
-DB integrity
-FK violations
-duplicate count
-snapshot drift
+DB integrity / FK violations
+duplicate count / snapshot drift
 stale critical count
-send_allowed count
+send_allowed
 Graph denominator
 Intelligence denominator
-quality result
+quality_result
 closure_state
-next bottleneck
+next_bottleneck
 ```
 
-Never report a canary count in `canonical_after_authoritative`.
+Never put a canary count in `canonical_after_authoritative`.
 
-## 18. Wave closure states
+## 18. Closure states
 
-Every material wave closes as exactly one:
+Exactly one:
 
 ```text
 COMPLETE_AUTHORITY
@@ -508,33 +462,33 @@ BLOCKED_P0
 SUPERSEDED
 ```
 
-`COMPLETE_AUTHORITY` requires all required persistence and reconciliation gates.
+`COMPLETE_AUTHORITY` requires all required persistence/reconciliation gates.
 
-## 19. Real-time meaning
+## 19. Real-time semantics
 
-SWITZERLAND_JOB_OS does **not** claim a background daemon unless one is actually configured.
+No background daemon is claimed unless actually configured.
 
-"Real-time synchronization" means:
+**Real-time synchronization** means:
 
-> before a material wave is allowed to return an authoritative promotion, every affected required layer is synchronously reconciled within that wave.
+> before an authoritative wave closes, every affected required layer is synchronously reconciled inside that wave.
 
 Temporary staging/canary divergence is allowed. Silent post-wave divergence is not.
 
 ## 20. Outbound lock
 
-No wave may perform email, portal submission, DM, WhatsApp or follow-up unless the completely separate outbound authorization stack passes.
+Research and market mapping never imply authorization to contact employers.
 
-Default remains:
+Default:
 
 ```text
 OUTBOUND = CLOSED
 send_allowed = 0
 ```
 
-Research and market mapping are never implicit authorization to contact employers.
+External email, portal submission, DM, WhatsApp or follow-up requires the separate outbound gate plus explicit user authorization.
 
-## 21. Current implementation rule
+## 21. Current-state location rule
 
-Until Drive/Sheets write capability is available again, SWITZERLAND_JOB_OS runs in `DEGRADED_CANARY` or `READ_ONLY_RESEARCH` for work that depends on those layers.
+Current connector availability, active checkpoint, live counts, active task, parent manifest and canary frontier are operational state.
 
-The current V16 candidate state is acceleration/recovery material only. The last fully synchronized authority remains the value declared by `STATE.md` and the live control plane when available.
+They MUST live in `STATE.md`, live Drive/Sheets and manifests — never in this permanent protocol.

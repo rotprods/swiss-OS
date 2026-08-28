@@ -47,10 +47,31 @@ class AliasSemanticTests(unittest.TestCase):
                     "claimed_alias_hotel_id": "H-0001",
                     "canonical_hotel_id": "H-0002",
                     "stable_identity_verified": True,
+                    "stable_identity_basis": "EXACT_DETAIL_URL",
+                    "stable_identity_ref": "https://example.invalid/hotel/example-lodge",
                 }
             ],
         )
         self.assertTrue(result.valid)
+
+    def test_bare_stable_identity_boolean_is_rejected(self) -> None:
+        result = validate_alias_semantics(
+            [
+                {"hotel_id": "H-0001", "canonical_name": "Hotel A", "city": "Bern"},
+                {"hotel_id": "H-0002", "canonical_name": "Hotel B", "city": "Bern"},
+            ],
+            [{"alias_hotel_id": "H-0001", "canonical_hotel_id": "H-0002"}],
+            [
+                {
+                    "candidate_name": "Hotel A",
+                    "candidate_city": "Bern",
+                    "claimed_alias_hotel_id": "H-0001",
+                    "canonical_hotel_id": "H-0002",
+                    "stable_identity_verified": True,
+                }
+            ],
+        )
+        self.assertEqual(result.violations[0].code, "STABLE_IDENTITY_PROOF_INVALID")
 
     def test_issue_89_four_mismatches_fail_closed(self) -> None:
         cases = [
@@ -88,6 +109,24 @@ class AliasSemanticTests(unittest.TestCase):
         self.assertEqual(result.as_dict()["authority_advanced"], False)
         self.assertEqual(result.as_dict()["h_id_allocations"], 0)
         self.assertEqual(result.as_dict()["outbound_opened"], False)
+
+    def test_notes_fallback_binds_only_superseded_side(self) -> None:
+        result = validate_alias_semantics(
+            [
+                {"hotel_id": "H-0001", "canonical_name": "Hotel A", "city": "Bern"},
+                {"hotel_id": "H-0002", "canonical_name": "Hotel B", "city": "Bern"},
+            ],
+            [{"alias_hotel_id": "H-0002", "canonical_hotel_id": "H-0001"}],
+            [
+                {
+                    "candidate_name": "Hotel A",
+                    "candidate_city": "Bern",
+                    "canonical_hotel_id": "H-0002",
+                    "notes": "H-0001 superseded; richer H-0002 remains canonical",
+                }
+            ],
+        )
+        self.assertEqual(result.violations[0].code, "ALIAS_EVIDENCE_MISSING")
 
     def test_missing_evidence_fails_closed(self) -> None:
         result = validate_alias_semantics(
@@ -134,6 +173,25 @@ class AliasSemanticTests(unittest.TestCase):
             ],
         )
         self.assertEqual(result.violations[0].code, "REAL_WORLD_EQUIVALENCE_UNPROVEN")
+
+    def test_resolution_target_mismatch_fails_closed(self) -> None:
+        result = validate_alias_semantics(
+            [
+                {"hotel_id": "H-0001", "canonical_name": "Hotel Example", "city": "Bern"},
+                {"hotel_id": "H-0002", "canonical_name": "Hotel Example", "city": "Bern"},
+                {"hotel_id": "H-0003", "canonical_name": "Hotel Example", "city": "Bern"},
+            ],
+            [{"alias_hotel_id": "H-0001", "canonical_hotel_id": "H-0002"}],
+            [
+                {
+                    "candidate_name": "Hotel Example",
+                    "candidate_city": "Bern",
+                    "claimed_alias_hotel_id": "H-0001",
+                    "canonical_hotel_id": "H-0003",
+                }
+            ],
+        )
+        self.assertEqual(result.violations[0].code, "RESOLUTION_TARGET_MISMATCH")
 
     def test_invalid_and_duplicate_catalog_ids_raise(self) -> None:
         with self.assertRaises(ValueError):

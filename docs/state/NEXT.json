@@ -1,16 +1,15 @@
 {
   "schema_version": "NPP-1.0",
   "project": "SWITZERLAND_JOB_OS",
-  "generated_at": "2026-08-28T21:53:40+02:00",
-  "cycle_id": "META-20260828-ISSUE89-AUTHORITY-RECOVERY-02",
-  "parent_git_sha": "1676bb22b5407f590de7fe47cd1e369ec5a7d7b0",
+  "generated_at": "2026-08-28T20:52:30Z",
+  "cycle_id": "META-20260828-CRM-SOURCE-2061-ECV-01",
+  "parent_git_sha": "7c667b94a7460ea2262dc0d12ba983eeb124863b",
   "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
   "authority_parent": "ISSUE_89_COMPOSITE_CONSTRAINED_PARENT",
-  "authority_parent_base_sha256": "0e605b412f29893ca1775f1e8fccd5987d0613baab4ac29b6699988cde0fdfe5",
   "authority_parent_materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
   "execution_mode": "PRE_AUTHORITY_SOURCE_RECONCILIATION",
-  "selected_route": "FRESH_HSLCA_COHERENT_CAPTURE",
-  "next_route": "HSLCA_PCF_LIVE_QUALIFICATION_FRESH_MAIN",
+  "selected_route": "ECV_ENTITY_RESOLUTION_SOURCE_TERMINALIZATION",
+  "next_route": "ECV_REMAINING_CWP_BATCHES_THEN_ENTITY_RESOLUTION",
   "goal_id": "G-0500",
   "checkpoint_id": "CRM_UNIVERSE_COMPLETE",
   "authority_state": {
@@ -25,71 +24,108 @@
     "l4": 105,
     "cp_0750_current": 690,
     "cp_0750_target": 750,
-    "next_physical_id": "H-0691",
+    "next_physical_id": "H-0691_UNALLOCATED",
     "crm_universe_complete": false,
     "outbound": "CLOSED",
     "send_allowed": 0
   },
-  "issue_89_recovery": {
-    "state": "RECOVERED_CROSS_PLANE_PASS",
-    "protocols": ["ASR-1.0", "ARR-1.0", "CCP-1.0"],
-    "repaired_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
-    "sqlite_integrity_check": "ok",
-    "foreign_key_violations": 0,
-    "idempotency_replay": "PASS",
-    "canonical_id_allocations": 0,
-    "hotels_master_revision": "497",
-    "rollback_copy_id": "1KPaM2gIA3C_CNulDPSI7KRFHIem50Thx-2q4BJXdrgk",
-    "run_id": "RUN-2026-08-28-2148-ASR-ISSUE89-AUTHORITY-RECOVERY",
-    "decision_id": "DEC-0102"
+  "source_universe": {
+    "snapshot_id": "HS-MEMBER-DE-33206402141",
+    "source": "HotellerieSuisse member directory",
+    "qualified_current": true,
+    "pages": 172,
+    "records": 2061,
+    "unique_detail_urls": 2061,
+    "raw_artifact_id": 9700376482,
+    "raw_artifact_sha256": "721f9ff9f84e2d5d9df62c6b22f12e7354cef3a298cb8990be66a202e1e769ce",
+    "pccn_consensus_pages": 171,
+    "pccn_total_pages": 172,
+    "canonical_mdm_records_sha256": "b02c6fae1215643088eafec0af8b2b139506e4e46dec9e81277a1a9e5e4e897f",
+    "canonical_mdm_manifest_sha256": "e5c7e2d52eed1dd585a9a00f1bd98015997ec902e8890d0abcb89cdc87aeb74f",
+    "cmi_records_sha256": "22bfc4ee304b37b426e6e8f4da03ca73febc7d2283882caf58fd13edaee5081f"
+  },
+  "mapping_frontier": {
+    "source_records": 2061,
+    "active_canonical_exact_matches": 624,
+    "candidate_new_entity_preauth": 1437,
+    "exact_match_conflicts": 0,
+    "reverse_authority_without_exact_source_match": 66,
+    "reverse_authority_state": "RECONCILE_REQUIRED_NOT_EXCLUSION",
+    "terminal_source_mappings": 624,
+    "reconcile_required": 1437,
+    "unmapped_source_records": 0,
+    "terminal_mapping_coverage_pct": 30.2766,
+    "anti_join_payload_sha256": "c50a2b2b70677d6651f89e94fe19382d525c72c52111c91b8291c15887729d2a",
+    "cwp_packet_sha256": "6ae41038683c185a51e482c2f979dc1a52b9348cc172a367bf5dc1311efd9249"
+  },
+  "ecv_frontier": {
+    "candidate_records_total": 1437,
+    "current_detail_verified": 20,
+    "remaining_unverified": 1417,
+    "first_subbatch_id": "HS-MEMBER-DE-33206402141:WORK:0001:SUB:0001",
+    "first_subbatch_items_sha256": "82a58723a538e0c33c5e501f5896dad060f09fc37d775454f6d5b2e0b2b48f0c",
+    "first_subbatch_packet_sha256": "0b0d10ac7fbe118fcbdf434b89b298759e911dda3c9adf5d11124f462b435586",
+    "first_subbatch_state": "CURRENT_DETAIL_VERIFIED_20_OF_20",
+    "terminal_mapping_effect": "NONE_UNTIL_ENTITY_RESOLUTION"
+  },
+  "parallel_exact_refresh": {
+    "batches": 8,
+    "records_attempted": 96,
+    "current_exact_member_detail": 78,
+    "current_non_exact_support_or_scope": 6,
+    "unresolved_or_stale_refresh_required": 12,
+    "authority_advanced": false,
+    "h_id_allocations": 0
   },
   "hard_blockers": [
-    "DISCOVER_SWISS_SUBSCRIPTION_KEY_UNAVAILABLE",
-    "CRM_SOURCE_UNIVERSE_NOT_YET_FROZEN_AND_TERMINALLY_MAPPED",
-    "PR_88_STALE_ANCESTRY_REQUIRES_FRESH_MAIN_PORT_AND_LIVE_QUALIFICATION"
+    "RECONCILE_REQUIRED_1437_NOT_ZERO",
+    "REVERSE_AUTHORITY_SOURCE_DISCREPANCIES_66_REQUIRE_RESOLUTION",
+    "DISCOVER_SWISS_SUBSCRIPTION_KEY_UNAVAILABLE_AS_ALTERNATE_SOURCE_ONLY"
   ],
   "required_inputs": [
-    "GitHub main reconstructed after issue-89 state merge",
-    "HSLCA-R1.0 and MDC-1.1 contracts",
-    "HPCB-1.0 changes from PR #88 ported only from fresh main if still required",
-    "PCF-1.0 / MDM / CMI / CWP / ECV / SMC / SRR-1.1 contracts",
-    "HOTELS_MASTER revision 497 as the reconciled E4 control-plane reference",
-    "ISSUE_89_COMPOSITE_CONSTRAINED_PARENT",
-    "existing exact-current evidence batches as non-authoritative anti-join evidence"
+    "GitHub main at or after parent_git_sha",
+    "E4 HOTELS_V2 690 canonical / 0 aliases",
+    "HS-MEMBER-DE-33206402141 canonical MDM / CMI hashes above",
+    "CWP-1.1 work frontier with 1437 VERIFY_NEW_ENTITY records",
+    "ECV-1.0 current-detail verifier",
+    "source_mapping.py terminal mapping validator",
+    "exact-current batches 01..08 as non-authoritative supporting evidence",
+    "Drive CMI summary spreadsheet 1-n34KObY-1AUv6AB8Tm7Mzp2WHDk2f_d0OoVqeITm94"
   ],
   "route_priority": [
-    "If DISCOVER_SWISS_SUBSCRIPTION_KEY becomes available: STRUCTURED_SOURCE_CAPTURE then SSR.",
-    "Otherwise run a fresh coherent current HSLCA capture from fresh main.",
-    "If provider aggregate count is absent, use HPCB provenance then PCF-1.0; do not invent a denominator.",
-    "Require MDM coverage_complete=true and current name/city/detail_url semantic QA before downstream source mapping.",
-    "Then build CMI candidate export and execute CWP/ECV/SMC/SRR pre-authority mapping chain.",
-    "If coherent bulk capture is unavailable, fall back to EXACT_CURRENT_REFRESH and entity-resolution evidence debt reduction."
+    "Continue bounded ECV batches for the remaining 1417 unverified CWP candidates.",
+    "For CURRENT_DETAIL_VERIFIED records, run entity resolution against E4 using stable name/city/detail/source evidence; do not infer novelty from anti-join alone.",
+    "Update source-mapping candidates only to terminal ACTIVE_CANONICAL, ALIAS_TO_CANONICAL or EXCLUDED_WITH_REASON when evidence is sufficient; otherwise retain RECONCILE_REQUIRED.",
+    "Resolve the 66 reverse authority/source discrepancies without interpreting absence as exclusion.",
+    "Recompute terminal mapping coverage after each bounded batch and persist NEXT.",
+    "If exact-current source access degrades, use existing exact-refresh evidence or a safe alternative provider route; never allocate an H-ID from staging."
   ],
   "promotion_preconditions": [
-    "No H-ID may be reserved or allocated from staging, HSLCA, MDM, CMI or any canary.",
-    "No cache observation or diagnostic capture may advance authority.",
-    "Every frozen source record must terminally map to ACTIVE_CANONICAL, ALIAS_TO_CANONICAL or EXCLUDED_WITH_REASON.",
-    "unmapped=0 and RECONCILE_REQUIRED=0 are mandatory before CRM_UNIVERSE_COMPLETE can be considered.",
-    "Any later authority promotion must rerun constrained DB, HOTELS_MASTER, Intelligence, Graph, scheduler, checkpoints, metrics, SLO, invariants and recovery reconciliation atomically.",
-    "ASR-1.0 remains mandatory for any future alias/supersession edge."
+    "No H-ID may be reserved or allocated from HSLCA, MDM, CMI, CWP, ECV, cache or staging.",
+    "Every frozen source record must have exactly one terminal mapping: ACTIVE_CANONICAL, ALIAS_TO_CANONICAL or EXCLUDED_WITH_REASON.",
+    "RECONCILE_REQUIRED must equal 0.",
+    "All reverse authority/source discrepancies must be explained or superseded by stronger source-scope evidence.",
+    "CRM source-scope reconciliation / SRR must pass.",
+    "Any later authority promotion must use a fresh bounded DB -> HOTELS_MASTER -> Intelligence -> Graph -> scheduler/checkpoints/metrics/SLO transaction with ASR and restore/replay/idempotency gates."
   ],
   "graph_impact": "META",
   "authority_advance_allowed": false,
   "canonical_id_allocation_allowed": false,
   "outbound_allowed": false,
   "resume_instructions": [
-    "Re-read GitHub main and compare parent_git_sha; reconstruct ancestry if it moved.",
-    "Verify E4 remains 690 active / 690 physical / aliases=0 and ASR=EXACT in current Drive control plane.",
-    "Re-probe discover.swiss credential and current HotellerieSuisse source accessibility.",
-    "Do not merge stale PR #88 directly; port only the still-required HPCB/HSLCA pieces onto fresh main, run tests/CI and live-source acceptance.",
-    "Execute coherent source capture or safe exact-current fallback, persist its evidence, compute NEXT and immediately continue while productive runtime remains.",
-    "Never reserve H-IDs from staging and keep OUTBOUND=CLOSED / send_allowed=0."
+    "Re-read GitHub main; if it moved, reconstruct ancestry and retain only evidence that remains lineage-compatible.",
+    "Verify E4 still reads 690 physical / 690 active / 0 aliases / ASR EXACT before any cross-plane work.",
+    "Do not rerun bulk HSLCA acquisition unless source freshness or lineage requires it; the current 2061-record frozen source is already qualified.",
+    "Continue ECV from the next unverified CWP records and persist each bounded result.",
+    "Immediately route verified records into entity-resolution/source-mapping terminalization where evidence is sufficient.",
+    "Never reserve H-IDs from pre-authority work and keep OUTBOUND=CLOSED / send_allowed=0."
   ],
   "done_when": [
-    "A coherent current source universe is frozen with a valid denominator/evidence contract.",
-    "Every frozen source record has exactly one terminal mapping and unmapped=0.",
-    "RECONCILE_REQUIRED=0 across source scope/entity resolution.",
-    "The authority-eligible candidate is atomically reconciled across DB, HOTELS_MASTER, Intelligence, Graph and control plane.",
-    "CRM_UNIVERSE_COMPLETE=true only after all independent gates pass; outbound remains separately authorization-gated."
+    "All 2061 frozen source records are terminally mapped exactly once.",
+    "RECONCILE_REQUIRED=0.",
+    "All 66 reverse authority/source discrepancies are explained or resolved.",
+    "Source-scope reconciliation passes and an authority-eligible candidate exists.",
+    "Any authority change is atomically reconciled across DB, HOTELS_MASTER, Intelligence, Graph and control plane.",
+    "CRM_UNIVERSE_COMPLETE=true only after every independent gate passes; outbound remains separately authorization-gated."
   ]
 }

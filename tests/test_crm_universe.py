@@ -1,3 +1,5 @@
+import unittest
+
 from swiss_os.crm_universe import (
     CRMUniverseMetrics,
     validate_crm_universe_gate,
@@ -30,58 +32,65 @@ def _complete_metrics(**overrides):
     return CRMUniverseMetrics(**values)
 
 
-def test_complete_snapshot_passes():
-    result = validate_crm_universe_gate(_complete_metrics())
-    assert result.complete is True
-    assert result.violations == ()
-    assert result.coverage_pct == 1.0
-    assert result.terminal_mapped_records == 10
+class CRMUniverseGateTests(unittest.TestCase):
+    def test_complete_snapshot_passes(self) -> None:
+        result = validate_crm_universe_gate(_complete_metrics())
+        self.assertTrue(result.complete)
+        self.assertEqual(result.violations, ())
+        self.assertEqual(result.coverage_pct, 1.0)
+        self.assertEqual(result.terminal_mapped_records, 10)
 
-
-def test_reconcile_required_fails_closed():
-    result = validate_crm_universe_gate(
-        _complete_metrics(
-            active_canonical_mappings=7,
-            reconcile_required=1,
+    def test_reconcile_required_fails_closed(self) -> None:
+        result = validate_crm_universe_gate(
+            _complete_metrics(active_canonical_mappings=7, reconcile_required=1)
         )
-    )
-    assert result.complete is False
-    assert "reconcile_required must be zero" in result.violations
-    assert any("mapping accounting mismatch" in item for item in result.violations)
-
-
-def test_cross_plane_denominator_drift_fails():
-    result = validate_crm_universe_gate(
-        _complete_metrics(graph_active_canonical=7)
-    )
-    assert result.complete is False
-    assert "active canonical denominator differs across planes" in result.violations
-
-
-def test_snapshot_lineage_mismatch_fails():
-    result = validate_crm_universe_gate(
-        _complete_metrics(
-            coverage_snapshot_ids=("HS-FROZEN-TEST", "OTHER-SNAPSHOT")
+        self.assertFalse(result.complete)
+        self.assertIn("reconcile_required must be zero", result.violations)
+        self.assertTrue(
+            any("mapping accounting mismatch" in item for item in result.violations)
         )
-    )
-    assert result.complete is False
-    assert "coverage metrics are not bound to one snapshot_id" in result.violations
+
+    def test_cross_plane_denominator_drift_fails(self) -> None:
+        result = validate_crm_universe_gate(
+            _complete_metrics(graph_active_canonical=7)
+        )
+        self.assertFalse(result.complete)
+        self.assertIn(
+            "active canonical denominator differs across planes", result.violations
+        )
+
+    def test_snapshot_lineage_mismatch_fails(self) -> None:
+        result = validate_crm_universe_gate(
+            _complete_metrics(
+                coverage_snapshot_ids=("HS-FROZEN-TEST", "OTHER-SNAPSHOT")
+            )
+        )
+        self.assertFalse(result.complete)
+        self.assertIn(
+            "coverage metrics are not bound to one snapshot_id", result.violations
+        )
+
+    def test_raw_count_is_not_active_canonical_count(self) -> None:
+        metrics = _complete_metrics()
+        result = validate_crm_universe_gate(metrics)
+        self.assertTrue(result.complete)
+        self.assertEqual(metrics.snapshot_raw_records, 10)
+        self.assertEqual(metrics.constrained_active_canonical, 8)
+        self.assertNotEqual(
+            metrics.snapshot_raw_records, metrics.constrained_active_canonical
+        )
+
+    def test_only_terminal_mapping_states_pass_final_state_validation(self) -> None:
+        invalid = validate_mapping_states(
+            [
+                "ACTIVE_CANONICAL",
+                "ALIAS_TO_CANONICAL",
+                "EXCLUDED_WITH_REASON",
+                "RECONCILE_REQUIRED",
+            ]
+        )
+        self.assertEqual(invalid, ("RECONCILE_REQUIRED",))
 
 
-def test_raw_count_is_not_active_canonical_count():
-    result = validate_crm_universe_gate(_complete_metrics())
-    assert result.complete is True
-    assert result.terminal_mapped_records == 10
-    assert result.terminal_mapped_records != result.complete  # guard against boolean/count confusion
-
-
-def test_only_terminal_mapping_states_pass_final_state_validation():
-    invalid = validate_mapping_states(
-        [
-            "ACTIVE_CANONICAL",
-            "ALIAS_TO_CANONICAL",
-            "EXCLUDED_WITH_REASON",
-            "RECONCILE_REQUIRED",
-        ]
-    )
-    assert invalid == ("RECONCILE_REQUIRED",)
+if __name__ == "__main__":
+    unittest.main()

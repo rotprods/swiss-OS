@@ -23,7 +23,7 @@ official hsId
 → normalized name + city
 ```
 
-Page is coverage metadata only.
+Page is coverage metadata only. When present, **page must be a strict positive integer**: booleans, floats, numeric strings, zero and negative values are rejected rather than coerced. An absent page remains `None` for evidence that is not tied to a paginated listing.
 
 ## Completion gate
 

@@ -1,0 +1,62 @@
+{
+  "event_id": "EVT-20260829T233130+0200-GRV2-HELLO-0001",
+  "event_type": "HELLO_WORK_STARTED",
+  "occurred_at": "2026-08-29T23:31:30+02:00",
+  "project_id": "SWITZERLAND_JOB_OS",
+  "agent_id": "AGENT-GPT56PRO-GRAPH-ARCH-001",
+  "session_id": "SESSION-20260829T233130+0200-GRV2-8F4C",
+  "workstream_id": "WS-GRAPH-REFACTOR-V2",
+  "objective_id": "OBJ-V2-ARCHITECTURE-COMPILER",
+  "correlation_id": "CORR-GRV2-D6C49F15-20260829T233130",
+  "main_sha": "d6c49f158c3691f44868cb9a55a52bc6c6aea225",
+  "base_sha": "d6c49f158c3691f44868cb9a55a52bc6c6aea225",
+  "branch": "arch/graph-refactor-v2-20260829",
+  "pull_request": null,
+  "event_watermark": "NONE_PRE_V2",
+  "projection_revision": "NONE_PRE_V2",
+  "context_pack_revision": "NONE_PRE_V2",
+  "resource_scopes": [
+    "docs/architecture/v2/**",
+    "docs/operations/GRAPH_REFACTOR_V2_PROTOCOL.md",
+    "docs/plans/V2_IMPLEMENTATION_PROGRAM.md",
+    "docs/decisions/v2/**",
+    "docs/state/v2/**",
+    "graph/v2/**",
+    "schemas/v2/**",
+    "src/swiss_os/hypergraph_v2.py",
+    "src/swiss_os/event_ledger_v2.py",
+    "src/swiss_os/context_pack_v2.py",
+    "src/swiss_os/graph_assurance_v2.py",
+    "tests/test_*_v2.py"
+  ],
+  "semantic_scopes": [
+    "PROJECT_MEMORY_META_GRAPH_V2",
+    "SESSION_IDENTITY",
+    "EVENT_LEDGER",
+    "CONTEXT_PACK",
+    "COS_20D_PROJECTIONS",
+    "ARCHITECTURE_V2",
+    "IMPLEMENTATION_COMPILER",
+    "NO_OPERATIONAL_HOTEL_MUTATION"
+  ],
+  "dependencies": [
+    "STATE.md@d6c49f158c3691f44868cb9a55a52bc6c6aea225",
+    "GOAL.md",
+    "AGENTS.md",
+    "MEP-2.0",
+    "WOP-1.1",
+    "ER-1.0",
+    "CUP-1.1",
+    "open P0 issues #14 #239 #240"
+  ],
+  "active_agent_claims_observed": [
+    "PR#275 state/provider-identity-ambiguity-wave-11: STATE/NEXT/provider review artifacts",
+    "PR#273 feat/provider-identity-enrichment: provider identity engine/workflow/tests",
+    "PR#269 state/full-smc-srr-2061-wave-10: full source mapping attestations",
+    "PR#135/#137/#139 legacy issue-89 repair branches: stale/supersession review required"
+  ],
+  "causation": "USER_COMMAND:/GRAPH-REFACTOR-V2",
+  "authority_ceiling": "SYSTEM_DEFINITION_ONLY_NO_OPERATIONAL_AUTHORITY",
+  "summary": "Reconstruct, adversarially challenge and compile SWITZERLAND_JOB_OS into one justified temporal hypergraph V2 without mutating hotel authority, allocating H-IDs or opening outbound.",
+  "next_action": "Compile live-truth baseline, V1-vs-greenfield delta, canonical ontology, assurance kernel, migration program and durable NEXT packet."
+}

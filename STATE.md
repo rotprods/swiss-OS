@@ -1,6 +1,6 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest chained Meta Execution reconciliation: **2026-08-29T02:16:00Z**.  
+Latest chained Meta Execution reconciliation: **2026-08-29T02:20:00Z**.  
 GitHub parent for this wave: **`ffe403d946337e8d1380ec822e41eb0c394415e3`**.  
 Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**.  
 Frozen current CRM source snapshot: **`HS-MEMBER-DE-33206402141`**.
@@ -58,19 +58,19 @@ Exact-current evidence alone never creates a terminal canonical mapping. Entity 
 The one-shot `SUB0018:RECLASSIFY:0001` canary completed successfully under GitHub Actions run `33228015270`, artifact `9707536383`, ZIP SHA-256 `fe6abd9128b010b1d9914274dbdfa29791a4f6cece38e4b7146c1f26f6cec4f8`.
 
 ```text
-input/results                       11 / 11
-CURRENT_DETAIL_URL_NOT_FOUND             10
-CURRENT_DETAIL_NAME_ONLY                  1
-all_terminal                           TRUE
-all_verified                          FALSE
-provider-record-change review            11
-pending blind requeue                     0
-current-detail verified frontier     349 / 1438
-remaining never verified              1089
-normalized ECV packet SHA       9e9a4fb60a7b6f1991ff0913ddcd17752b96b9f01b1133904127af951d1c2536
+ECV verified frontier             349 / 1438
+ECV remaining never verified     1089
+legacy ECV pending requeue          11
+blind network requeue pending        0
+CURRENT_DETAIL_URL_NOT_FOUND        10
+CURRENT_DETAIL_NAME_ONLY             1
+provider-record-change review       11
+all_terminal                       TRUE
+all_verified                      FALSE
+normalized ECV packet SHA  9e9a4fb60a7b6f1991ff0913ddcd17752b96b9f01b1133904127af951d1c2536
 ```
 
-Ten records are repeated all-attempt HTTP 404 provider-detail evidence; one successful current page matches the expected name but not expected city. They are terminal for network-retry semantics only. They do **not** prove hotel absence, novelty, exclusion, aliasing, canonical mapping, H-ID eligibility or authority promotion. Durable result: `docs/state/ECV_BATCH_0001_SUB0018_RECLASSIFY01_RESULT.json`.
+The cumulative CURRENT_DETAIL_VERIFIED frontier remains 349 because none of these 11 records became `CURRENT_DETAIL_VERIFIED`. The legacy `pending_requeue=11` field remains stable machine-frontier accounting for the prior requeue summary, while `blind network requeue pending=0` records the operational decision not to loop the same deterministic requests. Ten records are repeated all-attempt HTTP 404 provider-detail evidence; one successful current page matches the expected name but not expected city. They are terminal for network-retry semantics only. They do **not** prove hotel absence, novelty, exclusion, aliasing, canonical mapping, H-ID eligibility or authority promotion. Durable result: `docs/state/ECV_BATCH_0001_SUB0018_RECLASSIFY01_RESULT.json`.
 
 ## 5. CWP continuity and SUB0019
 

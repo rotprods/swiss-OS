@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.2",
+  "project": "SWITZERLAND_JOB_OS",
+  "graph_type": "PROJECT_MEMORY_META_GRAPH_DELTA",
+  "generated_at": "2026-08-29T20:24:00Z",
+  "cycle_id": "META-20260829-CP-R01-SRET-FULL2061-WAVE-10",
+  "base_git_sha": "d5c5a19aad1836a34bcec7a8b060abc239e80b4c",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "authority_mutation": false,
+  "nodes": [
+    {"id":"SOURCE-2061","type":"FROZEN_SOURCE_UNIVERSE","records":2061,"sha256":"62e26d62d8677a5437e081302b6b4d206c0d27a0fe268c6356aef01da5428dc2"},
+    {"id":"ECV-1438","type":"EXACT_CURRENT_FRONTIER","verified":1438,"pending":0},
+    {"id":"SMO-656","type":"PREAUTH_TERMINAL_FRONTIER","terminal":656,"reconcile":1405,"sha256":"e8a6da1bfe5e585807e41f91db9ecccb507c60140366e9dab7f36290c613a368"},
+    {"id":"SRET-1405","type":"REVIEW_CLASSIFICATION","ambiguous":8,"novelty":1397,"pending":0,"items_sha256":"b15ed2d019759b3730a225207cdb1ba674b16b93ac925b74dbabff2d495aecf6","triage_sha256":"85cc6d9d85918d98415879df0535b7276e4b33770a5b21ccdffef416b6f2aae0"},
+    {"id":"AMBIGUITY-8","type":"NEXT_REVIEW_QUEUE","records":8},
+    {"id":"NOVELTY-1397","type":"DISTINCTNESS_REVIEW_FRONTIER","records":1397,"high_similarity_records":20},
+    {"id":"AUTHORITY-E4","type":"AUTHORITY_STATE","active":690,"next_hid":"H-0691_UNALLOCATED"},
+    {"id":"SSR-BLOCKED","type":"PROVIDER_BOUNDARY","subscription_key_present":false},
+    {"id":"OUTBOUND-CLOSED","type":"GATE","send_allowed":0}
+  ],
+  "edges": [
+    ["SOURCE-2061","VERIFIED_CANDIDATE_SUBSET_BY","ECV-1438"],
+    ["SOURCE-2061","MATERIALIZED_TO_PREAUTH_FRONTIER","SMO-656"],
+    ["SMO-656","TRIAGED_REMAINING_1405_BY","SRET-1405"],
+    ["SRET-1405","PARTITIONS_TO","AMBIGUITY-8"],
+    ["SRET-1405","PARTITIONS_TO","NOVELTY-1397"],
+    ["AMBIGUITY-8","REQUIRES_INDEPENDENT_EVIDENCE_BEFORE","SMO-656"],
+    ["NOVELTY-1397","REQUIRES_DISTINCTNESS_EVIDENCE_BEFORE","AUTHORITY-E4"],
+    ["SRET-1405","DOES_NOT_MUTATE","AUTHORITY-E4"],
+    ["SSR-BLOCKED","FORCES_MEP","SOURCE-2061"],
+    ["AUTHORITY-E4","KEEPS","OUTBOUND-CLOSED"]
+  ],
+  "invariants": {
+    "authority_advanced": false,
+    "h_id_allocations": 0,
+    "canonical_id_reservations": 0,
+    "crm_universe_complete": false,
+    "outbound_opened": false,
+    "send_allowed": 0
+  }
+}

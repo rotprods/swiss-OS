@@ -1,6 +1,6 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest chained Meta Execution reconciliation: **2026-08-29T10:35:00Z**. Parent main SHA: **`12d8ff45b87e9783c67166c182319f50f8640b62`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
+Latest chained Meta Execution reconciliation: **2026-08-29T10:44:00Z**. Parent main SHA: **`aefadbf7882fb30292cf2b944bb2f91e21d41918`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
 
 ## Authority — unchanged / locked
 
@@ -43,14 +43,14 @@ contiguous candidate prefix       0..1000 (1001 records)
 next untouched candidate offset    1001
 ```
 
-## NEXT exact slice — SUB0052 materialization requested
+## SUB0052 — exact materialization verified and staged
 
-The next immutable CWP slice is **SUB0052**, original candidate offsets **1001..1020**, 20 items, materialized only from the durable candidate export. The request cannot allocate/reserve a canonical ID or advance authority. A green merge triggers read-only `cwp-materialize-next`; the resulting artifact must be independently hash-verified and persisted through a separate green PR before automatic ECV is eligible.
+Read-only CWP materialization run `33248447595` / job `99089857760` succeeded from main `aefadbf7882fb30292cf2b944bb2f91e21d41918`. Artifact `9713589488`, ZIP SHA `637ae4d9523b494cb7e9d3e8682b7cffc696b7ed103acc9a0907fa1740629eef`; packet SHA `a4aacd24b0fb6d8ed470a4c8cb80c85a9d72fd294276aa94a4f803a47e57683b`; report SHA `cb31851f30ad6ae6d759eac319ad1ed694d76ecf4b54ee7a54fbfacad09880cd`; items SHA `e6bd7d7bc4a24e222a7fb4c11a5bc914e5499bb8171efa236ad4cfc76936ced4`. Exact immutable offsets **1001..1020**, 20 items. All remain `CANDIDATE_NEW_ENTITY_PREAUTH` / `VERIFY_NEW_ENTITY`, all `matched_hotel_id` empty, `authority_advanced=false`, `h_id_allocations=0`; staging cannot reserve H-0691 or advance E4.
 
 ## Drive / Library / structured acquisition
 
-Drive recovery remains available through `MASTER_CONTEXT_V3.md` plus the existing HOTELS_MASTER/recovery pointers; exact workbook-title lookup did not surface the `.xlsx` by filename in this activation, so GitHub authority/recovery pointers remain the MEP path. File Library search returned no relevant SWITZERLAND_JOB_OS artifact; `CRM_UNIVERSE_STAGING_2026-08-28_v6.xlsx` therefore remains a prior recovery input rather than current authority. discover.swiss `Infocenter Open` key remains absent; MEP continues through the qualified HotellerieSuisse universe + deterministic anti-join + exact-current. SSR-1.0 remains a hard pre-authority gate.
+Drive recovery remains available through `MASTER_CONTEXT_V3.md` plus the existing HOTELS_MASTER/recovery pointers; no authority write is eligible. File Library remains recovery-only. discover.swiss `Infocenter Open` key remains absent; MEP continues through the qualified HotellerieSuisse universe + deterministic anti-join + exact-current. SSR-1.0 remains a hard pre-authority gate.
 
 ## P0 / NEXT
 
-Issue #14 remains controlling P0. Current route: green CI + adversarial review → merge SUB0051 result/NEXT request → materialize and hash-verify exact SUB0052 → persist exact staging → observe automatic SUB0052 ECV → continue. `RECONCILE_REQUIRED=1434`, reverse gaps `66`, full 2061 terminal mapping, SSR-1.0 and fresh authoritative cross-plane reconciliation remain mandatory before authority eligibility. Canonical pointer: `docs/state/NEXT.json`. OUTBOUND remains CLOSED; send_allowed=0.
+Issue #14 remains controlling P0. Current safe route: green CI + adversarial review → merge exact SUB0052 staging → observe automatic SUB0052 ECV → persist typed evidence/provider-change handling → immediately continue. `RECONCILE_REQUIRED=1434`, reverse gaps `66`, full 2061 terminal mapping, SSR-1.0 and fresh authoritative cross-plane reconciliation remain mandatory before authority eligibility. Canonical pointer: `docs/state/NEXT.json`. OUTBOUND remains CLOSED; send_allowed=0.

@@ -1,6 +1,6 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest chained Meta Execution reconciliation: **2026-08-29T22:23:00Z**. Wave parent main SHA: **`cc67d5ced6d43a6a29a734d91f1bec775ac6a949`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
+Latest chained Meta Execution reconciliation: **2026-08-29T22:33:00Z**. Wave parent main SHA: **`56345881f20f4fa03c45442430359ecd9c0aeb7e`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
 
 ## Authority — unchanged / locked
 
@@ -34,19 +34,21 @@ Full mapping recovery: `docs/state/FULL_SOURCE_MAPPING_REBUILD_657_ATTESTATION_3
 
 ## Provider identity frontier
 
-PIE-1.1 has now executed read-only provider evidence for the entire 47-record Jaccard-0.50–0.59 queue. Final17 Actions run `33278374703`, job `99169076312`, artifact `9722212725`, artifact digest `bfa30d4c89193d62ea02ca5b0120e55977f6508c9ba84cafce120afa4faa8a0e`, artifact JSON SHA `633e4f38047dfe2e5db41ce3a80f5b69845ffd6235e2c3e769d3f787db112b7f`, packet SHA `422f27d7d0e85c5bbba12ac55b77eafc7930204d5e8fec2c3d24f51395b06d7e`, results SHA `63bf8781509a968227cbfc1d470a5638aab49b14cf0582e201fefe646e7d0f65`.
+PIE-1.1 has executed read-only provider evidence for the entire 47-record Jaccard-0.50–0.59 queue. Final17 Actions run `33278374703`, job `99169076312`, artifact `9722212725`, artifact digest `bfa30d4c89193d62ea02ca5b0120e55977f6508c9ba84cafce120afa4faa8a0e`, artifact JSON SHA `633e4f38047dfe2e5db41ce3a80f5b69845ffd6235e2c3e769d3f787db112b7f`, packet SHA `422f27d7d0e85c5bbba12ac55b77eafc7930204d5e8fec2c3d24f51395b06d7e`, results SHA `63bf8781509a968227cbfc1d470a5638aab49b14cf0582e201fefe646e7d0f65`.
+
+Identity review wave01 independently compared 8 captured source identities against current canonical comparators using current official property evidence. All 8 are distinct current hotel identities; none is promoted to NEW_CANONICAL or terminal mapping by that fact alone. Review packet: `docs/state/SRET_PROVIDER_IDENTITY_050_REVIEW_WAVE01_33206402141.json`, items SHA `488ae59ffa1a873ffbbd94aec37ca3c779f5608f7e2a0314ae8bdb68712b687d`.
 
 ```text
 provider evidence executed                 47 / 47
-identity review completed                  20 / 47
-  distinctness corroborated                19
+identity review completed                  28 / 47
+  distinctness corroborated                27
   same-property SRR applied                 1
-captured evidence awaiting comparator review 27
+captured evidence awaiting comparator review 19
 unprocessed in 0.50–0.59                    0
 lower-similarity tail                      49
 ```
 
-SUB0003 and FINAL17 are deliberately `EVIDENCE_CAPTURED_REVIEW_REQUIRED`: provider evidence exists, but no same-property/distinctness decision is promoted without independent current canonical comparison. Their mapping delta is zero; `RECONCILE_REQUIRED` remains 1404.
+Distinctness review is nonterminal: it cannot decrement `RECONCILE_REQUIRED`, reserve a canonical ID, or advance authority. `RECONCILE_REQUIRED` remains 1404.
 
 ## Recovery / provider boundaries
 
@@ -56,6 +58,6 @@ SSR-1.0 remains blocked by the absent discover.swiss `Infocenter Open` subscript
 
 ## NEXT
 
-Independently reconcile all 27 evidence-captured-but-not-terminal identities against current canonical identities. Apply explicit SRR only where same-property identity is proven; distinctness/novelty review alone cannot decrement 1404 or reserve H-0691. Then process the lower-similarity 49 through bounded targetless PIE packets. `OUTBOUND=CLOSED`; `send_allowed=0`.
+Independently reconcile the remaining 19 evidence-captured identities against current canonical identities. Apply explicit SRR only where same-property identity is proven; distinctness/novelty review alone cannot decrement 1404 or reserve H-0691. After the 0.50–0.59 identity-review bucket closes, derive and pin the lower-similarity 49 from authoritative SRET triage before creating bounded targetless PIE packets. `OUTBOUND=CLOSED`; `send_allowed=0`.
 
 Drive HOTELS_MASTER: `1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w`. Private review: `1Ktlvg04MbDrgZ0LD0wGYrpz65xTHBRyiNdD8KWLxNhk`. Recovery: `1leVfYwda8g0B5Co5zaSUIpo245t37tpUEiTaYlLds_s`. RAGR recovery: `12X7sQZDWIFm8Ss9DyxYYzvit6zSKq6ZeAliM6lEvNVg`.

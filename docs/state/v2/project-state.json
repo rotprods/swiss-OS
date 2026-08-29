@@ -3,46 +3,25 @@
   "authority_advanced": false,
   "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
   "authority_revision": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
-  "blockers": [
-    "SSR-1.0 provider-blocked: discover.swiss Infocenter Open subscription key/capture-valid manifest absent.",
-    "Legacy workstreams/open PRs are not yet fully migrated to first-class V2 claims."
-  ],
-  "branch": "main",
-  "context_pack_revision": "4989f4c270dae23a6824516782104521351c7fe1987d344d9b7abd85a642a491",
-  "current_objective_id": "OBJ-GRAPH-REFACTOR-V2",
-  "event_watermark": {"event_id":"EVT-20260829T222031Z-GRAPHV2-WORK-COMPLETED","occurred_at":"2026-08-29T22:20:31Z"},
+  "blockers": ["SSR-1.0 provider-blocked: discover.swiss Infocenter Open subscription key/capture-valid manifest absent.","Legacy workstreams/open PRs are not yet fully migrated to first-class V2 claims."],
+  "branch": "qualification/v2-recovery-death-drill",
+  "context_pack_revision": "3f5aa6f917a033e98b8a9700d1aa8774b24f4f9359064f75fdf6920bb6e85033",
+  "current_objective_id": "OBJ-V2-RECOVERY-DEATH-DRILL",
+  "event_watermark": {"event_id":"EVT-20260829T223001Z-V2QUAL-WORK-COMPLETED","occurred_at":"2026-08-29T22:30:01Z"},
   "h_id_allocation_allowed": false,
   "live_frontier": {"active_canonical":690,"candidate_records":1438,"next_h_id":"H-0691 UNALLOCATED","reconcile_required":1404,"reverse_authority_gaps":34,"source_records":2061,"terminal_mappings":657},
-  "main_sha_observed": "fe08104ae668d1717c91d976ef33357917266ad9",
-  "next_safe_actions": [
-    "Migrate one active provider-identity workstream to V2 Session→Claim→Event semantics without changing hotel authority.",
-    "Execute projection deletion/rebuild recovery drill and verify identical projection revision.",
-    "Execute zero-context agent-death drill using HANDOFF.md + ContextPack 1.1.",
-    "Classify/close superseded legacy PRs only after semantic comparison."
-  ],
+  "main_sha_observed": "e6616d200c35106eae9333a019a566a8f02e4a53",
+  "next_safe_actions": ["Migrate one active provider-identity workstream to V2 Session→Claim→Event semantics without changing hotel authority.","Classify/close superseded legacy PRs only after semantic comparison.","Use the empirical drill as a permanent CI gate for future V2 state changes."],
   "north_star_ref": "GOAL.md#G-0001",
   "open_prs": [269,273,275,135,137,139],
   "outbound_allowed": false,
   "project_id": "SWITZERLAND_JOB_OS",
-  "projection_revision": "266e492c855010ad6ab5ce7cd788ac1a6551ce9a2ceb015eeb1fbdae5d457f06",
+  "projection_revision": "4de3ccdf960138cc81ead97b16424c9ec9bef0298c07d94b92b69f292d938cd7",
   "repo": "rotprods/swiss-OS",
-  "risks": [
-    "Legacy PRs can look active after semantic work was superseded until migration classification is complete.",
-    "V2 recovery/death-drill semantics are designed and unit-tested but still need an explicit post-merge empirical drill.",
-    "ContextPack freshness must continue to use ancestry + relevant-scope drift rather than exact live-HEAD equality."
-  ],
+  "risks": ["Legacy workstreams still need migration to first-class claims.","Hotel authority and outbound remain separately gated."],
   "schema_version": "COS-V2-PROJECT-STATE-1.0",
-  "source_refs": ["GOAL.md","STATE.md","ARCHITECTURE.md","HANDOFF.md","GitHub:PR#288","main:fe08104ae668d1717c91d976ef33357917266ad9","Actions:33278293052"],
-  "state": "V2_ARCHITECTURE_MERGED_SESSION_COMPLETED",
-  "unverified_work": [
-    "One live domain workstream has not yet been migrated end-to-end through V2 coordination semantics.",
-    "Projection deletion/rebuild recovery and zero-context death drill remain to be empirically executed post-merge."
-  ],
-  "verified_work": [
-    "V2 architecture/kernel merged to main in PR #288.",
-    "Merge commit fe08104ae668d1717c91d976ef33357917266ad9 passed push repo-guard CI run 33278293052.",
-    "ContextPack 1.1 ancestry + relevant-scope semantics passed full-repo CI.",
-    "Duplicate-work escaped bug #283 closed after permanent regressions merged.",
-    "Authority remained locked: no H-ID allocation and OUTBOUND=CLOSED."
-  ]
+  "source_refs": ["GOAL.md","STATE.md","ARCHITECTURE.md","HANDOFF.md","Actions:33278690926 PASS","docs/state/v2/qualification/V2_EMPIRICAL_QUALIFICATION_33278690926.json"],
+  "state": "V2_EMPIRICAL_QUALIFICATION_COMPLETED",
+  "unverified_work": ["A live domain workstream has not yet been migrated end-to-end through V2 coordination semantics."],
+  "verified_work": ["V2 architecture/kernel merged and green on main.","Projection recovery drill PASS from durable Event+Claim ledger.","Zero-context agent-death drill PASS from canonical durable surfaces.","374 repository tests PASS in qualification run 33278690926.","Authority remained locked: no H-ID allocation and OUTBOUND=CLOSED."]
 }

@@ -1,0 +1,48 @@
+{
+  "schema_version": "RAGR-MATERIALIZATION-ATTESTATION-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "snapshot_id": "HS-MEMBER-DE-33206402141",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "parent_git_sha": "f099fce7ae823a55c2c9156003b7ac8c9b16bd7d",
+  "inputs": {
+    "source_records": 2061,
+    "source_records_sha256": "62e26d62d8677a5437e081302b6b4d206c0d27a0fe268c6356aef01da5428dc2",
+    "active_canonical_records": 690,
+    "canonical_catalog_projection_sha256": "a0d9c97105f106b50a5636d21bb2d40d7333b60af6228b8c6ac8521d8aa1245b",
+    "smo_overlay_sha256": "7a98c1b34da7bc996ceac31b1f236ae8aa18657dfba201f3036fcc0b1fd3d4b2",
+    "terminal_coverage_recipe": "624_UNIQUE_EXACT_NORMALIZED_NAME_CITY_PLUS_22_VALIDATED_SMO_DELTAS",
+    "terminal_coverage_source_records": 646,
+    "unique_covered_canonical_records": 646,
+    "terminal_coverage_sha256": "594c6167d1984bbe78f25241795103c5c602a248a3520d8591faa1484153577d"
+  },
+  "ragr": {
+    "protocol": "RAGR-1.0",
+    "review_only": true,
+    "reverse_authority_source_gaps": 44,
+    "gaps_with_same_city_source_candidate": 29,
+    "gaps_without_same_city_source_candidate": 15,
+    "review_queue_sha256": "5f1d4d828292dc7718f388377e538780f72142f21a64e2ed9c63f7a181cc485d",
+    "gap_hotel_ids": ["H-0002","H-0003","H-0016","H-0019","H-0060","H-0063","H-0100","H-0121","H-0144","H-0161","H-0192","H-0218","H-0242","H-0291","H-0337","H-0352","H-0464","H-0474","H-0478","H-0501","H-0521","H-0524","H-0623","H-0652","H-0657","H-0659","H-0660","H-0661","H-0662","H-0663","H-0664","H-0665","H-0666","H-0667","H-0668","H-0669","H-0670","H-0671","H-0672","H-0673","H-0674","H-0675","H-0677","H-0681"],
+    "terminal_decision_allowed_from_queue": false,
+    "authority_mutation_allowed_from_queue": false
+  },
+  "next_high_value_evidence_batch": [
+    {"canonical_hotel_id":"H-0002","canonical_name":"Hotel Europa Suites AG","canonical_city":"Champfèr / St. Moritz","source_record_key":"MD-fed86d7933175b3cb112","source_name":"hotel europa suites","source_city":"champfèr","source_detail_url":"https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-hotel-europa-suites","candidate_offset":1430},
+    {"canonical_hotel_id":"H-0681","canonical_name":"Seehotel Wilerbad Seminar & Spa","canonical_city":"Wilen","source_record_key":"MD-70fee4f734bf530fb6fd","source_name":"seehotel wilerbad","source_city":"wilen (sarnen)","source_detail_url":"https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-seehotel-wilerbad","candidate_offset":657},
+    {"canonical_hotel_id":"H-0063","canonical_name":"Appenzeller Huus, Huus Quell","canonical_city":"Gonten","source_record_key":"MD-418c10f59064a67a4ffb","source_name":"huus quell","source_city":"gonten","source_detail_url":"https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-huus-quell","candidate_offset":388},
+    {"canonical_hotel_id":"H-0474","canonical_name":"Hotel Schweizerhof, Sils Maria, a Faern Collection Hotel","canonical_city":"Sils/Segl Maria","source_record_key":"MD-615a31fb4402ea4abf2e","source_name":"hotel schweizerhof","source_city":"sils/segl maria","source_detail_url":"https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-hotel-schweizerhof","candidate_offset":567},
+    {"canonical_hotel_id":"H-0478","canonical_name":"Hôtel-Restaurant Les Cernets","canonical_city":"Les Verrières","source_record_key":"MD-1e66aa8d213855517131","source_name":"hôtel les cernets \"val-de-travers\"","source_city":"les verrières","source_detail_url":"https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-hotel-les-cernets-val-de-travers","candidate_offset":186},
+    {"canonical_hotel_id":"H-0652","canonical_name":"Sedartis Swiss Quality Hotel","canonical_city":"Thalwil","source_record_key":"MD-d09653a62d86bff5e672","source_name":"lifestyle hotel sedartis lake zurich","source_city":"thalwil","source_detail_url":"https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-lifestyle-hotel-sedartis-lake-zurich","candidate_offset":1182},
+    {"canonical_hotel_id":"H-0060","canonical_name":"Apart Hotel Wetterhorn","canonical_city":"Hasliberg Hohfluh","source_record_key":"MD-466d0a46fe05df051926","source_name":"wetterhorn apartments","source_city":"hasliberg hohfluh","source_detail_url":"https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-wetterhorn-apartments","candidate_offset":431}
+  ],
+  "next_route": "STRICT_EXACT_CURRENT_REVERIFY_RAGR_VARIANT_7_THEN_EXPLICIT_SRR_REVIEW",
+  "hard_invariants": {
+    "authority_advanced": false,
+    "h_id_allocations": 0,
+    "canonical_id_reservations": 0,
+    "crm_universe_complete": false,
+    "outbound": "CLOSED",
+    "outbound_opened": false,
+    "send_allowed": 0
+  }
+}

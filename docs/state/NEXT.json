@@ -1,13 +1,13 @@
 {
   "schema_version": "NPP-1.0",
   "project": "SWITZERLAND_JOB_OS",
-  "generated_at": "2026-08-29T19:06:00Z",
-  "cycle_id": "META-20260829-SRR-CMRQ-MATCH-WAVE-02",
-  "parent_git_sha": "0056c0f80b8c5a894ab4f32bac21353bafcfe025",
+  "generated_at": "2026-08-29T19:16:00Z",
+  "cycle_id": "META-20260829-SRR-LA-COURONNE-WAVE-03",
+  "parent_git_sha": "f16b53022f4710c444739b29a039a373a7f505e6",
   "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
   "authority_parent_materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
-  "selected_route": "SRR_CMRQ_MATCH_BATCH_0002_PREAUTH_OVERLAY",
-  "next_route": "RECOVER_LA_COURONNE_ECV_THEN_RAGR_BOUNDED",
+  "selected_route": "LA_COURONNE_STRICT_ECV_PLUS_SRR_SMO_BATCH_0003",
+  "next_route": "RAGR_52_BOUNDED_EVIDENCE_REVIEW_THEN_FULL_SMC_SRR_REBUILD",
   "checkpoint_id": "CRM_UNIVERSE_COMPLETE",
   "authority_state": {
     "physical_rows": 690,
@@ -38,12 +38,12 @@
     "effective_preauthority_overlay_validated": true,
     "base_terminal_source_mappings": 624,
     "base_reconcile_required": 1437,
-    "cumulative_overlay_terminal_deltas": 13,
-    "overlay_sha256": "16db2ef17ee66c49fbaba9a54a9ef4182fa14bf660994b44dcdab40c3e44c718",
-    "effective_terminal_source_mappings": 637,
-    "effective_reconcile_required": 1424,
+    "cumulative_overlay_terminal_deltas": 14,
+    "overlay_sha256": "280b34924567f360af0122275493474ab61e59902ea2f50b95863f31e2fd1add",
+    "effective_terminal_source_mappings": 638,
+    "effective_reconcile_required": 1423,
     "reverse_authority_without_exact_source_match": 66,
-    "overlay_aware_reverse_gap_candidates": 53
+    "overlay_aware_reverse_gap_candidates": 52
   },
   "review_frontier": {
     "authoritative": false,
@@ -51,18 +51,14 @@
     "cmrq_queue_source_records": 16,
     "cmrq_queue_pairs": 16,
     "cmrq_queue_sha256": "06d550e3be5bc12e32e67d2d89f6000e1b882b3e3bcacf4e049e4b851f79b11a",
-    "match_existing_proposals": 15,
-    "new_canonical_proposals": 1,
-    "cumulative_match_existing_overlay": 13,
+    "cumulative_match_existing_overlay": 14,
     "base_exact_already_terminal": 1,
-    "pending_match_item_evidence": 1,
-    "pending_match_source_record_key": "MD-ff70cabc95a4a2ea61a1",
-    "pending_match_target": "H-0024",
+    "pending_match_item_evidence": 0,
     "new_canonical_nonterminal_source_record_key": "MD-034c1c3b0f7ba9d69c80",
     "new_canonical_reason": "DISTINCT_IBIS_BUDGET_RECORD_WHILE_SEPARATE_SOURCE_EXACTLY_COVERS_H-0180",
-    "private_drive_review_doc_id": "1Ktlvg04MbDrgZ0LD0wGYrpz65xTHBRyiNdD8KWLxNhk",
-    "review_packet_path": "docs/state/SOURCE_RESOLUTION_REVIEW_BATCH_0002_33206402141.json",
-    "overlay_path": "docs/state/SOURCE_MAPPING_OVERLAY_SRR_BATCH_0002_33206402141.json"
+    "latest_incremental_review_path": "docs/state/SOURCE_RESOLUTION_REVIEW_BATCH_0003_33206402141.json",
+    "overlay_path": "docs/state/SOURCE_MAPPING_OVERLAY_SRR_BATCH_0003_33206402141.json",
+    "private_drive_review_doc_id": "1Ktlvg04MbDrgZ0LD0wGYrpz65xTHBRyiNdD8KWLxNhk"
   },
   "ecv_frontier": {
     "candidate_records_total": 1438,
@@ -80,7 +76,16 @@
     "next_staged_items": 8,
     "next_staged_original_candidate_offset_range": "1421..1428",
     "next_staged_items_sha256": "d998657e8ea03c057d6a46af6366ddf5d1b890eab7592612729943e1aa0ffbdd",
-    "next_staged_state": "ECV_TERMINAL_VERIFIED"
+    "next_staged_state": "ECV_TERMINAL_VERIFIED",
+    "supplemental_reverify": {
+      "batch_id": "HS-MEMBER-DE-33206402141:WORK:0002:SUB:0001",
+      "source_record_key": "MD-ff70cabc95a4a2ea61a1",
+      "github_actions_run_id": 33270154075,
+      "artifact_id": 9719850886,
+      "packet_sha256": "af3b4ed6ee2dc6a0d62e1634a4ee033133f822d9635232212864178ca7637809",
+      "response_sha256": "d17a9dff160ca11d7603b66484e51992fef0f2c6a30d9a7dd2bb8439005cb873",
+      "state": "CURRENT_DETAIL_VERIFIED"
+    }
   },
   "structured_acquisition": {
     "runtime_subscription_key_present": false,
@@ -88,29 +93,30 @@
     "fallback": "QUALIFIED_MEMBER_DIRECTORY_PLUS_EXACT_CURRENT"
   },
   "hard_blockers": [
-    "EFFECTIVE_RECONCILE_REQUIRED_1424_NOT_ZERO",
+    "EFFECTIVE_RECONCILE_REQUIRED_1423_NOT_ZERO",
     "FULL_2061_SOURCE_MAPPING_MATERIALIZATION_REBUILD_PENDING",
     "DISCOVER_SWISS_RUNTIME_SUBSCRIPTION_KEY_ABSENT",
     "SSR_1_0_REQUIRES_CAPTURE_VALID_DISCOVER_SWISS_MANIFEST"
   ],
-  "exact_dependency": "RECOVER_OR_REGENERATE_STRICT_ITEM_LEVEL_ECV_FOR_MD-ff70cabc95a4a2ea61a1_THEN_APPLY_ONLY_IF_MATCH_CONTRACT_PASSES",
+  "exact_dependency": "EXECUTE_RAGR_OVER_52_OVERLAY_AWARE_REVERSE_GAP_CANDIDATES_WITH_EVIDENCE_ONLY_NO_FUZZY_AUTO_BINDING",
   "required_inputs": [
-    "GitHub main 0056c0f80b8c5a894ab4f32bac21353bafcfe025 or descendant",
+    "GitHub main f16b53022f4710c444739b29a039a373a7f505e6 or descendant",
     "authority E4 / SHA 70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
     "source artifact 9700376482 / records SHA256 62e26d62d8677a5437e081302b6b4d206c0d27a0fe268c6356aef01da5428dc2",
     "candidate export artifact 9718866661 / records SHA256 34d9aa9cfa4fe896bf1db8fba4dedfded9a1dbf2e135b847101904644d16bba0",
     "base SMC candidate SHA256 2f9413318c410eb0f0443de260213d31e9ab2bdc1058581c0fa9c0340474aa27",
-    "cumulative SMO overlay SHA256 16db2ef17ee66c49fbaba9a54a9ef4182fa14bf660994b44dcdab40c3e44c718",
+    "cumulative SMO overlay SHA256 280b34924567f360af0122275493474ab61e59902ea2f50b95863f31e2fd1add",
+    "La Couronne ECV run 33270154075 / artifact 9719850886 / response SHA256 d17a9dff160ca11d7603b66484e51992fef0f2c6a30d9a7dd2bb8439005cb873",
     "Drive HOTELS_MASTER 1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w; H-0691 absent",
     "Drive private review doc 1Ktlvg04MbDrgZ0LD0wGYrpz65xTHBRyiNdD8KWLxNhk"
   ],
   "recovery_route": [
     "materialize Actions source artifact 9700376482",
     "materialize Actions candidate artifact 9718866661",
-    "load cumulative SRR review batch 0002 and verify 13 evidence refs",
-    "validate cumulative SMO overlay SHA 16db2ef17ee66c49fbaba9a54a9ef4182fa14bf660994b44dcdab40c3e44c718",
-    "recover or regenerate La Couronne item-level ECV",
-    "continue bounded RAGR without fuzzy auto-binding"
+    "validate cumulative SMO overlay SHA 280b34924567f360af0122275493474ab61e59902ea2f50b95863f31e2fd1add",
+    "load 52 overlay-aware reverse-gap candidates from prior RAGR frontier",
+    "execute bounded evidence review without fuzzy auto-binding",
+    "persist explicit reviews then rebuild complete 2061-record SMC/SRR"
   ],
   "authority_advance_allowed": false,
   "canonical_id_allocation_allowed": false,

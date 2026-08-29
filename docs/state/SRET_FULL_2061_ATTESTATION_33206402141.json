@@ -1,0 +1,96 @@
+{
+  "schema_version": "SRET-FULL-MATERIALIZATION-ATTESTATION-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "generated_at": "2026-08-29T20:24:00Z",
+  "parent_git_sha": "d5c5a19aad1836a34bcec7a8b060abc239e80b4c",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "authority_parent_materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+  "snapshot_id": "HS-MEMBER-DE-33206402141",
+  "inputs": {
+    "source_records": 2061,
+    "source_records_sha256": "62e26d62d8677a5437e081302b6b4d206c0d27a0fe268c6356aef01da5428dc2",
+    "source_artifact_id": 9700376482,
+    "candidate_records": 1438,
+    "candidate_records_sha256": "34d9aa9cfa4fe896bf1db8fba4dedfded9a1dbf2e135b847101904644d16bba0",
+    "candidate_artifact_id": 9718866661,
+    "ecv_current_detail_verified": 1438,
+    "base_terminal_mappings": 624,
+    "cumulative_explicit_srr_smo_deltas": 32,
+    "effective_terminal_mappings": 656,
+    "effective_reconcile_required": 1405,
+    "overlay_materialization_sha256": "e8a6da1bfe5e585807e41f91db9ecccb507c60140366e9dab7f36290c613a368",
+    "terminal_coverage_sha256": "95c48f65fbf67c2fb2c284c9ba603be03d706d2f46ef7373dc8ebb7272b3c176",
+    "ragr_review_queue_sha256": "cf47dc91057df8653cd75729cb39320605e193e476c6828f24956b69e2848b9c",
+    "canonical_identity_catalog_sha256": "091a2b1d4f95bc0035135c848104666cf9fca5c4a9e1d691a8a6e16b20e52b99"
+  },
+  "materialization_recipe": [
+    "rebuild the 624 deterministic unique normalized name+city base mappings from the frozen 2061 source manifest and current 690-active canonical catalog",
+    "apply the 32 evidence-backed explicit SRR/SMO source-to-canonical deltas; all are disjoint from the deterministic base",
+    "verify 656 unique terminal source records map to 656 unique active canonical records and reproduce terminal coverage SHA 95c48f65fbf67c2fb2c284c9ba603be03d706d2f46ef7373dc8ebb7272b3c176",
+    "propagate current_evidence_verified=true to unresolved records strictly by membership in the immutable 1438-record candidate export whose complete ECV frontier is attested 1438/1438; the resulting unresolved set is exactly 1405 and is a subset of that verified key set",
+    "execute SRET-1.0 from main d5c5a19aad1836a34bcec7a8b060abc239e80b4c over the effective mapping plus the 690-active Drive catalog",
+    "similarity suggestions are review-space reduction only and cannot bind a canonical target or authorize a terminal decision"
+  ],
+  "result": {
+    "source_records": 2061,
+    "carried_terminal_mappings": 656,
+    "triage_records": 1405,
+    "counts_by_triage_state": {
+      "MATCH_EXISTING_REVIEW": 0,
+      "AMBIGUOUS_REVIEW": 8,
+      "NOVELTY_REVIEW": 1397,
+      "EVIDENCE_PENDING": 0
+    },
+    "current_verified_triage_records": 1405,
+    "items_sha256": "b15ed2d019759b3730a225207cdb1ba674b16b93ac925b74dbabff2d495aecf6",
+    "triage_sha256": "85cc6d9d85918d98415879df0535b7276e4b33770a5b21ccdffef416b6f2aae0",
+    "full_local_materialization_bytes": 919934,
+    "full_local_materialization_file_sha256": "5ea19728f0aeb715c502dce8647503e50eeeb019701dc8d8dd111a7968ccf70a",
+    "full_materialization_persisted_by_value": false,
+    "full_materialization_reconstructible_from_attested_inputs": true
+  },
+  "ambiguous_review_queue": [
+    {"source_record_key":"MD-0ff4c70958631a70430d","name":"Hotel De la Paix","city":"Interlaken","exact_signal_hotel_ids":["H-0600"]},
+    {"source_record_key":"MD-178259a759ab38cf00da","name":"Hotel Du Lac","city":"Därligen","exact_signal_hotel_ids":["H-0505","H-0506","H-0507"]},
+    {"source_record_key":"MD-3572f83756b4c984411f","name":"Hôtel Du Port","city":"Villeneuve VD","exact_signal_hotel_ids":["H-0620"]},
+    {"source_record_key":"MD-640f8cf75c0e922e9c29","name":"Hotel Astoria","city":"Luzern","exact_signal_hotel_ids":["H-0411","H-0412","H-0413","H-0414","H-0415"]},
+    {"source_record_key":"MD-7e632f2f1bfed0e1af41","name":"Hotel Silberhorn","city":"Wengen","exact_signal_hotel_ids":["H-0151"]},
+    {"source_record_key":"MD-a36014e20fcfce1236a8","name":"Hotel De la Paix","city":"Luzern","exact_signal_hotel_ids":["H-0600"]},
+    {"source_record_key":"MD-bba51d5c35760780d84d","name":"Hotel Allegra","city":"Pontresina","exact_signal_hotel_ids":["H-0382"]},
+    {"source_record_key":"MD-d00afedb7be15f4b96aa","name":"Hotel Drei Könige","city":"Einsiedeln","exact_signal_hotel_ids":["H-0650","H-0677"]}
+  ],
+  "similarity_review_space": {
+    "minimum_signal_ppm": 350000,
+    "source_records_with_suggestions": 116,
+    "suggestions_total": 166,
+    "thresholds": {
+      "800000": {"source_records":1,"suggestions":1},
+      "700000": {"source_records":2,"suggestions":2},
+      "600000": {"source_records":20,"suggestions":22},
+      "500000": {"source_records":67,"suggestions":91},
+      "350000": {"source_records":116,"suggestions":166}
+    },
+    "warning": "candidate_suggestions are not identity evidence and never set canonical_hotel_id"
+  },
+  "qa": {
+    "validator_violations": [],
+    "source_partition_exact": true,
+    "items_hash_verified": true,
+    "triage_hash_verified": true,
+    "terminal_targets_materialized_in_triage": 0,
+    "canonical_id_reservations": 0,
+    "authority_actions": 0
+  },
+  "hard_invariants": {
+    "review_only": true,
+    "terminal_mapping_allowed": false,
+    "canonical_id_reservation_allowed": false,
+    "authority_advanced": false,
+    "h_id_allocations": 0,
+    "crm_universe_complete": false,
+    "outbound": "CLOSED",
+    "send_allowed": 0
+  },
+  "next_route": "RESOLVE_SRET_AMBIGUITY8_THEN_SEGMENT_1397_NOVELTY_BY_INDEPENDENT_DISTINCTNESS_EVIDENCE",
+  "provider_boundary": "SSR-1.0 remains blocked on a capture-valid discover.swiss structured API manifest / Infocenter Open subscription key; this SRET materialization uses the qualified member-directory plus exact-current MEP route and does not claim API equivalence."
+}

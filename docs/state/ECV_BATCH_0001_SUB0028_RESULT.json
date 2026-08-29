@@ -1,0 +1,12 @@
+{
+  "schema_version":"ECV-RESULT-SUMMARY-1.0",
+  "project":"SWITZERLAND_JOB_OS","source_snapshot_id":"HS-MEMBER-DE-33206402141","batch_id":"HS-MEMBER-DE-33206402141:WORK:0001:SUB:0028",
+  "input_items":20,"results_count":20,"all_terminal":true,"all_verified":true,"counts_by_state":{"CURRENT_DETAIL_VERIFIED":20},"terminal_evidence_count":20,"provider_record_change_count":0,
+  "cumulative_current_detail_verified":550,"remaining_never_verified":888,"remaining_unverified":888,"pending_requeue":0,
+  "ecv_packet_sha256":"223026f226c0847176e8df0bbd0d8493c8f0a1cf83754c2c7c80cae7ded5ee65",
+  "artifact_result_json_sha256":"166aef3fe8e8fe83ce73bedd2876194d1b2893ec3cd5c38bc6a23d51a533ba07","artifact_raw_json_sha256":"e2d02cf04bd36ff7d1b5a7cc29dd980d7f9c1bb4d82b82c3b9d67276e83bbe9d","artifact_provider_evidence_sha256":"9b53de12208a8537a49e3df0fca93b8f17b3274d74dc6789d76856844c624530","artifact_runtime_sha256":"15c27730175c783ea45ab428175a61000c06d064f752a76d47483fc4e036e4f4","artifact_validate_sha256":"f5334be03870d50578ba6057a00ee90424ff994671576e764c93e37d61736aeb","artifact_zip_sha256":"d0e21006bf1f6b0c323db89f8afa60299445570914191a695739156be7ef3461",
+  "github_actions_run_id":33237308859,"github_actions_job_id":99060430338,"artifact_id":9710309203,"validation_violations":[],
+  "lineage_holes":[],"contiguous_original_candidate_offset_end":540,"next_untouched_offset":541,"terminal_mapping_effect":"NONE_UNTIL_ENTITY_RESOLUTION",
+  "authority_advanced":false,"h_id_allocations":0,"outbound":"CLOSED","send_allowed":0,
+  "note":"SUB0028 is 20/20 strict exact-current verified. Evidence is verification-only and does not allocate canonical IDs or advance operational authority."
+}

@@ -1,0 +1,83 @@
+name: candidate-entity-partition
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/candidate-entity-partition.yml'
+      - 'src/swiss_os/candidate_entity_partition.py'
+      - 'src/swiss_os/cwp_lineage_guard.py'
+      - 'tests/test_candidate_entity_partition.py'
+      - 'docs/state/CRM_CANDIDATE_EXPORT_33206402141.manifest.json'
+      - 'docs/state/CRM_CANDIDATE_EXPORT_33206402141.parts/**'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/candidate-entity-partition.yml'
+      - 'src/swiss_os/candidate_entity_partition.py'
+      - 'src/swiss_os/cwp_lineage_guard.py'
+      - 'docs/state/CRM_CANDIDATE_EXPORT_33206402141.manifest.json'
+      - 'docs/state/CRM_CANDIDATE_EXPORT_33206402141.parts/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  partition:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Unit and current-transport tests
+        run: python -m unittest tests.test_candidate_entity_partition
+      - name: Build exact current candidate partition
+        run: python -m swiss_os.candidate_entity_partition --out-dir .artifacts/cep
+      - name: Adversarial whole-set safety gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          payload = json.loads(Path('.artifacts/cep/CANDIDATE_ENTITY_PARTITION_SUMMARY.json').read_text())
+          summary = payload['summary']
+          assert payload['validation_pass'] is True
+          assert payload['snapshot_id'] == 'HS-MEMBER-DE-33206402141'
+          assert payload['candidate_records_sha256'] == '34d9aa9cfa4fe896bf1db8fba4dedfded9a1dbf2e135b847101904644d16bba0'
+          assert payload['candidate_gzip_sha256'] == '071e2cf1b895b63457c56066de7d8653b3182a12d1260ff9be7709a684fcf194'
+          assert summary['candidate_records'] == 1438
+          assert summary['partition_clusters'] == 1438
+          assert summary['singleton_clusters'] == 1438
+          assert summary['stable_detail_url_clusters'] == 0
+          assert summary['stable_detail_url_cluster_members'] == 0
+          assert summary['review_conflict_groups'] == 0
+          assert summary['review_required_records'] == 0
+          assert summary['name_city_collision_groups'] == 0
+          assert summary['missing_detail_url_records'] == 0
+          assert summary['exact_assignment_count'] == 1438
+          assert summary['assignment_duplicates'] == 0
+          assert summary['omitted_source_records'] == 0
+          assert summary['foreign_source_records'] == 0
+          assert summary['proposed_distinct_candidate_entities'] == 1438
+          assert payload['authority_advanced'] is False
+          assert payload['h_id_allocations'] == 0 and type(payload['h_id_allocations']) is int
+          assert payload['canonical_id_reservations'] == 0 and type(payload['canonical_id_reservations']) is int
+          assert payload['outbound'] == 'CLOSED'
+          assert payload['outbound_opened'] is False
+          assert payload['send_allowed'] == 0 and type(payload['send_allowed']) is int
+          print(json.dumps(payload, indent=2, sort_keys=True))
+          PY
+      - name: Upload ephemeral CEP evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: candidate-entity-partition-${{ github.run_id }}
+          path: .artifacts/cep
+          if-no-files-found: error
+          include-hidden-files: true
+          retention-days: 7

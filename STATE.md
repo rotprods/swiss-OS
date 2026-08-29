@@ -5,7 +5,7 @@ GitHub parent for this wave: **`15868e99c2b9d8919854043341e5c01947b4e37a`**.
 Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**.  
 Open GitHub issues labelled `P0`: **0**. Frozen current CRM source snapshot: **`HS-MEMBER-DE-33206402141`**.
 
-## Authority — unchanged
+## Authoritative operational state — unchanged
 ```text
 physical HOTELS rows            690
 active canonical                690
@@ -37,7 +37,7 @@ overlay SHA      e5ed0c76dd84e630679007e9cf209c1239dc68660c1b2c5158798f1302d4aa8
 ```
 Exact URL anti-join across all 1,438 CWP candidates found `0` direct matches to authority `hotelleriesuisse_url`; no heuristic mapping was created.
 
-## Exact-current verification
+## Exact-current canary verification
 ```text
 ECV verified frontier             320 / 1438
 ECV remaining never verified     1118

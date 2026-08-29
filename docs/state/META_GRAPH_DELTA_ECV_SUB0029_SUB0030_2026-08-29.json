@@ -1,0 +1,25 @@
+{
+  "schema_version": "META-GRAPH-DELTA-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "generated_at": "2026-08-29T06:10:00Z",
+  "cycle_id": "META-20260829-ECV-SUB0029-SUB0030",
+  "graph_impact": "META",
+  "parent_git_sha": "1959bd30001b79ba265100960c8b64dffb76ffd6",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "nodes": [
+    {"id":"ECV_SUB0029","type":"EVIDENCE_WAVE","state":"GREEN","artifact_id":9710370622,"verified_items":20},
+    {"id":"CWP_SUB0030","type":"STAGED_WAVE","state":"READY","offset_range":"561..580","items":20},
+    {"id":"P0_CRM_RECONCILE","type":"BLOCKER","state":"OPEN","value":1434},
+    {"id":"P0_REVERSE_GAPS","type":"BLOCKER","state":"OPEN","value":66}
+  ],
+  "edges": [
+    {"from":"ECV_SUB0029","relation":"UNLOCKS","to":"CWP_SUB0030"},
+    {"from":"CWP_SUB0030","relation":"REDUCES_EVIDENCE_BACKLOG_FOR","to":"P0_CRM_RECONCILE"},
+    {"from":"P0_CRM_RECONCILE","relation":"BLOCKS","to":"CRM_UNIVERSE_COMPLETE"},
+    {"from":"P0_REVERSE_GAPS","relation":"BLOCKS","to":"CRM_UNIVERSE_COMPLETE"}
+  ],
+  "authority_advanced": false,
+  "h_id_allocations": 0,
+  "outbound": "CLOSED",
+  "send_allowed": 0
+}

@@ -1,0 +1,46 @@
+{
+  "schema_version": "META-GAUNTLET-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "generated_at": "2026-08-29T06:20:00Z",
+  "cycle_id": "META-20260829-ECV-SUB0029-SUB0030",
+  "parent_git_sha": "1959bd30001b79ba265100960c8b64dffb76ffd6",
+  "checks": {
+    "main_ancestry_reconstructed": "PASS",
+    "live_drive_authority_690_ids": "PASS",
+    "h_0691_absent_and_unallocated": "PASS",
+    "candidate_export_lineage": "PASS",
+    "sub0029_artifact_zip_sha256": "PASS",
+    "sub0029_terminal_20_of_20": "PASS",
+    "sub0029_provider_record_changes_zero": "PASS",
+    "sub0029_validator_violations_zero": "PASS",
+    "sub0030_exact_original_offsets_561_580": "PASS",
+    "sub0030_items_sha_recomputed": "PASS",
+    "canonical_h_id_allocations_zero": "PASS",
+    "authority_not_advanced": "PASS",
+    "outbound_closed_send_zero": "PASS",
+    "repo_ci": "PASS",
+    "adversarial_diff_review": "PASS"
+  },
+  "repo_ci_run_id": 33238138484,
+  "repo_ci_job_id": 99062657514,
+  "repo_ci_evidence": {
+    "repo_guard":"PASS",
+    "stable_contract_guard":"PASS",
+    "cwp_lineage_guard":"PASS candidate_records=1438 staged_offsets=561..580",
+    "handoff_frontier_guard":"PASS verified=570 remaining=868 pending_requeue=0",
+    "unit_tests":"PASS 307/307",
+    "manifest_semantics_canary":"PASS"
+  },
+  "adversarial_questions": [
+    "Could any staged/ECV count be mistaken for operational authority? — NO; all artifacts remain PRE_AUTHORITY and permission flags are false.",
+    "Did any branch artifact reserve or imply reservation of H-0691? — NO; H-0691 remains explicitly UNALLOCATED and h_id_allocations=0.",
+    "Can candidate-order drift change the 561..580 identities? — GUARDED; CWP lineage rebuilt the durable 1438-record export and exact offsets passed.",
+    "Did live Drive authority move from the reconstructed 690/690/0 parent? — NO; HOTELS_V2 was reread and contains H-0001..H-0690 only.",
+    "Does every SUB0030 identity still require exact-current evidence before terminal mapping? — YES; staged state is VERIFY_NEW_ENTITY only."
+  ],
+  "closure": "PASS_SAFE_NON_AUTHORITATIVE_WAVE",
+  "authority_advanced": false,
+  "h_id_allocations": 0,
+  "outbound": "CLOSED",
+  "send_allowed": 0
+}

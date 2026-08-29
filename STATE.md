@@ -26,6 +26,7 @@ cumulative SMO terminal deltas              32
 effective terminal mappings                656
 RECONCILE_REQUIRED                         1405
 ECV verified frontier              1438 / 1438
+ECV remaining never verified              0
 RAGR residual reverse gaps                  34
 ```
 
@@ -54,7 +55,7 @@ This is a meaningful negative result: after the 32 explicit identity resolutions
 
 Public-safe summary: `docs/state/SRET_FULL_2061_SUMMARY_33206402141.json`. Exact-name locality collision queue: `docs/state/SRET_AMBIGUITY_QUEUE_0001_33206402141.json`. Meta Graph: `docs/state/META_GRAPH_DELTA_SRET_FULL2061_2026-08-29.json`.
 
-The 116 same-city lexical suggestions are **review-space reducers only**. The strongest example is deliberately known to be unsafe as an identity shortcut: `ibis budget Zürich City West` resembles `ibis Zürich City West`, but prior evidence established them as distinct source/canonical properties. This validates the fail-closed SRET posture.
+The 116 same-city lexical suggestions are **review-space reducers only**. The strongest example is deliberately known to be unsafe as an identity shortcut: `ibis budget Zürich City West` resembles `ibis Zürich City West`, but prior evidence established them as distinct. This validates the fail-closed SRET posture.
 
 ## NEXT — provider identity enrichment before further terminal resolution
 

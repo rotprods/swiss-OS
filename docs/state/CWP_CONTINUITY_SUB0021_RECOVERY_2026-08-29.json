@@ -1,0 +1,45 @@
+{
+  "schema_version": "CWP-CONTINUITY-RECOVERY-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "generated_at": "2026-08-29T02:34:00Z",
+  "parent_git_sha": "a5997eab004e6775f72aa7f8a335c5d11c65f8ef",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "authority_materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+  "authority_sheet_id": "1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w",
+  "authority_export_xlsx_sha256": "434fab60a1260f08b647e9f6ed718575de195a11fc09177a4c42da84b66b920e",
+  "source_artifact_id": 9700376482,
+  "source_artifact_zip_sha256": "721f9ff9f84e2d5d9df62c6b22f12e7354cef3a298cb8990be66a202e1e769ce",
+  "source_records": 2061,
+  "normalization_contract": "strip + whitespace collapse + casefold",
+  "deterministic_anti_join": {
+    "exact_name_city_matches": 623,
+    "candidate_new_entity_preauth": 1438,
+    "conflicts": 0,
+    "candidate_order": "source_record_key ascending"
+  },
+  "continuity_proofs": {
+    "sub0017_offsets": "320..339",
+    "sub0017_hash_match": true,
+    "sub0019_offsets": "340..359",
+    "sub0019_hash_match": true,
+    "sub0020_offsets": "360..379",
+    "sub0020_persisted_items_sha256": "52cf15deec4f63e877805850a8175342cf05bd3d701899d64973491d6d1c1162",
+    "sub0020_live_batch_id": "HS-MEMBER-DE-33206402141:WORK:0001:SUB:0020",
+    "sub0020_live_all_verified": true,
+    "sub0020_live_result_packet_sha256": "b06d5d2125b664bc361e5bfaaaa74d326f9b797ab0d732bf7ba39f323b45c6aa"
+  },
+  "sub0021": {
+    "offset_range": "380..399",
+    "items_count": 20,
+    "first_source_record_key": "MD-409df9653f7243f904d7",
+    "last_source_record_key": "MD-42b7f31568deddd19f7f",
+    "items_sha256": "b42407608bf0a0995b453485b40ad9016376426445fdcad59084d8bdd43045b2",
+    "lineage_eligible": true
+  },
+  "next_untouched_original_candidate_offset": 400,
+  "adversarial_note": "SUB0021 is derived from the same frozen 1438-candidate deterministic anti-join whose later-format continuity is proven across SUB0017, corrected SUB0019 and live-verified SUB0020. Historical malformed SUB0018 consumes no original-candidate offsets. No H-ID is allocated or reserved by this reconstruction.",
+  "authority_advanced": false,
+  "h_id_allocations": 0,
+  "outbound": "CLOSED",
+  "send_allowed": 0
+}

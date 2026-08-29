@@ -1,0 +1,36 @@
+{
+  "schema_version": "META-GRAPH-DELTA-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "cycle_id": "META-20260829-ECV-SUB0020-SUB0021",
+  "parent_git_sha": "a5997eab004e6775f72aa7f8a335c5d11c65f8ef",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "checkpoint": "CRM_UNIVERSE_COMPLETE",
+  "colette": {
+    "observe": "SUB0020 live ECV completed green: 20/20 CURRENT_DETAIL_VERIFIED, zero provider record changes, zero validation violations.",
+    "bottleneck": "Continue immutable exact-current acquisition while qualified terminal source mappings remain only 627/2061 and discover.swiss parity is key-blocked.",
+    "execute": "Persist SUB0020 evidence and stage deterministic original-candidate offsets 380..399 as SUB0021.",
+    "learn": "The corrected candidate lineage remains coherent through live SUB0020; malformed historical SUB0018 remains excluded from original-candidate consumption.",
+    "test": "Artifact safety assertions pass; validator violations are zero; staged SUB0021 hash is deterministic from frozen source artifact + E4 authority.",
+    "evaluate": "PASS_PRE_AUTHORITY"
+  },
+  "frontier_before": {"current_detail_verified":369,"remaining_never_verified":1069,"pending_requeue":0},
+  "frontier_after": {"current_detail_verified":389,"remaining_never_verified":1049,"pending_requeue":0},
+  "decisions": [
+    "D-META-ECV-020-01: accept SUB0020 exact-current evidence as verification-only; no terminal canonical mapping effect until entity resolution.",
+    "D-META-CWP-021-01: stage original candidate offsets 380..399 as SUB0021 with items SHA b42407608bf0a0995b453485b40ad9016376426445fdcad59084d8bdd43045b2.",
+    "D-META-SAFETY-01: H-0691 remains unallocated; authority promotion remains prohibited; OUTBOUND=CLOSED; send_allowed=0."
+  ],
+  "next": {
+    "route": "SUB0021_LIVE_ECV_THEN_CHAIN_SUB0022",
+    "staged_batch": "HS-MEMBER-DE-33206402141:WORK:0001:SUB:0021",
+    "staged_items_sha256": "b42407608bf0a0995b453485b40ad9016376426445fdcad59084d8bdd43045b2",
+    "next_original_candidate_offset_if_safe": 400,
+    "provider_dependency": "DISCOVER_SWISS_SUBSCRIPTION_KEY",
+    "mapping_blocker": "EFFECTIVE_RECONCILE_REQUIRED_1434_NOT_ZERO",
+    "reverse_gap_blocker": 66
+  },
+  "authority_advanced": false,
+  "h_id_allocations": 0,
+  "outbound": "CLOSED",
+  "send_allowed": 0
+}

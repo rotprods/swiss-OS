@@ -1,6 +1,6 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest chained Meta Execution reconciliation: **2026-08-29T20:18:00Z**. Current wave parent main SHA: **`d5c5a19aad1836a34bcec7a8b060abc239e80b4c`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
+Latest chained Meta Execution reconciliation: **2026-08-29T20:24:00Z**. Current wave parent main SHA: **`22d2d57ab22c227b1781f6705f851871667f1bb3`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
 
 ## Authority — unchanged / locked
 
@@ -34,34 +34,19 @@ Pinned lineage: source records SHA `62e26d62d8677a5437e081302b6b4d206c0d27a0fe26
 
 ## SRET-1.0 — full 2061-record evidence triage materialized
 
-SRET-1.0 was added in PR #266 after green CI and adversarial review. It is strictly review-only: exact identity signals may create review work, similarity may reduce review space, but neither can materialize a terminal mapping, reserve an H-ID or advance authority.
+SRET-1.0 remains strictly review-only. The deterministic full frontier is 656 carried terminal mappings plus 1405 triage records: `MATCH_EXISTING_REVIEW=0`, `AMBIGUOUS_REVIEW=8`, `NOVELTY_REVIEW=1397`, `EVIDENCE_PENDING=0`; 116 novelty records have same-city similarity hints used only to reduce review space. Full items SHA `b15ed2d019759b3730a225207cdb1ba674b16b93ac925b74dbabff2d495aecf6`; triage SHA `e82127ea2abc0ac68ef194496cd0de6bfddab2596a9dda15bf13411316d6f790`.
 
-The full effective 2061-record mapping was reconstructed from the exact 656 terminal source-to-canonical coverage plus the 1405 remaining `RECONCILE_REQUIRED` records and compiled through SRET-1.0. Deterministic result:
+A post-merge lineage audit caught that the first public ambiguity-queue projection was not selected directly from those hashed SRET items: several source keys/localities were stale. It was fail-closed and never used for a terminal decision. The queue is now regenerated directly by `triage_state == AMBIGUOUS_REVIEW`, includes the source detail URLs, and hashes to **`1fdf800a0b7bd9ad64a7a47c9c9c41c87c2c38a3d4b91e1fea2b54c93230cee8`**. This correction changes review lineage only; all SRET counts, full items/triage hashes, authority state, and mapping frontier remain unchanged.
 
-```text
-source records                       2061
-carried terminal mappings             656
-triage records                       1405
-MATCH_EXISTING_REVIEW                   0
-AMBIGUOUS_REVIEW                        8
-NOVELTY_REVIEW                        1397
-EVIDENCE_PENDING                         0
-novelty with same-city suggestions     116
-items SHA            b15ed2d019759b3730a225207cdb1ba674b16b93ac925b74dbabff2d495aecf6
-triage SHA           e82127ea2abc0ac68ef194496cd0de6bfddab2596a9dda15bf13411316d6f790
-```
+Correct ambiguity records are: Hotel De la Paix / Interlaken; Hotel Du Lac / Därligen; Hôtel Du Port / Villeneuve VD; Hotel Astoria / Luzern; Hotel Silberhorn / Wengen; Hotel De la Paix / Luzern; Hotel Allegra / Pontresina; and Hotel Drei Könige / Einsiedeln. Each remains ambiguity-only; exact global-name collisions do not authorize mapping.
 
-This is a meaningful negative result: after the 32 explicit identity resolutions already applied, **no remaining source record has a unique exact canonical name+city/detail identity signal** under the pinned catalog. Eight records have exact global-name/locality collisions and remain ambiguity review. The other 1397 are novelty-review records; current exact member-directory verification proves current source existence, not distinctness from all canonical identities.
-
-Public-safe summary: `docs/state/SRET_FULL_2061_SUMMARY_33206402141.json`. Exact-name locality collision queue: `docs/state/SRET_AMBIGUITY_QUEUE_0001_33206402141.json`. Meta Graph: `docs/state/META_GRAPH_DELTA_SRET_FULL2061_2026-08-29.json`.
-
-The 116 same-city lexical suggestions are **review-space reducers only**. The strongest example is deliberately known to be unsafe as an identity shortcut: `ibis budget Zürich City West` resembles `ibis Zürich City West`, but prior evidence established them as distinct. This validates the fail-closed SRET posture.
+Public-safe summary: `docs/state/SRET_FULL_2061_SUMMARY_33206402141.json`. Corrected ambiguity queue: `docs/state/SRET_AMBIGUITY_QUEUE_0001_33206402141.json`.
 
 ## NEXT — provider identity enrichment before further terminal resolution
 
-The shallow deterministic identity surface is exhausted. The next high-value safe route is to enrich bounded SRET records with current provider identity fields that can disambiguate same-city/name variants: official property domain and postal/location identity where available. Compare those fields to HOTELS_MASTER current official domains/locations. Exact domain/address agreement may justify an explicit SRR `MATCH_EXISTING` review after current corroboration; **absence or difference of a domain is not by itself proof of a new canonical**.
+The shallow deterministic identity surface is exhausted. Enrich bounded SRET records with current provider identity fields that can disambiguate variants: external property-domain candidates and structured postal/location identity where available. Compare those fields to HOTELS_MASTER current official domains/locations. Exact independently corroborated agreement may justify an explicit SRR review; **absence or difference of a domain is not proof of a new canonical**.
 
-Start with the 8 ambiguity records and the highest-value subset of the 116 same-city similarity hints. Persist enrichment evidence/hashes, keep all target IDs out of staging, and apply only independently demonstrated SRR decisions. Any record lacking sufficient identity evidence remains `NOVELTY_REVIEW` or `AMBIGUOUS_REVIEW`.
+Start with the corrected 8 ambiguity records, then a bounded highest-value subset of the 116 same-city similarity hints. Persist enrichment evidence/hashes, keep target IDs out of staging, and apply only independently demonstrated SRR decisions. Records lacking sufficient identity evidence remain `NOVELTY_REVIEW` or `AMBIGUOUS_REVIEW`.
 
 The dominant P0 remains `RECONCILE_REQUIRED=1405`. `MD-034c1c3b0f7ba9d69c80` ibis budget Zürich City West remains a distinct nonterminal new-canonical review candidate; **H-0691 is not reserved**.
 

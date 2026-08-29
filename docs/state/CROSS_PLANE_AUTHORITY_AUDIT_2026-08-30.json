@@ -1,0 +1,121 @@
+{
+  "schema_version": "CROSS-PLANE-AUTHORITY-AUDIT-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "wave_id": "WAVE-20260830-CROSS-PLANE-AUDIT-02",
+  "session_id": "SES-20260829T223900Z-SSR-CAPABILITY-A71C5E",
+  "workstream_id": "WS-AUTHORITY-RECONCILIATION",
+  "objective_id": "CRM_UNIVERSE_COMPLETE",
+  "correlation_id": "CORR-20260829-CROSS-PLANE-AUDIT-A71C5E",
+  "generated_at": "2026-08-29T22:44:00Z",
+  "parent_git_sha": "ff65e9bd79945294accae55536faeb42f3135a16",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "authority_parent_materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+  "execution_mode": "READ_ONLY_RECONCILIATION_AUDIT",
+  "visible_plane_checks": {
+    "github": {
+      "main_sha": "ff65e9bd79945294accae55536faeb42f3135a16",
+      "authority_pointer_active_canonical": 690,
+      "next_h_id": "H-0691",
+      "next_h_id_state": "UNALLOCATED",
+      "crm_universe_complete": false,
+      "outbound": "CLOSED",
+      "send_allowed": 0
+    },
+    "drive_hotels_v2": {
+      "last_observed_hotel_id": "H-0690",
+      "H-0690_present": true,
+      "H-0691_present": false,
+      "H-0690_name": "Hotel Wettstein",
+      "state": "CONSISTENT_WITH_690_FRONTIER"
+    },
+    "drive_hotel_intelligence_v1": {
+      "H-0690_present": true,
+      "H-0690_level": "L1",
+      "H-0691_present": false,
+      "state": "CONSISTENT_WITH_690_FRONTIER"
+    },
+    "drive_graph_v2": {
+      "H-0690_hotel_node_present": true,
+      "H-0690_intelligence_node_present": true,
+      "H-0690_has_intelligence_edge_present": true,
+      "state": "TAIL_ENTITY_GRAPH_CONNECTED"
+    },
+    "drive_goal_state": {
+      "G-0500_current": 690,
+      "G-0500_target_reference": 2050,
+      "G-0700_active_denominator_note": 690,
+      "G-0800_active_denominator_note": 690,
+      "state": "CURRENT_TOP_LEVEL_PROJECTIONS_ALIGN"
+    },
+    "drive_checkpoint_registry": {
+      "CP-0750_current": 690,
+      "CP-0750_target": 750,
+      "CP-0800-GRAPH-CUTOVER_current": 686,
+      "CP-0800-GRAPH-CUTOVER_target": 686,
+      "CP-0800-CURRENT-L4_current": 105,
+      "CP-0800-CURRENT-L4_target": 686,
+      "CP-0800-CURRENT-L9_current": 0,
+      "CP-0800-CURRENT-L9_target": 686,
+      "CP-INTEL-1000_current": 686,
+      "state": "STALE_DENOMINATOR_PROJECTIONS_DETECTED"
+    },
+    "drive_outreach_gates_v2": {
+      "lanes_checked": ["ENTRY", "HYBRID", "CREATIVE", "PORTAL"],
+      "all_send_allowed_zero": true,
+      "state": "OUTBOUND_LOCK_CONFIRMED"
+    }
+  },
+  "findings": [
+    {
+      "id": "DRIFT-CHECKPOINT-DENOMINATOR-686-690",
+      "severity": "P1_OBSERVABILITY_CONTINUITY",
+      "type": "STALE_CONTROL_PLANE_PROJECTION",
+      "description": "Top-level authority and live HOTELS_V2/Intelligence/Graph tail evidence align at 690, while several CHECKPOINT_REGISTRY rows still encode the pre-recovery denominator 686.",
+      "affected_rows": [
+        "CP-0800-GRAPH-CUTOVER",
+        "CP-0800-CURRENT-L4",
+        "CP-0800-CURRENT-L9",
+        "CP-INTEL-1000"
+      ],
+      "authority_effect": "NONE_UNLESS_FALSELY_CONSUMED_AS_CURRENT_DENOMINATOR",
+      "repair_rule": "Do not patch these rows in isolation. Regenerate checkpoint projections through the synchronized control-plane/meta-state reconciliation path against live 690 authority, preserving historical completion semantics and recalculating dynamic targets where applicable."
+    }
+  ],
+  "audit_result": {
+    "visible_frontier_consistent": true,
+    "cross_plane_exact_complete": false,
+    "reason_not_exact_complete": [
+      "Constrained SQLite authority bytes were not rehydrated in this activation.",
+      "Checkpoint-registry denominator projections contain stale 686 values despite 690 live frontier.",
+      "Active fenced entity-review claim token 3 remains in flight."
+    ],
+    "authority_promotion_eligible": false,
+    "state": "VISIBLE_AUTHORITY_FRONTIER_CONSISTENT_WITH_P1_PROJECTION_DRIFT"
+  },
+  "hard_invariants": {
+    "authority_advanced": false,
+    "h_id_allocations": 0,
+    "canonical_id_reservations": 0,
+    "crm_universe_complete": false,
+    "outbound": "CLOSED",
+    "send_allowed": 0,
+    "external_irreversible_actions": 0
+  },
+  "next_pointer": {
+    "next_route": "CHECKPOINT_DENOMINATOR_RECONCILIATION_PREFLIGHT",
+    "exact_blocker_dependency": "Regenerate stale 686 dynamic checkpoint projections from 690 live authority through synchronized reconciliation; do not mutate Drive rows alone. Entity-review lane remains fenced by token 3.",
+    "parent_sha": "ff65e9bd79945294accae55536faeb42f3135a16",
+    "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+    "recovery_inputs": [
+      "STATE.md",
+      "docs/state/NEXT.json",
+      "docs/state/v2/active-claims.json",
+      "Drive GOAL_STATE",
+      "Drive CHECKPOINT_REGISTRY",
+      "Drive HOTELS_V2:H-0690",
+      "Drive HOTEL_INTELLIGENCE_V1:H-0690",
+      "Drive GRAPH_NODES_V2:H-0690",
+      "Drive GRAPH_EDGES_V2:H-0690"
+    ]
+  }
+}

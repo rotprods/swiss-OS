@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import base64
+import binascii
 import gzip
 import hashlib
 import json
@@ -23,9 +25,29 @@ def _load_json(path: Path) -> Mapping[str, Any]:
 
 
 def _load_gzip_json(path: Path) -> tuple[Mapping[str, Any], str]:
-    compressed = path.read_bytes()
+    """Load a gzip JSON artifact from raw gzip bytes or GitHub text-safe base64.
+
+    GitHub's contents writer in this execution environment is UTF-8 text-only. Binary
+    gzip bytes therefore cannot be persisted losslessly through that actuator. The
+    durable fallback is the base64 text representation of the *same* gzip payload.
+    We hash the decoded gzip bytes so the provenance digest remains transport-neutral.
+    Any non-gzip/non-canonical-base64 input fails closed.
+    """
+    stored = path.read_bytes()
+    compressed = stored
+    if not stored.startswith(b"\x1f\x8b"):
+        try:
+            compact = b"".join(stored.split())
+            compressed = base64.b64decode(compact, validate=True)
+        except (binascii.Error, ValueError) as exc:
+            raise CwpLineageError(f"{path}: invalid gzip or base64-gzip transport") from exc
+        if not compressed.startswith(b"\x1f\x8b"):
+            raise CwpLineageError(f"{path}: decoded transport is not gzip")
     digest = hashlib.sha256(compressed).hexdigest()
-    value = json.loads(gzip.decompress(compressed).decode("utf-8"))
+    try:
+        value = json.loads(gzip.decompress(compressed).decode("utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise CwpLineageError(f"{path}: invalid gzip JSON payload") from exc
     if not isinstance(value, Mapping):
         raise CwpLineageError(f"{path}: expected JSON object")
     return value, digest

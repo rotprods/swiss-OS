@@ -23,6 +23,7 @@ jobs:
       - uses: actions/checkout@v7
         with:
           persist-credentials: false
+          fetch-depth: 0
       - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
@@ -33,6 +34,8 @@ jobs:
         shell: bash
         env:
           INPUT_PACKET: ${{ github.event.inputs.packet_path }}
+          PUSH_BEFORE: ${{ github.event.before }}
+          PUSH_AFTER: ${{ github.sha }}
         run: |
           set -euo pipefail
           if [[ -n "${INPUT_PACKET:-}" ]]; then
@@ -40,7 +43,7 @@ jobs:
             [[ "$PACKET" == docs/state/PROVIDER_IDENTITY_WORK_*.json ]]
             [[ "$PACKET" != *".."* ]]
           else
-            PACKET="$(python -m swiss_os.provider_identity_packet_selection "$GITHUB_EVENT_PATH")"
+            PACKET="$(python -m swiss_os.provider_identity_packet_selection --git-diff "$PUSH_BEFORE" "$PUSH_AFTER")"
           fi
           [[ -f "$PACKET" ]]
           echo "path=$PACKET" >> "$GITHUB_OUTPUT"

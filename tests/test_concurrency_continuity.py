@@ -2,8 +2,7 @@ from __future__ import annotations
 
 from dataclasses import replace
 from datetime import datetime, timedelta, timezone
-
-import pytest
+import unittest
 
 from swiss_os.concurrency import AuthorityFence, ContextPack, ContractError, EventEnvelope, ScopeClaim, ScopeCollisionError, SessionIdentity, StaleWriterError, assert_no_claim_collision, validate_writer
 
@@ -16,7 +15,7 @@ def iso(delta=0):
 
 
 def identity():
-    return SessionIdentity.new(project_id="SWITZERLAND_JOB_OS", agent_id="AGT:pytest", workstream_id="WS:graph-v2", objective_id="OBJ:concurrency-kernel")
+    return SessionIdentity.new(project_id="SWITZERLAND_JOB_OS", agent_id="AGT:unittest", workstream_id="WS:graph-v2", objective_id="OBJ:concurrency-kernel")
 
 
 def fence(token=7, watermark=11, main=MAIN):
@@ -32,59 +31,53 @@ def claim(i, *, resource="repo/docs", semantic="source-resolution", mode="WRITE"
     return ScopeClaim(claim_id=f"CLM:{i.session_id}:{resource}:{semantic}", session_id=i.session_id, resource_scope=resource, semantic_scope=semantic, mode=mode, lease_expires_at=iso(delta), fencing_token=token)
 
 
-def test_parallel_disjoint_write_claims_are_allowed():
-    a, b = identity(), identity()
-    ca = claim(a, resource="repo/docs/architecture", semantic="architecture")
-    cb = claim(b, resource="repo/docs/state", semantic="provider-review")
-    assert_no_claim_collision(cb, [ca], now=iso())
-
-
-def test_overlapping_write_claims_fail_closed():
-    a, b = identity(), identity()
-    ca = claim(a, resource="repo/docs/state", semantic="source-resolution")
-    cb = claim(b, resource="repo/docs/state/sret", semantic="source-resolution/review")
-    with pytest.raises(ScopeCollisionError):
+class ConcurrencyContinuityTests(unittest.TestCase):
+    def test_parallel_disjoint_write_claims_are_allowed(self):
+        a, b = identity(), identity()
+        ca = claim(a, resource="repo/docs/architecture", semantic="architecture")
+        cb = claim(b, resource="repo/docs/state", semantic="provider-review")
         assert_no_claim_collision(cb, [ca], now=iso())
 
+    def test_overlapping_write_claims_fail_closed(self):
+        a, b = identity(), identity()
+        ca = claim(a, resource="repo/docs/state", semantic="source-resolution")
+        cb = claim(b, resource="repo/docs/state/sret", semantic="source-resolution/review")
+        with self.assertRaises(ScopeCollisionError):
+            assert_no_claim_collision(cb, [ca], now=iso())
 
-def test_expired_claim_is_stale():
-    i = identity()
-    with pytest.raises(StaleWriterError):
-        claim(i, delta=-1).validate(iso())
+    def test_expired_claim_is_stale(self):
+        with self.assertRaises(StaleWriterError):
+            claim(identity(), delta=-1).validate(iso())
 
+    def test_context_pack_rejects_moved_main(self):
+        with self.assertRaises(StaleWriterError):
+            context().validate(live_main_sha="0" * 40, live_authority_parent_sha256=PARENT, live_event_watermark=11, live_fencing_token=7)
 
-def test_context_pack_rejects_moved_main():
-    c = context()
-    with pytest.raises(StaleWriterError):
-        c.validate(live_main_sha="0" * 40, live_authority_parent_sha256=PARENT, live_event_watermark=11, live_fencing_token=7)
+    def test_context_pack_rejects_event_watermark_drift(self):
+        with self.assertRaises(StaleWriterError):
+            context().validate(live_main_sha=MAIN, live_authority_parent_sha256=PARENT, live_event_watermark=12, live_fencing_token=7)
 
+    def test_fencing_token_rejects_stale_writer(self):
+        i = identity(); ctx = context(i, fence(token=8)); c = claim(i, token=7)
+        with self.assertRaises(StaleWriterError):
+            validate_writer(claim=c, context=ctx, now=iso(), live_main_sha=MAIN, live_authority_parent_sha256=PARENT, live_event_watermark=11, live_fencing_token=8)
 
-def test_context_pack_rejects_event_watermark_drift():
-    c = context()
-    with pytest.raises(StaleWriterError):
-        c.validate(live_main_sha=MAIN, live_authority_parent_sha256=PARENT, live_event_watermark=12, live_fencing_token=7)
-
-
-def test_fencing_token_rejects_stale_writer():
-    i = identity(); ctx = context(i, fence(token=8)); c = claim(i, token=7)
-    with pytest.raises(StaleWriterError):
-        validate_writer(claim=c, context=ctx, now=iso(), live_main_sha=MAIN, live_authority_parent_sha256=PARENT, live_event_watermark=11, live_fencing_token=8)
-
-
-def test_writer_validation_passes_on_exact_live_fence():
-    i = identity(); ctx = context(i); c = claim(i)
-    validate_writer(claim=c, context=ctx, now=iso(), live_main_sha=MAIN, live_authority_parent_sha256=PARENT, live_event_watermark=11, live_fencing_token=7)
-
-
-def test_event_digest_is_deterministic_and_payload_sensitive():
-    i = identity()
-    event = EventEnvelope(event_id="EVT:test-1", event_type="WORK_STARTED", occurred_at="2026-08-29T21:39:00+00:00", identity=i, causation_id=None, authority=fence(), aggregate_type="SESSION", aggregate_id=i.session_id, expected_version=0, payload={"scope": "architecture"})
-    event.validate()
-    assert event.digest() == event.digest()
-    assert event.digest() != replace(event, payload={"scope": "other"}).digest()
-
-
-def test_material_writer_requires_write_claim():
-    i = identity(); ctx = context(i); c = claim(i, mode="READ")
-    with pytest.raises(ContractError):
+    def test_writer_validation_passes_on_exact_live_fence(self):
+        i = identity(); ctx = context(i); c = claim(i)
         validate_writer(claim=c, context=ctx, now=iso(), live_main_sha=MAIN, live_authority_parent_sha256=PARENT, live_event_watermark=11, live_fencing_token=7)
+
+    def test_event_digest_is_deterministic_and_payload_sensitive(self):
+        i = identity()
+        event = EventEnvelope(event_id="EVT:test-1", event_type="WORK_STARTED", occurred_at="2026-08-29T21:39:00+00:00", identity=i, causation_id=None, authority=fence(), aggregate_type="SESSION", aggregate_id=i.session_id, expected_version=0, payload={"scope": "architecture"})
+        event.validate()
+        self.assertEqual(event.digest(), event.digest())
+        self.assertNotEqual(event.digest(), replace(event, payload={"scope": "other"}).digest())
+
+    def test_material_writer_requires_write_claim(self):
+        i = identity(); ctx = context(i); c = claim(i, mode="READ")
+        with self.assertRaises(ContractError):
+            validate_writer(claim=c, context=ctx, now=iso(), live_main_sha=MAIN, live_authority_parent_sha256=PARENT, live_event_watermark=11, live_fencing_token=7)
+
+
+if __name__ == "__main__":
+    unittest.main()

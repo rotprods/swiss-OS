@@ -1,0 +1,93 @@
+{
+  "schema_version": "CHECKPOINT-DENOMINATOR-RECONCILIATION-ATTESTATION-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "wave_id": "WAVE-20260830-CHECKPOINT-RECONCILE-04",
+  "session_id": "SES-20260829T223900Z-SSR-CAPABILITY-A71C5E",
+  "workstream_id": "WS-CONTROL-PLANE-RECONCILIATION",
+  "objective_id": "CRM_UNIVERSE_COMPLETE",
+  "correlation_id": "CORR-20260829-CHECKPOINT-690-A71C5E",
+  "generated_at": "2026-08-29T22:48:30Z",
+  "parent_git_sha": "ed32e0f1b7686d44fb524c5b45fe9d15111a5cb8",
+  "plan_path": "docs/state/CHECKPOINT_DENOMINATOR_RECONCILIATION_PLAN_2026-08-30.json",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "authority_parent_materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+  "drive": {
+    "spreadsheet_id": "1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w",
+    "checkpoint_sheet": "CHECKPOINT_REGISTRY",
+    "decision_ledger_row": "DECISION_LEDGER!A98:P98",
+    "decision_id": "DEC-0103"
+  },
+  "precondition_reread": {
+    "result": "PASS",
+    "cp_1500_current": 686,
+    "cp_intel_1000_current": 686,
+    "cp_intel_1000_blocker": "CANONICAL_CAPACITY_686",
+    "cp_intel_1500_current": 686,
+    "cp_2050_canon_current": 686,
+    "cp_intel_2050_l1_current": 686,
+    "cp_0800_graph_cutover": "686/686 COMPLETE historical",
+    "cp_0800_current_l4": "105/686",
+    "cp_0800_current_l9": "0/686",
+    "live_goal_denominator": 690,
+    "H_0690_present": true,
+    "H_0691_present": false
+  },
+  "write": {
+    "result": "PASS",
+    "mode": "ATOMIC_SHEETS_BATCH_UPDATE",
+    "requests": 6,
+    "authority_plane_mutated": false,
+    "control_plane_projection_only": true
+  },
+  "post_write_verification": {
+    "result": "PASS",
+    "cp_1500_current": 690,
+    "cp_intel_1000_current": 690,
+    "cp_intel_1000_blocker": "CANONICAL_CAPACITY_690",
+    "cp_intel_1500_current": 690,
+    "cp_2050_canon_current": 690,
+    "cp_intel_2050_l1_current": 690,
+    "cp_0800_graph_cutover": "686/686 COMPLETE historical preserved",
+    "cp_0800_current_l4": "105/690",
+    "cp_0800_current_l9": "0/690",
+    "H_0690_present": true,
+    "H_0691_present": false,
+    "outreach_lanes_checked": ["ENTRY","HYBRID","CREATIVE","PORTAL"],
+    "all_send_allowed_zero": true
+  },
+  "decision": {
+    "drive_decision_id": "DEC-0103",
+    "rule": "DYNAMIC_PROJECTIONS_FOLLOW_LIVE_DENOMINATOR_COMPLETED_CHECKPOINTS_PRESERVE_COMPLETION_SNAPSHOT",
+    "historical_truth_destroyed": false
+  },
+  "concurrency": {
+    "entity_review_claim_id": "CLAIM-CRM-PIE050-CAPTURED27-D42F9A",
+    "fencing_token": 3,
+    "entity_review_scope_touched": false,
+    "claimed_files_touched": false,
+    "collision": false
+  },
+  "hard_invariants": {
+    "authority_advanced": false,
+    "h_id_allocations": 0,
+    "canonical_id_reservations": 0,
+    "source_mapping_changes": 0,
+    "crm_universe_complete": false,
+    "outbound": "CLOSED",
+    "send_allowed": 0,
+    "external_irreversible_actions": 0
+  },
+  "next_pointer": {
+    "next_route": "POST_RECONCILIATION_CONTROL_PLANE_AUDIT_THEN_RECHECK_FENCED_ENTITY_REVIEW_CLAIM",
+    "exact_blocker_dependency": "Structured discover.swiss SSR remains blocked by absent runtime subscription key. PIE050 captured-27 entity review remains owned by active fenced claim token 3 until explicit release/supersession.",
+    "parent_sha": "ed32e0f1b7686d44fb524c5b45fe9d15111a5cb8",
+    "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+    "recovery_inputs": [
+      "docs/state/CROSS_PLANE_AUTHORITY_AUDIT_2026-08-30.json",
+      "docs/state/CHECKPOINT_DENOMINATOR_RECONCILIATION_PLAN_2026-08-30.json",
+      "Drive CHECKPOINT_REGISTRY rows 11-15 and 26-28",
+      "Drive DECISION_LEDGER DEC-0103",
+      "docs/state/v2/active-claims.json"
+    ]
+  }
+}

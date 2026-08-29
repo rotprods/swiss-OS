@@ -94,6 +94,23 @@ def build_work_packet(
     }
 
 
+def build_idle_report(next_payload: Mapping[str, Any]) -> dict[str, Any]:
+    source = next_payload.get("source_universe")
+    snapshot_id = ""
+    if isinstance(source, Mapping):
+        snapshot_id = str(source.get("snapshot_id", ""))
+    return {
+        "schema_version": "CWP-MATERIALIZE-REPORT-1.0",
+        "state": "NO_ACTIVE_CWP_REQUEST",
+        "materialized": False,
+        "snapshot_id": snapshot_id,
+        "authority_advanced": False,
+        "h_id_allocations": 0,
+        "outbound": "CLOSED",
+        "send_allowed": 0,
+    }
+
+
 def materialize_from_next(root: Path, next_payload: Mapping[str, Any]) -> tuple[dict[str, Any], Mapping[str, Any]]:
     source = next_payload.get("source_universe")
     if not isinstance(source, Mapping):
@@ -156,16 +173,27 @@ def main() -> int:
 
     root = Path(args.root).resolve()
     next_payload = _load_json(root / args.next_path)
+    out_dir = root / args.out_dir
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    if not isinstance(next_payload.get("cwp_materialization_request"), Mapping):
+        report = build_idle_report(next_payload)
+        (out_dir / "CWP_MATERIALIZE_REPORT.json").write_text(
+            json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+        )
+        print(json.dumps(report, ensure_ascii=False, sort_keys=True))
+        return 0
+
     packet, request = materialize_from_next(root, next_payload)
     requested_path = Path(str(request.get("batch_path", "")))
     if not requested_path.name.startswith("CMI_WORK_BATCH_") or requested_path.suffix != ".json":
         raise CwpMaterializeError("requested batch_path is not a CMI work packet JSON")
-    out_dir = root / args.out_dir
-    out_dir.mkdir(parents=True, exist_ok=True)
     out_path = out_dir / requested_path.name
     out_path.write_text(json.dumps(packet, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n", encoding="utf-8")
     report = {
         "schema_version": "CWP-MATERIALIZE-REPORT-1.0",
+        "state": "MATERIALIZED",
+        "materialized": True,
         "batch_id": packet["batch_id"],
         "batch_file": out_path.name,
         "items_count": packet["items_count"],

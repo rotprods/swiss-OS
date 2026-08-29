@@ -1,0 +1,102 @@
+{
+  "schema_version": "SRET-PROVIDER-IDENTITY-SUBWAVE-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "snapshot_id": "HS-MEMBER-DE-33206402141",
+  "parent_git_sha": "c77bb973bc9a6c477868cf695381b52784e56eed",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "authority_parent_materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+  "source_queue_path": "docs/state/SRET_SIMILARITY_RISK_QUEUE_050_059_33206402141.json",
+  "source_queue_sha256": "eed5f949c55da71b7a69d3dd481778992f316bfdd35e4655f85070dc46a14429",
+  "provider_enrichment": {
+    "protocol": "PIE-1.1",
+    "github_actions_run_id": 33277579026,
+    "github_actions_job_id": 99166896108,
+    "artifact_id": 9721979270,
+    "artifact_digest_sha256": "eb7e5d272adf8c18efea315f4e07104798b2b5a6e9a617fd25431284bf13e6cf",
+    "packet_sha256": "74e61c5b16ee739cb09068c74c7cbf34ab88081370faaf9abbf0da5aa21c4e45",
+    "results_count": 10,
+    "state": "EXECUTED_VALIDATED_REVIEW_ONLY"
+  },
+  "selection": {
+    "processed_items": 10,
+    "processed_source_keys": [
+      "MD-2d28fdb69a92ffc73757",
+      "MD-743f997f58574d1eaed3",
+      "MD-ed486c91e2fb16a80021",
+      "MD-9d5bcbee9c2d05ffa223",
+      "MD-cb645cdf37e73110d1c2",
+      "MD-d5acead607eaf2e3b361",
+      "MD-f83a8470d9f6c1dff7b6",
+      "MD-fe4b602d2ca02f8b2acd",
+      "MD-22897d03136de001e608",
+      "MD-2629df23edc682b6ee9b"
+    ],
+    "processed_source_keys_sha256": "2f7c897bea1a0606ced6c5c78a0327f68c4ab72cf3e0904108e0e633db4a8213",
+    "provider_response_hashes_sha256": "273737dc58594b97756b62d4a62f946db6365e2f685231a38386932945420c14",
+    "remaining_items_in_bucket": 27
+  },
+  "provider_response_sha256": {
+    "MD-2d28fdb69a92ffc73757": "27aa5a670cff500c2f396d6d148f46b28e71181060f5fec2c01e7b4f4047c281",
+    "MD-743f997f58574d1eaed3": "8549a74c75e3c93e289b8bc7e4fdae363b5e5ca45d8f8bf3eca7f424b9910d0b",
+    "MD-ed486c91e2fb16a80021": "e00a1ef6b4c9ced86cc149d57b6d58a2c9972d466af64cf589c7595f4d90410b",
+    "MD-9d5bcbee9c2d05ffa223": "38a941abf51ed7f1bdbc697182f602ac4d7f7e1d6eacb5049936f44115bb3981",
+    "MD-cb645cdf37e73110d1c2": "f00c858e53d27d94e3ac21612b8a01f160ecab44db7a231bc298f254fd617638",
+    "MD-d5acead607eaf2e3b361": "68b82afb690087c2774cdf2dbaff5155d09e0d22465679ad313655903d7e7498",
+    "MD-f83a8470d9f6c1dff7b6": "b9595c9d0ecf760cd90b602eacacd9a81a71bf820a1b365fdcbd04cbe70f7e9f",
+    "MD-fe4b602d2ca02f8b2acd": "f78fa3afd6b5e9dd892ca694d8aff5934df7434efc680d0a5a44a95a38d2eaa7",
+    "MD-22897d03136de001e608": "308fb4d5e67eed22a40ef83b8cdd3813b7097c3be2d3d1bfee7a0e6ea3395d8f",
+    "MD-2629df23edc682b6ee9b": "2cc0dc1384273e9bc24d5f9a198cd818533ec146fb8b47e99d7de952a6659d56"
+  },
+  "review": {
+    "review_state": "NOVELTY_REVIEW_DISTINCTNESS_CORROBORATED",
+    "result_count": 10,
+    "reason_code": "CURRENT_SOURCE_PROPERTY_IDENTITY_DISTINCT_FROM_ALL_SUGGESTED_CANONICALS",
+    "semantics": "Distinctness review only. It is not a NEW_CANONICAL authorization, terminal mapping, anti-join decrement, canonical ID reservation or authority promotion.",
+    "source_identity_evidence": {
+      "Hotel MONOPOL Luzern": "https://www.monopolluzern.ch/",
+      "Hotel Schlüssel Luzern": "https://hotel-schluessel.swiss/",
+      "Hotel ALPINA Luzern": "https://www.alpina-luzern.ch/",
+      "Hyperion Hotel Basel": "https://www.h-hotels.com/en/hyperion/hotels/hyperion-hotel-basel",
+      "GAIA Hotel Basel": "https://www.myswitzerland.com/de-ch/unterkuenfte/gaia-hotel/",
+      "Mövenpick Hotel Basel": "https://movenpick.accor.com/en/europe/switzerland/basel/hotel-basel/location.html",
+      "Hotel Birsighof Basel": "https://birsighof.ch/",
+      "Hotel Krafft Basel": "https://www.krafftbasel.ch/",
+      "Hotel Adler Zürich": "https://hotel-adler.ch/",
+      "Sheraton Zürich Hotel": "https://www.marriott.com/en-us/hotels/zrhzs-sheraton-zurich-hotel/overview/"
+    },
+    "canonical_comparator_evidence": {
+      "Luzern": [
+        {"hotel_id":"H-0470","name":"Hotel Schweizerhof Luzern","url":"https://www.schweizerhof-luzern.ch/"},
+        {"hotel_id":"H-0640","name":"Hotel Central Luzern","url":"https://www.hotel-central-luzern.com/"}
+      ],
+      "Basel": [
+        {"hotel_id":"H-0050","name":"Airport Hotel Basel","url":"https://www.airporthotelbasel.com/"},
+        {"hotel_id":"H-0081","name":"Basel Marriott Hotel","url":"https://www.marriott.com/en-us/hotels/bslmc-basel-marriott-hotel/overview/"},
+        {"hotel_id":"H-0467","name":"Hotel Schweizerhof Basel","url":"https://www.schweizerhof-basel.ch/en/"}
+      ],
+      "Zürich": [
+        {"hotel_id":"H-0473","name":"Hotel Schweizerhof Zürich","url":"https://www.hotelschweizerhof.com/"}
+      ]
+    }
+  },
+  "mapping_effect": {
+    "terminal_mappings": 0,
+    "reconcile_required_delta": 0,
+    "effective_reconcile_required": 1404,
+    "state": "REVIEW_ONLY_NO_SRR_SMO_APPLICATION"
+  },
+  "result_counts": {
+    "NOVELTY_REVIEW_DISTINCTNESS_CORROBORATED": 10,
+    "EVIDENCE_REVIEW_REQUIRED": 0,
+    "MATCH_EXISTING_REVIEW_CORROBORATED": 0
+  },
+  "hard_invariants": {
+    "authority_advanced": false,
+    "h_id_allocations": 0,
+    "canonical_id_reservations": 0,
+    "crm_universe_complete": false,
+    "outbound": "CLOSED",
+    "send_allowed": 0
+  },
+  "next_route": "PROVIDER_IDENTITY_050_REMAINING_27"
+}

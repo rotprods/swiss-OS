@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import argparse
 from collections import Counter
-from dataclasses import dataclass
 from difflib import SequenceMatcher
 import hashlib
 import json
@@ -11,50 +10,15 @@ import re
 import unicodedata
 from typing import Any, Iterable, Mapping, Sequence
 
-
 SCHEMA_VERSION = "CMRQ-1.0"
 NORMALIZATION_PROFILE = "NAME_CITY_GENERIC_TOKEN_V1"
 VERY_HIGH_NAME_SIMILARITY = 0.92
 HIGH_TOKEN_JACCARD = 0.75
 HIGH_TOKEN_MIN_NAME_SIMILARITY = 0.75
-
 _GENERIC_TOKENS = frozenset(
-    {
-        "alpin",
-        "alpine",
-        "am",
-        "and",
-        "apartment",
-        "apartements",
-        "apartments",
-        "boutique",
-        "das",
-        "de",
-        "der",
-        "des",
-        "die",
-        "du",
-        "garni",
-        "gasthof",
-        "haus",
-        "hostel",
-        "hotel",
-        "hotels",
-        "house",
-        "im",
-        "inn",
-        "la",
-        "le",
-        "les",
-        "restaurant",
-        "resort",
-        "spa",
-        "the",
-        "und",
-        "wellness",
-        "zum",
-        "zur",
-    }
+    "alpin alpine am and apartment apartements apartments boutique das de der des die du "
+    "garni gasthof haus hostel hotel hotels house im inn la le les restaurant resort spa "
+    "the und wellness zum zur".split()
 )
 
 
@@ -78,9 +42,9 @@ def _text(value: object) -> str:
 
 
 def _normalize_text(value: object) -> str:
-    decomposed = unicodedata.normalize("NFKD", _text(value))
-    asciiish = "".join(char for char in decomposed if not unicodedata.combining(char))
-    return " ".join(re.findall(r"[a-z0-9]+", asciiish.casefold()))
+    value = unicodedata.normalize("NFKD", _text(value))
+    value = "".join(char for char in value if not unicodedata.combining(char))
+    return " ".join(re.findall(r"[a-z0-9]+", value.casefold()))
 
 
 def _token_signature(value: object) -> tuple[str, ...]:
@@ -95,101 +59,75 @@ def _token_signature(value: object) -> tuple[str, ...]:
     )
 
 
-def _round_score(value: float) -> float:
-    return round(float(value), 6)
-
-
 def _jaccard(left: Sequence[str], right: Sequence[str]) -> float:
     a, b = set(left), set(right)
-    if not a and not b:
-        return 0.0
-    return len(a & b) / len(a | b)
+    return 0.0 if not (a or b) else len(a & b) / len(a | b)
 
 
-@dataclass(frozen=True)
-class CandidateIdentity:
-    source_record_key: str
-    name: str
-    city: str
-    detail_url: str
-
-    @classmethod
-    def from_mapping(cls, row: Mapping[str, object]) -> "CandidateIdentity":
-        if not isinstance(row, Mapping):
-            raise CanonicalMatchReviewError("candidate record must be an object")
-        key = row.get("source_record_key")
-        name = row.get("name")
-        city = row.get("city")
-        detail_url = row.get("detail_url", "")
-        if not all(isinstance(value, str) for value in (key, name, city, detail_url)):
-            raise CanonicalMatchReviewError("candidate identity fields must be strings")
-        key, name, city, detail_url = (
-            key.strip(),
-            name.strip(),
-            city.strip(),
-            detail_url.strip(),
+def _candidate(row: Mapping[str, object]) -> dict[str, str]:
+    if not isinstance(row, Mapping):
+        raise CanonicalMatchReviewError("candidate record must be an object")
+    for key in ("source_record_key", "name", "city", "detail_url"):
+        if not isinstance(row.get(key), str) or not _text(row.get(key)):
+            raise CanonicalMatchReviewError(
+                f"candidate {key} must be a non-empty string"
+            )
+    source_key = _text(row.get("source_record_key"))
+    if row.get("decision") != "CANDIDATE_NEW_ENTITY_PREAUTH":
+        raise CanonicalMatchReviewError(
+            f"candidate {source_key} must remain CANDIDATE_NEW_ENTITY_PREAUTH"
         )
-        if not key or not name or not city or not detail_url:
-            raise CanonicalMatchReviewError(
-                "candidate source_record_key, name, city and detail_url are required"
-            )
-        if row.get("matched_hotel_id") not in {"", None}:
-            raise CanonicalMatchReviewError(
-                f"candidate {key} already has matched_hotel_id; review queue is pre-authority only"
-            )
-        if row.get("decision") not in {None, "CANDIDATE_NEW_ENTITY_PREAUTH"}:
-            raise CanonicalMatchReviewError(
-                f"candidate {key} has unexpected decision {row.get('decision')!r}"
-            )
-        return cls(key, name, city, detail_url)
+    if row.get("matched_hotel_id") != "":
+        raise CanonicalMatchReviewError(
+            f"candidate {source_key} must not carry matched_hotel_id"
+        )
+    return {
+        "source_record_key": source_key,
+        "name": _text(row.get("name")),
+        "city": _text(row.get("city")),
+        "detail_url": _text(row.get("detail_url")),
+    }
 
 
-@dataclass(frozen=True)
-class CanonicalIdentity:
-    hotel_id: str
-    name: str
-    city: str
-
-    @classmethod
-    def from_mapping(cls, row: Mapping[str, object]) -> "CanonicalIdentity | None":
-        if not isinstance(row, Mapping):
-            raise CanonicalMatchReviewError("canonical record must be an object")
-        hotel_id = _text(row.get("hotel_id"))
-        name = _text(row.get("name") or row.get("canonical_name"))
-        city = _text(row.get("city"))
-        active = row.get("is_active", True)
-        if not re.fullmatch(r"H-\d{4,}", hotel_id):
-            raise CanonicalMatchReviewError(
-                f"invalid canonical hotel_id: {hotel_id or '<empty>'}"
-            )
-        if not isinstance(active, bool):
-            raise CanonicalMatchReviewError(
-                f"canonical is_active must be boolean: {hotel_id}"
-            )
-        if not active:
-            return None
-        if not name or not city:
-            raise CanonicalMatchReviewError(
-                f"active canonical name/city required: {hotel_id}"
-            )
-        return cls(hotel_id, name, city)
+def _canonical(row: Mapping[str, object]) -> dict[str, str] | None:
+    if not isinstance(row, Mapping):
+        raise CanonicalMatchReviewError("canonical record must be an object")
+    hotel_id = _text(row.get("hotel_id"))
+    if not re.fullmatch(r"H-\d{4,}", hotel_id):
+        raise CanonicalMatchReviewError(
+            f"invalid canonical hotel_id: {hotel_id or '<empty>'}"
+        )
+    if "is_active" not in row or not isinstance(row.get("is_active"), bool):
+        raise CanonicalMatchReviewError(
+            f"canonical is_active must be explicitly boolean: {hotel_id}"
+        )
+    if row.get("is_active") is False:
+        return None
+    name = _text(row.get("name") or row.get("canonical_name"))
+    city = _text(row.get("city"))
+    if not name or not city:
+        raise CanonicalMatchReviewError(
+            f"active canonical name/city required: {hotel_id}"
+        )
+    return {"hotel_id": hotel_id, "name": name, "city": city}
 
 
 def _catalog_rows(payload: object) -> list[Mapping[str, object]]:
     raw = payload.get("hotels") if isinstance(payload, Mapping) else payload
-    if not isinstance(raw, list) or not all(isinstance(item, Mapping) for item in raw):
+    if not isinstance(raw, list) or not all(
+        isinstance(item, Mapping) for item in raw
+    ):
         raise CanonicalMatchReviewError(
             "canonical catalog must be an array or object with hotels array"
         )
     return list(raw)
 
 
-def _signal_set(
+def _signals(
     candidate_name: str,
     canonical_name: str,
 ) -> tuple[list[str], float, float]:
-    left = _normalize_text(candidate_name)
-    right = _normalize_text(canonical_name)
+    left, right = _normalize_text(candidate_name), _normalize_text(canonical_name)
     left_tokens = _token_signature(candidate_name)
     right_tokens = _token_signature(canonical_name)
     similarity = SequenceMatcher(None, left, right).ratio()
@@ -212,7 +150,7 @@ def _signal_set(
 def build_canonical_match_review_queue(
     *,
     snapshot_id: str,
-    candidate_records: Iterable[CandidateIdentity | Mapping[str, object]],
+    candidate_records: Iterable[Mapping[str, object]],
     canonical_catalog: object,
     candidate_records_sha256: str,
     canonical_catalog_sha256: str,
@@ -226,63 +164,71 @@ def build_canonical_match_review_queue(
         if not re.fullmatch(r"[0-9a-f]{64}", digest):
             raise CanonicalMatchReviewError(f"{label} must be lowercase SHA-256")
 
-    candidates = tuple(
-        item
-        if isinstance(item, CandidateIdentity)
-        else CandidateIdentity.from_mapping(item)
-        for item in candidate_records
-    )
-    if not candidates:
-        raise CanonicalMatchReviewError("at least one candidate is required")
-    candidate_keys = [item.source_record_key for item in candidates]
-    if len(candidate_keys) != len(set(candidate_keys)):
+    raw_candidates = tuple(candidate_records)
+    if not raw_candidates or not all(
+        isinstance(item, Mapping) for item in raw_candidates
+    ):
+        raise CanonicalMatchReviewError(
+            "candidate records must be a non-empty array of objects"
+        )
+    if _sha256(raw_candidates) != candidate_records_sha256:
+        raise CanonicalMatchReviewError("candidate_records_sha256 mismatch")
+    if _sha256(canonical_catalog) != canonical_catalog_sha256:
+        raise CanonicalMatchReviewError("canonical_catalog_sha256 mismatch")
+
+    candidates = tuple(_candidate(item) for item in raw_candidates)
+    source_keys = [item["source_record_key"] for item in candidates]
+    if len(source_keys) != len(set(source_keys)):
         raise CanonicalMatchReviewError("duplicate candidate source_record_key")
 
-    canonicals: list[CanonicalIdentity] = []
-    for row in _catalog_rows(canonical_catalog):
-        item = CanonicalIdentity.from_mapping(row)
-        if item is not None:
-            canonicals.append(item)
-    canonical_ids = [item.hotel_id for item in canonicals]
-    if len(canonical_ids) != len(set(canonical_ids)):
-        raise CanonicalMatchReviewError("duplicate canonical hotel_id")
+    canonicals = tuple(
+        item
+        for item in (
+            _canonical(row) for row in _catalog_rows(canonical_catalog)
+        )
+        if item is not None
+    )
     if not canonicals:
         raise CanonicalMatchReviewError("at least one active canonical is required")
+    canonical_ids = [item["hotel_id"] for item in canonicals]
+    if len(canonical_ids) != len(set(canonical_ids)):
+        raise CanonicalMatchReviewError("duplicate canonical hotel_id")
 
-    by_city: dict[str, list[CanonicalIdentity]] = {}
+    by_city: dict[str, list[dict[str, str]]] = {}
     for item in canonicals:
-        by_city.setdefault(_normalize_text(item.city), []).append(item)
+        by_city.setdefault(_normalize_text(item["city"]), []).append(item)
     for values in by_city.values():
-        values.sort(key=lambda item: item.hotel_id)
+        values.sort(key=lambda item: item["hotel_id"])
 
-    queue: list[dict[str, Any]] = []
+    review_queue: list[dict[str, Any]] = []
     same_city_pairs_evaluated = 0
-    for candidate in sorted(candidates, key=lambda item: item.source_record_key):
-        candidate_city = _normalize_text(candidate.city)
-        for canonical in by_city.get(candidate_city, ()):
+    for candidate in sorted(
+        candidates, key=lambda item: item["source_record_key"]
+    ):
+        for canonical in by_city.get(_normalize_text(candidate["city"]), ()):
             same_city_pairs_evaluated += 1
-            signals, similarity, jaccard = _signal_set(
-                candidate.name, canonical.name
+            signals, similarity, jaccard = _signals(
+                candidate["name"], canonical["name"]
             )
             if not signals:
                 continue
-            queue.append(
+            review_queue.append(
                 {
-                    "source_record_key": candidate.source_record_key,
-                    "candidate_name": candidate.name,
-                    "candidate_city": candidate.city,
-                    "candidate_detail_url": candidate.detail_url,
-                    "suggested_canonical_hotel_id": canonical.hotel_id,
-                    "canonical_name": canonical.name,
-                    "canonical_city": canonical.city,
+                    "source_record_key": candidate["source_record_key"],
+                    "candidate_name": candidate["name"],
+                    "candidate_city": candidate["city"],
+                    "candidate_detail_url": candidate["detail_url"],
+                    "suggested_canonical_hotel_id": canonical["hotel_id"],
+                    "canonical_name": canonical["name"],
+                    "canonical_city": canonical["city"],
                     "signals": signals,
-                    "name_similarity": _round_score(similarity),
-                    "token_jaccard": _round_score(jaccard),
+                    "name_similarity": round(similarity, 6),
+                    "token_jaccard": round(jaccard, 6),
                     "candidate_token_signature": list(
-                        _token_signature(candidate.name)
+                        _token_signature(candidate["name"])
                     ),
                     "canonical_token_signature": list(
-                        _token_signature(canonical.name)
+                        _token_signature(canonical["name"])
                     ),
                     "required_action": "EVIDENCE_BACKED_EXPLICIT_REVIEW",
                     "auto_merge_allowed": False,
@@ -290,25 +236,24 @@ def build_canonical_match_review_queue(
                 }
             )
 
-    signal_rank = {
+    rank = {
         "EXACT_NORMALIZED_NAME_CITY": 0,
         "TOKEN_SIGNATURE_EQUAL": 1,
         "VERY_HIGH_NAME_SIMILARITY": 2,
         "HIGH_TOKEN_OVERLAP": 3,
     }
-    queue.sort(
+    review_queue.sort(
         key=lambda item: (
-            str(item["source_record_key"]),
-            min(signal_rank[signal] for signal in item["signals"]),
-            -float(item["name_similarity"]),
-            -float(item["token_jaccard"]),
-            str(item["suggested_canonical_hotel_id"]),
+            item["source_record_key"],
+            min(rank[signal] for signal in item["signals"]),
+            -item["name_similarity"],
+            -item["token_jaccard"],
+            item["suggested_canonical_hotel_id"],
         )
     )
-
-    by_source = Counter(str(item["source_record_key"]) for item in queue)
+    by_source = Counter(item["source_record_key"] for item in review_queue)
     signal_counts = Counter(
-        signal for item in queue for signal in item["signals"]
+        signal for item in review_queue for signal in item["signals"]
     )
     policy = {
         "normalization_profile": NORMALIZATION_PROFILE,
@@ -319,7 +264,7 @@ def build_canonical_match_review_queue(
         "high_token_min_name_similarity": HIGH_TOKEN_MIN_NAME_SIMILARITY,
         "auto_merge_allowed": False,
     }
-    result: dict[str, Any] = {
+    result = {
         "schema_version": SCHEMA_VERSION,
         "project": "SWITZERLAND_JOB_OS",
         "snapshot_id": snapshot_id,
@@ -331,15 +276,15 @@ def build_canonical_match_review_queue(
             "candidate_records": len(candidates),
             "active_canonical_records": len(canonicals),
             "same_city_pairs_evaluated": same_city_pairs_evaluated,
-            "review_pairs": len(queue),
+            "review_pairs": len(review_queue),
             "review_source_records": len(by_source),
             "source_records_with_multiple_targets": sum(
                 1 for count in by_source.values() if count > 1
             ),
             "signal_counts": dict(sorted(signal_counts.items())),
         },
-        "review_queue": queue,
-        "queue_sha256": _sha256(queue),
+        "review_queue": review_queue,
+        "queue_sha256": _sha256(review_queue),
         "review_only": True,
         "auto_merge_allowed": False,
         "authority_advanced": False,
@@ -406,10 +351,9 @@ def validate_canonical_match_review_queue(
         if not isinstance(target, str) or not re.fullmatch(r"H-\d{4,}", target):
             violations.append("INVALID_SUGGESTED_CANONICAL_ID")
             continue
-        pair = (source_key, target)
-        if pair in seen:
+        if (source_key, target) in seen:
             violations.append("DUPLICATE_REVIEW_PAIR")
-        seen.add(pair)
+        seen.add((source_key, target))
         if _normalize_text(item.get("candidate_city")) != _normalize_text(
             item.get("canonical_city")
         ):
@@ -435,7 +379,7 @@ def validate_canonical_match_review_queue(
         if summary.get("review_pairs") != len(queue):
             violations.append("REVIEW_PAIR_COUNT_MISMATCH")
         source_count = len(
-            {str(item.get("source_record_key")) for item in queue}
+            {item.get("source_record_key") for item in queue}
         )
         if summary.get("review_source_records") != source_count:
             violations.append("REVIEW_SOURCE_COUNT_MISMATCH")
@@ -477,15 +421,17 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "build":
             candidate_export = _read_json(args.candidate_export)
             if not isinstance(candidate_export, Mapping):
-                raise CanonicalMatchReviewError("candidate export must be an object")
-            for key, expected in (
-                ("authority_advanced", False),
-                ("outbound", "CLOSED"),
-            ):
-                if candidate_export.get(key) != expected:
-                    raise CanonicalMatchReviewError(
-                        f"candidate export {key} must be {expected!r}"
-                    )
+                raise CanonicalMatchReviewError(
+                    "candidate export must be an object"
+                )
+            if candidate_export.get("authority_advanced") is not False:
+                raise CanonicalMatchReviewError(
+                    "candidate export authority_advanced must be false"
+                )
+            if candidate_export.get("outbound") != "CLOSED":
+                raise CanonicalMatchReviewError(
+                    "candidate export outbound must be CLOSED"
+                )
             for key in ("h_id_allocations", "send_allowed"):
                 value = candidate_export.get(key)
                 if isinstance(value, bool) or value != 0:
@@ -496,6 +442,13 @@ def main(argv: list[str] | None = None) -> int:
             if not isinstance(records, list):
                 raise CanonicalMatchReviewError(
                     "candidate export records must be an array"
+                )
+            if (
+                candidate_export.get("records_sha256")
+                != args.candidate_records_sha256
+            ):
+                raise CanonicalMatchReviewError(
+                    "candidate export records_sha256 lineage mismatch"
                 )
             result = build_canonical_match_review_queue(
                 snapshot_id=_text(candidate_export.get("snapshot_id")),

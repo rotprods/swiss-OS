@@ -112,12 +112,27 @@ class CandidateEntityPartitionTests(unittest.TestCase):
         self.assertEqual(left["clusters"], right["clusters"])
         self.assertEqual(left["review_conflicts"], right["review_conflicts"])
 
-    def test_loader_validates_gzip_and_raw_hashes(self) -> None:
+    def test_loader_validates_gzip_and_record_hashes(self) -> None:
         rows = [
             record("MD-001", "Hotel A", "Bern", "https://x.test/a"),
             record("MD-002", "Hotel B", "Basel", "https://x.test/b"),
         ]
-        raw = (json.dumps(rows, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode("utf-8")
+        records_sha = hashlib.sha256(
+            json.dumps(
+                rows, ensure_ascii=False, sort_keys=True, separators=(",", ":")
+            ).encode("utf-8")
+        ).hexdigest()
+        raw = json.dumps(
+            {
+                "schema_version": "CRM-CANDIDATE-EXPORT-1.0",
+                "snapshot_id": "SNAP-1",
+                "records_count": 2,
+                "records": rows,
+            },
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        ).encode("utf-8")
         compressed = gzip.compress(raw, mtime=0)
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -125,14 +140,12 @@ class CandidateEntityPartitionTests(unittest.TestCase):
             manifest = root / "manifest.json"
             archive.write_bytes(compressed)
             manifest.write_text(
-                json.dumps(
-                    {
-                        "snapshot_id": "SNAP-1",
-                        "gzip_sha256": hashlib.sha256(compressed).hexdigest(),
-                        "records_sha256": hashlib.sha256(raw).hexdigest(),
-                        "records_count": 2,
-                    }
-                ),
+                json.dumps({
+                    "snapshot_id": "SNAP-1",
+                    "gzip_sha256": hashlib.sha256(compressed).hexdigest(),
+                    "records_sha256": records_sha,
+                    "records_count": 2,
+                }),
                 encoding="utf-8",
             )
             loaded = load_candidate_export(archive, manifest)
@@ -143,6 +156,29 @@ class CandidateEntityPartitionTests(unittest.TestCase):
             manifest.write_text(json.dumps(manifest_payload))
             with self.assertRaisesRegex(ValueError, "candidate records SHA mismatch"):
                 load_candidate_export(archive, manifest)
+
+    def test_loader_accepts_strict_base64_gzip_transport(self) -> None:
+        rows = [record("MD-001", "Hotel A", "Bern", "https://x.test/a")]
+        records_sha = hashlib.sha256(
+            json.dumps(rows, sort_keys=True, separators=(",", ":")).encode()
+        ).hexdigest()
+        compressed = gzip.compress(
+            json.dumps({"snapshot_id": "SNAP-1", "records_count": 1, "records": rows}, sort_keys=True, separators=(",", ":")).encode(),
+            mtime=0,
+        )
+        import base64
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            archive = root / "records.b64"
+            manifest = root / "manifest.json"
+            archive.write_bytes(base64.b64encode(compressed))
+            manifest.write_text(json.dumps({
+                "snapshot_id": "SNAP-1",
+                "gzip_sha256": hashlib.sha256(compressed).hexdigest(),
+                "records_sha256": records_sha,
+                "records_count": 1,
+            }))
+            self.assertEqual(len(load_candidate_export(archive, manifest).records), 1)
 
     def test_public_summary_preserves_hard_locks(self) -> None:
         partition = build_candidate_entity_partition(

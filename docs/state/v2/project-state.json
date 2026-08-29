@@ -1,43 +1,27 @@
 {
-  "active_claim_ids": ["CLAIM-V2QUAL-B91E4D"],
+  "active_claim_ids": [],
   "authority_advanced": false,
   "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
   "authority_revision": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
-  "blockers": ["SSR-1.0 provider-blocked: discover.swiss Infocenter Open subscription key/capture-valid manifest absent."],
+  "blockers": ["SSR-1.0 provider-blocked: discover.swiss Infocenter Open subscription key/capture-valid manifest absent.","Legacy workstreams/open PRs are not yet fully migrated to first-class V2 claims."],
   "branch": "qualification/v2-recovery-death-drill",
-  "context_pack_revision": "43ebab8bc2fc597f3987c9292a7142eef0d962ed7ea1a3436764087c7c684a7a",
+  "context_pack_revision": "3f5aa6f917a033e98b8a9700d1aa8774b24f4f9359064f75fdf6920bb6e85033",
   "current_objective_id": "OBJ-V2-RECOVERY-DEATH-DRILL",
-  "event_watermark": {"event_id":"EVT-20260829T222600Z-V2QUAL-WORK-STARTED","occurred_at":"2026-08-29T22:26:00Z"},
+  "event_watermark": {"event_id":"EVT-20260829T223001Z-V2QUAL-WORK-COMPLETED","occurred_at":"2026-08-29T22:30:01Z"},
   "h_id_allocation_allowed": false,
   "live_frontier": {"active_canonical":690,"candidate_records":1438,"next_h_id":"H-0691 UNALLOCATED","reconcile_required":1404,"reverse_authority_gaps":34,"source_records":2061,"terminal_mappings":657},
   "main_sha_observed": "e6616d200c35106eae9333a019a566a8f02e4a53",
-  "next_safe_actions": [
-    "Execute empirical projection reconstruction from Event+Claim ledger without reading cached projection.",
-    "Execute zero-context death drill from canonical HANDOFF/ContextPack/project-state surfaces.",
-    "Persist qualification receipt only after CI proves both drills.",
-    "Release qualification claim and promote CP7/CP8 only with evidence."
-  ],
+  "next_safe_actions": ["Migrate one active provider-identity workstream to V2 Session→Claim→Event semantics without changing hotel authority.","Classify/close superseded legacy PRs only after semantic comparison.","Use the empirical drill as a permanent CI gate for future V2 state changes."],
   "north_star_ref": "GOAL.md#G-0001",
   "open_prs": [269,273,275,135,137,139],
   "outbound_allowed": false,
   "project_id": "SWITZERLAND_JOB_OS",
-  "projection_revision": "e434a974386f91407f5dff92860cb8039b680bfacd201496b45036eeb89e3340",
+  "projection_revision": "4de3ccdf960138cc81ead97b16424c9ec9bef0298c07d94b92b69f292d938cd7",
   "repo": "rotprods/swiss-OS",
-  "risks": [
-    "Empirical recovery can reveal hidden projection dependencies not covered by unit tests.",
-    "A zero-context handoff may be structurally complete but operationally ambiguous; the drill must fail closed on missing canonical pointers.",
-    "Hotel authority and provider-identity work remain excluded from this qualification scope."
-  ],
+  "risks": ["Legacy workstreams still need migration to first-class claims.","Hotel authority and outbound remain separately gated."],
   "schema_version": "COS-V2-PROJECT-STATE-1.0",
-  "source_refs": ["GOAL.md","STATE.md","ARCHITECTURE.md","HANDOFF.md","main:e6616d200c35106eae9333a019a566a8f02e4a53","Actions:33278540059 PASS"],
-  "state": "V2_EMPIRICAL_QUALIFICATION_ACTIVE",
-  "unverified_work": [
-    "Projection delete/rebuild drill has not yet executed in CI.",
-    "Zero-context death drill has not yet executed in CI."
-  ],
-  "verified_work": [
-    "V2 architecture/kernel merged and closure state is green on main.",
-    "ContextPack 1.1 ancestry + relevant-scope semantics are verified.",
-    "Architecture build session is completed and released."
-  ]
+  "source_refs": ["GOAL.md","STATE.md","ARCHITECTURE.md","HANDOFF.md","Actions:33278690926 PASS","docs/state/v2/qualification/V2_EMPIRICAL_QUALIFICATION_33278690926.json"],
+  "state": "V2_EMPIRICAL_QUALIFICATION_COMPLETED",
+  "unverified_work": ["A live domain workstream has not yet been migrated end-to-end through V2 coordination semantics."],
+  "verified_work": ["V2 architecture/kernel merged and green on main.","Projection recovery drill PASS from durable Event+Claim ledger.","Zero-context agent-death drill PASS from canonical durable surfaces.","374 repository tests PASS in qualification run 33278690926.","Authority remained locked: no H-ID allocation and OUTBOUND=CLOSED."]
 }

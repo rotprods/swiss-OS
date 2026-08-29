@@ -1,0 +1,32 @@
+{
+  "schema_version": "ECV-RESULT-SUMMARY-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "source_snapshot_id": "HS-MEMBER-DE-33206402141",
+  "batch_id": "HS-MEMBER-DE-33206402141:WORK:0001:SUB:0018:RECLASSIFY:0001",
+  "input_items": 11,
+  "results_count": 11,
+  "all_terminal": true,
+  "all_verified": false,
+  "counts_by_state": {
+    "CURRENT_DETAIL_URL_NOT_FOUND": 10,
+    "CURRENT_DETAIL_NAME_ONLY": 1
+  },
+  "terminal_evidence_count": 11,
+  "provider_record_change_count": 11,
+  "pending_provider_record_change_review": 11,
+  "blind_network_requeue_pending": 0,
+  "verified_frontier_effect": "NONE",
+  "ecv_packet_sha256": "9e9a4fb60a7b6f1991ff0913ddcd17752b96b9f01b1133904127af951d1c2536",
+  "artifact_result_json_sha256": "32cb1c1bfa4aaede9f154e020c36710c03edc1ef47627e7c2d8f49d06450a5db",
+  "artifact_zip_sha256": "fe6abd9128b010b1d9914274dbdfa29791a4f6cece38e4b7146c1f26f6cec4f8",
+  "github_actions_run_id": 33228015270,
+  "artifact_id": 9707536383,
+  "normalizer": "ECV-PROVIDER-EVIDENCE-1.0",
+  "validation_violations": [],
+  "terminal_mapping_effect": "NONE_UNTIL_ENTITY_RESOLUTION",
+  "authority_advanced": false,
+  "h_id_allocations": 0,
+  "outbound": "CLOSED",
+  "send_allowed": 0,
+  "note": "All 11 exhausted SUB0018 reclassify records carry deterministic non-transient provider evidence. This summary intentionally does not redefine the cumulative CURRENT_DETAIL_VERIFIED frontier: no new page became CURRENT_DETAIL_VERIFIED. It closes blind network retry for these 11 only and routes them to provider-record-change review; it does not establish novelty, exclusion, aliasing, canonical mapping, H-ID eligibility or authority promotion."
+}

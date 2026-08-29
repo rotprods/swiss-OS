@@ -1,9 +1,8 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest chained Meta Execution reconciliation: **2026-08-29T01:58:00Z**.  
-GitHub parent for this wave: **`b1ff292d4fadb886401a9eef3e500a4624bc41d6`**.  
+Latest chained Meta Execution reconciliation: **2026-08-29T02:20:00Z**.  
+GitHub parent for this wave: **`ffe403d946337e8d1380ec822e41eb0c394415e3`**.  
 Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**.  
-Open GitHub issues labelled `P0`: **0**.  
 Frozen current CRM source snapshot: **`HS-MEMBER-DE-33206402141`**.
 
 ## 1. Authoritative operational state — unchanged
@@ -23,9 +22,9 @@ OUTBOUND                        CLOSED
 send_allowed                      0
 ```
 
-Immutable V13 base SHA-256: `0e605b412f29893ca1775f1e8fccd5987d0613baab4ac29b6699988cde0fdfe5`. Repaired constrained-parent SHA-256: `70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`. Staging, provider responses, exact-current canary evidence and recovery copies remain non-authoritative. No canonical IDs have been reserved from staging.
+Immutable V13 base SHA-256: `0e605b412f29893ca1775f1e8fccd5987d0613baab4ac29b6699988cde0fdfe5`. Repaired constrained-parent SHA-256: `70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`. Staging, provider responses, exact-current canary evidence and recovery copies remain non-authoritative. No canonical IDs have been allocated or reserved from staging.
 
-## 2. Qualified current source / intake lineage
+## 2. Qualified current CRM source universe
 
 ```text
 snapshot                         HS-MEMBER-DE-33206402141
@@ -40,7 +39,7 @@ CWP packet SHA-256        2741ca3b870c83d5fe424243bb06f599a96517f5922ec13bdc6621
 CWP JSON SHA-256          60ecb59fb8947aee90267c777792fa51238e4bd19bb6e6a993c64cdeb8587b1d
 ```
 
-The recovered immutable CWP order is authoritative only for pre-authority work scheduling, never for H-ID allocation.
+The coherent HotellerieSuisse member-directory manifest remains the productive primary fallback while structured discover.swiss parity is blocked by the missing `DISCOVER_SWISS_SUBSCRIPTION_KEY`.
 
 ## 3. Source mapping frontier — pre-authority
 
@@ -54,73 +53,86 @@ overlay SHA-256                  e5ed0c76dd84e630679007e9cf209c1239dc68660c1b2c5
 
 Exact-current evidence alone never creates a terminal canonical mapping. Entity resolution may add only evidence-proven pre-authority mappings.
 
-## 4. Exact-current verification frontier
+## 4. SUB0018 reclassify result — terminal provider evidence
 
-The bounded SUB0018 requeue ran under GitHub Actions run `33227654867` / job `99034382133`, artifact `9707422829`. It reproduced the same deterministic provider-record evidence: ten detail URLs returned HTTP 404 on all three attempts and one current detail page matched name but not expected city.
+The one-shot `SUB0018:RECLASSIFY:0001` canary completed successfully under GitHub Actions run `33228015270`, artifact `9707536383`, ZIP SHA-256 `fe6abd9128b010b1d9914274dbdfa29791a4f6cece38e4b7146c1f26f6cec4f8`.
 
 ```text
 ECV verified frontier             349 / 1438
 ECV remaining never verified     1089
-CURRENT_DETAIL_NAME_ONLY            1
-FETCH_FAILED                       10
-all_verified                    FALSE
-pending requeue                    0
-pending provider-change review    11
-next untouched offset            360
-SUB0018 requeue packet SHA  4fd6827be5370dfd37b757bac45a757434093490de32a623493daf71ca751268
-artifact ZIP SHA            6cc8789e4bae1d500517a9307851dc5f2cc2fadc7f8400d67841510827ff069b
+legacy ECV pending requeue          11
+blind network requeue pending        0
+CURRENT_DETAIL_URL_NOT_FOUND        10
+CURRENT_DETAIL_NAME_ONLY             1
+provider-record-change review       11
+all_terminal                       TRUE
+all_verified                      FALSE
+normalized ECV packet SHA  9e9a4fb60a7b6f1991ff0913ddcd17752b96b9f01b1133904127af951d1c2536
 ```
 
-Durable summary: `docs/state/ECV_BATCH_0001_SUB0018_REQUEUE01_RESULT.json`.
+The cumulative CURRENT_DETAIL_VERIFIED frontier remains 349 because none of these 11 records became `CURRENT_DETAIL_VERIFIED`. The legacy `pending_requeue=11` field remains stable machine-frontier accounting for the prior requeue summary, while `blind network requeue pending=0` records the operational decision not to loop the same deterministic requests. Ten records are repeated all-attempt HTTP 404 provider-detail evidence; one successful current page matches the expected name but not expected city. They are terminal for network-retry semantics only. They do **not** prove hotel absence, novelty, exclusion, aliasing, canonical mapping, H-ID eligibility or authority promotion. Durable result: `docs/state/ECV_BATCH_0001_SUB0018_RECLASSIFY01_RESULT.json`.
 
-Blind requeue is exhausted. No hotel absence, novelty, exclusion, alias, terminal mapping, H-ID or authority inference is made from these states.
+## 5. CWP continuity and SUB0019
 
-## 5. Provider-record-change semantics wave
+The prior recovery input at closed PR #133 head `dd3d93f28a34b38c843fa93d8e5651bd3dd78dc8` was continuity-checked against the current immutable work frontier and relabelled only at packet level as `SUB0019`:
 
-A bounded system-definition change introduces `ECV-PROVIDER-EVIDENCE-1.0` after the raw exact-current fetch. It normalizes only repeated all-attempt HTTP 404 evidence to `CURRENT_DETAIL_URL_NOT_FOUND`; successful-page identity drift routes to `PROVIDER_RECORD_CHANGE_REVIEW`; mixed/transient failures remain `FETCH_FAILED` and requeueable.
+```text
+offset range                    360..379
+items                                20
+first key        MD-383f381de10462fb0875
+last key         MD-3c8d2a88eedd678efa02
+items SHA-256    2e9da88fba2d5fefbc20dfd6fb3876e38823387e3af8262c7496d717c4b0241f
+batch id          HS-MEMBER-DE-33206402141:WORK:0001:SUB:0019
+```
 
-The additive `all_terminal` field means every item has non-transient exact-current evidence. It is not equivalent to `all_verified`, source-to-canonical reconciliation, or authority eligibility.
-
-One one-shot semantic canary is staged at `docs/state/CMI_WORK_BATCH_0001_SUB0018_RECLASSIFY01_33206402141.json`, containing exactly the same 11 source records, items SHA `6c8c3fb448f8710e5460e6a91fb538aacd311ef7a9820d31889f9342c2019e34`. It exists only to classify the already-bounded provider evidence under the new semantics after the defining PR passes CI/review and merges.
+Staged packet: `docs/state/CMI_WORK_BATCH_0001_SUB0019_33206402141.json`. The item list/order/hash is unchanged from the immutable recovery input. It is a pre-authority ECV work packet and reserves no H-ID.
 
 ## 6. Protocol / capability state
 
 ```text
 MEP-2.0 / COLETTE / WOP                  ACTIVE
 ASR-1.0                                  EXACT
-SSR-1.0 / SRR-1.1                        AVAILABLE
+SSR-1.0 / SRR-1.1                        AVAILABLE; discover parity blocked by key
 SMO-1.0                                  ACTIVE PRE-AUTHORITY
 handoff frontier guard                   ACTIVE IN CI
 GitHub branch/PR/CI/review/merge          AVAILABLE
-Drive + native Sheets read plane          AVAILABLE
-qualified HotellerieSuisse exact-current AVAILABLE
+Drive read                               AVAILABLE
+native Sheets writer                     AVAILABLE IN THIS ACTIVATION
+File Library read                        AVAILABLE
+qualified HotellerieSuisse live ECV      AVAILABLE
 discover.swiss subscription key           UNAVAILABLE / MEP FALLBACK ACTIVE
 ```
 
-Structured discover.swiss parity remains independently blocked by `DISCOVER_SWISS_SUBSCRIPTION_KEY`; productive MEP work continues through the qualified HotellerieSuisse directory and coherent 2061-record manifest.
+Capability failure on discover.swiss therefore does not idle execution: exact-current verification, provider-record-change review, entity resolution, source mapping, reverse-gap work and cross-plane preflight remain productive routes.
 
 ## 7. Gauntlet decision
 
-Repeated 404 is evidence that the recorded provider detail URL is not currently resolving; it is not evidence that the underlying hotel entity is absent. Name/city drift is provider identity-change evidence, not a reason for infinite network retries. Both remain pre-authority and require entity/provider-change review.
+`ECV-PROVIDER-EVIDENCE-1.0` produced valid terminal typing with zero validation violations and preserved all hard locks. The SUB0019 continuity candidate matches the expected offset, first/last source keys and historical items hash. Adversarial constraints remain:
 
-The normalizer rejects any packet that attempts `authority_advanced=true`, non-zero H-ID allocation, open outbound, or non-zero send permission. Existing exact-current packet validation runs after normalization and the canonical packet hash is recomputed.
+- repeated 404 is provider-record evidence, never entity absence/novelty;
+- `NAME_ONLY` is identity drift evidence, never canonical identity proof;
+- no staging row may reserve a canonical H-ID;
+- no ECV/cache/canary state can advance authority;
+- OUTBOUND remains `CLOSED`, `send_allowed=0`.
+
+Durable gauntlet: `docs/state/META_GAUNTLET_ECV_SUB0018_RECLASSIFY_SUB0019_2026-08-29.json`.
 
 ## 8. NEXT
 
 ```text
-PR/CI/adversarial review/merge ECV-PROVIDER-EVIDENCE-1.0
-→ observe auto-triggered SUB0018:RECLASSIFY:0001 canary
-→ inspect all_terminal as well as all_verified
-→ if all 11 are terminal evidence: persist provider-change queue and continuity-verify/stage SUB0019 offset 360..379
-→ if any transient non-terminal state remains: persist exact blocker; continue MEP entity resolution without blind retries
-→ continue deterministic entity resolution / source mapping replay
+merge this bounded state/staging wave only after green CI + adversarial review
+→ observe auto-triggered SUB0019 live ECV
+→ download/validate exact result + provider evidence
+→ persist SUB0019 evidence
+→ recompute NEXT and immediately stage the next immutable CWP subbatch if safe
+→ continue entity resolution/source mapping replay for terminal evidence
 → resolve reverse gaps 66
 → RECONCILE_REQUIRED = 0
-→ SSR-1.0
-→ only then construct an authority-eligible DB → HOTELS_MASTER → Intelligence → Graph transaction
+→ complete SSR-1.0 when structured discover.swiss parity capability exists
+→ fresh DB → HOTELS_MASTER → Intelligence → Graph cross-plane reconciliation only when authority-eligible
 ```
 
-Recovery candidate for SUB0019 remains non-staged input from closed superseded PR #133 head `dd3d93f28a34b38c843fa93d8e5651bd3dd78dc8`: expected offset 360..379, first `MD-383f381de10462fb0875`, last `MD-3c8d2a88eedd678efa02`, historical items SHA `2e9da88fba2d5fefbc20dfd6fb3876e38823387e3af8262c7496d717c4b0241f`. It must be continuity-verified before reuse and relabelled SUB0019.
+Independent provider dependency: `DISCOVER_SWISS_SUBSCRIPTION_KEY` is still unavailable. It blocks discover.swiss parity/SSR completion, not the current HotellerieSuisse ECV route.
 
 ```text
 authority_advance_allowed = FALSE

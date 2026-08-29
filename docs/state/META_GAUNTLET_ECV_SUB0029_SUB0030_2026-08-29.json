@@ -1,0 +1,36 @@
+{
+  "schema_version": "META-GAUNTLET-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "generated_at": "2026-08-29T06:10:00Z",
+  "cycle_id": "META-20260829-ECV-SUB0029-SUB0030",
+  "parent_git_sha": "1959bd30001b79ba265100960c8b64dffb76ffd6",
+  "checks": {
+    "main_ancestry_reconstructed": "PASS",
+    "live_drive_authority_690_ids": "PASS",
+    "h_0691_absent_and_unallocated": "PASS",
+    "candidate_export_lineage": "PASS",
+    "sub0029_artifact_zip_sha256": "PASS",
+    "sub0029_terminal_20_of_20": "PASS",
+    "sub0029_provider_record_changes_zero": "PASS",
+    "sub0029_validator_violations_zero": "PASS",
+    "sub0030_exact_original_offsets_561_580": "PASS",
+    "sub0030_items_sha_recomputed": "PASS",
+    "canonical_h_id_allocations_zero": "PASS",
+    "authority_not_advanced": "PASS",
+    "outbound_closed_send_zero": "PASS",
+    "repo_ci": "PENDING",
+    "adversarial_diff_review": "PENDING"
+  },
+  "adversarial_questions": [
+    "Could any staged/ECV count be mistaken for operational authority?",
+    "Did any branch artifact reserve or imply reservation of H-0691?",
+    "Can candidate-order drift change the 561..580 identities?",
+    "Did live Drive authority move from the reconstructed 690/690/0 parent?",
+    "Does every SUB0030 identity still require exact-current evidence before terminal mapping?"
+  ],
+  "closure": "PENDING_CI_AND_DIFF_REVIEW",
+  "authority_advanced": false,
+  "h_id_allocations": 0,
+  "outbound": "CLOSED",
+  "send_allowed": 0
+}

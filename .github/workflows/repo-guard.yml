@@ -18,6 +18,8 @@ jobs:
         run: python scripts/repo_guard.py
       - name: Stable contract drift guard
         run: python scripts/system_contract_guard.py
+      - name: CWP candidate lineage guard
+        run: python -m swiss_os.cwp_lineage_guard
       - name: Durable handoff frontier guard
         run: python scripts/handoff_frontier_guard.py
       - name: Unit tests

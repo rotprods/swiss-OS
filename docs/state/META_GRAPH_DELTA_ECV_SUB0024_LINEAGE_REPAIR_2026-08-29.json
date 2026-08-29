@@ -1,0 +1,31 @@
+{
+  "schema_version": "META-GRAPH-DELTA-1.0",
+  "cycle_id": "META-20260829-ECV-SUB0024-LINEAGE-REPAIR",
+  "checkpoint": "CRM_UNIVERSE_COMPLETE",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "parent_git_sha": "6c64f747dd7ec707d42a221c8c7e2eaa4ce9329f",
+  "colette": {
+    "collect": "Reconstructed current main ancestry, E4 authority, Drive/Library recovery, frozen source artifact, authority workbook, SUB0024 live artifact and protocols.",
+    "observe": "SUB0024 ECV is green 20/20 but candidate replay exposes a skipped original offset 453 and an early verified offset 460.",
+    "locate": "Highest-value safe bottleneck is CWP lineage integrity because a false forward pointer can silently omit CRM candidates.",
+    "execute": "Persist SUB0024 evidence, durable 1438-record candidate export, lineage CI guard/tests, and one-item SUB0024R1 recovery staging.",
+    "test": "Deterministic replay + local guard regression + gauntlet preserve source counts and safety invariants; PR CI remains mandatory.",
+    "transact": "Branch → implementation → tests → PR → CI → adversarial review → merge only.",
+    "evolve": "After green SUB0024R1, clear the hole and stage offsets 461..480 as SUB0025."
+  },
+  "decisions": [
+    {"id":"D-CWP-453","decision":"Repair skipped original candidate offset 453 as one-item SUB0024R1; do not roll back verified offset 460.","authority_effect":"NONE"},
+    {"id":"D-CANDIDATE-EXPORT","decision":"Treat deterministic 1438-record export as the staging lineage plane and validate it in CI before each staged packet.","authority_effect":"NONE"},
+    {"id":"D-MEP-DRIVE","decision":"When local spreadsheet artifact materialization failed, persist full export in Git and a Drive recovery pointer instead of idling.","authority_effect":"NONE"}
+  ],
+  "p0": [
+    "CWP_LINEAGE_HOLE_SUB0024_OFFSET_453",
+    "EFFECTIVE_RECONCILE_REQUIRED_1434_NOT_ZERO",
+    "REVERSE_AUTHORITY_SOURCE_DISCREPANCIES_66_REQUIRE_RESOLUTION",
+    "DISCOVER_SWISS_SUBSCRIPTION_KEY_UNAVAILABLE_FOR_DISCOVER_PARITY"
+  ],
+  "authority_advanced": false,
+  "h_id_allocations": 0,
+  "outbound": "CLOSED",
+  "send_allowed": 0
+}

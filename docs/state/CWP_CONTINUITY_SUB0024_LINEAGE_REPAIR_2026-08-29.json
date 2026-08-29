@@ -1,0 +1,52 @@
+{
+  "schema_version": "CWP-CONTINUITY-REPAIR-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "generated_at": "2026-08-29T03:56:00Z",
+  "parent_git_sha": "6c64f747dd7ec707d42a221c8c7e2eaa4ce9329f",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "authority_materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+  "source_artifact_id": 9700376482,
+  "source_artifact_zip_sha256": "721f9ff9f84e2d5d9df62c6b22f12e7354cef3a298cb8990be66a202e1e769ce",
+  "deterministic_replay": {
+    "source_records": 2061,
+    "exact_name_city_matches": 623,
+    "candidate_new_entity_preauth": 1438,
+    "candidate_order": "source_record_key ascending",
+    "normalization": "strip + whitespace collapse + casefold"
+  },
+  "candidate_export": {
+    "path": "docs/state/CRM_CANDIDATE_EXPORT_33206402141.json.gz",
+    "gzip_sha256": "071e2cf1b895b63457c56066de7d8653b3182a12d1260ff9be7709a684fcf194",
+    "records_sha256": "34d9aa9cfa4fe896bf1db8fba4dedfded9a1dbf2e135b847101904644d16bba0",
+    "records": 1438,
+    "drive_recovery_pointer_id": "1bQ74_WJlXFP6-nyGmkD97u-jgk6xhlz22j6t9H0e9sE",
+    "durable_data_plane": "GITHUB",
+    "gzip_transport": "DETERMINISTIC_BINARY_GIT_BLOB_MTIME_0"
+  },
+  "sub0024": {
+    "all_verified": true,
+    "input_items_sha256": "2f6703fbbdb3ea2bbc52a13a8e33656f25c0a64bf3fa073efca2b6b045b8464a",
+    "declared_original_candidate_range_was": "440..459",
+    "actual_original_candidate_offsets": "440..452,454..460"
+  },
+  "lineage_defect": {
+    "skipped_original_candidate_offset": 453,
+    "skipped_source_record_key": "MD-4ac3fbacbb0490ec9371",
+    "skipped_name": "hotel stern chur",
+    "skipped_city": "chur",
+    "prematurely_verified_original_candidate_offset": 460,
+    "prematurely_verified_source_record_key": "MD-4c44399c312bbb82c71e",
+    "verified_evidence_discarded": false
+  },
+  "recovery": {
+    "batch_id": "HS-MEMBER-DE-33206402141:WORK:0001:SUB:0024R1",
+    "original_candidate_offsets": [453],
+    "items_count": 1,
+    "items_sha256": "274a92b447ca1272dfbad5ffe214254aad3bb1be48c72f66b87e0e0225d933f6",
+    "next_forward_original_candidate_offset_after_green": 461
+  },
+  "authority_advanced": false,
+  "h_id_allocations": 0,
+  "outbound": "CLOSED",
+  "send_allowed": 0
+}

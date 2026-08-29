@@ -1,0 +1,25 @@
+{
+  "schema_version": "CRM-CANDIDATE-EXPORT-MULTIPART-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "snapshot_id": "HS-MEMBER-DE-33206402141",
+  "encoding": "base64(gzip(json))",
+  "gzip_mtime": 0,
+  "gzip_sha256": "071e2cf1b895b63457c56066de7d8653b3182a12d1260ff9be7709a684fcf194",
+  "records_sha256": "34d9aa9cfa4fe896bf1db8fba4dedfded9a1dbf2e135b847101904644d16bba0",
+  "records_count": 1438,
+  "source_records": 2061,
+  "exact_name_city_matches": 623,
+  "parts": [
+    {"path": "docs/state/CRM_CANDIDATE_EXPORT_33206402141.parts/part-00.b64", "bytes": 12000, "sha256": "9726a2776f0351924757ea58326a55fdb616b4e7202d6684083a858fc8be0b4c"},
+    {"path": "docs/state/CRM_CANDIDATE_EXPORT_33206402141.parts/part-01.b64", "bytes": 12000, "sha256": "e3785c5ee121b444f9c0bbcda8e56b3e05a8f45eca56f9ac77e9007904370ae1"},
+    {"path": "docs/state/CRM_CANDIDATE_EXPORT_33206402141.parts/part-02.b64", "bytes": 12000, "sha256": "6426df0fa10c0422d0bdbfc783909c28edb7d9759de7bb477ebb6547e3bd48c3"},
+    {"path": "docs/state/CRM_CANDIDATE_EXPORT_33206402141.parts/part-03.b64", "bytes": 12000, "sha256": "4587e4aeac45073fbb411de97eb45dce825339a337853d79dd52c9a3ebdd759d"},
+    {"path": "docs/state/CRM_CANDIDATE_EXPORT_33206402141.parts/part-04.b64", "bytes": 12000, "sha256": "66ec617d492b80b841bd90b577cb752905898e0a54a428472dafaf08a872185b"},
+    {"path": "docs/state/CRM_CANDIDATE_EXPORT_33206402141.parts/part-05.b64", "bytes": 12000, "sha256": "c64ba52d7a722f915e91b47f3b46767963065491e69036da23a4c364acdc1a5e"},
+    {"path": "docs/state/CRM_CANDIDATE_EXPORT_33206402141.parts/part-06.b64", "bytes": 11344, "sha256": "51c37730db271b755be49f001a84e98247d19e599c2d54edb9c7b354d79fb997"}
+  ],
+  "authority_advanced": false,
+  "h_id_allocations": 0,
+  "outbound": "CLOSED",
+  "send_allowed": 0
+}

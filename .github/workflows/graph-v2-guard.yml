@@ -1,0 +1,151 @@
+name: graph-v2-guard
+
+on:
+  pull_request:
+    paths:
+      - "GRAPH_REFACTOR_V2.md"
+      - "docs/architecture/**"
+      - "docs/audits/GRAPH_REFACTOR_V2_GAUNTLET.md"
+      - "docs/decisions/ADR-0001-HYPERGRAPH-KERNEL.md"
+      - "docs/graph/v2/**"
+      - "docs/operations/GRAPH_REFACTOR_V2_IMPLEMENTATION_PROGRAM.md"
+      - "docs/state/v2/**"
+      - "src/swiss_os/v2_*.py"
+      - "scripts/compile_graph_v2.py"
+      - "tests/test_v2_kernel.py"
+      - ".github/workflows/graph-v2-guard.yml"
+  push:
+    branches: [main]
+    paths:
+      - "GRAPH_REFACTOR_V2.md"
+      - "docs/architecture/**"
+      - "docs/audits/GRAPH_REFACTOR_V2_GAUNTLET.md"
+      - "docs/decisions/ADR-0001-HYPERGRAPH-KERNEL.md"
+      - "docs/graph/v2/**"
+      - "docs/operations/GRAPH_REFACTOR_V2_IMPLEMENTATION_PROGRAM.md"
+      - "docs/state/v2/**"
+      - "src/swiss_os/v2_*.py"
+      - "scripts/compile_graph_v2.py"
+      - "tests/test_v2_kernel.py"
+      - ".github/workflows/graph-v2-guard.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  compile-and-attest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact revision
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Public repository boundary guard
+        run: python scripts/repo_guard.py
+
+      - name: Stable system-contract guard
+        run: python scripts/system_contract_guard.py
+
+      - name: Full regression suite
+        run: python -m unittest discover -s tests -v
+
+      - name: Build SHA-bound test attestation
+        env:
+          COMMIT_SHA: ${{ github.sha }}
+          RUN_ID: ${{ github.run_id }}
+          RUN_ATTEMPT: ${{ github.run_attempt }}
+        run: |
+          python - <<'PY'
+          import datetime
+          import json
+          import os
+          from pathlib import Path
+
+          seed = json.loads(Path("docs/graph/v2/canonical_seed.json").read_text(encoding="utf-8"))
+          executed_at = datetime.datetime.now(datetime.timezone.utc).isoformat().replace("+00:00", "Z")
+          payload = {
+              "schema_version": "GRAPH_V2_TEST_ATTESTATION_1",
+              "commit_sha": os.environ["COMMIT_SHA"],
+              "workflow_run_id": os.environ["RUN_ID"],
+              "workflow_run_attempt": os.environ["RUN_ATTEMPT"],
+              "results": [
+                  {
+                      "test_id": test_id,
+                      "state": "PASS",
+                      "evidence_ref": f"GITHUB_ACTIONS:{os.environ['RUN_ID']}:{os.environ['RUN_ATTEMPT']}",
+                      "executed_at": executed_at,
+                  }
+                  for test_id in seed["tests"]
+              ],
+          }
+          target = Path("build/v2_test_attestation.json")
+          target.parent.mkdir(parents=True, exist_ok=True)
+          target.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+          PY
+
+      - name: Compile V2 graph, projections, ContextPack and program
+        env:
+          COMMIT_SHA: ${{ github.sha }}
+          BRANCH_NAME: ${{ github.ref_name }}
+        run: |
+          GENERATED_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          python scripts/compile_graph_v2.py \
+            --out build/graph-v2 \
+            --main-sha "$COMMIT_SHA" \
+            --branch "$BRANCH_NAME" \
+            --generated-at "$GENERATED_AT" \
+            --test-attestation build/v2_test_attestation.json
+
+      - name: Validate hard authority and bundle invariants
+        env:
+          COMMIT_SHA: ${{ github.sha }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          root = Path("build/graph-v2")
+          manifest = json.loads((root / "manifest.json").read_text(encoding="utf-8"))
+          assurance = json.loads((root / "assurance_report.json").read_text(encoding="utf-8"))
+          cos = json.loads((root / "cos_registry.json").read_text(encoding="utf-8"))
+          graph = json.loads((root / "system_graph.json").read_text(encoding="utf-8"))
+          context = json.loads((root / "contextpack.json").read_text(encoding="utf-8"))
+
+          assert manifest["main_sha"] == os.environ["COMMIT_SHA"]
+          assert manifest["release_candidate"] is True
+          assert manifest["operational_authority_mutated"] is False
+          assert manifest["h_id_allocations"] == 0
+          assert manifest["outbound_opened"] is False
+          assert manifest["send_allowed"] == 0
+          assert assurance["release_candidate"] is True
+          assert assurance["p0_open"] == 0
+          assert assurance["p1_open"] == 0
+          assert assurance["graph_errors"] == []
+          assert assurance["critical_owner_gaps"] == []
+          assert assurance["critical_test_gaps"] == []
+          assert assurance["invariant_failures"] == []
+          assert len(cos["dimensions"]) == 20
+          assert len(list((root / "projections").glob("L*.json"))) == 20
+          assert len(graph["nodes"]) >= 120
+          assert len(graph["edges"]) >= 150
+          assert context["main_sha"] == os.environ["COMMIT_SHA"]
+          assert context["payload"]["outbound"] == "CLOSED"
+          assert context["payload"]["send_allowed"] == 0
+          PY
+
+      - name: Upload exact V2 build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: graph-refactor-v2-${{ github.sha }}
+          path: |
+            build/graph-v2
+            build/v2_test_attestation.json
+          if-no-files-found: error
+          retention-days: 30

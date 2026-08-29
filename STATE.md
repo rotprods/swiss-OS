@@ -14,7 +14,7 @@ OUTBOUND                        CLOSED
 send_allowed                      0
 ```
 
-Authority SHA `70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`. Staging, ECV, SRR, SMO, RAGR and SRET remain non-authoritative. HOTELS_MASTER remains 690 rows and H-0691 remains absent. No H-ID has been allocated or reserved.
+Authority SHA `70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`. Staging, ECV, SRR, SMO, RAGR, SRET, cache and canary remain non-authoritative. HOTELS_MASTER remains 690 rows and H-0691 remains absent. No H-ID has been allocated or reserved.
 
 ## CRM universe / pre-authority source-mapping frontier
 

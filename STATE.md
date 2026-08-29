@@ -1,7 +1,7 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest chained Meta Execution reconciliation: **2026-08-29T00:58:00Z**.  
-GitHub parent for this wave: **`15868e99c2b9d8919854043341e5c01947b4e37a`**.  
+Latest chained Meta Execution reconciliation: **2026-08-29T01:03:00Z**.  
+GitHub parent for this wave: **`a5b28b6cd628444bf3cd1bd961359aa8a87f151c`**.  
 Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**.  
 Open GitHub issues labelled `P0`: **0**. Frozen current CRM source snapshot: **`HS-MEMBER-DE-33206402141`**.
 
@@ -29,32 +29,28 @@ Immutable V13 SHA `0e605b412f29893ca1775f1e8fccd5987d0613baab4ac29b6699988cde0fd
 source pages / records               172 / 2061
 CMI ACTIVE_MATCH / TRUE_MISSING      623 / 1438
 CWP MATCHED_EXISTING / VERIFY_NEW    623 / 1438
-CWP packet SHA  2741ca3b870c83d5fe424243bb06f599a96517f5922ec13bdc6621252b3273c0
 effective terminal mappings                 627
 effective RECONCILE_REQUIRED               1434
 reverse authority/source gaps                66
-overlay SHA      e5ed0c76dd84e630679007e9cf209c1239dc68660c1b2c5158798f1302d4aa87
 ```
-Exact URL anti-join across all 1,438 CWP candidates found `0` direct matches to authority `hotelleriesuisse_url`; no heuristic mapping was created.
+Exact URL anti-join across all 1,438 CWP candidates found `0` direct matches to authority `hotelleriesuisse_url`; no heuristic mapping created.
 
 ## Exact-current canary verification
 ```text
-ECV verified frontier             320 / 1438
-ECV remaining never verified     1118
+ECV verified frontier             340 / 1438
+ECV remaining never verified     1098
 pending requeue                     0
-SUB0016 items                     20 / 20 CURRENT_DETAIL_VERIFIED
-SUB0016 packet SHA-256     87e1e2a6b8357089a9b2beb60c85a4fa26dbe9d35b2755195b14de4d621b7eeb
-SUB0016 artifact SHA-256   3b31767ab6a4f480da77b1016b9ae76aecea93028dfb0c1c98602f9260686099
+SUB0017 items                     20 / 20 CURRENT_DETAIL_VERIFIED
+SUB0017 packet SHA-256     d6bb1e25697ae12bb38bae91bd1c126d36e40508286761a40654b1ca38824f09
+SUB0017 artifact SHA-256   d05d3ec29f57af772340a80eb58ef723b54a1562e2c4d9413f16f5ccb722f50d
 ```
-Run `33224909760`, job `99026505270`, artifact `9706522838`. Durable result: `docs/state/ECV_BATCH_0001_SUB0016_RESULT.json`.
-
-SUB0017 is staged at immutable candidate offset `320..339`, first `MD-34a0d5f74bd56ec3450e`, last `MD-382b91f5f89fb8895bf0`, items SHA `9fb65344f12ad30a1aafb53d99af24da4509ae65711a5abd79c6a4b5eb59b7f2`.
+Run `33225192983`, job `99027337676`, artifact `9706618663`. SUB0018 staged immutable offset `340..359`, first `MD-383f381de10462fb0875`, last `MD-3c8d2a88eedd678efa02`, items SHA `2e9da88fba2d5fefbc20dfd6fb3876e38823387e3af8262c7496d717c4b0241f`.
 
 ## Protocol / capability
-`MEP-2.0 / COLETTE / WOP` active; `SSR-1.0 / SRR-1.1` available; `SMO-1.0` pre-authority; GitHub branch/PR/CI/review/merge and Drive native Sheets available; discover.swiss subscription key unavailable, so MEP stays on qualified HotellerieSuisse source.
+`MEP-2.0 / COLETTE / WOP` active; `SSR-1.0 / SRR-1.1` available; `SMO-1.0` pre-authority; GitHub branch/PR/CI/review/merge and Drive native Sheets available; discover.swiss subscription key unavailable, MEP continues on qualified HotellerieSuisse source.
 
 ## NEXT
-`run ECV SUB0017 → persist evidence frontier only on success → continue untouched CWP slices + evidence-proven entity resolution → replay all 2061 mappings → resolve reverse gaps 66 → RECONCILE_REQUIRED=0 → SSR-1.0 → authority-eligible cross-plane transaction only after all gates`.
+`run ECV SUB0018 → persist evidence frontier only on success → continue untouched CWP slices + evidence-proven entity resolution → replay all 2061 mappings → resolve reverse gaps 66 → RECONCILE_REQUIRED=0 → SSR-1.0 → authority-eligible cross-plane transaction only after all gates`.
 
 ```text
 authority_advance_allowed = FALSE

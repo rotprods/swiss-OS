@@ -1,13 +1,13 @@
 {
   "schema_version": "NPP-1.0",
   "project": "SWITZERLAND_JOB_OS",
-  "generated_at": "2026-08-29T18:47:52Z",
-  "cycle_id": "META-20260829-CRM-RECON-REVIEW-WAVE-01",
-  "parent_git_sha": "f8d496870c8696c42b5e80fb794d1bdcaa85003a",
+  "generated_at": "2026-08-29T19:06:00Z",
+  "cycle_id": "META-20260829-SRR-CMRQ-MATCH-WAVE-02",
+  "parent_git_sha": "0056c0f80b8c5a894ab4f32bac21353bafcfe025",
   "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
   "authority_parent_materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
-  "selected_route": "CMRQ_16_EXPLICIT_REVIEW_COMPILED_PREAUTH",
-  "next_route": "SRR_1_1_APPLY_CMRQ_EXPLICIT_REVIEWS_THEN_RAGR_BOUNDED",
+  "selected_route": "SRR_CMRQ_MATCH_BATCH_0002_PREAUTH_OVERLAY",
+  "next_route": "RECOVER_LA_COURONNE_ECV_THEN_RAGR_BOUNDED",
   "checkpoint_id": "CRM_UNIVERSE_COMPLETE",
   "authority_state": {
     "physical_rows": 690,
@@ -34,10 +34,16 @@
     "candidate_records": 1438
   },
   "mapping_frontier": {
-    "authoritative": true,
-    "effective_terminal_source_mappings": 627,
-    "effective_reconcile_required": 1434,
-    "reverse_authority_without_exact_source_match": 66
+    "operational_authority": false,
+    "effective_preauthority_overlay_validated": true,
+    "base_terminal_source_mappings": 624,
+    "base_reconcile_required": 1437,
+    "cumulative_overlay_terminal_deltas": 13,
+    "overlay_sha256": "16db2ef17ee66c49fbaba9a54a9ef4182fa14bf660994b44dcdab40c3e44c718",
+    "effective_terminal_source_mappings": 637,
+    "effective_reconcile_required": 1424,
+    "reverse_authority_without_exact_source_match": 66,
+    "overlay_aware_reverse_gap_candidates": 53
   },
   "review_frontier": {
     "authoritative": false,
@@ -45,15 +51,18 @@
     "cmrq_queue_source_records": 16,
     "cmrq_queue_pairs": 16,
     "cmrq_queue_sha256": "06d550e3be5bc12e32e67d2d89f6000e1b882b3e3bcacf4e049e4b851f79b11a",
-    "explicit_review_proposals": 16,
     "match_existing_proposals": 15,
     "new_canonical_proposals": 1,
-    "reverse_gap_closing_match_proposals": 14,
-    "derived_exact_unique_canonical_coverage": 624,
-    "projected_reverse_gaps_if_reviews_accepted": 52,
+    "cumulative_match_existing_overlay": 13,
+    "base_exact_already_terminal": 1,
+    "pending_match_item_evidence": 1,
+    "pending_match_source_record_key": "MD-ff70cabc95a4a2ea61a1",
+    "pending_match_target": "H-0024",
+    "new_canonical_nonterminal_source_record_key": "MD-034c1c3b0f7ba9d69c80",
+    "new_canonical_reason": "DISTINCT_IBIS_BUDGET_RECORD_WHILE_SEPARATE_SOURCE_EXACTLY_COVERS_H-0180",
     "private_drive_review_doc_id": "1Ktlvg04MbDrgZ0LD0wGYrpz65xTHBRyiNdD8KWLxNhk",
-    "public_summary_path": "docs/state/CRM_RECON_REVIEW_WAVE_2026-08-29.json",
-    "terminal_effect": "NONE_UNTIL_SRR_EXPLICIT_REVIEW_APPLIED"
+    "review_packet_path": "docs/state/SOURCE_RESOLUTION_REVIEW_BATCH_0002_33206402141.json",
+    "overlay_path": "docs/state/SOURCE_MAPPING_OVERLAY_SRR_BATCH_0002_33206402141.json"
   },
   "ecv_frontier": {
     "candidate_records_total": 1438,
@@ -79,28 +88,29 @@
     "fallback": "QUALIFIED_MEMBER_DIRECTORY_PLUS_EXACT_CURRENT"
   },
   "hard_blockers": [
-    "EFFECTIVE_RECONCILE_REQUIRED_1434_NOT_ZERO",
-    "REVERSE_AUTHORITY_SOURCE_DISCREPANCIES_66_REQUIRE_RESOLUTION",
+    "EFFECTIVE_RECONCILE_REQUIRED_1424_NOT_ZERO",
+    "FULL_2061_SOURCE_MAPPING_MATERIALIZATION_REBUILD_PENDING",
     "DISCOVER_SWISS_RUNTIME_SUBSCRIPTION_KEY_ABSENT",
     "SSR_1_0_REQUIRES_CAPTURE_VALID_DISCOVER_SWISS_MANIFEST"
   ],
-  "exact_dependency": "APPLY_OR_REJECT_16_CMRQ_EXPLICIT_REVIEWS_THROUGH_SRR_1_1_THEN_RECOMPUTE_REVERSE_GAPS",
+  "exact_dependency": "RECOVER_OR_REGENERATE_STRICT_ITEM_LEVEL_ECV_FOR_MD-ff70cabc95a4a2ea61a1_THEN_APPLY_ONLY_IF_MATCH_CONTRACT_PASSES",
   "required_inputs": [
-    "GitHub main f8d496870c8696c42b5e80fb794d1bdcaa85003a or descendant",
+    "GitHub main 0056c0f80b8c5a894ab4f32bac21353bafcfe025 or descendant",
     "authority E4 / SHA 70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
     "source artifact 9700376482 / records SHA256 62e26d62d8677a5437e081302b6b4d206c0d27a0fe268c6356aef01da5428dc2",
     "candidate export artifact 9718866661 / records SHA256 34d9aa9cfa4fe896bf1db8fba4dedfded9a1dbf2e135b847101904644d16bba0",
+    "base SMC candidate SHA256 2f9413318c410eb0f0443de260213d31e9ab2bdc1058581c0fa9c0340474aa27",
+    "cumulative SMO overlay SHA256 16db2ef17ee66c49fbaba9a54a9ef4182fa14bf660994b44dcdab40c3e44c718",
     "Drive HOTELS_MASTER 1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w; H-0691 absent",
-    "Drive private review doc 1Ktlvg04MbDrgZ0LD0wGYrpz65xTHBRyiNdD8KWLxNhk",
-    "docs/state/CRM_RECON_REVIEW_WAVE_2026-08-29.json"
+    "Drive private review doc 1Ktlvg04MbDrgZ0LD0wGYrpz65xTHBRyiNdD8KWLxNhk"
   ],
   "recovery_route": [
     "materialize Actions source artifact 9700376482",
     "materialize Actions candidate artifact 9718866661",
-    "read current HOTELS_MASTER from Drive",
-    "recompute CMRQ-1.0 and verify queue SHA",
-    "load private Drive review packet",
-    "apply/reject explicit reviews through SRR-1.1"
+    "load cumulative SRR review batch 0002 and verify 13 evidence refs",
+    "validate cumulative SMO overlay SHA 16db2ef17ee66c49fbaba9a54a9ef4182fa14bf660994b44dcdab40c3e44c718",
+    "recover or regenerate La Couronne item-level ECV",
+    "continue bounded RAGR without fuzzy auto-binding"
   ],
   "authority_advance_allowed": false,
   "canonical_id_allocation_allowed": false,

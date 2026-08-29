@@ -1,0 +1,112 @@
+name: preauth-entity-resolution-workset
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "src/swiss_os/preauth_entity_resolution.py"
+      - "tests/test_preauth_entity_resolution.py"
+      - ".github/workflows/preauth-entity-resolution-workset.yml"
+      - "docs/state/NEXT.json"
+      - "docs/state/CMI_WORK_BATCH_0001*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Resolve route gate
+        id: gate
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = json.loads(Path("docs/state/NEXT.json").read_text())
+          expected = "ENTITY_RESOLUTION_TERMINAL_MAPPING_PREAUTH_WAVE"
+          ecv = p.get("ecv_frontier") or {}
+          complete = (
+              int(ecv.get("candidate_records_total", -1)) == 1438
+              and int(ecv.get("current_detail_verified", -2)) == 1438
+              and int(ecv.get("remaining_unverified", -3)) == 0
+              and int(ecv.get("remaining_never_verified", -4)) == 0
+              and int(ecv.get("pending_requeue", -5)) == 0
+          )
+          should_run = p.get("next_route") == expected and complete
+          import os
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as fh:
+              fh.write(f"run={'true' if should_run else 'false'}\n")
+          print(json.dumps({
+              "next_route": p.get("next_route"),
+              "exact_current_complete": complete,
+              "run": should_run,
+          }, sort_keys=True))
+          PY
+
+      - name: Build pre-authority entity-resolution workset
+        if: steps.gate.outputs.run == 'true'
+        shell: bash
+        run: |
+          mkdir -p .artifacts
+          PYTHONPATH=src python -m swiss_os.preauth_entity_resolution build \
+            docs/state \
+            --next docs/state/NEXT.json \
+            --snapshot-id HS-MEMBER-DE-33206402141 \
+            --expected-records 1438 \
+            --out .artifacts/PREAUTH_ENTITY_RESOLUTION_33206402141.json
+
+      - name: Validate workset
+        if: steps.gate.outputs.run == 'true'
+        shell: bash
+        run: |
+          PYTHONPATH=src python -m swiss_os.preauth_entity_resolution validate \
+            .artifacts/PREAUTH_ENTITY_RESOLUTION_33206402141.json
+
+      - name: Safety assertions
+        if: steps.gate.outputs.run == 'true'
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = json.loads(Path(".artifacts/PREAUTH_ENTITY_RESOLUTION_33206402141.json").read_text())
+          assert p["authority_advanced"] is False
+          assert p["h_id_allocations"] == 0
+          assert p["canonical_id_allocation_allowed"] is False
+          assert p["terminal_mapping_effect"] == "NONE"
+          assert p["outbound"] == "CLOSED"
+          assert p["send_allowed"] == 0
+          assert p["source_records"] == 1438
+          assert p["exact_current_verified_records"] == 1438
+          print(json.dumps({
+              "valid": True,
+              "source_records": p["source_records"],
+              "duplicate_group_count": p["duplicate_group_count"],
+              "duplicate_records": p["duplicate_records"],
+              "unique_records": p["unique_records"],
+              "entity_group_candidates": p["entity_group_candidates"],
+              "workset_sha256": p["workset_sha256"],
+              "authority_advanced": False,
+              "h_id_allocations": 0,
+              "outbound": "CLOSED",
+              "send_allowed": 0,
+          }, indent=2, sort_keys=True))
+          PY
+
+      - name: Upload workset evidence
+        if: steps.gate.outputs.run == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: preauth-entity-resolution-${{ github.run_id }}
+          path: .artifacts/PREAUTH_ENTITY_RESOLUTION_33206402141.json
+          if-no-files-found: error
+          retention-days: 7

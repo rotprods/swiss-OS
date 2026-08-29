@@ -38,9 +38,9 @@ Discover.swiss structured parity remains provider-key blocked (`DISCOVER_SWISS_S
 Actions `33230259429`, job `99041727509`, artifact `9708270858`; artifact ZIP SHA `12cf4ecd2257b406286547f8684dd7fdd44b540db4ed9840d817af26700d59b5`; normalized ECV packet SHA `a7b20ed6bbc5f0e5b07408caee8cd39894d8cb7c20ea08a799424c920804a8e9`; validator violations `0`.
 
 ```text
-verified frontier                 449 / 1438
-remaining never verified          989
-pending requeue                     0
+ECV verified frontier             449 / 1438
+ECV remaining never verified     989
+ECV pending requeue                 0
 SUB0023 verified / terminal       20 / 20
 provider-record changes             0
 ```

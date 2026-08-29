@@ -1,6 +1,6 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest chained Meta Execution reconciliation: **2026-08-29T16:31:00Z**. Parent main SHA: **`f786d7748035785b3b5bc3bfec5e34ba8f0845b5`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
+Latest chained Meta Execution reconciliation: **2026-08-29T16:38:00Z**. Parent main SHA: **`14041743651b5d59d2408c02baa71edbc9276bca`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
 
 ## Authority — unchanged / locked
 
@@ -17,7 +17,7 @@ OUTBOUND                        CLOSED
 send_allowed                      0
 ```
 
-Authority SHA `70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`. Staging/materialization/ECV/cache/canary remain non-authoritative. Native Sheets tail remains H-0690; H-0691 absent; no authority effect.
+Authority SHA `70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`. Staging/materialization/ECV/cache/canary remain non-authoritative. Native Sheets tail rechecked this activation: H-0690 present; H-0691 absent; no authority effect.
 
 ## CRM universe / mapping frontier
 
@@ -43,12 +43,12 @@ contiguous candidate prefix       0..1400 (1401 records)
 next untouched candidate offset    1401
 ```
 
-## NEXT bounded wave — SUB0072
+## SUB0072 — exact materialization verified and staged
 
-Request immutable read-only CWP materialization for **SUB0072**, offsets **1401..1420**, 20 records. Do not reserve or allocate H-IDs. Validate artifact hashes, stage only through branch→CI→adversarial review→merge, then allow only read-only ECV to advance exact-current evidence.
+Read-only CWP run `33263167196` / job `99128476808` succeeded from main `14041743651b5d59d2408c02baa71edbc9276bca`. Artifact `9717836680`, ZIP SHA `b100b62aac8c5abdee42139c5d9b970ad093092ee4152c1870d291d163307fac`; packet SHA `e1c2c58f3b5ae0aca0a6b3afffc288ad9d73fb25f9c506de74b794152e7b9ccb`; report SHA `a72d650bddc9d3209cf179d7d4f2a513fd0931828e142339272b8bf9cd926cc6`; items SHA `fac7cc7446e29f05e1c38a9ed239c912739d67f5221aba8b6cd5ba31762df8de`. Exact immutable offsets **1401..1420**, 20 items. All are `CANDIDATE_NEW_ENTITY_PREAUTH` / `VERIFY_NEW_ENTITY`; every `matched_hotel_id` is empty. `authority_advanced=false`, `h_id_allocations=0`, OUTBOUND=CLOSED, `send_allowed=0`.
 
-## Hard gates
+## Hard gates / NEXT
 
-SSR-1.0 remains blocked on missing discover.swiss `Infocenter Open` subscription key / capture-valid structured API manifest. MEP fallback remains qualified member-directory + exact-current, without claiming API equivalence. Issue #14 controls the P0. Before authority eligibility require SSR-1.0, `RECONCILE_REQUIRED=0`, reverse gaps=0, full 2061 terminal mappings and fresh DB↔Sheets↔Graph↔Intelligence reconciliation. OUTBOUND=CLOSED; send_allowed=0.
+After green CI + adversarial review, merge this staging only to trigger read-only SUB0072 ECV. Persist typed ECV evidence separately before selecting the next immutable slice. SSR-1.0 remains blocked on missing discover.swiss `Infocenter Open` subscription key / capture-valid structured API manifest. MEP fallback remains qualified member-directory + exact-current without claiming API equivalence. Issue #14 controls the P0. Before authority eligibility require SSR-1.0, `RECONCILE_REQUIRED=0`, reverse gaps=0, full 2061 terminal mappings and fresh DB↔Sheets↔Graph↔Intelligence reconciliation.
 
-Drive recovery doc: `1leVfYwda8g0B5Co5zaSUIpo245t37tpUEiTaYlLds_s`. HOTELS_MASTER: `1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w`. File Library remains cold recovery only.
+Drive recovery doc: `1leVfYwda8g0B5Co5zaSUIpo245t37tpUEiTaYlLds_s`. HOTELS_MASTER: `1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w`. File Library is cold recovery and lags GitHub main.

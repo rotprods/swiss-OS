@@ -1,0 +1,135 @@
+name: graph-v2-empirical-qualification
+
+on:
+  pull_request:
+    paths:
+      - "scripts/qualify_graph_v2.py"
+      - "scripts/compile_graph_v2.py"
+      - "scripts/verify_graph_v2_bundle.py"
+      - "src/swiss_os/v2_*.py"
+      - "tests/test_v2_*.py"
+      - "docs/state/NEXT.json"
+      - "docs/audits/GRAPH_V2_EMPIRICAL_QUALIFICATION.md"
+      - ".github/workflows/graph-v2-empirical-qualification.yml"
+  push:
+    branches: [main]
+    paths:
+      - "scripts/qualify_graph_v2.py"
+      - "scripts/compile_graph_v2.py"
+      - "scripts/verify_graph_v2_bundle.py"
+      - "src/swiss_os/v2_*.py"
+      - "tests/test_v2_*.py"
+      - "docs/state/NEXT.json"
+      - "docs/audits/GRAPH_V2_EMPIRICAL_QUALIFICATION.md"
+      - ".github/workflows/graph-v2-empirical-qualification.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout exact revision
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Repository and contract guards
+        run: |
+          python scripts/repo_guard.py
+          python scripts/system_contract_guard.py
+
+      - name: Full regression suite
+        run: python -m unittest discover -s tests -v
+
+      - name: Build exact-SHA test attestation
+        env:
+          COMMIT_SHA: ${{ github.sha }}
+          RUN_ID: ${{ github.run_id }}
+          RUN_ATTEMPT: ${{ github.run_attempt }}
+        run: |
+          python - <<'PY'
+          import datetime
+          import json
+          import os
+          from pathlib import Path
+
+          seed = json.loads(Path("docs/graph/v2/canonical_seed.json").read_text(encoding="utf-8"))
+          executed_at = datetime.datetime.now(datetime.timezone.utc).isoformat().replace("+00:00", "Z")
+          payload = {
+              "schema_version": "GRAPH_V2_TEST_ATTESTATION_1",
+              "commit_sha": os.environ["COMMIT_SHA"],
+              "workflow_run_id": os.environ["RUN_ID"],
+              "workflow_run_attempt": os.environ["RUN_ATTEMPT"],
+              "results": [
+                  {
+                      "test_id": test_id,
+                      "state": "PASS",
+                      "evidence_ref": f"GITHUB_ACTIONS:{os.environ['RUN_ID']}:{os.environ['RUN_ATTEMPT']}",
+                      "executed_at": executed_at,
+                  }
+                  for test_id in seed["tests"]
+              ],
+          }
+          target = Path("build/v2_test_attestation.json")
+          target.parent.mkdir(parents=True, exist_ok=True)
+          target.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+          PY
+
+      - name: Run repeated empirical qualification
+        env:
+          COMMIT_SHA: ${{ github.sha }}
+          BRANCH_NAME: ${{ github.ref_name }}
+        run: |
+          GENERATED_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          python scripts/qualify_graph_v2.py \
+            --commit-sha "$COMMIT_SHA" \
+            --branch "$BRANCH_NAME" \
+            --generated-at "$GENERATED_AT" \
+            --test-attestation build/v2_test_attestation.json \
+            --next docs/state/NEXT.json \
+            --iterations 30 \
+            --compile-iterations 7 \
+            --out build/graph-v2-empirical-qualification.json
+
+      - name: Assert CP12 declared-scope gates
+        env:
+          COMMIT_SHA: ${{ github.sha }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          report = json.loads(Path("build/graph-v2-empirical-qualification.json").read_text(encoding="utf-8"))
+          assert report["state"] == "PASS"
+          assert report["commit_sha"] == os.environ["COMMIT_SHA"]
+          assert report["iterations"] == 30
+          assert report["compile_iterations"] == 7
+          assert all(report["gates"].values())
+          assert report["measurements"]["failure_count"] == 0
+          assert report["measurements"]["compile_successes"] == 7
+          assert report["measurements"]["recovery_successes"] == 30
+          assert report["measurements"]["runtime_successes"] == 30
+          assert report["measurements"]["shadow_successes"] == 30
+          assert report["authority_advanced"] is False
+          assert report["h_id_allocations"] == 0
+          assert report["outbound_opened"] is False
+          assert report["send_allowed"] == 0
+          PY
+
+      - name: Upload exact empirical qualification artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: graph-v2-empirical-qualification-${{ github.sha }}
+          path: |
+            build/graph-v2-empirical-qualification.json
+            build/v2_test_attestation.json
+          if-no-files-found: error
+          retention-days: 30

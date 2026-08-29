@@ -1,0 +1,64 @@
+{
+  "schema_version": "CRM-SOURCE-MAPPING-MATERIALIZATION-ATTESTATION-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "snapshot_id": "HS-MEMBER-DE-33206402141",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "parent_git_sha": "49b43df55e119d4b7df2beaf5c2405e67a28b8cd",
+  "lineage": {
+    "source_artifact_id": 9700376482,
+    "source_records": 2061,
+    "source_records_sha256": "62e26d62d8677a5437e081302b6b4d206c0d27a0fe268c6356aef01da5428dc2",
+    "candidate_artifact_id": 9718866661,
+    "candidate_records": 1438,
+    "candidate_records_sha256": "34d9aa9cfa4fe896bf1db8fba4dedfded9a1dbf2e135b847101904644d16bba0",
+    "pinned_base_smc_candidate_sha256": "2f9413318c410eb0f0443de260213d31e9ab2bdc1058581c0fa9c0340474aa27",
+    "base_terminal_semantic_reconstruction": {
+      "terminal": 624,
+      "non_candidate_exact_name_city": 623,
+      "candidate_exact_correction_source_record_key": "MD-dd14bef2251b12ecd017",
+      "candidate_exact_correction_canonical_hotel_id": "H-0088"
+    },
+    "explicit_srr_deltas_applied": 32,
+    "explicit_overlay_source_sha256": "5aca28742358507bc64e40602895b809664810b9cb8732770a9cf69065c0676c",
+    "terminal_coverage_sha256": "95c48f65fbf67c2fb2c284c9ba603be03d706d2f46ef7373dc8ebb7272b3c176",
+    "ragr_34_queue_sha256": "cf47dc91057df8653cd75729cb39320605e193e476c6828f24956b69e2848b9c"
+  },
+  "materialization": {
+    "source_records_total": 2061,
+    "terminal_active_canonical": 656,
+    "reconcile_required": 1405,
+    "unique_terminal_canonical_targets": 656,
+    "candidate_rows_terminalized": 33,
+    "candidate_rows_remaining_reconcile": 1405,
+    "source_key_conservation": true,
+    "candidate_key_conservation": true,
+    "duplicate_source_keys": 0,
+    "terminal_target_collisions": 0,
+    "reconcile_rows_with_canonical_target": 0,
+    "fuzzy_autobind_count": 0,
+    "drive_artifact_file_name": "FULL_SOURCE_MAPPING_2061_33206402141.json.gz",
+    "drive_review_artifact_file_name": "FULL_SOURCE_RESOLUTION_REVIEW_2061_33206402141.json.gz",
+    "drive_recovery_method": "Search exact file names in connected Drive; each artifact embeds its deterministic materialization hash and complete lineage."
+  },
+  "review": {
+    "coverage_complete": true,
+    "source_conservation": true,
+    "source_resolution_complete": false,
+    "authority_batch_ready": false,
+    "remaining_reconcile_required": 1405,
+    "remaining_ragr_reverse_gaps": 34,
+    "all_candidate_rows_current_detail_verified": true,
+    "ibis_budget_source_record_key": "MD-034c1c3b0f7ba9d69c80",
+    "ibis_budget_state": "RECONCILE_REQUIRED_NEW_CANONICAL_PREAUTH_NO_ID_RESERVATION"
+  },
+  "reconstruction_note": "The historical base SMC byte artifact is not present in the repository. The full materialization therefore reconstructs its pinned semantic frontier exactly as 624 terminal mappings (623 records outside the candidate export plus the H-0088 exact correction), then applies the 32 validated explicit SRR deltas. It does not claim byte identity with the unavailable historical base file.",
+  "hard_invariants": {
+    "authority_advanced": false,
+    "h_id_allocations": 0,
+    "canonical_id_reservations": 0,
+    "crm_universe_complete": false,
+    "outbound": "CLOSED",
+    "send_allowed": 0
+  },
+  "next_route": "CP_R02_CLASSIFY_1405_RECONCILE_ROWS_WITH_DETERMINISTIC_EVIDENCE_LANES_NO_FUZZY_AUTOBIND"
+}

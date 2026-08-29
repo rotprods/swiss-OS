@@ -1,0 +1,23 @@
+{
+  "schema_version": "COS-V2-CLAIM-1.0",
+  "claim_id": "CLAIM-ARCH-GRAPH-V2-A7F3C1",
+  "project_id": "SWITZERLAND_JOB_OS",
+  "agent_id": "AGENT-GPT56SOL-ARCH-001",
+  "session_id": "SES-20260829T213800Z-GRAPHV2-A7F3C1",
+  "workstream_id": "WS-ARCH-GRAPH-V2",
+  "objective_id": "OBJ-GRAPH-REFACTOR-V2",
+  "correlation_id": "CORR-20260829-GRAPHV2-A7F3C1",
+  "state": "ACTIVE",
+  "claimed_at": "2026-08-29T21:42:00Z",
+  "base_sha": "d6c49f158c3691f44868cb9a55a52bc6c6aea225",
+  "branch": "refactor/cos-20d-hypergraph-v2",
+  "resource_scopes": ["architecture-v2", "coordination-v2", "machine-state-v2", "continuity-v2"],
+  "semantic_scopes": ["ARCHITECTURE", "EVENT", "SESSION", "CLAIM", "HYPERGRAPH", "RECOVERY", "TEST_ASSURANCE"],
+  "excluded_scopes": ["HOTEL_AUTHORITY_MUTATION", "H_ID_ALLOCATION", "OUTBOUND_EXECUTION"],
+  "fencing_token": 1,
+  "lease_semantics": "BRANCH_SCOPED_UNTIL_HANDOFF_OR_SUPERSEDED; no wall-clock lease enforcement exists yet",
+  "collisions_observed": ["PR#269 historical full-SMC materialization", "PR#273 provider enrichment", "PR#275 stale ambiguity resolution"],
+  "supersession_policy": "Do not overwrite concurrent domain progress; re-read main before PR and rebase/recompile state pointers.",
+  "authority_ceiling": "ARCHITECTURE_AND_PREAUTHORITY_ONLY",
+  "idempotency_key": "SWITZERLAND_JOB_OS|WS-ARCH-GRAPH-V2|OBJ-GRAPH-REFACTOR-V2"
+}

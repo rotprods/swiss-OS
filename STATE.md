@@ -1,6 +1,6 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest chained Meta Execution reconciliation: **2026-08-29T20:24:00Z**. Current wave parent main SHA: **`22d2d57ab22c227b1781f6705f851871667f1bb3`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
+Latest chained Meta Execution reconciliation: **2026-08-29T20:37:00Z**. Current wave parent main SHA: **`55b8e6cf570cc603018b92f36de97b07995b7f3a`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
 
 ## Authority — unchanged / locked
 
@@ -14,7 +14,7 @@ OUTBOUND                        CLOSED
 send_allowed                      0
 ```
 
-Authority SHA `70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`. Staging, ECV, SRR, SMO, RAGR, SRET, cache and canary remain non-authoritative. HOTELS_MASTER remains 690 rows and H-0691 remains absent. No H-ID has been allocated or reserved.
+Authority SHA `70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`. Staging, ECV, SRR, SMO, RAGR, SRET, provider-identity enrichment, cache and canary remain non-authoritative. HOTELS_MASTER remains 690 rows and H-0691 remains absent. No H-ID has been allocated or reserved.
 
 ## Effective source-resolution frontier
 
@@ -36,20 +36,28 @@ Pinned lineage: source records SHA `62e26d62d8677a5437e081302b6b4d206c0d27a0fe26
 
 SRET-1.0 remains strictly review-only. The deterministic full frontier is 656 carried terminal mappings plus 1405 triage records: `MATCH_EXISTING_REVIEW=0`, `AMBIGUOUS_REVIEW=8`, `NOVELTY_REVIEW=1397`, `EVIDENCE_PENDING=0`; 116 novelty records have same-city similarity hints used only to reduce review space. Full items SHA `b15ed2d019759b3730a225207cdb1ba674b16b93ac925b74dbabff2d495aecf6`; triage SHA `e82127ea2abc0ac68ef194496cd0de6bfddab2596a9dda15bf13411316d6f790`.
 
-A post-merge lineage audit caught that the first public ambiguity-queue projection was not selected directly from those hashed SRET items: several source keys/localities were stale. It was fail-closed and never used for a terminal decision. The queue is now regenerated directly by `triage_state == AMBIGUOUS_REVIEW`, includes the source detail URLs, and hashes to **`1fdf800a0b7bd9ad64a7a47c9c9c41c87c2c38a3d4b91e1fea2b54c93230cee8`**. This correction changes review lineage only; all SRET counts, full items/triage hashes, authority state, and mapping frontier remain unchanged.
+The corrected ambiguity queue is selected directly by `triage_state == AMBIGUOUS_REVIEW`, includes exactly eight records, and hashes to `1fdf800a0b7bd9ad64a7a47c9c9c41c87c2c38a3d4b91e1fea2b54c93230cee8`. Public-safe summary: `docs/state/SRET_FULL_2061_SUMMARY_33206402141.json`. Corrected queue: `docs/state/SRET_AMBIGUITY_QUEUE_0001_33206402141.json`.
 
-Correct ambiguity records are: Hotel De la Paix / Interlaken; Hotel Du Lac / Därligen; Hôtel Du Port / Villeneuve VD; Hotel Astoria / Luzern; Hotel Silberhorn / Wengen; Hotel De la Paix / Luzern; Hotel Allegra / Pontresina; and Hotel Drei Könige / Einsiedeln. Each remains ambiguity-only; exact global-name collisions do not authorize mapping.
+## Wave 0011 — current provider identity enrichment for all 8 SRET ambiguities
 
-Public-safe summary: `docs/state/SRET_FULL_2061_SUMMARY_33206402141.json`. Corrected ambiguity queue: `docs/state/SRET_AMBIGUITY_QUEUE_0001_33206402141.json`.
+All eight exact-global-name/locality conflicts now have bounded independent identity evidence in `docs/state/PROVIDER_IDENTITY_ENRICHMENT_SRET_AMBIGUITY_BATCH_0001_33206402141.json`, items SHA `074a4801ac90ac53a08f42ebfae1bcf6b0170ee35a4c52a366474a56bc5864e1`.
 
-## NEXT — provider identity enrichment before further terminal resolution
+For every source record, the already-complete exact-current HotellerieSuisse evidence is paired with current independent official/tourism identity for the source property and every exact-name canonical comparator. The eight sources resolve as **distinct properties** from all same-name canonical signals because current locality and postal address differ; official-domain divergence corroborates most cases. Domain absence is never used as proof.
 
-The shallow deterministic identity surface is exhausted. Enrich bounded SRET records with current provider identity fields that can disambiguate variants: external property-domain candidates and structured postal/location identity where available. Compare those fields to HOTELS_MASTER current official domains/locations. Exact independently corroborated agreement may justify an explicit SRR review; **absence or difference of a domain is not proof of a new canonical**.
+The eight evidence-sufficient pre-authority decisions are staged as explicit SRR-1.1 `NEW_CANONICAL` reviews in `docs/state/SRR_PROVIDER_IDENTITY_REVIEWS_BATCH_0007_33206402141.json`, reviews SHA `994cdc03e793d983d745cf3386e510a5ef05dce8e6146fd10fcca06536371bea`.
 
-Start with the corrected 8 ambiguity records, then a bounded highest-value subset of the 116 same-city similarity hints. Persist enrichment evidence/hashes, keep target IDs out of staging, and apply only independently demonstrated SRR decisions. Records lacking sufficient identity evidence remain `NOVELTY_REVIEW` or `AMBIGUOUS_REVIEW`.
+Important semantics: these reviews **do not terminalize a source mapping and do not allocate/reserve an H-ID**. Under SRR-1.1, a valid `NEW_CANONICAL` review remains `RECONCILE_REQUIRED` and only queues `ALLOCATE_NEW_CANONICAL_ON_AUTHORITY_COMMIT` for a later explicitly authorized authority transaction. No authority commit is authorized by this wave.
 
-The dominant P0 remains `RECONCILE_REQUIRED=1405`. `MD-034c1c3b0f7ba9d69c80` ibis budget Zürich City West remains a distinct nonterminal new-canonical review candidate; **H-0691 is not reserved**.
+QA: ambiguity queue coverage `8/8`; every exact-signal comparator is covered; every source has current evidence; no fuzzy/similarity signal is used as proof; target H-ID fields are empty; authority/outbound locks remain intact.
+
+## NEXT — apply the 8 explicit SRR reviews, then attack highest-risk novelty evidence
+
+Run the SRR-1.1 validator/materializer against the current effective 656/1405 source-mapping input, active E4 canonical catalog and `SRR_PROVIDER_IDENTITY_REVIEWS_BATCH_0007_33206402141.json`. Expected result: eight explicit `NEW_CANONICAL` resolution actions remain pre-authority `RECONCILE_REQUIRED`, with no H-ID allocation/reservation. Persist the resulting review hash and exact action counts.
+
+Immediately after validation, continue provider-identity enrichment over a bounded highest-value slice of the 116 `NOVELTY_REVIEW` records carrying same-city similarity hints, beginning with the strongest duplicate-risk cases rather than the largest-volume no-suggestion tail. Similarity only selects review work; independently corroborated current identity evidence must decide match versus distinctness.
+
+The dominant P0 remains `RECONCILE_REQUIRED=1405`; eight of those records now have explicit evidence-sufficient `NEW_CANONICAL` review inputs but are still unresolved at the mapping/authority layer. `MD-034c1c3b0f7ba9d69c80` ibis budget Zürich City West remains a high-priority novelty review and **H-0691 is not reserved**.
 
 SSR-1.0 remains provider-boundary blocked on the missing discover.swiss `Infocenter Open` subscription key / capture-valid structured API manifest. Continue the qualified HotellerieSuisse member-directory + exact-current MEP fallback without claiming structured API equivalence.
 
-Drive HOTELS_MASTER: `1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w`. Private review: `1Ktlvg04MbDrgZ0LD0wGYrpz65xTHBRyiNdD8KWLxNhk`. Recovery: `1leVfYwda8g0B5Co5zaSUIpo245t37tpUEiTaYlLds_s`. RAGR recovery: `12X7sQZDWIFm8Ss9DyxYYzvit6zSKq6ZeAliM6lEvNVg`.
+Drive HOTELS_MASTER: `1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w`. Private review: `1Ktlvg04MbDrgZ0LD0wGYrpz65xTHBRyiNdD8KWLxNhk`. Recovery: `1leVfYwda8g0B5Co5zaSUIpo245t37tpUEiTaYlLds_s`. RAGR recovery: `12X7sQZDWIFm8Ss9DyxYYzvit6zSKq6ZeAliM6lEvNVg`. Machine continuation pointer: `docs/state/NEXT.json`.

@@ -14,7 +14,7 @@ Candidate verification proves that a source record currently resolves to an enti
 CEP consumes:
 
 ```text
-candidate export gzip
+candidate export gzip or strict base64(gzip)
 candidate export manifest
 frozen source snapshot ID
 ```
@@ -23,13 +23,14 @@ The loader must verify:
 
 ```text
 gzip SHA-256
-uncompressed records SHA-256
+canonical JSON(records) SHA-256
 declared record count
+payload/manifest snapshot agreement
 unique non-empty source/provider record keys
 non-empty name and city
 ```
 
-A hash or count mismatch fails closed.
+A hash, count or lineage mismatch fails closed.
 
 ## Strong identity partition
 

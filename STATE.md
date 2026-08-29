@@ -1,6 +1,6 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest chained Meta Execution reconciliation: **2026-08-29T22:18:00Z**. Wave parent main SHA: **`94f645e815991758572b3d8f006522b5b146f538`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
+Latest chained Meta Execution reconciliation: **2026-08-29T22:23:00Z**. Wave parent main SHA: **`cc67d5ced6d43a6a29a734d91f1bec775ac6a949`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
 
 ## Authority — unchanged / locked
 
@@ -34,32 +34,28 @@ Full mapping recovery: `docs/state/FULL_SOURCE_MAPPING_REBUILD_657_ATTESTATION_3
 
 ## Provider identity frontier
 
-PIE-1.1 merge-push packet selection is now fail-closed against repository `before→after` truth. SUB0003 replay executed successfully in Actions run `33278148054`, job `99168454573`, artifact `9722145032`, artifact digest `d57e61df6b6351640434721fc0c5b945054baa4d35f17351ef3553ed9ccabc09`, packet SHA `17dcdee8cb5f1dec528b4f0da2880d3faa12b10c08f791d6092a215e412ffd30`.
-
-The 47-record Jaccard-0.50 queue is now split precisely:
+PIE-1.1 has now executed read-only provider evidence for the entire 47-record Jaccard-0.50–0.59 queue. Final17 Actions run `33278374703`, job `99169076312`, artifact `9722212725`, artifact digest `bfa30d4c89193d62ea02ca5b0120e55977f6508c9ba84cafce120afa4faa8a0e`, artifact JSON SHA `633e4f38047dfe2e5db41ce3a80f5b69845ffd6235e2c3e769d3f787db112b7f`, packet SHA `422f27d7d0e85c5bbba12ac55b77eafc7930204d5e8fec2c3d24f51395b06d7e`, results SHA `63bf8781509a968227cbfc1d470a5638aab49b14cf0582e201fefe646e7d0f65`.
 
 ```text
-provider evidence executed                 30
-identity review completed                  20
+provider evidence executed                 47 / 47
+identity review completed                  20 / 47
   distinctness corroborated                19
   same-property SRR applied                 1
-captured evidence awaiting comparator review 10
-unprocessed / staged next                  17
+captured evidence awaiting comparator review 27
+unprocessed in 0.50–0.59                    0
 lower-similarity tail                      49
 ```
 
-SUB0003 is deliberately `EVIDENCE_CAPTURED_REVIEW_REQUIRED`: provider evidence exists, but no distinctness/same-property decision is promoted without an independent current canonical comparison. Mapping delta remains zero and `RECONCILE_REQUIRED` remains 1404.
-
-The exact remaining 17 are staged targetlessly at `docs/state/PROVIDER_IDENTITY_WORK_0003_33206402141.json`, items SHA `a0799fd578ed008bbef2896b2c3d4fbfc4269ef82afafbc5cc29a80d537073b6`. On merge, PIE-1.1 must execute exactly these 17 and produce a validated artifact; then persist evidence before any identity decision.
+SUB0003 and FINAL17 are deliberately `EVIDENCE_CAPTURED_REVIEW_REQUIRED`: provider evidence exists, but no same-property/distinctness decision is promoted without independent current canonical comparison. Their mapping delta is zero; `RECONCILE_REQUIRED` remains 1404.
 
 ## Recovery / provider boundaries
 
-Pinned source artifact `9700376482` SHA `62e26d62d8677a5437e081302b6b4d206c0d27a0fe268c6356aef01da5428dc2`; candidate artifact `9718866661` records SHA `34d9aa9cfa4fe896bf1db8fba4dedfded9a1dbf2e135b847101904644d16bba0`. Direct connector-file → Drive recovery remains blocked by file-reference egress, so MEP is GitHub compact recovery state + pinned Actions artifact IDs/hashes. Drive remains a projection/recovery plane.
+Pinned source artifact `9700376482` SHA `62e26d62d8677a5437e081302b6b4d206c0d27a0fe268c6356aef01da5428dc2`; candidate artifact `9718866661` records SHA `34d9aa9cfa4fe896bf1dbfba4dedfded9a1dbf2e135b847101904644d16bba0`. Direct connector-file → Drive recovery remains blocked by file-reference egress, so MEP is GitHub compact recovery state + pinned Actions artifact IDs/hashes. Drive remains a projection/recovery plane.
 
 SSR-1.0 remains blocked by the absent discover.swiss `Infocenter Open` subscription key / capture-valid structured manifest. Qualified HotellerieSuisse member-directory + exact-current remains the MEP fallback without API-equivalence claims.
 
 ## NEXT
 
-Merge and execute the staged final17 PIE packet, persist the resulting evidence artifact, then independently reconcile all 27 captured-but-not-terminal identities. Apply explicit SRR only where same-property identity is proven. Distinctness/novelty review alone cannot decrement 1404 or reserve H-0691. After this bucket, process the lower-similarity 49.
+Independently reconcile all 27 evidence-captured-but-not-terminal identities against current canonical identities. Apply explicit SRR only where same-property identity is proven; distinctness/novelty review alone cannot decrement 1404 or reserve H-0691. Then process the lower-similarity 49 through bounded targetless PIE packets. `OUTBOUND=CLOSED`; `send_allowed=0`.
 
 Drive HOTELS_MASTER: `1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w`. Private review: `1Ktlvg04MbDrgZ0LD0wGYrpz65xTHBRyiNdD8KWLxNhk`. Recovery: `1leVfYwda8g0B5Co5zaSUIpo245t37tpUEiTaYlLds_s`. RAGR recovery: `12X7sQZDWIFm8Ss9DyxYYzvit6zSKq6ZeAliM6lEvNVg`.

@@ -1,0 +1,86 @@
+{
+  "schema_version": "SRET-PROVIDER-IDENTITY-FINAL17-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "snapshot_id": "HS-MEMBER-DE-33206402141",
+  "parent_git_sha": "cc67d5ced6d43a6a29a734d91f1bec775ac6a949",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "authority_parent_materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+  "source_queue_sha256": "eed5f949c55da71b7a69d3dd481778992f316bfdd35e4655f85070dc46a14429",
+  "provider_enrichment": {
+    "protocol": "PIE-1.1",
+    "github_actions_run_id": 33278374703,
+    "github_actions_job_id": 99169076312,
+    "artifact_id": 9722212725,
+    "artifact_digest_sha256": "bfa30d4c89193d62ea02ca5b0120e55977f6508c9ba84cafce120afa4faa8a0e",
+    "artifact_json_sha256": "633e4f38047dfe2e5db41ce3a80f5b69845ffd6235e2c3e769d3f787db112b7f",
+    "packet_sha256": "422f27d7d0e85c5bbba12ac55b77eafc7930204d5e8fec2c3d24f51395b06d7e",
+    "results_sha256": "63bf8781509a968227cbfc1d470a5638aab49b14cf0582e201fefe646e7d0f65",
+    "results_count": 17,
+    "state": "EXECUTED_VALIDATED_REVIEW_ONLY"
+  },
+  "processed_source_keys": [
+    "MD-699c71bb6bce540f641c",
+    "MD-6a4331093c8de2eca2fb",
+    "MD-6c3153de9fbb5a337f6f",
+    "MD-6d5fffc699aa640f4bb8",
+    "MD-6e3f71832d698c2f256e",
+    "MD-7400cffb0d22c9b2d01d",
+    "MD-8b6c2242e364c6468f0a",
+    "MD-931f468fc8ccbeb0630e",
+    "MD-93d88fb61a77fd5a967d",
+    "MD-a5398d49d8ecd5b730d7",
+    "MD-bbd80dd892e2a9df49ee",
+    "MD-c6675203a7f20b7cc8fc",
+    "MD-c6bfaec6d1420cb70c35",
+    "MD-c881e519c797060a91ec",
+    "MD-d11e64ed164c210f6583",
+    "MD-e5aa47658762211ef284",
+    "MD-eaa9591c67a4016cf6c4"
+  ],
+  "processed_source_keys_sha256": "16afde3e79868a7644e8bb7e4bd9530441ef889d1c9d883f84f01403fa69e778",
+  "provider_response_sha256": {
+    "MD-699c71bb6bce540f641c": "34dcb94966b981ca636f852ecd4189485b3da4a8238554335ed6473df58683dd",
+    "MD-6a4331093c8de2eca2fb": "0deb8402507ff107766ac989dab2bdb4adca9c90fdd9cd0f00db163d2ccc35f5",
+    "MD-6c3153de9fbb5a337f6f": "db1b260de5afaf3a804cb2532f57836353ff391a9dc8c24e1f9bbfadcfa00159",
+    "MD-6d5fffc699aa640f4bb8": "bb26dc42197ddd997e736907972659718c506c804d3fde1bacf1412b5b34fa83",
+    "MD-6e3f71832d698c2f256e": "7a5be4d589455c14a7eb4c369c127bcf63271b7ee6295922b49ded147be43978",
+    "MD-7400cffb0d22c9b2d01d": "43d59b4d2e2e1f9fd3574e8686c1af54fc81622e3d4a30b7e2509f349c309c5f",
+    "MD-8b6c2242e364c6468f0a": "52f50fba0617af2480d1949f0ee53235b1017c8021aa303794e8e516aae7c7c1",
+    "MD-931f468fc8ccbeb0630e": "bfc8967e7a79abe892b2b907efc40e8586508b0aa54e070ce6fa66d28dffa429",
+    "MD-93d88fb61a77fd5a967d": "64288a4d40aa4b4ecb1e078171212674e42d20501dd0fe4b70292e579a771540",
+    "MD-a5398d49d8ecd5b730d7": "b73582f2165ef264ed5faec71a9297d184d4eb664af3286b38797259e007f6cf",
+    "MD-bbd80dd892e2a9df49ee": "0bfc9d5fc4ed2d1c1fcbdb83ce955a681ad718f748a1837d7f20905cce0ef647",
+    "MD-c6675203a7f20b7cc8fc": "ac5e0d79b3c13d430bd95fe233707a3ba0463c417e95fbe4f9b1602800f07768",
+    "MD-c6bfaec6d1420cb70c35": "704322ae664b1bb464093c6ec64505e1eeb3f6e99b02cd8c81074c501f73cb9c",
+    "MD-c881e519c797060a91ec": "8cf4ea2f4f3832b65b9ad555c0ceef0e81198e4e8e4adbd6cae3782d18be0b81",
+    "MD-d11e64ed164c210f6583": "89d6185f4963b18d2de6a82a3c9c7c3140a62d93ad847cb9aa11b0c13d937121",
+    "MD-e5aa47658762211ef284": "0c2abc17d59d62b12da4404b19cb48c65741922a12cf68679af9f37748372b5c",
+    "MD-eaa9591c67a4016cf6c4": "89e016a90813b6b218ea5479d0a6ee6e67cc16cea6bd82f231600c56aff01205"
+  },
+  "review": {
+    "review_state": "EVIDENCE_CAPTURED_REVIEW_REQUIRED",
+    "reason": "All remaining 0.50-0.59 provider pages executed successfully; no same-property or distinctness decision is promoted without independent current canonical comparison.",
+    "terminal_decision_allowed": false
+  },
+  "mapping_effect": {
+    "terminal_mappings": 0,
+    "reconcile_required_delta": 0,
+    "effective_reconcile_required": 1404
+  },
+  "frontier": {
+    "provider_evidence_executed": 47,
+    "identity_review_completed": 20,
+    "identity_review_pending_from_evidence": 27,
+    "unprocessed_in_050_059": 0,
+    "lower_similarity_tail_remaining": 49
+  },
+  "hard_invariants": {
+    "authority_advanced": false,
+    "h_id_allocations": 0,
+    "canonical_id_reservations": 0,
+    "crm_universe_complete": false,
+    "outbound": "CLOSED",
+    "send_allowed": 0
+  },
+  "next_route": "PIE_050_CAPTURED_27_IDENTITY_REVIEW_THEN_LOWER_49"
+}

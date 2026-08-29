@@ -1,0 +1,20 @@
+{
+  "schema_version":"META-GRAPH-DELTA-1.0",
+  "project":"SWITZERLAND_JOB_OS",
+  "parent_git_sha":"cc67d5ced6d43a6a29a734d91f1bec775ac6a949",
+  "authority_epoch":"HS_ENTITY_EPOCH_2026-08-25_E4",
+  "nodes":[
+    {"id":"EVD-PIE-050-FINAL17","type":"Artifact","state":"VERIFIED","artifact_id":9722212725,"packet_sha256":"422f27d7d0e85c5bbba12ac55b77eafc7930204d5e8fec2c3d24f51395b06d7e","results_sha256":"63bf8781509a968227cbfc1d470a5638aab49b14cf0582e201fefe646e7d0f65"},
+    {"id":"DEC-PIE-050-FINAL17","type":"Decision","state":"EVIDENCE_CAPTURED_REVIEW_REQUIRED","statement":"Final 17 provider records executed successfully; identity remains undecided pending independent current canonical comparison."},
+    {"id":"FRONTIER-PIE-050","type":"Checkpoint","state":"PROVIDER_EVIDENCE_COMPLETE_IDENTITY_REVIEW_INCOMPLETE","provider_evidence_executed":47,"identity_review_completed":20,"identity_review_pending":27,"unprocessed":0},
+    {"id":"WORK-PIE-050-REVIEW27","type":"Wave","state":"NEXT_SAFE_FRONTIER","items":27},
+    {"id":"WORK-PIE-LOWER49","type":"Wave","state":"BLOCKED_BY_REVIEW_FRONTIER","items":49}
+  ],
+  "edges":[
+    {"from":"EVD-PIE-050-FINAL17","type":"SUPPORTS","to":"DEC-PIE-050-FINAL17"},
+    {"from":"DEC-PIE-050-FINAL17","type":"CONTRIBUTES_TO","to":"FRONTIER-PIE-050"},
+    {"from":"FRONTIER-PIE-050","type":"UNBLOCKS","to":"WORK-PIE-050-REVIEW27"},
+    {"from":"WORK-PIE-050-REVIEW27","type":"PRECEDES","to":"WORK-PIE-LOWER49"}
+  ],
+  "invariants":{"authority_advanced":false,"h_id_allocations":0,"canonical_id_reservations":0,"reconcile_required":1404,"crm_universe_complete":false,"outbound":"CLOSED","send_allowed":0}
+}

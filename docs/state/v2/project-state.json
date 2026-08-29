@@ -1,48 +1,27 @@
 {
-  "active_claim_ids": [
-    "CLAIM-ARCH-GRAPH-V2-A7F3C1"
-  ],
+  "active_claim_ids": ["CLAIM-ARCH-GRAPH-V2-A7F3C1"],
   "authority_advanced": false,
   "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
   "authority_revision": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
   "blockers": [
     "SSR-1.0 provider-blocked: discover.swiss Infocenter Open subscription key/capture-valid manifest absent.",
-    "Open PR overlap/supersession is not machine-managed in V1.",
-    "No first-class V1 Session/Claim/EventWatermark/ContextPack contract."
+    "Open PR overlap/supersession is not machine-managed in V1."
   ],
   "branch": "refactor/cos-20d-hypergraph-v2",
-  "context_pack_revision": "36ef89da4706696f80f56aeaad3aeaa408f3ebd56afed4d231cd8cabcb428988",
+  "context_pack_revision": "10b495767584a9785fdc75cb411082016ad2acb0fe2835ce5f7ea07fd2c68b1a",
   "current_objective_id": "OBJ-GRAPH-REFACTOR-V2",
-  "event_watermark": {
-    "event_id": "EVT-20260829T214200Z-GRAPHV2-WORK-STARTED",
-    "occurred_at": "2026-08-29T21:42:00Z"
-  },
+  "event_watermark": {"event_id":"EVT-20260829T214200Z-GRAPHV2-WORK-STARTED","occurred_at":"2026-08-29T21:42:00Z"},
   "h_id_allocation_allowed": false,
-  "live_frontier": {
-    "active_canonical": 690,
-    "candidate_records": 1438,
-    "next_h_id": "H-0691 UNALLOCATED",
-    "reconcile_required": 1404,
-    "reverse_authority_gaps": 34,
-    "source_records": 2061,
-    "terminal_mappings": 657
-  },
-  "main_sha_observed": "d6c49f158c3691f44868cb9a55a52bc6c6aea225",
+  "live_frontier": {"active_canonical":690,"candidate_records":1438,"next_h_id":"H-0691 UNALLOCATED","reconcile_required":1404,"reverse_authority_gaps":34,"source_records":2061,"terminal_mappings":657},
+  "main_sha_observed": "e467f112e63aac9b84079d6594a639c205963ba1",
   "next_safe_actions": [
-    "Implement and test V2 coordination kernel.",
-    "Freeze V2 architecture/ontology/lexicon/authority boundaries.",
-    "Compile machine-readable tasks/checkpoints/gap matrix.",
-    "Run CI and adversarial review; reread main before merge."
+    "Run repository CI on the rebased V2+PIE state.",
+    "Adversarially inspect PR #288 for authority/domain mutation.",
+    "If CI stays green, merge V2 coordination architecture without advancing hotel authority.",
+    "Migrate one active domain workstream to Session→Claim→Event→ContextPack semantics and execute recovery/death/concurrency qualification."
   ],
   "north_star_ref": "GOAL.md#G-0001",
-  "open_prs": [
-    269,
-    273,
-    275,
-    135,
-    137,
-    139
-  ],
+  "open_prs": [269,273,275,288,135,137,139],
   "outbound_allowed": false,
   "project_id": "SWITZERLAND_JOB_OS",
   "projection_revision": "6d43676ed98267ed71b0141e1abf0c94cc353e65ba920c33098d3be3dd6c55ea",
@@ -54,26 +33,19 @@
     "Project recovery currently relies on many handoff artifacts without one machine-validated zero-context pack."
   ],
   "schema_version": "COS-V2-PROJECT-STATE-1.0",
-  "source_refs": [
-    "STATE.md@d6c49f158c3691f44868cb9a55a52bc6c6aea225",
-    "GOAL.md",
-    "AGENTS.md",
-    "docs/architecture/AUTHORITY_MODEL.md",
-    "docs/architecture/SYSTEM_MAP.md",
-    "GitHub:issue#281"
-  ],
+  "source_refs": ["STATE.md@e467f112e63aac9b84079d6594a639c205963ba1","GOAL.md","AGENTS.md","docs/architecture/AUTHORITY_MODEL.md","docs/architecture/SYSTEM_MAP.md","GitHub:issue#281","docs/state/FULL_SOURCE_MAPPING_REBUILD_657_ATTESTATION_33206402141.json"],
   "state": "V2_IMPLEMENTING_PREAUTHORITY",
   "unverified_work": [
-    "Full 657-row terminal coverage rebuild pending.",
     "37 provider-identity reviews remain in similarity 0.50 bucket.",
     "49 lower-similarity tail remains after that.",
-    "V2 coordination kernel not yet merged or CI-qualified."
+    "V2 coordination architecture is CI-tested on its branch but not yet merged/migrated/empirically qualified."
   ],
   "verified_work": [
     "Authority plane remains 690 active canonical / H-0691 unallocated.",
     "Frozen source universe 2061; ECV 1438/1438.",
     "Preauthority mapping frontier 657 terminal / 1404 reconcile.",
-    "RAGR reverse authority gaps 34.",
+    "Full deterministic 657-row terminal coverage rebuild executed and re-attested.",
+    "RAGR reverse authority gaps 34 over 656 unique canonical targets.",
     "ASR repair is historical-complete and authority revision pinned."
   ]
 }

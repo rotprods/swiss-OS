@@ -1,6 +1,6 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest chained Meta Execution reconciliation: **2026-08-29T04:58:31Z**. Parent main SHA: **`216481c7993198daef4585fb90b9acbc9bfeeefc`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
+Latest chained Meta Execution reconciliation: **2026-08-29T05:09:00Z**. Parent main SHA: **`216481c7993198daef4585fb90b9acbc9bfeeefc`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
 
 ## Authority — unchanged / locked
 
@@ -44,10 +44,10 @@ contiguous candidate prefix       0..500 (501 records)
 
 ## Staged next bounded wave — SUB0027
 
-`SUB0027` = exact original candidate offsets **501..520**, items `20`, items SHA `61de2015102d7b110d42d32c05ae56261b7da3dca0f67fa4f19b96d57714a357`, next untouched offset `521`. No H-ID reservation/allocation and no authority advance.
+`SUB0027` = exact original candidate offsets **501..520**, items `20`, corrected canonical items SHA `f92f07e9d2753f9bf0b2d21965e05678c2633dfdf9029b09c332bb4428b2b5dd`, next untouched offset `521`. Initial PR #150 repo-guard failed only on `STAGED_ITEMS_SHA_MISMATCH`; the hash has been recomputed with the guard's canonical sorted compact JSON semantics and propagated across durable artifacts. No H-ID reservation/allocation and no authority advance.
 
 ## P0 / NEXT
 
-`RECONCILE_REQUIRED=1434`, reverse authority/source gaps `66`, discover.swiss subscription key unavailable. Green CI + adversarial review → merge → auto SUB0027 ECV → if green stage offsets 521..540 as SUB0028. Full 2061 mapping replay, zero reconcile-required, zero reverse gaps, SSR-1.0 and fresh cross-plane reconciliation remain mandatory before authority eligibility.
+`RECONCILE_REQUIRED=1434`, reverse authority/source gaps `66`, discover.swiss subscription key unavailable. Require green CI after the adversarial repair → merge PR #150 → auto SUB0027 ECV → if green stage offsets 521..540 as SUB0028. Full 2061 mapping replay, zero reconcile-required, zero reverse gaps, SSR-1.0 and fresh cross-plane reconciliation remain mandatory before authority eligibility.
 
 Canonical pointer: `docs/state/NEXT.json`. OUTBOUND remains CLOSED; send_allowed=0.

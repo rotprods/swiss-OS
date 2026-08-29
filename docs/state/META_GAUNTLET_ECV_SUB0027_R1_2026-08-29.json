@@ -1,0 +1,16 @@
+{
+  "schema_version":"META-GAUNTLET-1.0","project":"SWITZERLAND_JOB_OS","cycle_id":"META-20260829-ECV-SUB0027-R1","parent_git_sha":"c95df7b75037647cd7266ab49b32747d82217360","authority_epoch":"HS_ENTITY_EPOCH_2026-08-25_E4","verdict":"PASS_PRE_MERGE_PENDING_CI",
+  "assertions":[
+    {"id":"G-01","assertion":"SUB0027 workflow completed successfully and ECV validator violations are zero","pass":true},
+    {"id":"G-02","assertion":"18 records are strict CURRENT_DETAIL_VERIFIED; two NAME_ONLY records are isolated","pass":true},
+    {"id":"G-03","assertion":"Qualified frozen manifest proves staged URL/source-key mismatch for both NAME_ONLY records","pass":true},
+    {"id":"G-04","assertion":"SUB0027R1 preserves original candidate offsets 501 and 511 and exact frozen source_record_keys","pass":true},
+    {"id":"G-05","assertion":"SUB0027R1 uses exact frozen-source URLs and canonical items SHA 7e5c4d64589ef7697c26ffe38f9ed2202cdc34f911fb7884637471d66e27a153","pass":true},
+    {"id":"G-06","assertion":"No H-ID allocation/reservation; H-0691 remains unallocated","pass":true},
+    {"id":"G-07","assertion":"E4 remains 690/690/0 and staging/ECV remain non-authoritative","pass":true},
+    {"id":"G-08","assertion":"OUTBOUND=CLOSED and send_allowed=0","pass":true},
+    {"id":"G-09","assertion":"Repo-guard/CWP lineage/handoff/unit/manifest CI must be green before merge","pass":"PENDING_CI"}
+  ],
+  "residual_blockers":["EFFECTIVE_RECONCILE_REQUIRED_1434_NOT_ZERO","REVERSE_AUTHORITY_SOURCE_DISCREPANCIES_66_REQUIRE_RESOLUTION","DISCOVER_SWISS_SUBSCRIPTION_KEY_UNAVAILABLE"],
+  "authority_advanced":false,"h_id_allocations":0,"outbound":"CLOSED","send_allowed":0
+}

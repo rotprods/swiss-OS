@@ -1,0 +1,17 @@
+{
+  "project":"SWITZERLAND_JOB_OS",
+  "cycle_id":"META-20260829-ECV-SUB0029-SUB0030",
+  "generated_at":"2026-08-29T06:10:00Z",
+  "parent_git_sha":"1959bd30001b79ba265100960c8b64dffb76ffd6",
+  "authority_epoch":"HS_ENTITY_EPOCH_2026-08-25_E4",
+  "authority":{"physical_rows":690,"active_canonical":690,"alias_edges":0,"asr_state":"EXACT","next_h_id":"H-0691_UNALLOCATED","authority_sha256":"70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6"},
+  "sub0029":{"run_id":33237526375,"job_id":99061009426,"artifact_id":9710370622,"artifact_zip_sha256":"1714d946472fd42648ffac0fa64e6ab86d4c39e9fc02f16eb6bdee8c0b64b26b","packet_sha256":"07353aa11f33981b27d34e3be8a2e6a6d5aa6e18190f61dfadb5f14703d02119","verified":20,"provider_changes":0,"validator_violations":0},
+  "frontier":{"current_detail_verified":570,"candidate_total":1438,"remaining_never_verified":868,"contiguous_offset_end":560},
+  "sub0030":{"path":"docs/state/CMI_WORK_BATCH_0001_SUB0030_33206402141.json","offset_range":"561..580","items":20,"items_sha256":"655a2e453134f95255333c7a5f7c9ce7f097a285092f924ab3f23ad26fe7e9a7","next_untouched_offset":581},
+  "blockers":{"reconcile_required":1434,"reverse_authority_source_gaps":66,"discover_swiss_subscription_key":false},
+  "next":"Require green CI and adversarial review, merge, observe SUB0030 exact-current evidence, persist terminal result, then stage offsets 581..600 if clean.",
+  "authority_advanced":false,
+  "h_id_allocations":0,
+  "outbound":"CLOSED",
+  "send_allowed":0
+}

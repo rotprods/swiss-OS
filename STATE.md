@@ -1,6 +1,6 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest chained Meta Execution reconciliation: **2026-08-29T15:51:00Z**. Parent main SHA: **`0a420b262d15b35dad19e968bbae0b3808af8f09`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
+Latest chained Meta Execution reconciliation: **2026-08-29T15:55:00Z**. Parent main SHA: **`759fde4239a4fdad4b21fe174e31086407dd5986`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
 
 ## Authority — unchanged / locked
 
@@ -31,22 +31,26 @@ candidate records                   1438
 candidate records SHA               34d9aa9cfa4fe896bf1db8fba4dedfded9a1dbf2e135b847101904644d16bba0
 ```
 
-## Exact-current durable frontier — SUB0067 green
+## Exact-current durable frontier — SUB0068 green
 
-SUB0067 ECV Actions `33260359187`, job `99121129918`, artifact `9717090561`, ZIP SHA `40c9f09cbc15937db9b42b2dcbc6aeeeb82fd4fc0d878f609bc0de4c6f74989a`; normalized packet SHA `01f061809bd138dd22e65b9990bd611c50f76ba4ed8d3ad465d7943ac77de69f`; 20/20 `CURRENT_DETAIL_VERIFIED`, provider changes `0`, validator violations `0`.
+SUB0068 ECV Actions `33261424108`, job `99123922608`, artifact `9717374156`, ZIP SHA `dd4732f9c304c27531b4c4dcfd699c46a72b2d772d71dc6781023bb1e2eb4b1e`; normalized packet SHA `106785a159d9e43b1aa75a0d2db05f418b71ce11da60c1ba38ed8a8daa7f9f29`; 20/20 `CURRENT_DETAIL_VERIFIED`, HTTP 200 `20/20`, name match `20/20`, city match `20/20`, provider changes `0`, validator violations `0`.
 
 ```text
-ECV verified frontier            1330 / 1438
-ECV remaining never verified     108
+ECV verified frontier            1350 / 1438
+ECV remaining never verified      88
 ECV pending requeue                 0
-contiguous candidate prefix       0..1320 (1321 records)
-next untouched candidate offset    1321
+contiguous candidate prefix       0..1340 (1341 records)
+next untouched candidate offset    1341
 ```
 
-## SUB0068 — exact materialization verified and staged
+## NEXT bounded wave — SUB0069
 
-Read-only CWP run `33261267804` / job `99123515902` succeeded from main `0a420b262d15b35dad19e968bbae0b3808af8f09`. Artifact `9717316182`, ZIP SHA `4080263f9aa6bbacdd2b15582225e3a3a0d1a61c28b07e6c9e280db06474d47d`; packet file SHA `b50b088c8c8ffc6676345e2a39507e898e5746fdcc5ee37d5ab42bf08e2bfda9`; report SHA `6f70b0f0a6e38f466bd23a437cf47b3c27009791d55f9913282c6a1db525cd58`; items SHA `a0057d12f8fb64b11f00f38975e38bee996576a4267bd2dd6aa313d312732778`. Exact immutable offsets **1321..1340**, 20 items. All are `CANDIDATE_NEW_ENTITY_PREAUTH` / `VERIFY_NEW_ENTITY`, every `matched_hotel_id` is empty, `authority_advanced=false`, `h_id_allocations=0`, OUTBOUND=CLOSED, `send_allowed=0`.
+Request immutable read-only CWP materialization for **SUB0069**, offsets **1341..1360**, 20 records. Do not reserve or allocate H-IDs; materialization is source-staging only. After byte/hash validation, stage via a separate PR and allow only the read-only ECV verifier to advance the exact-current evidence frontier.
+
+## Structured-source / SSR gate
+
+SSR-1.0 is executable only with a `capture_valid=true` discover.swiss structured API manifest plus a complete member-directory manifest. The authenticated discover.swiss `Infocenter Open` subscription key remains absent, so SSR-1.0 is provider-boundary blocked. MEP therefore remains on qualified HotellerieSuisse member-directory + exact-current evidence; no bypass or heuristic scope equivalence is permitted.
 
 ## Durable recovery / gates
 
-Drive recovery doc `1leVfYwda8g0B5Co5zaSUIpo245t37tpUEiTaYlLds_s`; HOTELS_MASTER `1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w`; File Library is cold recovery only. discover.swiss `Infocenter Open` key remains absent; MEP fallback continues through qualified HotellerieSuisse evidence. Issue #14 remains controlling P0. NEXT: green CI + adversarial review → merge exact SUB0068 staging → automatic read-only SUB0068 ECV → persist typed evidence → request SUB0069. SSR-1.0, `RECONCILE_REQUIRED=0`, reverse gaps=0, full 2061 terminal mapping and fresh DB↔Sheets↔Graph↔Intelligence reconciliation remain mandatory before authority eligibility. OUTBOUND=CLOSED; send_allowed=0.
+Drive recovery doc `1leVfYwda8g0B5Co5zaSUIpo245t37tpUEiTaYlLds_s`; HOTELS_MASTER `1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w`; File Library remains cold recovery only. Issue #14 remains controlling P0. Before authority eligibility require SSR-1.0, `RECONCILE_REQUIRED=0`, reverse gaps=0, full 2061 terminal mapping and fresh DB↔Sheets↔Graph↔Intelligence reconciliation. OUTBOUND=CLOSED; send_allowed=0.

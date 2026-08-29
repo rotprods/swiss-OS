@@ -1,53 +1,23 @@
 {
   "checkpoints": [
-    {
-      "evidence": [
-        "main=d6c49f158c3691f44868cb9a55a52bc6c6aea225",
-        "STATE.md live frontier",
-        "open PR inventory",
-        "authority revision=70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6"
-      ],
-      "id": "CP0",
-      "name": "Live Truth Reconstructed",
-      "state": "PASS"
-    },
-    {
-      "exit": "V2 ontology + system/dependency/execution/agent/session/knowledge/decision/risk/test/evidence/artifact/workflow/state/recovery/security/historical/roadmap projections are defined from shared IDs.",
-      "id": "CP1",
-      "name": "Graph Complete",
-      "state": "IN_PROGRESS"
-    },
-    {
-      "exit": "major pivots/escaped bugs are linked to invariant + permanent test.",
-      "id": "CP2",
-      "name": "Historical Regression Complete",
-      "state": "IN_PROGRESS"
-    },
-    {
-      "exit": "all P0/P1 gaps have owner/test/evidence/phase.",
-      "id": "CP3",
-      "name": "Architecture Gaps Classified",
-      "state": "IN_PROGRESS"
-    },
-    {
-      "exit": "single canonical V2 architecture approved by CI/adversarial review.",
-      "id": "CP4",
-      "name": "V2 Architecture Frozen",
-      "state": "PENDING"
-    },
-    {"id":"CP5","name":"Core Contracts Frozen","state":"PENDING"},
-    {"id":"CP6","name":"Implementation Kernel Verified","state":"PENDING"},
-    {"id":"CP7","name":"Recovery Verified","state":"PENDING"},
-    {"id":"CP8","name":"Agent Death Drill Passed","state":"PENDING"},
-    {"id":"CP9","name":"Concurrency Verified","state":"PENDING"},
-    {"id":"CP10","name":"Security Gauntlet Passed","state":"PENDING"},
+    {"evidence":["live main reconstructed before mutation","authority revision=70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6","multiple concurrency rechecks"],"id":"CP0","name":"Live Truth Reconstructed","state":"PASS"},
+    {"evidence":["docs/architecture/V2_GRAPH_MODEL.md","docs/state/v2/graph-snapshot.json"],"id":"CP1","name":"Graph Complete","state":"PASS"},
+    {"evidence":["duplicate bootstrap failure family","ContextPack exact-HEAD failure family","permanent regressions"],"id":"CP2","name":"Historical Regression Complete","state":"PASS_FOR_SELECTED_CRITICAL_ESCAPES"},
+    {"evidence":["docs/architecture/V2_GAP_RISK_MATRIX.md"],"id":"CP3","name":"Architecture Gaps Classified","state":"PASS"},
+    {"evidence":["PR#288","main=fe08104ae668d1717c91d976ef33357917266ad9"],"id":"CP4","name":"V2 Architecture Frozen","state":"PASS"},
+    {"evidence":["event/claim/context schemas","ADR-V2-005 ContextPack 1.1"],"id":"CP5","name":"Core Contracts Frozen","state":"PASS"},
+    {"evidence":["src/swiss_os/v2_coordination.py","Actions run 33278293052 PASS"],"id":"CP6","name":"Implementation Kernel Verified","state":"PASS"},
+    {"id":"CP7","name":"Recovery Verified","state":"PENDING_EMPIRICAL_PROJECTION_DELETE_REBUILD"},
+    {"id":"CP8","name":"Agent Death Drill Passed","state":"PENDING_EMPIRICAL_ZERO_CONTEXT_RUN"},
+    {"evidence":["main moved repeatedly during V2 execution","ContextPack 1.1 descendant-head regression tests","final CI against exact merge parent"],"id":"CP9","name":"Concurrency Verified","state":"PASS_ARCHITECTURE_SCOPE"},
+    {"evidence":["repo public guard","authority ceilings","malformed bool/token/SHA regressions"],"id":"CP10","name":"Security Gauntlet Passed","state":"PASS_KERNEL_SCOPE_RESIDUAL_DOMAIN_SECURITY_SEPARATE"},
     {"id":"CP11","name":"E2E Product Path Passed","state":"DEFERRED_TO_DOMAIN_PATH"},
-    {"id":"CP12","name":"Empirical Qualification Passed","state":"PENDING"},
-    {"id":"CP13","name":"Migration Complete","state":"PENDING"},
-    {"id":"CP14","name":"Production Authority","reason":"Architecture refactor is not authorized to advance hotel authority.","state":"AUTHORITY_BLOCK"}
+    {"id":"CP12","name":"Empirical Qualification Passed","state":"PENDING_RECOVERY_DEATH_DRILL_AND_DOMAIN_MIGRATION"},
+    {"evidence":["V2 architecture merged","legacy/domain workstreams not yet fully converted to claims"],"id":"CP13","name":"Migration Complete","state":"PARTIAL_ARCHITECTURE_MERGED"},
+    {"id":"CP14","name":"Production Authority","reason":"Architecture coordination cannot advance hotel operational authority; separate authority gates remain mandatory.","state":"AUTHORITY_BLOCK"}
   ],
-  "objective_id": "OBJ-GRAPH-REFACTOR-V2",
-  "project_id": "SWITZERLAND_JOB_OS",
-  "promotion_authority": "Architecture V2 may merge after CI and ancestry reconciliation. Hotel authority remains separately gated.",
-  "schema_version": "COS-V2-CHECKPOINT-STATE-1.0"
+  "objective_id":"OBJ-GRAPH-REFACTOR-V2",
+  "project_id":"SWITZERLAND_JOB_OS",
+  "promotion_authority":"V2 coordination architecture is merged and kernel-verified. Empirical recovery/death-drill/domain migration remain required before V2_FINAL. Hotel authority remains separately gated.",
+  "schema_version":"COS-V2-CHECKPOINT-STATE-1.0"
 }

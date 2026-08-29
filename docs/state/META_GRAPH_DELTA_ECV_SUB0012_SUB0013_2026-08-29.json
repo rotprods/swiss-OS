@@ -1,0 +1,29 @@
+{
+  "authority_mutation": false,
+  "cycle_id": "META-20260829-CWP-LINEAGE-ECV-SUB0013-MANUAL",
+  "edges": [
+    ["ECV-SUB0012", "ADVANCES", "ECV-FRONTIER-240"],
+    ["ECV-FRONTIER-240", "STAGES_NEXT", "ECV-SUB0013"],
+    ["ECV-SUB0012", "DOES_NOT_MUTATE", "AUTHORITY-E4"],
+    ["GATE-CRM-UNIVERSE-COMPLETE", "BLOCKS", "OUTBOUND"]
+  ],
+  "generated_at": "2026-08-29T00:24:00Z",
+  "graph_type": "PROJECT_MEMORY_META_GRAPH_DELTA",
+  "invariants": {
+    "authority_advanced": false,
+    "candidate_order": "IMMUTABLE_CWP_1438",
+    "h_id_allocations": 0,
+    "outbound": "CLOSED",
+    "send_allowed": 0
+  },
+  "nodes": [
+    {"id": "ECV-SUB0012", "items": 20, "packet_sha256": "f747c586f6631908b8da3fe5b346759413b01c1e2bf3ae46ef0418f8ed48f4b8", "state": "VERIFIED", "type": "EVIDENCE_BATCH"},
+    {"id": "ECV-SUB0013", "items": 20, "items_sha256": "8b43efd4a1b3af46c4d6a830944b5bc8279f2c391ae36d01150b29e9cd9bf2b3", "state": "STAGED", "type": "EVIDENCE_BATCH"},
+    {"id": "ECV-FRONTIER-240", "remaining": 1198, "type": "EVIDENCE_FRONTIER", "verified": 240},
+    {"active": 690, "aliases": 0, "id": "AUTHORITY-E4", "physical": 690, "type": "AUTHORITY_STATE"},
+    {"id": "GATE-CRM-UNIVERSE-COMPLETE", "state": false, "type": "GATE"},
+    {"id": "OUTBOUND", "send_allowed": 0, "state": "CLOSED", "type": "GATE"}
+  ],
+  "project": "SWITZERLAND_JOB_OS",
+  "schema_version": "1.4"
+}

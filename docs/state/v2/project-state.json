@@ -1,50 +1,48 @@
 {
-  "active_claim_ids": ["CLAIM-ARCH-GRAPH-V2-A7F3C1"],
+  "active_claim_ids": [],
   "authority_advanced": false,
   "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
   "authority_revision": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
   "blockers": [
     "SSR-1.0 provider-blocked: discover.swiss Infocenter Open subscription key/capture-valid manifest absent.",
-    "Open PR overlap/supersession is not machine-managed in V1."
+    "Legacy workstreams/open PRs are not yet fully migrated to first-class V2 claims."
   ],
-  "branch": "refactor/cos-20d-hypergraph-v2",
-  "context_pack_revision": "9b159f8cf8678713ccd773db06212ecea1b64b4ebda0b41d7b891e419847d11f",
+  "branch": "main",
+  "context_pack_revision": "ff0a57cdd6b7fb80e40d05856478593b688ef11ba5eb6318e61ffd50175e531b",
   "current_objective_id": "OBJ-GRAPH-REFACTOR-V2",
-  "event_watermark": {"event_id":"EVT-20260829T214200Z-GRAPHV2-WORK-STARTED","occurred_at":"2026-08-29T21:42:00Z"},
+  "event_watermark": {"event_id":"EVT-20260829T222031Z-GRAPHV2-WORK-COMPLETED","occurred_at":"2026-08-29T22:20:31Z"},
   "h_id_allocation_allowed": false,
   "live_frontier": {"active_canonical":690,"candidate_records":1438,"next_h_id":"H-0691 UNALLOCATED","reconcile_required":1404,"reverse_authority_gaps":34,"source_records":2061,"terminal_mappings":657},
-  "main_sha_observed": "e467f112e63aac9b84079d6594a639c205963ba1",
+  "main_sha_observed": "fe08104ae668d1717c91d976ef33357917266ad9",
   "next_safe_actions": [
-    "Run repository CI with ContextPack 1.1 ancestry/scope semantics.",
-    "Verify PR #288 merge candidate against live main ancestry and relevant-scope drift.",
-    "Merge V2 coordination architecture only if CI and final concurrency barrier pass.",
-    "Migrate one active domain workstream and execute projection-recovery / zero-context death drill."
+    "Migrate one active provider-identity workstream to V2 Session→Claim→Event semantics without changing hotel authority.",
+    "Execute projection deletion/rebuild recovery drill and verify identical projection revision.",
+    "Execute zero-context agent-death drill using HANDOFF.md + ContextPack 1.1.",
+    "Classify/close superseded legacy PRs only after semantic comparison."
   ],
   "north_star_ref": "GOAL.md#G-0001",
-  "open_prs": [269,273,275,288,135,137,139],
+  "open_prs": [269,273,275,135,137,139],
   "outbound_allowed": false,
   "project_id": "SWITZERLAND_JOB_OS",
-  "projection_revision": "6d43676ed98267ed71b0141e1abf0c94cc353e65ba920c33098d3be3dd6c55ea",
+  "projection_revision": "266e492c855010ad6ab5ce7cd788ac1a6551ce9a2ceb015eeb1fbdae5d457f06",
   "repo": "rotprods/swiss-OS",
   "risks": [
-    "STATE prose can lag live main ancestry while retaining newer counters.",
-    "Concurrent agents can duplicate coordination actions without deterministic idempotency/fencing.",
-    "Stale PRs can look active after their semantic work was superseded.",
-    "ContextPack freshness must use ancestry + relevant-scope drift, not exact live-HEAD equality."
+    "Legacy PRs can look active after semantic work was superseded until migration classification is complete.",
+    "V2 recovery/death-drill semantics are designed and unit-tested but still need an explicit post-merge empirical drill.",
+    "ContextPack freshness must continue to use ancestry + relevant-scope drift rather than exact live-HEAD equality."
   ],
   "schema_version": "COS-V2-PROJECT-STATE-1.0",
-  "source_refs": ["STATE.md@e467f112e63aac9b84079d6594a639c205963ba1","GOAL.md","AGENTS.md","docs/architecture/AUTHORITY_MODEL.md","docs/architecture/SYSTEM_MAP.md","GitHub:issue#281","docs/state/FULL_SOURCE_MAPPING_REBUILD_657_ATTESTATION_33206402141.json"],
-  "state": "V2_IMPLEMENTING_PREAUTHORITY",
+  "source_refs": ["GOAL.md","STATE.md","ARCHITECTURE.md","HANDOFF.md","GitHub:PR#288","main:fe08104ae668d1717c91d976ef33357917266ad9","Actions:33278293052"],
+  "state": "V2_ARCHITECTURE_MERGED_SESSION_COMPLETED",
   "unverified_work": [
-    "Provider-identity work continues concurrently on main.",
-    "V2 coordination architecture is CI-tested on its branch but not yet merged/migrated/empirically qualified."
+    "One live domain workstream has not yet been migrated end-to-end through V2 coordination semantics.",
+    "Projection deletion/rebuild recovery and zero-context death drill remain to be empirically executed post-merge."
   ],
   "verified_work": [
-    "Authority plane remains 690 active canonical / H-0691 unallocated.",
-    "Frozen source universe 2061; ECV 1438/1438.",
-    "Preauthority mapping frontier 657 terminal / 1404 reconcile.",
-    "Full deterministic 657-row terminal coverage rebuild executed and re-attested.",
-    "RAGR reverse authority gaps 34 over 656 unique canonical targets.",
-    "ContextPack 1.1 semantics derived from observed concurrent-main movement."
+    "V2 architecture/kernel merged to main in PR #288.",
+    "Merge commit fe08104ae668d1717c91d976ef33357917266ad9 passed push repo-guard CI run 33278293052.",
+    "ContextPack 1.1 ancestry + relevant-scope semantics passed full-repo CI.",
+    "Duplicate-work escaped bug #283 closed after permanent regressions merged.",
+    "Authority remained locked: no H-ID allocation and OUTBOUND=CLOSED."
   ]
 }

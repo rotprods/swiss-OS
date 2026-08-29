@@ -1,48 +1,43 @@
 {
-  "active_claim_ids": [],
+  "active_claim_ids": ["CLAIM-V2QUAL-B91E4D"],
   "authority_advanced": false,
   "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
   "authority_revision": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
-  "blockers": [
-    "SSR-1.0 provider-blocked: discover.swiss Infocenter Open subscription key/capture-valid manifest absent.",
-    "Legacy workstreams/open PRs are not yet fully migrated to first-class V2 claims."
-  ],
-  "branch": "main",
-  "context_pack_revision": "4989f4c270dae23a6824516782104521351c7fe1987d344d9b7abd85a642a491",
-  "current_objective_id": "OBJ-GRAPH-REFACTOR-V2",
-  "event_watermark": {"event_id":"EVT-20260829T222031Z-GRAPHV2-WORK-COMPLETED","occurred_at":"2026-08-29T22:20:31Z"},
+  "blockers": ["SSR-1.0 provider-blocked: discover.swiss Infocenter Open subscription key/capture-valid manifest absent."],
+  "branch": "qualification/v2-recovery-death-drill",
+  "context_pack_revision": "43ebab8bc2fc597f3987c9292a7142eef0d962ed7ea1a3436764087c7c684a7a",
+  "current_objective_id": "OBJ-V2-RECOVERY-DEATH-DRILL",
+  "event_watermark": {"event_id":"EVT-20260829T222600Z-V2QUAL-WORK-STARTED","occurred_at":"2026-08-29T22:26:00Z"},
   "h_id_allocation_allowed": false,
   "live_frontier": {"active_canonical":690,"candidate_records":1438,"next_h_id":"H-0691 UNALLOCATED","reconcile_required":1404,"reverse_authority_gaps":34,"source_records":2061,"terminal_mappings":657},
-  "main_sha_observed": "fe08104ae668d1717c91d976ef33357917266ad9",
+  "main_sha_observed": "e6616d200c35106eae9333a019a566a8f02e4a53",
   "next_safe_actions": [
-    "Migrate one active provider-identity workstream to V2 Session→Claim→Event semantics without changing hotel authority.",
-    "Execute projection deletion/rebuild recovery drill and verify identical projection revision.",
-    "Execute zero-context agent-death drill using HANDOFF.md + ContextPack 1.1.",
-    "Classify/close superseded legacy PRs only after semantic comparison."
+    "Execute empirical projection reconstruction from Event+Claim ledger without reading cached projection.",
+    "Execute zero-context death drill from canonical HANDOFF/ContextPack/project-state surfaces.",
+    "Persist qualification receipt only after CI proves both drills.",
+    "Release qualification claim and promote CP7/CP8 only with evidence."
   ],
   "north_star_ref": "GOAL.md#G-0001",
   "open_prs": [269,273,275,135,137,139],
   "outbound_allowed": false,
   "project_id": "SWITZERLAND_JOB_OS",
-  "projection_revision": "266e492c855010ad6ab5ce7cd788ac1a6551ce9a2ceb015eeb1fbdae5d457f06",
+  "projection_revision": "e434a974386f91407f5dff92860cb8039b680bfacd201496b45036eeb89e3340",
   "repo": "rotprods/swiss-OS",
   "risks": [
-    "Legacy PRs can look active after semantic work was superseded until migration classification is complete.",
-    "V2 recovery/death-drill semantics are designed and unit-tested but still need an explicit post-merge empirical drill.",
-    "ContextPack freshness must continue to use ancestry + relevant-scope drift rather than exact live-HEAD equality."
+    "Empirical recovery can reveal hidden projection dependencies not covered by unit tests.",
+    "A zero-context handoff may be structurally complete but operationally ambiguous; the drill must fail closed on missing canonical pointers.",
+    "Hotel authority and provider-identity work remain excluded from this qualification scope."
   ],
   "schema_version": "COS-V2-PROJECT-STATE-1.0",
-  "source_refs": ["GOAL.md","STATE.md","ARCHITECTURE.md","HANDOFF.md","GitHub:PR#288","main:fe08104ae668d1717c91d976ef33357917266ad9","Actions:33278293052"],
-  "state": "V2_ARCHITECTURE_MERGED_SESSION_COMPLETED",
+  "source_refs": ["GOAL.md","STATE.md","ARCHITECTURE.md","HANDOFF.md","main:e6616d200c35106eae9333a019a566a8f02e4a53","Actions:33278540059 PASS"],
+  "state": "V2_EMPIRICAL_QUALIFICATION_ACTIVE",
   "unverified_work": [
-    "One live domain workstream has not yet been migrated end-to-end through V2 coordination semantics.",
-    "Projection deletion/rebuild recovery and zero-context death drill remain to be empirically executed post-merge."
+    "Projection delete/rebuild drill has not yet executed in CI.",
+    "Zero-context death drill has not yet executed in CI."
   ],
   "verified_work": [
-    "V2 architecture/kernel merged to main in PR #288.",
-    "Merge commit fe08104ae668d1717c91d976ef33357917266ad9 passed push repo-guard CI run 33278293052.",
-    "ContextPack 1.1 ancestry + relevant-scope semantics passed full-repo CI.",
-    "Duplicate-work escaped bug #283 closed after permanent regressions merged.",
-    "Authority remained locked: no H-ID allocation and OUTBOUND=CLOSED."
+    "V2 architecture/kernel merged and closure state is green on main.",
+    "ContextPack 1.1 ancestry + relevant-scope semantics are verified.",
+    "Architecture build session is completed and released."
   ]
 }

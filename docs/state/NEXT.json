@@ -25,11 +25,13 @@
     "qualified_fallback_artifact_id": 9700376482,
     "records_sha256": "62e26d62d8677a5437e081302b6b4d206c0d27a0fe268c6356aef01da5428dc2",
     "scope_state": "QUALIFIED_MEMBER_DIRECTORY_FALLBACK_NOT_SSR_EQUIVALENT",
+    "candidate_export_manifest_path": "docs/state/CRM_CANDIDATE_EXPORT_33206402141.manifest.json",
+    "candidate_export_gzip_sha256": "071e2cf1b895b63457c56066de7d8653b3182a12d1260ff9be7709a684fcf194",
+    "candidate_export_records_sha256": "34d9aa9cfa4fe896bf1db8fba4dedfded9a1dbf2e135b847101904644d16bba0",
     "candidate_export_workflow_run_id": 33266739167,
     "candidate_export_artifact_id": 9718866661,
     "candidate_export_artifact_digest_sha256": "d58c57c5a83cd2ff740f0ec900163f5c7aa795b032045cf9d30ffd194733465e",
-    "candidate_records": 1438,
-    "candidate_records_sha256": "34d9aa9cfa4fe896bf1db8fba4dedfded9a1dbf2e135b847101904644d16bba0"
+    "candidate_records": 1438
   },
   "mapping_frontier": {
     "authoritative": true,
@@ -57,7 +59,13 @@
     "candidate_records_total": 1438,
     "current_detail_verified": 1438,
     "remaining_unverified": 0,
-    "pending_requeue": 0
+    "pending_requeue": 0,
+    "next_staged_batch": "HS-MEMBER-DE-33206402141:WORK:0001:SUB:0073",
+    "next_staged_batch_path": "docs/state/CMI_WORK_BATCH_0001_SUB0073_33206402141.json",
+    "next_staged_items": 8,
+    "next_staged_original_candidate_offset_range": "1421..1428",
+    "next_staged_items_sha256": "d998657e8ea03c057d6a46af6366ddf5d1b890eab7592612729943e1aa0ffbdd",
+    "next_staged_state": "ECV_TERMINAL_VERIFIED"
   },
   "structured_acquisition": {
     "runtime_subscription_key_present": false,

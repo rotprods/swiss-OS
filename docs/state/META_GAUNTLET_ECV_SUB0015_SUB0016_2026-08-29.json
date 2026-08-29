@@ -1,0 +1,20 @@
+{
+  "schema_version": "META-GAUNTLET-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "generated_at": "2026-08-29T00:49:00Z",
+  "wave_id": "WAVE-20260829-ECV-SUB0015-SUB0016-CHAIN",
+  "parent_git_sha": "47cac743c75526b074b31fb9e3b211ef01af2026",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "checks": {
+    "sub0015_live_canary": {"status":"PASS","run_id":33224456214,"job_id":99025203228,"artifact_id":9706374150,"artifact_zip_sha256":"e0c7e232eb09fe01468629dba9b25fa0e54e9fa32c6a89b8281b301c33a0f421","packet_sha256":"b0b1ede8177424e9355b76df5a188afe5a3b2101d1d7c4d7f6f4a4d206096809","verified_items":20,"violations":[]},
+    "candidate_lineage_reconstruction": {"status":"PASS","source_records":2061,"exact_matches":623,"verify_new_entity":1438,"conflicts":0,"ordering":"LEXICOGRAPHIC_SOURCE_RECORD_KEY","sub0016_offset_start":300,"sub0016_offset_end_inclusive":319,"first_key":"MD-303c8d7a38b11012ab07","last_key":"MD-3498078d5bde3f26f0fe","items_sha256":"e279773adef09db60bdfa931fb6c5b2abff09aabd9c41666f0334cb079498549"},
+    "authority_projection_readonly_check": {"status":"PASS","hotels_v2_rows":690,"first_hotel_id":"H-0001","last_hotel_id":"H-0690","h_0691_present":false,"authority_mutated":false},
+    "verified_candidate_exact_authority_url_antijoin": {"status":"PASS","verified_candidate_frontier":300,"exact_hotelleriesuisse_url_matches":0,"heuristic_mappings_created":0},
+    "safety_locks": {"status":"PASS","authority_advanced":false,"h_id_allocations":0,"next_physical_id":"H-0691_UNALLOCATED","outbound":"CLOSED","send_allowed":0},
+    "prior_process_audit": {"status":"PASS_WITH_PROCESS_NOTE","note":"PR #129 merged with green repo-guard CI but no formal GitHub review object was recorded. This wave independently revalidated its artifact, lineage, authority projection and safety locks; this PR must receive an explicit adversarial COMMENT review before merge."}
+  },
+  "decision": "PASS_TO_PR_CI_AND_ADVERSARIAL_REVIEW",
+  "authority_advance_allowed": false,
+  "canonical_id_allocation_allowed": false,
+  "outbound_allowed": false
+}

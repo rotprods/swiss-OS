@@ -1,7 +1,7 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest manual chained Meta Execution reconciliation: **2026-08-29T00:36:00Z**.  
-GitHub parent for this wave: **`e0729f8823c8bad78ddbfb3cd1f76f130534499b`**.  
+Latest chained Meta Execution reconciliation: **2026-08-29T00:49:00Z**.  
+GitHub parent for this wave: **`47cac743c75526b074b31fb9e3b211ef01af2026`**.  
 Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**.  
 Open GitHub issues labelled `P0`: **0**.  
 Frozen current CRM source snapshot: **`HS-MEMBER-DE-33206402141`**.
@@ -25,7 +25,7 @@ OUTBOUND                        CLOSED
 send_allowed                      0
 ```
 
-Immutable V13 base SHA-256: `0e605b412f29893ca1775f1e8fccd5987d0613baab4ac29b6699988cde0fdfe5`. Repaired constrained-parent SHA-256: `70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`. Staging, provider responses, canaries and recovery copies remain non-authoritative.
+Immutable V13 base SHA-256: `0e605b412f29893ca1775f1e8fccd5987d0613baab4ac29b6699988cde0fdfe5`. Repaired constrained-parent SHA-256: `70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`. A fresh read-only Drive export independently confirms `HOTELS_V2` has exactly 690 rows `H-0001..H-0690`; `H-0691` is absent and remains unallocated. Staging, provider responses, canaries and recovery copies remain non-authoritative.
 
 ## 2. Qualified current source and immutable intake lineage
 
@@ -42,7 +42,7 @@ CWP packet SHA-256        2741ca3b870c83d5fe424243bb06f599a96517f5922ec13bdc6621
 CWP JSON SHA-256          60ecb59fb8947aee90267c777792fa51238e4bd19bb6e6a993c64cdeb8587b1d
 ```
 
-Deterministic reconstruction remains 623 exact matches / 1438 candidates / 0 conflicts. Persisted slices through SUB0014 are contiguous with the recovered immutable candidate ordering.
+Independent deterministic reconstruction from the frozen 2,061-record manifest against the current 690-row authority remains exactly `623 / 1438 / 0 conflicts`. Persisted slices through SUB0015 are contiguous with the recovered immutable candidate ordering.
 
 ## 3. Source mapping frontier — pre-authority
 
@@ -57,24 +57,24 @@ reverse authority/source gaps            66
 overlay SHA-256                  e5ed0c76dd84e630679007e9cf209c1239dc68660c1b2c5158798f1302d4aa87
 ```
 
-The three evidence-reviewed MATCH_EXISTING overlays remain pre-authority source mappings only. Deterministic exact name+city/detail-slug checks across the first 260 verified candidates found no additional unambiguous existing-authority match; no heuristic mappings were created.
+The three evidence-reviewed MATCH_EXISTING overlays remain pre-authority source mappings only. An exact HotellerieSuisse-detail-URL anti-join across the first 300 verified candidates found `0` additional exact authority URL matches; no heuristic mapping was created.
 
 ## 4. Exact-current verification frontier
 
-SUB0014 completed successfully under GitHub Actions run `33223811133` / job `99023293128`:
+SUB0015 completed successfully under GitHub Actions run `33224456214` / job `99025203228`:
 
 ```text
-ECV verified frontier             280 / 1438
-ECV remaining never verified     1158
+ECV verified frontier             300 / 1438
+ECV remaining never verified     1138
 pending requeue                     0
-SUB0014 items                     20 / 20 CURRENT_DETAIL_VERIFIED
-SUB0014 packet SHA-256     69b1c3ce896a09d665eec50631d62d49dbaba380fff0c87236c16438218978c4
-SUB0014 artifact SHA-256   c63ad21e6e63c588b2e70e6774ff08f263041e28638ebb2040a8f74fd1370a4d
+SUB0015 items                     20 / 20 CURRENT_DETAIL_VERIFIED
+SUB0015 packet SHA-256     b0b1ede8177424e9355b76df5a188afe5a3b2101d1d7c4d7f6f4a4d206096809
+SUB0015 artifact SHA-256   e0c7e232eb09fe01468629dba9b25fa0e54e9fa32c6a89b8281b301c33a0f421
 ```
 
-Durable summary: `docs/state/ECV_BATCH_0001_SUB0014_RESULT.json`.
+Durable summary: `docs/state/ECV_BATCH_0001_SUB0015_RESULT.json`.
 
-SUB0015 is staged at original candidate offset 280..299, first key `MD-2cbc6e20f928c70951c5`, last key `MD-2fdd70a1747ea2bb590b`, items SHA `d96da1ed470698a492f7d0f5c61a0a8c8400a5cd630492b461a6f3af8ed021db`. It remains evidence-only until the live exact-current canary succeeds.
+SUB0016 is staged at original candidate offset `300..319`, first key `MD-303c8d7a38b11012ab07`, last key `MD-3498078d5bde3f26f0fe`, items SHA `e279773adef09db60bdfa931fb6c5b2abff09aabd9c41666f0334cb079498549`. It remains evidence-only until the live exact-current canary succeeds.
 
 ## 5. Protocol / capability state
 
@@ -90,10 +90,14 @@ qualified current-source canary           AVAILABLE
 discover.swiss subscription key           UNAVAILABLE / MEP FALLBACK ACTIVE
 ```
 
-## 6. NEXT
+## 6. QA / gauntlet
+
+`docs/state/META_GAUNTLET_ECV_SUB0015_SUB0016_2026-08-29.json` records the independent artifact digest check, exact CWP reconstruction, read-only 690-row authority projection check, exact-URL anti-join, and fail-closed safety assertions. PR #129 had green CI but no formal GitHub review object; this wave treats that as a process note and requires an explicit adversarial review on the present PR before merge.
+
+## 7. NEXT
 
 ```text
-run ECV SUB0015
+run ECV SUB0016
 → persist result and advance evidence frontier only if verification succeeds
 → continue bounded untouched CWP slices while provider pacing remains healthy
 → entity-resolve verified candidates and add only evidence-proven MATCH_EXISTING mappings

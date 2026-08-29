@@ -1,6 +1,6 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest chained Meta Execution reconciliation: **2026-08-29T20:56:00Z**. Wave parent main SHA: **`738ca09b1689fcc2e583fb1f0b544eb460e70f72`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
+Latest chained Meta Execution reconciliation: **2026-08-29T21:09:00Z**. Wave parent main SHA: **`13069434be503edca6c30fd2564156413cbcaca7`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
 
 ## Authority — unchanged / locked
 
@@ -14,7 +14,7 @@ OUTBOUND                        CLOSED
 send_allowed                      0
 ```
 
-Authority SHA `70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`. Staging, ECV, SRR, SMO, RAGR, SRET, provider-enrichment, cache and canary remain non-authoritative. HOTELS_MASTER remains 690 rows and H-0691 remains absent. No H-ID has been allocated or reserved.
+Authority SHA `70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`. Staging, ECV, SRR, SMO, RAGR, SRET, provider-enrichment, cache and canary remain non-authoritative. No H-ID was reserved or allocated.
 
 ## Frozen source / pre-authority mapping
 
@@ -34,17 +34,22 @@ Pinned lineage: source SHA `62e26d62d8677a5437e081302b6b4d206c0d27a0fe268c6356ae
 
 ## Provider-identity review frontier
 
-The 8 exact-name/locality ambiguities and the 20 highest-risk similarity records (`>=0.60`) are already independently distinctness-corroborated, review-only. High-risk20 provider packet SHA: `73ce1df88a717542e5a97dd038590727360d1126bfc81acde98e3ba0278a1a51`.
+Previously complete, review-only: 8 exact-name/locality ambiguities and 20 records with same-city Jaccard >=0.60 are independently distinctness-corroborated. The 47-record 0.50 bucket is pinned by queue SHA `eed5f949c55da71b7a69d3dd481778992f316bfdd35e4655f85070dc46a14429`.
 
-This wave deterministically materialized the next risk bucket: **47 SRET NOVELTY_REVIEW records with max same-city token Jaccard exactly 0.50**. Artifact `docs/state/SRET_SIMILARITY_RISK_QUEUE_050_059_33206402141.json`; items SHA `0e204a81dc9575d8b802d82d62dd2249bea231c1432931c7464c4b0990e0d275`; queue SHA `eed5f949c55da71b7a69d3dd481778992f316bfdd35e4655f85070dc46a14429`.
+Wave 14 processed a bounded 10-item, highest-collision-risk subwave from that 47-record queue. Evidence artifact: `docs/state/SRET_PROVIDER_IDENTITY_050_SUB01_33206402141.json`; items SHA `bc838d86661cd1a5c02a842b3ba51b80589673c08cc0abdcfa722365a0e1e5db`; packet SHA `24a261915978fda329bbc164ad8438395e49abf334eb07a53058154e0122bca8`.
 
-Queue materialization is review-space reduction only. No provider distinctness claim is made for these 47 yet; no source target, canonical row, terminal mapping, authority action, H-ID reservation/allocation or outbound opening exists. Mapping therefore remains **656 terminal / 1405 RECONCILE_REQUIRED**.
+Review results:
+- 9 records are independently `NOVELTY_REVIEW_DISTINCTNESS_CORROBORATED` by current provider/property identity.
+- `MD-7c70baeb19408c2e971b` — **FIVE Zürich - EAST WING** — is independently `MATCH_EXISTING_REVIEW_CORROBORATED` to H-0452 **FIVE Zurich**: same official provider/property and Döltschiweg 234 identity. This is a review decision only until explicit SRR/SMO application is materialized and validated.
+- Particularly adversarial same-provider cases were resolved without fuzzy binding: ibis budget Winterthur vs ibis Winterthur City, ibis budget Genève Palexpo vs ibis Styles Genève Palexpo, and Appenzeller Huus Bären/Löwen vs Huus Quell are distinct provider-defined properties/houses.
+
+No source mapping has been terminalized by this provider-review wave. Mapping therefore remains **656 terminal / 1405 RECONCILE_REQUIRED**. The 0.50 provider-enrichment bucket has **37 records remaining**.
 
 ## NEXT
 
-Provider-enrich the materialized **47-record 0.50 bucket** with current address/domain/phone identity and classify only with independent evidence. Candidate similarity never binds. After that, materialize and review the remaining **49** similarity-hint records below 0.50 (42 at 0.40, 5 at ~0.428571, 2 at 0.375).
+Highest-value safe route: apply the independently corroborated FIVE East Wing → H-0452 decision through an explicit SRR/SMO pre-authority wave **only if** the cumulative source-mapping lineage can be rebuilt/attested without weakening guards; otherwise continue bounded provider-identity review over the remaining 37 records and leave the match review pending. Then process the 49-record lower-similarity tail.
 
-Do not decrement `RECONCILE_REQUIRED` from risk/novelty classification alone and do not reserve H-0691. Authoritative reconciliation remains ineligible while 1405 source mappings are nonterminal.
+Do not decrement `RECONCILE_REQUIRED` from novelty/distinctness review alone. Never reserve H-0691 from review/staging. `OUTBOUND=CLOSED`; `send_allowed=0`.
 
 SSR-1.0 remains provider-blocked on the absent discover.swiss `Infocenter Open` subscription key / capture-valid structured API manifest. MEP remains qualified HotellerieSuisse member-directory + exact-current, without API-equivalence claims.
 

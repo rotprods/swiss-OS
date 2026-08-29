@@ -1,0 +1,30 @@
+{
+  "schema_version":"SWISS-OS-META-HANDOFF-1.0",
+  "generated_at":"2026-08-29T06:43:00Z",
+  "cycle_id":"META-20260829-ECV-SUB0032-SUB0033",
+  "parent_git_sha":"71494fbfbfbe7753f8cd7fc1f747656c5654417c",
+  "authority_epoch":"HS_ENTITY_EPOCH_2026-08-25_E4",
+  "authority_sha256":"70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+  "completed":{
+    "sub0032":"20/20 CURRENT_DETAIL_VERIFIED",
+    "ecv_frontier":"630/1438",
+    "contiguous_candidate_prefix":"0..620",
+    "source_reconstruction":"2061 source / 623 active match / 1438 true missing",
+    "invariants":"authority unchanged; H-0691 unallocated; outbound closed"
+  },
+  "staged":{
+    "batch":"HS-MEMBER-DE-33206402141:WORK:0001:SUB:0033",
+    "offsets":"621..640",
+    "items_sha256":"10cc67ddc4a40680522e6eff785e66546de51f5df27c564fde07bae3cf5917e2",
+    "next_untouched_offset":641
+  },
+  "next":{
+    "route":"MERGE_GREEN_SUB0033_STAGING_THEN_OBSERVE_AUTO_ECV_AND_CHAIN",
+    "dependency":"PR CI + adversarial review; then automatic ECV artifact",
+    "recovery_inputs":["STATE.md","docs/state/NEXT.json","docs/state/ECV_BATCH_0001_SUB0032_RESULT.json","docs/state/CMI_WORK_BATCH_0001_SUB0033_33206402141.json","source artifact 9700376482","Drive HOTELS_MASTER 1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w"]
+  },
+  "authority_advance_allowed":false,
+  "canonical_id_allocation_allowed":false,
+  "outbound":"CLOSED",
+  "send_allowed":0
+}

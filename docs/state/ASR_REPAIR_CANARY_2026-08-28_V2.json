@@ -1,0 +1,35 @@
+{
+  "schema_version": "ASR_REPAIR_CANARY_PUBLIC_V2",
+  "generated_at": "2026-08-28T20:20:00+02:00",
+  "issue": 89,
+  "status": "CANARY_PASS_DOWNSTREAM_AUTHORITY_RECONCILIATION_REQUIRED",
+  "source_parent": "OPERATIONAL_DB_SHADOW_MANIFEST_V13",
+  "source_parent_sha256": "0e605b412f29893ca1775f1e8fccd5987d0613baab4ac29b6699988cde0fdfe5",
+  "proof": {
+    "phantom_alias_edges_proven": 4,
+    "target_identities_unique": true,
+    "physical_alias_identities_stable_and_unrelated": true,
+    "entity_resolution_h_id_row_drift": true
+  },
+  "canary": {
+    "invalid_alias_edges_quarantined": 4,
+    "physical_h_ids": 690,
+    "effective_active_projection": 690,
+    "sqlite_integrity_check": "ok",
+    "foreign_key_violations": 0,
+    "repair_replay_unintended_deletes": 0,
+    "active_normalized_name_city_duplicates": 0,
+    "known_bad_edges_remaining": 0,
+    "restore_integrity_check": "ok",
+    "restore_foreign_key_violations": 0
+  },
+  "authority": {
+    "advanced": false,
+    "published_active_denominator": "RECONCILE_REQUIRED",
+    "canonical_h_id_allocations": 0,
+    "crm_universe_complete": false,
+    "outbound": "CLOSED",
+    "send_allowed": 0
+  },
+  "next_route": "ALIAS_SEMANTIC_AUTHORITY_RECONCILIATION"
+}

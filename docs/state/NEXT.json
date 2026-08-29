@@ -1,7 +1,7 @@
 {
   "schema_version": "NPP-1.0",
   "project": "SWITZERLAND_JOB_OS",
-  "generated_at": "2026-08-29T19:55:00Z",
+  "generated_at": "2026-08-29T19:58:00Z",
   "cycle_id": "META-20260829-RAGR-VARIANT7-SRR7-WAVE-07",
   "parent_git_sha": "44a4377c641032951c959006265437ea64f4ec54",
   "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
@@ -25,9 +25,12 @@
     "qualified_fallback_artifact_id": 9700376482,
     "records_sha256": "62e26d62d8677a5437e081302b6b4d206c0d27a0fe268c6356aef01da5428dc2",
     "scope_state": "QUALIFIED_MEMBER_DIRECTORY_FALLBACK_NOT_SSR_EQUIVALENT",
+    "candidate_export_manifest_path": "docs/state/CRM_CANDIDATE_EXPORT_33206402141.manifest.json",
+    "candidate_export_gzip_sha256": "071e2cf1b895b63457c56066de7d8653b3182a12d1260ff9be7709a684fcf194",
     "candidate_export_records_sha256": "34d9aa9cfa4fe896bf1db8fba4dedfded9a1dbf2e135b847101904644d16bba0",
     "candidate_export_workflow_run_id": 33266739167,
     "candidate_export_artifact_id": 9718866661,
+    "candidate_export_artifact_digest_sha256": "d58c57c5a83cd2ff740f0ec900163f5c7aa795b032045cf9d30ffd194733465e",
     "candidate_records": 1438
   },
   "mapping_frontier": {
@@ -80,7 +83,13 @@
     "latest_artifact_id": 9720247842,
     "latest_artifact_digest_sha256": "403a23ff4b52c2396cacd7cdb7aaaa7e4bd4f50a4745b44cc261548c8a2eba5f",
     "supplemental_reverified_items": 7,
-    "state": "CURRENT_DETAIL_VERIFIED"
+    "state": "CURRENT_DETAIL_VERIFIED",
+    "next_staged_batch": "HS-MEMBER-DE-33206402141:WORK:0005:SUB:0001",
+    "next_staged_batch_path": "docs/state/CMI_WORK_BATCH_0005_SUB0001_33206402141.json",
+    "next_staged_items": 2,
+    "next_staged_original_candidate_offsets": [733, 913],
+    "next_staged_items_sha256": "93aa124a48421e6623ab9f86255453216749b34a0200dcd5cde2e5f67f7bf047",
+    "next_staged_state": "STAGED_STRICT_ECV_ONLY"
   },
   "next_ragr_evidence_batch": {
     "count": 2,

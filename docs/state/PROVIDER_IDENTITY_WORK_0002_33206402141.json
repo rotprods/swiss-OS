@@ -1,0 +1,33 @@
+{
+  "schema_version": "PROVIDER-IDENTITY-WORK-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "snapshot_id": "HS-MEMBER-DE-33206402141",
+  "batch_id": "HS-MEMBER-DE-33206402141:PIE:050:SUB:0003",
+  "parent_git_sha": "678415e4a4594cdfc75ab001d35e304d4189985c",
+  "source_queue_path": "docs/state/SRET_SIMILARITY_RISK_QUEUE_050_059_33206402141.json",
+  "source_queue_sha256": "eed5f949c55da71b7a69d3dd481778992f316bfdd35e4655f85070dc46a14429",
+  "selection": "bounded 10-record collision-risk provider evidence wave; excludes 20 records represented in SRET_PROVIDER_IDENTITY_050_SUB01/SUB02",
+  "items_count": 10,
+  "items_sha256": "07b12092f1e621f55a9e53df20b9d79465adbb989e1357307247af3714db3657",
+  "items": [
+    {"source_record_key":"MD-0bc05b76e74e4bf37b9d","name":"Ultima Crans-Montana","city":"Crans-Montana","detail_url":"https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-ultima-crans-montana"},
+    {"source_record_key":"MD-1c67bec9e4e6883dcc51","name":"Sunstar Hotel Arosa","city":"Arosa","detail_url":"https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-sunstar-hotel-arosa"},
+    {"source_record_key":"MD-2883d04e3588f7215630","name":"Grand Hotel Europe","city":"Luzern","detail_url":"https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-grand-hotel-europe"},
+    {"source_record_key":"MD-4a9768f6c335edab67ca","name":"Boutique Hotel KARL","city":"Luzern","detail_url":"https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-boutique-hotel-karl"},
+    {"source_record_key":"MD-4d727160a4b32b3096cd","name":"Hotel Cristallo Arosa","city":"Arosa","detail_url":"https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-hotel-cristallo-arosa"},
+    {"source_record_key":"MD-51f9aade5e736df8a56b","name":"Sunstar Hotel Lenzerheide","city":"Lenzerheide/Lai","detail_url":"https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-sunstar-hotel-lenzerheide"},
+    {"source_record_key":"MD-5249a86c12e8d2df0c4a","name":"Valsana Hotel Arosa","city":"Arosa","detail_url":"https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-valsana-hotel-arosa"},
+    {"source_record_key":"MD-5716424f7d4b099c64d4","name":"Hotel Central am See","city":"Weggis","detail_url":"https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-hotel-central-am-see"},
+    {"source_record_key":"MD-587ba810db73aba0d22a","name":"Interlaken Apartments","city":"Interlaken","detail_url":"https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-interlaken-apartments"},
+    {"source_record_key":"MD-6547373922845094a08d","name":"Opera Hotel Zürich","city":"Zürich","detail_url":"https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-opera-hotel-zuerich"}
+  ],
+  "review_only": true,
+  "identity_decision_allowed": false,
+  "terminal_mapping_allowed": false,
+  "canonical_id_reservation_allowed": false,
+  "authority_advanced": false,
+  "h_id_allocations": 0,
+  "crm_universe_complete": false,
+  "outbound": "CLOSED",
+  "send_allowed": 0
+}

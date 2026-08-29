@@ -54,4 +54,5 @@ jobs:
           name: cwp-next-batch-${{ github.run_id }}
           path: .artifacts
           if-no-files-found: error
+          include-hidden-files: true
           retention-days: 7

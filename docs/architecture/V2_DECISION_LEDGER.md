@@ -33,8 +33,13 @@ A Claim contains resource/semantic scopes, excluded scopes, authority ceiling an
 
 ## ADR-V2-005 — ContextPack is derived acceleration, never authority
 
-Pinned to main SHA, projection revision, authority revision and event watermark. Any mismatch means stale.  
-**Confidence:** HIGH.
+**Initial hypothesis (SUPERSEDED):** pin ContextPack validity to equality with live `main` HEAD.  
+**Observed failure:** during the V2 gauntlet, unrelated concurrent provider-identity commits repeatedly advanced `main` after a green CI run. Exact HEAD equality therefore made a valid ContextPack self-stale even though its relevant architecture inputs and authority revision had not changed.  
+**Selected V1.1 semantics:** persist `base_main_sha`, require that base to remain an ancestor of the execution head, bind the pack to explicit `relevant_paths` and a deterministic `relevant_scope_revision`, and independently pin projection revision, authority revision, event watermark and pack hash.  
+**Reject when:** ancestry breaks, relevant scope drifts, authority/projection revision drifts, watermark is incompatible, or the hash fails.  
+**Why selected:** preserves fail-closed semantics while permitting safe unrelated concurrency.  
+**Alternative rejected:** chase every new HEAD by rewriting the ContextPack; this creates coordination churn and makes the pack depend on unrelated domain work.  
+**Confidence:** HIGH — directly derived from repeated live-main movement during this refactor.
 
 ## ADR-V2-006 — Preserve V1 domain engines
 

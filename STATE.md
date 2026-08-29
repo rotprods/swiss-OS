@@ -1,6 +1,6 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest chained Meta Execution reconciliation: **2026-08-29T21:09:00Z**. Wave parent main SHA: **`13069434be503edca6c30fd2564156413cbcaca7`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
+Latest chained Meta Execution reconciliation: **2026-08-29T21:18:00Z**. Wave parent main SHA: **`450e4f0bd06ee6e0efc95c482fab6e35e8ba5abc`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
 
 ## Authority — unchanged / locked
 
@@ -24,30 +24,34 @@ candidate records                      1438
 ECV verified frontier              1438 / 1438
 ECV remaining never verified              0
 base terminal mappings                    624
-explicit SRR/SMO deltas                   32
-effective terminal mappings               656
-RECONCILE_REQUIRED                       1405
+explicit SRR/SMO deltas                   33
+effective terminal mappings               657
+RECONCILE_REQUIRED                       1404
 RAGR reverse authority gaps                34
 ```
 
-Pinned lineage: source SHA `62e26d62d8677a5437e081302b6b4d206c0d27a0fe268c6356aef01da5428dc2`; candidate SHA `34d9aa9cfa4fe896bf1db8fba4dedfded9a1dbf2e135b847101904644d16bba0`; candidate gzip SHA `071e2cf1b895b63457c56066de7d8653b3182a12d1260ff9be7709a684fcf194`; SRET items SHA `b15ed2d019759b3730a225207cdb1ba674b16b93ac925b74dbabff2d495aecf6`; SRET triage SHA `e82127ea2abc0ac68ef194496cd0de6bfddab2596a9dda15bf13411316d6f790`; overlay SHA `e8a6da1bfe5e585807e41f91db9ecccb507c60140366e9dab7f36290c613a368`; terminal coverage SHA `95c48f65fbf67c2fb2c284c9ba603be03d706d2f46ef7373dc8ebb7272b3c176`.
+Pinned source/candidate lineage is unchanged. Prior fully rebuilt terminal coverage remains SHA `95c48f65fbf67c2fb2c284c9ba603be03d706d2f46ef7373dc8ebb7272b3c176` for 656 terminal source records; a **full 657-row terminal coverage rebuild is pending**. The new cumulative incremental lineage SHA is `80bdac00c83fcee25c112f01d1189b7212073fc50cfe50c02c2e75cf147e8281` and is explicitly reconstructible from the prior `e8a6da1bfe5e585807e41f91db9ecccb507c60140366e9dab7f36290c613a368` frontier plus one review delta.
 
-## Provider-identity review frontier
+## Wave 15 — explicit pre-authority SRR/SMO
 
-Previously complete, review-only: 8 exact-name/locality ambiguities and 20 records with same-city Jaccard >=0.60 are independently distinctness-corroborated. The 47-record 0.50 bucket is pinned by queue SHA `eed5f949c55da71b7a69d3dd481778992f316bfdd35e4655f85070dc46a14429`.
+The Wave-14 corroborated review for `MD-7c70baeb19408c2e971b` **FIVE Zürich - EAST WING** has been promoted from review-only into an explicit SRR-1.1 pre-authority source mapping to H-0452 **FIVE Zurich**. Evidence remains current and official-provider grounded; no fuzzy identity rule was used.
 
-Wave 14 processed a bounded 10-item, highest-collision-risk subwave from that 47-record queue. Evidence artifact: `docs/state/SRET_PROVIDER_IDENTITY_050_SUB01_33206402141.json`; items SHA `bc838d86661cd1a5c02a842b3ba51b80589673c08cc0abdcfa722365a0e1e5db`; packet SHA `24a261915978fda329bbc164ad8438395e49abf334eb07a53058154e0122bca8`.
+Durable artifacts:
+- `docs/state/SOURCE_RESOLUTION_REVIEW_BATCH_0007_33206402141.json`
+- `docs/state/SOURCE_MAPPING_OVERLAY_SRR_BATCH_0007_ATTESTATION_33206402141.json`
+- cumulative terminal deltas: 33
+- effective source mapping: **657 terminal / 1404 RECONCILE_REQUIRED**
+- incremental lineage SHA `80bdac00c83fcee25c112f01d1189b7212073fc50cfe50c02c2e75cf147e8281`
 
-Review results:
-- 9 records are independently `NOVELTY_REVIEW_DISTINCTNESS_CORROBORATED` by current provider/property identity.
-- `MD-7c70baeb19408c2e971b` — **FIVE Zürich - EAST WING** — is independently `MATCH_EXISTING_REVIEW_CORROBORATED` to H-0452 **FIVE Zurich**: same official provider/property and Döltschiweg 234 identity. This is a review decision only until explicit SRR/SMO application is materialized and validated.
-- Particularly adversarial same-provider cases were resolved without fuzzy binding: ibis budget Winterthur vs ibis Winterthur City, ibis budget Genève Palexpo vs ibis Styles Genève Palexpo, and Appenzeller Huus Bären/Löwen vs Huus Quell are distinct provider-defined properties/houses.
+H-0452 is not in the attested RAGR-34 gap set, so this source alias does not close an authority reverse gap; RAGR remains 34 pending a later full terminal-coverage rebuild. Authority E4 is unchanged and this mapping cannot allocate or reserve H-IDs.
 
-No source mapping has been terminalized by this provider-review wave. Mapping therefore remains **656 terminal / 1405 RECONCILE_REQUIRED**. The 0.50 provider-enrichment bucket has **37 records remaining**.
+## Provider-identity frontier
+
+The 47-record Jaccard-0.50 queue has 10 provider-reviewed records: 9 independently distinct novelty reviews and the FIVE East Wing match now explicitly mapped pre-authority. **37 records remain** in that bucket. The lower-similarity tail remains 49.
 
 ## NEXT
 
-Highest-value safe route: apply the independently corroborated FIVE East Wing → H-0452 decision through an explicit SRR/SMO pre-authority wave **only if** the cumulative source-mapping lineage can be rebuilt/attested without weakening guards; otherwise continue bounded provider-identity review over the remaining 37 records and leave the match review pending. Then process the 49-record lower-similarity tail.
+Continue bounded provider-identity review over the remaining **37** records in the 0.50 bucket, prioritizing same-provider/same-complex and multi-candidate collisions. In parallel, when a deterministic 657-row coverage rebuild route is available, rebuild terminal coverage and re-attest RAGR before using its hash as current. After the 37, materialize/review the 49-record lower-similarity tail.
 
 Do not decrement `RECONCILE_REQUIRED` from novelty/distinctness review alone. Never reserve H-0691 from review/staging. `OUTBOUND=CLOSED`; `send_allowed=0`.
 

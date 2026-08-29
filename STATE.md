@@ -1,6 +1,6 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest chained Meta Execution reconciliation: **2026-08-29T12:25:00Z**. Parent main SHA: **`02649badf19d2ee629499f9dc81a73bb21069af1`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
+Latest chained Meta Execution reconciliation: **2026-08-29T12:28:00Z**. Parent main SHA: **`84c8b62252a380f5fa579e7242b2f3922421b27a`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
 
 ## Authority — unchanged / locked
 
@@ -17,7 +17,7 @@ OUTBOUND                        CLOSED
 send_allowed                      0
 ```
 
-Authority SHA `70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`. Staging/materialization/ECV/cache/canary remain non-authoritative. Live Drive bounded tail recheck remains H-0690 present and H-0691 absent.
+Authority SHA `70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`. Staging/materialization/ECV/cache/canary remain non-authoritative.
 
 ## CRM universe / mapping frontier
 
@@ -31,26 +31,22 @@ candidate records                   1438
 candidate records SHA               34d9aa9cfa4fe896bf1db8fba4dedfded9a1dbf2e135b847101904644d16bba0
 ```
 
-## Exact-current frontier — SUB0058 green
+## Exact-current durable frontier — SUB0058 green
 
-SUB0058 ECV Actions `33252294223`, job `99099954643`, artifact `9714746258`, ZIP SHA `2fba20ed82867ba6e29bac83b4d59ef3ccda7aef968b747b727d19e6577c4748`; normalized packet SHA `bc3f0525896da79f0d20c3d1e3654f99deec64d6f4cff91bbae66e472a777b8b`; 20/20 `CURRENT_DETAIL_VERIFIED`, HTTP 200 `20/20`, name match `20/20`, city match `20/20`, provider changes `0`, validator violations `0`. All follow-ups remain `DEDUPE_GROUP_ALIAS_REVIEW`; no entity resolution, terminal mapping promotion, canonical ID allocation, or authority advance occurred.
+SUB0058 is durably verified 20/20 for offsets **1121..1140**. Actions `33252294223`, job `99099954643`, artifact `9714746258`, packet SHA `bc3f0525896da79f0d20c3d1e3654f99deec64d6f4cff91bbae66e472a777b8b`.
 
 ```text
 ECV verified frontier            1150 / 1438
 ECV remaining never verified     288
 ECV pending requeue                 0
 contiguous candidate prefix       0..1140 (1141 records)
-next untouched candidate offset    1141
+next ECV candidate offset          1141
 ```
 
-## SUB0059 — exact materialization requested
+## SUB0059 — exact materialization verified and staged
 
-NEXT requests read-only CWP materialization for `HS-MEMBER-DE-33206402141:WORK:0001:SUB:0059`, exact immutable original candidate offsets **1141..1160**, 20 items, output path `docs/state/CMI_WORK_BATCH_0001_SUB0059_33206402141.json`. Materialization and subsequent ECV remain pre-authority: `authority_advanced=false`, `h_id_allocations=0`, no H-ID reservation and no outbound effect.
+Read-only CWP run `33252497783` / job `99100485559` succeeded from main `84c8b62252a380f5fa579e7242b2f3922421b27a`. Artifact `9714787365`, ZIP SHA `14a1cf846847a422fd942f9d68bbeb30c12b6376c42ffabaa7577dfffdf6fb4e`; packet SHA `91c6655eed66e581925d624b1416b1f27caa302031eec55f16467ab1a66b73bf`; report SHA `2e99e6d338b2618ff63c352c07d9cc54258ea88312c4de7c3c1b62991c1fae17`; items SHA `a37fa945cc7acb1a6b3ff61e5ee7e915f05b09cc79bc0e9fed9eb91b7b6551d8`. Exact immutable offsets **1141..1160**, 20 items. All are `CANDIDATE_NEW_ENTITY_PREAUTH` / `VERIFY_NEW_ENTITY`, all `matched_hotel_id` empty, `authority_advanced=false`, `h_id_allocations=0`, OUTBOUND=CLOSED, `send_allowed=0`.
 
-## Durable recovery
+## Durable recovery / gates
 
-Drive recovery artifact `SWISS_OS_CURRENT_RECOVERY_2026-08-29_1314_SUB0053` (`1leVfYwda8g0B5Co5zaSUIpo245t37tpUEiTaYlLds_s`) remains non-authoritative and is being advanced with recovery checkpoints. HOTELS_MASTER remains `1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w`. File Library surfaces are recovery-only and stale versus current GitHub/Drive state.
-
-## Structured acquisition / P0 / NEXT
-
-discover.swiss `Infocenter Open` key remains absent; MEP continues through the qualified HotellerieSuisse universe + deterministic anti-join + exact-current. SSR-1.0 remains a hard pre-authority gate. Issue #14 remains controlling P0. Current route: green CI + adversarial review → merge SUB0058 typed evidence/NEXT → materialize exact SUB0059 → validate staging → read-only SUB0059 ECV → persist typed evidence → continue. `RECONCILE_REQUIRED=1434`, reverse gaps `66`, full 2061 terminal mapping, SSR-1.0 and fresh authoritative cross-plane reconciliation remain mandatory before authority eligibility. OUTBOUND remains CLOSED; send_allowed=0.
+Drive recovery doc `1leVfYwda8g0B5Co5zaSUIpo245t37tpUEiTaYlLds_s`; HOTELS_MASTER `1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w`; bounded authority tail H-0690 present / H-0691 absent. File Library remains cold recovery only. discover.swiss key remains absent; MEP fallback continues. NEXT: green CI + adversarial review → merge SUB0059 staging → automatic read-only SUB0059 ECV → persist typed evidence → SUB0060. SSR-1.0, `RECONCILE_REQUIRED=0`, reverse gaps=0, full 2061 terminal mapping and fresh cross-plane reconciliation remain mandatory before authority eligibility. OUTBOUND remains CLOSED; send_allowed=0.

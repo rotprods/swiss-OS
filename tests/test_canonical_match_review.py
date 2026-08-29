@@ -12,8 +12,15 @@ from swiss_os.canonical_match_review import (
 )
 
 
-SHA_A = "a" * 64
-SHA_B = "b" * 64
+def digest(value) -> str:
+    return hashlib.sha256(
+        json.dumps(
+            value,
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        ).encode("utf-8")
+    ).hexdigest()
 
 
 def candidate(key: str, name: str, city: str) -> dict[str, object]:
@@ -42,8 +49,8 @@ class CanonicalMatchReviewTests(unittest.TestCase):
             snapshot_id="SNAPSHOT",
             candidate_records=candidates,
             canonical_catalog=canonicals,
-            candidate_records_sha256=SHA_A,
-            canonical_catalog_sha256=SHA_B,
+            candidate_records_sha256=digest(candidates),
+            canonical_catalog_sha256=digest(canonicals),
         )
 
     def test_exact_name_city_is_review_only(self) -> None:
@@ -128,9 +135,9 @@ class CanonicalMatchReviewTests(unittest.TestCase):
             canonical("H-0001", "Hotel Alpha", "Bern"),
         ]
         first = self.build(candidates, canonicals)
-        second = self.build(
-            list(reversed(candidates)), list(reversed(canonicals))
-        )
+        second_candidates = list(reversed(candidates))
+        second_canonicals = list(reversed(canonicals))
+        second = self.build(second_candidates, second_canonicals)
         self.assertEqual(first["queue_sha256"], second["queue_sha256"])
         self.assertEqual(first["review_queue"], second["review_queue"])
 
@@ -152,6 +159,36 @@ class CanonicalMatchReviewTests(unittest.TestCase):
                 [bad], [canonical("H-0001", "Hotel A", "Bern")]
             )
 
+    def test_candidate_hash_mismatch_fails_closed(self) -> None:
+        candidates = [candidate("K1", "Hotel A", "Bern")]
+        canonicals = [canonical("H-0001", "Hotel A", "Bern")]
+        with self.assertRaises(CanonicalMatchReviewError):
+            build_canonical_match_review_queue(
+                snapshot_id="SNAPSHOT",
+                candidate_records=candidates,
+                canonical_catalog=canonicals,
+                candidate_records_sha256="a" * 64,
+                canonical_catalog_sha256=digest(canonicals),
+            )
+
+    def test_canonical_hash_mismatch_fails_closed(self) -> None:
+        candidates = [candidate("K1", "Hotel A", "Bern")]
+        canonicals = [canonical("H-0001", "Hotel A", "Bern")]
+        with self.assertRaises(CanonicalMatchReviewError):
+            build_canonical_match_review_queue(
+                snapshot_id="SNAPSHOT",
+                candidate_records=candidates,
+                canonical_catalog=canonicals,
+                candidate_records_sha256=digest(candidates),
+                canonical_catalog_sha256="b" * 64,
+            )
+
+    def test_active_state_must_be_explicit(self) -> None:
+        candidates = [candidate("K1", "Hotel A", "Bern")]
+        canonicals = [{"hotel_id": "H-0001", "name": "Hotel A", "city": "Bern"}]
+        with self.assertRaises(CanonicalMatchReviewError):
+            self.build(candidates, canonicals)
+
     def test_validator_rejects_encoded_resolution_action(self) -> None:
         queue = self.build(
             [candidate("K1", "Hotel Alpha", "Bern")],
@@ -159,14 +196,7 @@ class CanonicalMatchReviewTests(unittest.TestCase):
         )
         tampered = copy.deepcopy(queue)
         tampered["review_queue"][0]["action"] = "MATCH_EXISTING"
-        tampered["queue_sha256"] = hashlib.sha256(
-            json.dumps(
-                tampered["review_queue"],
-                ensure_ascii=False,
-                sort_keys=True,
-                separators=(",", ":"),
-            ).encode("utf-8")
-        ).hexdigest()
+        tampered["queue_sha256"] = digest(tampered["review_queue"])
         self.assertIn(
             "QUEUE_MUST_NOT_ENCODE_RESOLUTION_ACTION",
             validate_canonical_match_review_queue(tampered),

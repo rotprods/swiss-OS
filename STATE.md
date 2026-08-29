@@ -1,6 +1,6 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest chained Meta Execution reconciliation: **2026-08-29T16:49:00Z**. Parent main SHA: **`6ee331ca824e0cae6c3d60a5ef8ffaa827ee89e4`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
+Latest chained Meta Execution reconciliation: **2026-08-29T16:54:00Z**. Parent main SHA: **`4b7a93007aa3cfd823d128e5175bfa92024f6334`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
 
 ## Authority — unchanged / locked
 
@@ -43,12 +43,12 @@ contiguous candidate prefix       0..1420 (1421 records)
 next untouched candidate offset    1421
 ```
 
-## NEXT bounded wave — SUB0073
+## SUB0073 — final exact materialization verified and staged
 
-Request immutable read-only CWP materialization for **SUB0073**, offsets **1421..1428**, 8 records. Do not reserve or allocate H-IDs. Validate artifact hashes, stage only through branch→CI→adversarial review→merge, then allow only read-only ECV to advance exact-current evidence.
+Read-only CWP run `33264145969` / job `99131064859` succeeded from main `4b7a93007aa3cfd823d128e5175bfa92024f6334`. Artifact `9718117550`, ZIP SHA `788fa05c0c7f1b2e726c50fe6f7ff9979526d1fcb850eec873036b011a273338`; packet SHA `b34a03112b3d2c047b1685f469c4dbf9b3168820251ec99e2755fccc67efe285`; report SHA `03cd7cd08d2303b74feb890ce823010c1ac71514e9c5e0aa66d8bcd1e18ed0d6`; items SHA `d998657e8ea03c057d6a46af6366ddf5d1b890eab7592612729943e1aa0ffbdd`. Exact immutable offsets **1421..1428**, 8 items. All are `CANDIDATE_NEW_ENTITY_PREAUTH` / `VERIFY_NEW_ENTITY`; every `matched_hotel_id` is empty. `authority_advanced=false`, `h_id_allocations=0`, OUTBOUND=CLOSED, `send_allowed=0`.
 
-## Hard gates
+## Hard gates / NEXT
 
-SSR-1.0 remains blocked on missing discover.swiss `Infocenter Open` subscription key / capture-valid structured API manifest. MEP fallback remains qualified member-directory + exact-current, without claiming API equivalence. Issue #14 controls the P0. Before authority eligibility require SSR-1.0, `RECONCILE_REQUIRED=0`, reverse gaps=0, full 2061 terminal mappings and fresh DB↔Sheets↔Graph↔Intelligence reconciliation. OUTBOUND=CLOSED; send_allowed=0.
+After green CI + adversarial review, merge this staging only to trigger read-only SUB0073 ECV. Persist typed ECV evidence before any entity-resolution or terminal-mapping wave. SSR-1.0 remains blocked on missing discover.swiss `Infocenter Open` subscription key / capture-valid structured API manifest. MEP fallback remains qualified member-directory + exact-current without claiming API equivalence. Issue #14 controls the P0. Before authority eligibility require SSR-1.0, `RECONCILE_REQUIRED=0`, reverse gaps=0, full 2061 terminal mappings and fresh DB↔Sheets↔Graph↔Intelligence reconciliation.
 
 Drive recovery doc: `1leVfYwda8g0B5Co5zaSUIpo245t37tpUEiTaYlLds_s`. HOTELS_MASTER: `1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w`. File Library is cold recovery and lags GitHub main.

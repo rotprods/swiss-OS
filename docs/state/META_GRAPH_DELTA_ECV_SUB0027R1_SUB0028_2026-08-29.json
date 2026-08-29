@@ -1,0 +1,8 @@
+{
+  "schema_version":"META-GRAPH-DELTA-1.0","project":"SWITZERLAND_JOB_OS","cycle_id":"META-20260829-ECV-SUB0027R1-SUB0028","parent_git_sha":"ac5428e2e83b434b3653682b982e061f6e28b858","authority_epoch":"HS_ENTITY_EPOCH_2026-08-25_E4","checkpoint":"CRM_UNIVERSE_COMPLETE",
+  "colette":{"collect":"Fresh main plus SUB0027R1 Actions artifact and frozen candidate export.","observe":"SUB0027R1 is 2/2 strict verified; both prior lineage holes are closed.","locate":"Highest-value safe bottleneck is continuing immutable exact-current acquisition over the next untouched 20 frozen candidates.","execute":"Persist R1 evidence and stage SUB0028 exact offsets 521..540.","test":"Require CWP lineage guard, durable handoff guard, unit tests and manifest semantics canary.","transact":"Git-only pre-authority state; no canonical mutation.","evolve":"Merge if green, observe auto SUB0028 ECV, then type-route any exceptions and continue at offset 541 when safe."},
+  "frontier_before":{"current_detail_verified":528,"remaining_never_verified":910,"pending_requeue":2,"contiguous_verified_end":500},
+  "frontier_after":{"current_detail_verified":530,"remaining_never_verified":908,"pending_requeue":0,"contiguous_verified_end":520,"lineage_holes":[]},
+  "next":{"batch":"HS-MEMBER-DE-33206402141:WORK:0001:SUB:0028","original_candidate_offsets":"521..540","next_forward_offset":541,"mapping_blocker":1434,"reverse_gap_blocker":66,"provider_dependency":"DISCOVER_SWISS_SUBSCRIPTION_KEY"},
+  "authority_advanced":false,"h_id_allocations":0,"outbound":"CLOSED","send_allowed":0
+}

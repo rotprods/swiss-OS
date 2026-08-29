@@ -1,6 +1,6 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest chained Meta Execution reconciliation: **2026-08-29T13:53:00Z**. Parent main SHA: **`19953f94c84d1d3a327f7a721660129a7f15f4c2`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
+Latest chained Meta Execution reconciliation: **2026-08-29T13:58:00Z**. Parent main SHA: **`84f7c6892cbbf0d451e4f739727d5bcd881252c2`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
 
 ## Authority — unchanged / locked
 
@@ -43,10 +43,10 @@ contiguous candidate prefix       0..1200 (1201 records)
 next untouched candidate offset    1201
 ```
 
-## SUB0062 — exact materialization requested
+## SUB0062 — exact materialization verified and staged
 
-NEXT requests read-only CWP materialization for `HS-MEMBER-DE-33206402141:WORK:0001:SUB:0062`, immutable offsets **1201..1220**, 20 items, output `docs/state/CMI_WORK_BATCH_0001_SUB0062_33206402141.json`. No staging/current-evidence step may reserve H-0691 or advance E4.
+Read-only CWP run `33256296974` / job `99110513417` succeeded from main `84f7c6892cbbf0d451e4f739727d5bcd881252c2`. Artifact `9715901512`, ZIP SHA `3d3578fbd2e3abc3ae593997b7d8afcc253679a10477ed2bf4688e5749cb8dd4`; packet file SHA `6be1422ae475701278180bc3ca4fe94c349be9dae6e2535f247dbc601c058fe4`; report SHA `8e8f74f55be990015cb3ddc079b2f84309a8692724229e29536ece3a6bd97eb2`; items SHA `a11c2d32e3ff4de934271e13352bd051bd126f72cd645e516195298a22210565`. Exact immutable offsets **1201..1220**, 20 items. All are `CANDIDATE_NEW_ENTITY_PREAUTH` / `VERIFY_NEW_ENTITY`, every `matched_hotel_id` is empty, `authority_advanced=false`, `h_id_allocations=0`, OUTBOUND=CLOSED, `send_allowed=0`. Repository packet is byte-exact to the downloaded artifact (Git blob `798d144d8e6ee335b0b407180e70b0840053b13d`).
 
 ## Durable recovery / gates
 
-Drive recovery doc `1leVfYwda8g0B5Co5zaSUIpo245t37tpUEiTaYlLds_s`; HOTELS_MASTER `1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w`; bounded authority tail rechecked H-0690 present / H-0691 absent. File Library remains cold recovery only. discover.swiss `Infocenter Open` key remains absent; MEP fallback continues through qualified HotellerieSuisse evidence. Issue #14 remains controlling P0. NEXT: green CI + adversarial review → merge SUB0061 evidence → exact SUB0062 materialization/staging → read-only SUB0062 ECV → persist and continue. SSR-1.0, `RECONCILE_REQUIRED=0`, reverse gaps=0, full 2061 terminal mapping and fresh cross-plane reconciliation remain mandatory before authority eligibility. OUTBOUND=CLOSED; send_allowed=0.
+Drive recovery doc `1leVfYwda8g0B5Co5zaSUIpo245t37tpUEiTaYlLds_s`; HOTELS_MASTER `1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w`; bounded authority tail rechecked H-0690 present / H-0691 absent. File Library remains cold recovery only. discover.swiss `Infocenter Open` key remains absent; MEP fallback continues through qualified HotellerieSuisse evidence. Issue #14 remains controlling P0. NEXT: green CI + adversarial review → merge exact SUB0062 staging → automatic read-only SUB0062 ECV → persist typed evidence → request SUB0063. SSR-1.0, `RECONCILE_REQUIRED=0`, reverse gaps=0, full 2061 terminal mapping and fresh cross-plane reconciliation remain mandatory before authority eligibility. OUTBOUND=CLOSED; send_allowed=0.

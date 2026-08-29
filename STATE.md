@@ -1,6 +1,6 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest chained Meta Execution reconciliation: **2026-08-29T03:56:00Z**. Parent main SHA: **`6c64f747dd7ec707d42a221c8c7e2eaa4ce9329f`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
+Latest chained Meta Execution reconciliation: **2026-08-29T04:19:00Z**. Parent main SHA: **`6c64f747dd7ec707d42a221c8c7e2eaa4ce9329f`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
 
 ## Authority — unchanged / locked
 
@@ -31,18 +31,20 @@ source artifact                     9700376482
 source ZIP SHA                      721f9ff9f84e2d5d9df62c6b22f12e7354cef3a298cb8990be66a202e1e769ce
 candidate records                   1438
 candidate records SHA               34d9aa9cfa4fe896bf1db8fba4dedfded9a1dbf2e135b847101904644d16bba0
-candidate gzip SHA                  8107499196092fe3a505ee54b64b26362ea3669380e3ee57754825f6acd5c95f
+candidate gzip SHA                  071e2cf1b895b63457c56066de7d8653b3182a12d1260ff9be7709a684fcf194
 ```
 
-The full deterministic candidate export is durable at `docs/state/CRM_CANDIDATE_EXPORT_33206402141.json.gz`; CI reconstructs and validates all 1,438 ordered records from it. Drive recovery pointer sheet `1bQ74_WJlXFP6-nyGmkD97u-jgk6xhlz22j6t9H0e9sE` is explicitly non-authoritative. Local spreadsheet materialization degraded, so MEP used Git as the durable data plane rather than idling. Discover.swiss structured parity remains blocked by missing `DISCOVER_SWISS_SUBSCRIPTION_KEY`.
+The full deterministic candidate export is durable at `docs/state/CRM_CANDIDATE_EXPORT_33206402141.json.gz`. It is now a valid deterministic binary gzip Git blob (`mtime=0`), and CI validates all 1,438 ordered records plus the gzip digest. The CWP reader also accepts strict base64-of-gzip only as a fail-closed MEP transport fallback. Drive recovery pointer sheet `1bQ74_WJlXFP6-nyGmkD97u-jgk6xhlz22j6t9H0e9sE` is explicitly non-authoritative. Discover.swiss structured parity remains blocked by missing `DISCOVER_SWISS_SUBSCRIPTION_KEY`.
 
 ## Exact-current frontier — SUB0024 green
 
 Actions `33232080824`, job `99046528179`, artifact `9708807620`, artifact ZIP SHA `56a21fe827881a3ea4a8ac860c7d73092d67eea4bbfc33a7c3746f23e6f62dce`; normalized ECV packet SHA `8685490197f0a580e6cfc69a03c71161eb66b5ee4775a7b82ddd4b373915fb79`; validator violations `0`.
 
+```text
 ECV verified frontier             469 / 1438
 ECV remaining never verified     969
 ECV pending requeue                 0
+```
 
 SUB0024 is 20/20 `CURRENT_DETAIL_VERIFIED`, provider-record changes `0`. Exact-current evidence reserves/allocates no canonical ID and advances no authority.
 
@@ -67,7 +69,8 @@ No verified evidence is discarded. SUB0024R1 stages only the skipped source reco
 Open P0s are `CWP_LINEAGE_HOLE_SUB0024_OFFSET_453` until SUB0024R1 verifies, `EFFECTIVE_RECONCILE_REQUIRED_1434_NOT_ZERO`, `REVERSE_AUTHORITY_SOURCE_DISCREPANCIES_66_REQUIRE_RESOLUTION`, and discover.swiss provider-key absence.
 
 ```text
-merge lineage-repair meta-PR only after green repo-guard + adversarial review
+require green repo-guard + adversarial review on PR #147
+→ merge lineage repair
 → observe auto SUB0024R1 ECV
 → validate/persist evidence with authority_advanced=false, h_id_allocations=0, OUTBOUND=CLOSED, send_allowed=0
 → if green, contiguous verified lineage reaches offset 460 and forward staging starts at 461

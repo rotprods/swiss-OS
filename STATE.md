@@ -1,6 +1,6 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest chained Meta Execution reconciliation: **2026-08-29T09:44:10Z**. Parent main SHA: **`a606cebf9f83a186775ccdf37ff7e7111548f8a7`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
+Latest chained Meta Execution reconciliation: **2026-08-29T09:50:10Z**. Parent main SHA: **`ec4af03248b3110723077548aab8ee870fe43bcb`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
 
 ## Authority — unchanged / locked
 
@@ -31,24 +31,25 @@ candidate records                   1438
 candidate records SHA               34d9aa9cfa4fe896bf1db8fba4dedfded9a1dbf2e135b847101904644d16bba0
 ```
 
-## Exact-current frontier — SUB0046 green
+## Exact-current frontier — SUB0047 green
 
-SUB0046 ECV Actions `33245709426`, job `99082677123`, artifact `9712775970`, ZIP SHA `e2f102b7f5b8eb45a82c07ddb8d04023257bd67d027f3ab74766000a827abbf4`; normalized packet SHA `76b527cbebe5659b61e96d592aa3cddfd4957ec504c0d590fb6730283700006b`; 20/20 `CURRENT_DETAIL_VERIFIED`, HTTP 200=20, provider changes `0`, validator violations `0`, aliases `0`. Runtime safety assertions: `authority_advanced=false`, `h_id_allocations=0`, `OUTBOUND=CLOSED`, `send_allowed=0`.
+SUB0047 ECV Actions `33246324236`, job `99084305458`, artifact `9712965732`, ZIP SHA `19b22e90cd1d1ea3072c74491d4df59087f196f98455a92816907d4187f7f949`; normalized packet SHA `73a77840de8779b1f8fa68654bcc33223fe14ba7a68371d710fdfe333d56168f`; 20/20 `CURRENT_DETAIL_VERIFIED`, HTTP 200=20, provider changes `0`, validator violations `0`, URL aliases `0`. Runtime safety assertions: `authority_advanced=false`, `h_id_allocations=0`, `OUTBOUND=CLOSED`, `send_allowed=0`.
 
 ```text
-ECV verified frontier             910 / 1438
-ECV remaining never verified     528
+ECV verified frontier             930 / 1438
+ECV remaining never verified     508
 ECV pending requeue                 0
-contiguous candidate prefix       0..900 (901 records)
+contiguous candidate prefix       0..920 (921 records)
+next untouched candidate offset     921
 ```
 
-## SUB0047 — exact materialization verified and staged
+## NEXT exact slice — SUB0048 materialization requested
 
-Read-only CWP materialization run `33246163445` / job `99083878585` succeeded. Artifact `9712898058`, ZIP SHA `e95f37e13e579a0665c7acbcf0be466eb20789ee6aa3b49ea62c51a494671f3d`; packet file SHA `c058284b80c5c54f87659987d5017d18a85f4edd8646b90099ba56d569d319b0`; report SHA `97d28572e01a35d648412aa34e8a8bf08f5e1e890cfac755fe2f50cc54e677f7`; canonical items SHA `3b132c5c696cb930544e7ffb385658c365bc0fe2ae55a557661689f33b6ba224`. Exact immutable candidate offsets **901..920**, 20 items. Every item remains `CANDIDATE_NEW_ENTITY_PREAUTH` / `VERIFY_NEW_ENTITY`, every `matched_hotel_id` is empty, and the artifact cannot reserve H-0691 or advance E4 authority.
+The next immutable CWP slice is **SUB0048**, original candidate offsets **921..940**, 20 items, materialized only from the durable candidate export. The request cannot allocate/reserve a canonical ID or advance authority. A green merge triggers read-only `cwp-materialize-next`; the resulting artifact must be independently hash-verified and persisted through a separate green PR before automatic ECV is eligible.
 
 ## Drive / Library reconstruction
 
-Drive `HOTELS_MASTER` (`1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w`) is readable with the expected operational planes including `HOTELS_V2`, `ENTITY_RESOLUTION`, `EVIDENCE_LEDGER`, `OUTREACH_GATES_V2`, `DISCOVERY_CANDIDATES_V3`, `DEDUPE_REGISTRY_V2`, `GOAL_STATE`, and `AGENT_HANDOFF_LOG`. File Library exposes `CRM_UNIVERSE_STAGING_2026-08-28_v6.xlsx`; its directory crawl queue remains non-authoritative staging/recovery state.
+Drive `HOTELS_MASTER` (`1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w`) remains readable with the expected operational planes. File Library `CRM_UNIVERSE_STAGING_2026-08-28_v6.xlsx` remains non-authoritative staging/recovery state.
 
 ## Structured acquisition boundary
 
@@ -56,6 +57,6 @@ Authenticated developer.discover.swiss `Infocenter Open` subscription key remain
 
 ## P0 / NEXT
 
-`RECONCILE_REQUIRED=1434`, reverse authority/source gaps `66`, discover.swiss key absent, and `P0-GSHEETS-E4-BULK-READ-PARTIAL` remains open as a recovery-path limitation rather than an authority license. Current route: green CI + adversarial review → merge exact SUB0047 staging → observe automatic SUB0047 ECV → persist typed terminal evidence or provider-change handling → immediately request/materialize the next immutable slice if safe. Full 2061 terminal mapping, `RECONCILE_REQUIRED=0`, reverse gaps `0`, SSR-1.0 and fresh authoritative cross-plane reconciliation remain mandatory before authority eligibility.
+`RECONCILE_REQUIRED=1434`, reverse authority/source gaps `66`, discover.swiss key absent, and `P0-GSHEETS-E4-BULK-READ-PARTIAL` remains open as a recovery-path limitation rather than an authority license. Current route: green CI + adversarial review → merge SUB0047 result/NEXT request → materialize and hash-verify exact SUB0048 → persist exact staging → observe automatic SUB0048 ECV → continue. Full 2061 terminal mapping, `RECONCILE_REQUIRED=0`, reverse gaps `0`, SSR-1.0 and fresh authoritative cross-plane reconciliation remain mandatory before authority eligibility.
 
 Canonical pointer: `docs/state/NEXT.json`. OUTBOUND remains CLOSED; send_allowed=0.

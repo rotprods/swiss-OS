@@ -1,0 +1,78 @@
+{
+  "schema_version": "SSR-RUNTIME-CAPABILITY-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "wave_id": "WAVE-20260830-SSR-CAPABILITY-01",
+  "session_id": "SES-20260829T223900Z-SSR-CAPABILITY-A71C5E",
+  "workstream_id": "WS-CRM-SOURCE-ACQUISITION",
+  "objective_id": "CRM_UNIVERSE_COMPLETE",
+  "correlation_id": "CORR-20260829-SSR-CAPABILITY-A71C5E",
+  "generated_at": "2026-08-29T22:39:30Z",
+  "parent_git_sha": "ff65e9bd79945294accae55536faeb42f3135a16",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "authority_parent_materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+  "authority_ceiling": "READ_ONLY_SOURCE_CAPABILITY_ATTESTATION",
+  "structured_acquisition": {
+    "provider": "discover.swiss Infocenter v2 / AccommoDataHub",
+    "production_base_url": "https://api.discover.swiss/info/v2",
+    "list_endpoint": "/lodgingbusinesses",
+    "project": "dsod-hs",
+    "free_product": "Infocenter Open",
+    "subscription_key_required_for_all_api_requests": true,
+    "subscription_key_header": "Ocp-Apim-Subscription-Key",
+    "runtime_subscription_key_present": false,
+    "live_capture_executed": false,
+    "state": "BLOCKED_PROVIDER_CREDENTIAL_BOUNDARY",
+    "evidence": [
+      "https://docs.discover.swiss/dev/quickstarts/how-to-work-with-accommodatahub/",
+      "https://developer.discover.swiss/apis",
+      "https://docs.discover.swiss/dev/reference/environments/"
+    ]
+  },
+  "qualified_fallback": {
+    "snapshot_id": "HS-MEMBER-DE-33206402141",
+    "records": 2061,
+    "pages": 172,
+    "candidate_records": 1438,
+    "exact_current_verified": 1438,
+    "scope_state": "QUALIFIED_MEMBER_DIRECTORY_FALLBACK_NOT_SSR_EQUIVALENT",
+    "ssr_1_0_promotion_allowed": false
+  },
+  "concurrency": {
+    "overlapping_live_claim_detected": true,
+    "claim_id": "CLAIM-CRM-PIE050-CAPTURED27-D42F9A",
+    "fencing_token": 3,
+    "claimed_semantic_scope": "CRM_ENTITY_RESOLUTION_REVIEW",
+    "collision_avoided": true,
+    "this_wave_scope": "DISCOVER_SWISS_SSR_CAPABILITY_DIAGNOSTIC"
+  },
+  "decision": {
+    "result": "PROVIDER_BOUNDARY_CONFIRMED_MEP_FALLBACK_REQUIRED",
+    "reason": "Current provider documentation requires a subscription key even for Infocenter Open. No runtime key is present in durable state, so a capture-valid discover.swiss manifest cannot be produced in this activation. The active fenced provider-identity claim owns the highest-value entity-review lane, so this wave does not collide with it.",
+    "safe_fallback_routes": [
+      "READ_ONLY_CROSS_PLANE_AUTHORITY_RECONCILIATION_AUDIT",
+      "WAIT_FOR_FENCED_PIE050_CLAIM_RELEASE_THEN_CONTINUE_CAPTURED27_OR_LOWER49",
+      "EXECUTE_DISCOVER_SWISS_CAPTURE_ONLY_WHEN_RUNTIME_KEY_EXISTS_WITHOUT_PERSISTING_SECRET"
+    ]
+  },
+  "hard_invariants": {
+    "authority_advanced": false,
+    "h_id_allocations": 0,
+    "canonical_id_reservations": 0,
+    "crm_universe_complete": false,
+    "outbound": "CLOSED",
+    "send_allowed": 0,
+    "external_irreversible_actions": 0
+  },
+  "next_pointer": {
+    "next_route": "READ_ONLY_CROSS_PLANE_AUTHORITY_RECONCILIATION_AUDIT",
+    "exact_blocker": "DISCOVER_SWISS_SUBSCRIPTION_KEY_ABSENT_AND_ENTITY_REVIEW_SCOPE_OWNED_BY_ACTIVE_FENCED_CLAIM_TOKEN_3",
+    "parent_sha": "ff65e9bd79945294accae55536faeb42f3135a16",
+    "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+    "recovery_inputs": [
+      "docs/state/NEXT.json",
+      "docs/state/v2/active-claims.json",
+      "docs/state/FULL_SOURCE_MAPPING_REBUILD_657_ATTESTATION_33206402141.json",
+      "Drive HOTELS_MASTER 1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w"
+    ]
+  }
+}

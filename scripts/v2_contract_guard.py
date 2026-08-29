@@ -12,16 +12,16 @@ def load(rel):
     if not isinstance(value,dict): raise ValueError(f"{rel}: expected JSON object")
     return value
 def scope_revision(paths):
-    h=hashlib.sha256()
+    entries=[]
     for rel in paths:
         path=ROOT/rel
         if not path.is_file(): raise ValueError(f"relevant path missing: {rel}")
-        h.update(rel.encode()); h.update(b"\0"); h.update(path.read_bytes()); h.update(b"\0")
-    return h.hexdigest()
+        oid=subprocess.check_output(["git","hash-object",rel],cwd=ROOT,text=True).strip()
+        entries.append(f"{rel}:{oid}")
+    return hashlib.sha256("\n".join(entries).encode()).hexdigest()
 def is_ancestor(base):
     if not isinstance(base,str) or len(base)!=40: return False
-    result=subprocess.run(["git","merge-base","--is-ancestor",base,"HEAD"],cwd=ROOT,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,check=False)
-    return result.returncode==0
+    return subprocess.run(["git","merge-base","--is-ancestor",base,"HEAD"],cwd=ROOT,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,check=False).returncode==0
 def main():
     errors=[]
     for rel in REQUIRED:
@@ -39,7 +39,7 @@ def main():
     context=load("docs/state/v2/context-pack.json")
     paths=context.get("relevant_paths") if isinstance(context.get("relevant_paths"),list) else []
     try: current_scope=scope_revision(paths)
-    except ValueError as exc: errors.append(f"context:{exc}"); current_scope=""
+    except (ValueError,subprocess.SubprocessError) as exc: errors.append(f"context:{exc}"); current_scope=""
     errors.extend(f"context:{x}" for x in validate_context_pack(context,base_is_ancestor=is_ancestor(context.get("base_main_sha")),current_projection_revision=projection["projection_revision"],current_relevant_scope_revision=current_scope,current_authority_revision=str(state.get("authority_revision",""))))
     if context.get("event_watermark")!=projection.get("event_watermark"): errors.append("CONTEXT_EVENT_WATERMARK_MISMATCH")
     active=load("docs/state/v2/active-claims.json"); projected_ids=sorted(str(i.get("claim_id","")) for i in active.get("claims",[]) if isinstance(i,dict)); durable_ids=sorted(str(i.get("claim_id","")) for i in claims)

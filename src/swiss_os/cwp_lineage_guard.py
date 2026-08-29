@@ -5,6 +5,7 @@ import binascii
 import gzip
 import hashlib
 import json
+import zlib
 from pathlib import Path
 from typing import Any, Mapping
 
@@ -18,22 +19,34 @@ def _sha256_json(value: object) -> str:
 
 
 def _load_json(path: Path) -> Mapping[str, Any]:
-    value = json.loads(path.read_text(encoding="utf-8"))
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise CwpLineageError(f"{path}: invalid JSON object") from exc
     if not isinstance(value, Mapping):
         raise CwpLineageError(f"{path}: expected JSON object")
     return value
 
 
-def _load_gzip_json(path: Path) -> tuple[Mapping[str, Any], str]:
-    """Load a gzip JSON artifact from raw gzip bytes or GitHub text-safe base64.
+def _decode_gzip_json(compressed: bytes, *, label: str) -> tuple[Mapping[str, Any], str]:
+    if not compressed.startswith(b"\x1f\x8b"):
+        raise CwpLineageError(f"{label}: decoded transport is not gzip")
+    digest = hashlib.sha256(compressed).hexdigest()
+    try:
+        value = json.loads(gzip.decompress(compressed).decode("utf-8"))
+    except (OSError, zlib.error, UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise CwpLineageError(f"{label}: invalid gzip JSON payload") from exc
+    if not isinstance(value, Mapping):
+        raise CwpLineageError(f"{label}: expected JSON object")
+    return value, digest
 
-    GitHub's contents writer in this execution environment is UTF-8 text-only. Binary
-    gzip bytes therefore cannot be persisted losslessly through that actuator. The
-    durable fallback is the base64 text representation of the *same* gzip payload.
-    We hash the decoded gzip bytes so the provenance digest remains transport-neutral.
-    Any non-gzip/non-canonical-base64 input fails closed.
-    """
-    stored = path.read_bytes()
+
+def _load_gzip_json(path: Path) -> tuple[Mapping[str, Any], str]:
+    """Load a legacy single-file gzip JSON artifact or strict base64(gzip)."""
+    try:
+        stored = path.read_bytes()
+    except OSError as exc:
+        raise CwpLineageError(f"{path}: candidate export transport unreadable") from exc
     compressed = stored
     if not stored.startswith(b"\x1f\x8b"):
         try:
@@ -41,16 +54,87 @@ def _load_gzip_json(path: Path) -> tuple[Mapping[str, Any], str]:
             compressed = base64.b64decode(compact, validate=True)
         except (binascii.Error, ValueError) as exc:
             raise CwpLineageError(f"{path}: invalid gzip or base64-gzip transport") from exc
-        if not compressed.startswith(b"\x1f\x8b"):
-            raise CwpLineageError(f"{path}: decoded transport is not gzip")
-    digest = hashlib.sha256(compressed).hexdigest()
+    return _decode_gzip_json(compressed, label=str(path))
+
+
+def _safe_repo_path(root: Path, relative: object) -> Path:
+    text = str(relative or "").strip()
+    if not text:
+        raise CwpLineageError("multipart candidate export contains an empty path")
+    candidate = (root / text).resolve()
+    resolved_root = root.resolve()
+    if candidate != resolved_root and resolved_root not in candidate.parents:
+        raise CwpLineageError(f"multipart path escapes repository root: {text}")
+    return candidate
+
+
+def _load_multipart_candidate_export(root: Path, manifest_path: Path) -> tuple[Mapping[str, Any], str, Mapping[str, Any]]:
+    manifest = _load_json(manifest_path)
+    if manifest.get("schema_version") != "CRM-CANDIDATE-EXPORT-MULTIPART-1.0":
+        raise CwpLineageError("INVALID_CANDIDATE_EXPORT_MULTIPART_SCHEMA")
+    if manifest.get("encoding") != "base64(gzip(json))":
+        raise CwpLineageError("INVALID_CANDIDATE_EXPORT_MULTIPART_ENCODING")
+    if manifest.get("gzip_mtime") != 0:
+        raise CwpLineageError("CANDIDATE_EXPORT_GZIP_MTIME_NOT_DETERMINISTIC")
+    if manifest.get("authority_advanced") is not False or manifest.get("h_id_allocations") != 0:
+        raise CwpLineageError("CANDIDATE_EXPORT_MANIFEST_AUTHORITY_MUTATION")
+    if manifest.get("outbound") != "CLOSED" or manifest.get("send_allowed") != 0:
+        raise CwpLineageError("CANDIDATE_EXPORT_MANIFEST_OUTBOUND_OPEN")
+
+    parts = manifest.get("parts")
+    if not isinstance(parts, list) or not parts or not all(isinstance(part, Mapping) for part in parts):
+        raise CwpLineageError("CANDIDATE_EXPORT_MULTIPART_PARTS_INVALID")
+
+    encoded_parts: list[bytes] = []
+    seen_paths: set[str] = set()
+    for index, part in enumerate(parts):
+        relative = str(part.get("path", ""))
+        if relative in seen_paths:
+            raise CwpLineageError(f"CANDIDATE_EXPORT_MULTIPART_DUPLICATE_PATH:{relative}")
+        seen_paths.add(relative)
+        path = _safe_repo_path(root, relative)
+        try:
+            data = path.read_bytes()
+        except OSError as exc:
+            raise CwpLineageError(f"CANDIDATE_EXPORT_MULTIPART_PART_MISSING:{index}:{relative}") from exc
+        expected_bytes = part.get("bytes")
+        if isinstance(expected_bytes, bool) or not isinstance(expected_bytes, int) or expected_bytes < 1 or len(data) != expected_bytes:
+            raise CwpLineageError(f"CANDIDATE_EXPORT_MULTIPART_PART_SIZE_MISMATCH:{index}:{relative}")
+        digest = hashlib.sha256(data).hexdigest()
+        if digest != part.get("sha256"):
+            raise CwpLineageError(f"CANDIDATE_EXPORT_MULTIPART_PART_SHA_MISMATCH:{index}:{relative}")
+        encoded_parts.append(data)
+
+    encoded = b"".join(encoded_parts)
     try:
-        value = json.loads(gzip.decompress(compressed).decode("utf-8"))
-    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
-        raise CwpLineageError(f"{path}: invalid gzip JSON payload") from exc
-    if not isinstance(value, Mapping):
-        raise CwpLineageError(f"{path}: expected JSON object")
-    return value, digest
+        compressed = base64.b64decode(encoded, validate=True)
+    except (binascii.Error, ValueError) as exc:
+        raise CwpLineageError("CANDIDATE_EXPORT_MULTIPART_BASE64_INVALID") from exc
+    payload, gzip_sha = _decode_gzip_json(compressed, label=str(manifest_path))
+    if gzip_sha != manifest.get("gzip_sha256"):
+        raise CwpLineageError("CANDIDATE_EXPORT_MANIFEST_GZIP_SHA_MISMATCH")
+    records = payload.get("records")
+    if not isinstance(records, list) or _sha256_json(records) != manifest.get("records_sha256"):
+        raise CwpLineageError("CANDIDATE_EXPORT_MANIFEST_RECORDS_SHA_MISMATCH")
+    if manifest.get("records_count") != len(records):
+        raise CwpLineageError("CANDIDATE_EXPORT_MANIFEST_RECORDS_COUNT_MISMATCH")
+    if manifest.get("source_records") != payload.get("source_records") or manifest.get("exact_name_city_matches") != payload.get("exact_name_city_matches"):
+        raise CwpLineageError("CANDIDATE_EXPORT_MANIFEST_SOURCE_COUNTS_MISMATCH")
+    return payload, gzip_sha, manifest
+
+
+def _load_candidate_export(root: Path, source: Mapping[str, Any]) -> tuple[Mapping[str, Any], str]:
+    manifest_relative = str(source.get("candidate_export_manifest_path", "")).strip()
+    if manifest_relative:
+        manifest_path = _safe_repo_path(root, manifest_relative)
+        payload, gzip_sha, manifest = _load_multipart_candidate_export(root, manifest_path)
+        if manifest.get("gzip_sha256") != source.get("candidate_export_gzip_sha256"):
+            raise CwpLineageError("NEXT_MANIFEST_GZIP_SHA_MISMATCH")
+        if manifest.get("records_sha256") != source.get("candidate_export_records_sha256"):
+            raise CwpLineageError("NEXT_MANIFEST_RECORDS_SHA_MISMATCH")
+        return payload, gzip_sha
+    export_path = _safe_repo_path(root, source.get("candidate_export_path"))
+    return _load_gzip_json(export_path)
 
 
 def parse_offset_spec(value: object) -> list[int]:
@@ -142,8 +226,12 @@ def main() -> int:
     source = next_payload.get("source_universe")
     if not isinstance(source, Mapping):
         raise CwpLineageError("NEXT source_universe must be an object")
-    export_path = root / str(source.get("candidate_export_path", ""))
-    export, gzip_sha = _load_gzip_json(export_path)
+    try:
+        export, gzip_sha = _load_candidate_export(root, source)
+    except CwpLineageError as exc:
+        print("cwp_lineage_guard: FAIL")
+        print(f"- {exc}")
+        return 1
     errors: list[str] = []
     if gzip_sha != source.get("candidate_export_gzip_sha256"):
         errors.append("CANDIDATE_EXPORT_GZIP_SHA_MISMATCH")
@@ -151,7 +239,7 @@ def main() -> int:
     if not isinstance(ecv, Mapping):
         errors.append("NEXT_ECV_FRONTIER_MISSING")
     else:
-        packet_path = root / str(ecv.get("next_staged_batch_path", ""))
+        packet_path = _safe_repo_path(root, ecv.get("next_staged_batch_path"))
         if packet_path.is_file():
             errors.extend(validate_staged_lineage(next_payload, export, _load_json(packet_path)))
         else:

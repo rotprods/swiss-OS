@@ -1,6 +1,6 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest chained Meta Execution reconciliation: **2026-08-29T14:49:36Z**. Parent main SHA: **`3424d8c2e8166853f293ff70401ce00b4d5febc5`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
+Latest chained Meta Execution reconciliation: **2026-08-29T15:09:00Z**. Parent main SHA: **`ec4266c43c061807dcaf23771c01b1b4fd85a026`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
 
 ## Authority — unchanged / locked
 
@@ -31,22 +31,22 @@ candidate records                   1438
 candidate records SHA               34d9aa9cfa4fe896bf1db8fba4dedfded9a1dbf2e135b847101904644d16bba0
 ```
 
-## Exact-current durable frontier — SUB0064 green
+## Exact-current durable frontier — SUB0065 green
 
-SUB0064 ECV Actions `33257637978`, job `99114023470`, artifact `9716307883`, ZIP SHA `22cd5a83f91629ec14928ce79c794a50fc6ba9cc50f5f050aa4c8f31a03f72c6`; normalized packet SHA `69db1537bd8163f86d5f9c5b2f70e492123281594aa17ee9bd58f124b24c8e6f`; 20/20 `CURRENT_DETAIL_VERIFIED`, HTTP 200 `20/20`, name match `20/20`, city match `20/20`, provider changes `0`, validator violations `0`. All follow-ups remain `DEDUPE_GROUP_ALIAS_REVIEW`; no entity-resolution decision, terminal-mapping promotion, canonical ID allocation, or authority advance occurred.
+SUB0065 ECV Actions `33258789525`, job `99117028151`, artifact `9716643901`, ZIP SHA `21f132714a3f81a796203f343c2d8f2d4fa4560f4de8abeaf2a4df0a79cd28e8`; normalized packet SHA `f41878b9ea357c3b2c367538f301369ca34ecc86a4ca5c2aea266eaa8b0608d9`; 20/20 `CURRENT_DETAIL_VERIFIED`, HTTP 200 `20/20`, name match `20/20`, city match `20/20`, provider changes `0`, validator violations `0`. All follow-ups remain `DEDUPE_GROUP_ALIAS_REVIEW`; no entity-resolution decision, terminal-mapping promotion, canonical ID allocation, or authority advance occurred.
 
 ```text
-ECV verified frontier            1270 / 1438
-ECV remaining never verified     168
+ECV verified frontier            1290 / 1438
+ECV remaining never verified     148
 ECV pending requeue                 0
-contiguous candidate prefix       0..1260 (1261 records)
-next untouched candidate offset    1261
+contiguous candidate prefix       0..1280 (1281 records)
+next untouched candidate offset    1281
 ```
 
-## SUB0065 — exact materialization verified and staged
+## SUB0066 — next immutable safe wave
 
-Read-only CWP run `33258498382` / job `99116264026` succeeded from main `3424d8c2e8166853f293ff70401ce00b4d5febc5`. Artifact `9716540671`, ZIP SHA `3fc3541719b9a654c75fc5c163ce8b1f289215ea2ac835e80143e690cdc4f0a7`; packet file SHA `aec039a9605671ebef77ec491c097c9af197e5684c944b591e29ca7438cd6483`; report SHA `5cd79b8e3af925ac0b44c1621e817cd5a56619319534d69950b5bf4c9521424b`; items SHA `790787903a04b5967557bb569270b209af55b42628728f584fde4d9e7dcd6308`. Exact immutable offsets **1261..1280**, 20 items. All are `CANDIDATE_NEW_ENTITY_PREAUTH` / `VERIFY_NEW_ENTITY`, every `matched_hotel_id` is empty, `authority_advanced=false`, `h_id_allocations=0`, OUTBOUND=CLOSED, `send_allowed=0`. Repository packet is byte-exact to the downloaded artifact (Git blob `1a7c6d1c9d321faa7c9779f7ef9fa94086f4e10e`).
+Request exact read-only CWP materialization for offsets **1281..1300**, 20 items, batch `HS-MEMBER-DE-33206402141:WORK:0001:SUB:0066`. The materializer must preserve `CANDIDATE_NEW_ENTITY_PREAUTH` / `VERIFY_NEW_ENTITY`, empty `matched_hotel_id`, `authority_advanced=false`, `h_id_allocations=0`, OUTBOUND=CLOSED and `send_allowed=0`. Stage only after artifact/hash verification; then merge through green CI/adversarial review to trigger read-only ECV.
 
 ## Durable recovery / gates
 
-Drive recovery doc `1leVfYwda8g0B5Co5zaSUIpo245t37tpUEiTaYlLds_s`; HOTELS_MASTER `1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w`; File Library remains cold recovery only. discover.swiss `Infocenter Open` key remains absent; MEP fallback continues through qualified HotellerieSuisse evidence. Issue #14 remains controlling P0. NEXT: green CI + adversarial review → merge exact SUB0065 staging → automatic read-only SUB0065 ECV → persist typed evidence → request SUB0066. SSR-1.0, `RECONCILE_REQUIRED=0`, reverse gaps=0, full 2061 terminal mapping and fresh cross-plane reconciliation remain mandatory before authority eligibility. OUTBOUND=CLOSED; send_allowed=0.
+Drive recovery doc `1leVfYwda8g0B5Co5zaSUIpo245t37tpUEiTaYlLds_s`; HOTELS_MASTER `1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w`; File Library remains cold recovery only. discover.swiss `Infocenter Open` key remains absent; MEP fallback continues through qualified HotellerieSuisse evidence. Issue #14 remains controlling P0. NEXT: green CI + adversarial review → merge exact SUB0065 result → automatic read-only SUB0066 CWP materialization → verify hashes and stage exact SUB0066 → automatic read-only SUB0066 ECV → persist typed evidence. SSR-1.0, `RECONCILE_REQUIRED=0`, reverse gaps=0, full 2061 terminal mapping and fresh cross-plane reconciliation remain mandatory before authority eligibility. OUTBOUND=CLOSED; send_allowed=0.

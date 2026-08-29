@@ -1,0 +1,35 @@
+{
+  "schema_version": "META-GRAPH-DELTA-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "cycle_id": "META-20260829-PROVIDER-LINEAGE-CLOSE-SUB0020-LIVE",
+  "parent_git_sha": "3bbad2657bddb97d5467dd03f6c3cd9ec1b372b6",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "checkpoint": "CRM_UNIVERSE_COMPLETE",
+  "colette": {
+    "observe": "SUB0018 reclassify produced 10 URL_NOT_FOUND and 1 NAME_ONLY terminal provider states while SUB0020 ECV proceeds independently.",
+    "bottleneck": "Eleven provider-record-change reviews were open even though the historical SUB0018 work packet was known malformed relative to the frozen qualified manifest.",
+    "execute": "Reconcile each malformed work item against the frozen 2061-record manifest and E4 authority by exact URL and normalized name; terminalize only work-item lineage where evidence is deterministic.",
+    "learn": "Ten work items are absent from the frozen manifest by both exact URL and normalized name; Sporthotel Victoria redirects to qualified record MD-e9a4756e4bd6482a5ced with city drift and remains an unresolved original candidate.",
+    "test": "All 11 receive one deterministic lineage resolution; provider-record-change review falls to zero; qualified mapping delta and authority mapping delta remain zero.",
+    "evaluate": "PASS_PRE_AUTHORITY"
+  },
+  "decisions": [
+    "D-PROVIDER-LINEAGE-01: classify ten malformed records as NON_MANIFEST_STALE_WORK_ITEM at work-lineage level only; make no hotel-existence inference.",
+    "D-PROVIDER-LINEAGE-02: redirect malformed Sporthotel Victoria work lineage to qualified source record MD-e9a4756e4bd6482a5ced / Gstaad / original candidate offset 1319; make no canonical mapping inference.",
+    "D-PROVIDER-LINEAGE-03: close provider_record_change_review=0 without changing effective terminal source mappings 627 or RECONCILE_REQUIRED 1434.",
+    "D-SAFETY-01: H-0691 remains unallocated; authority remains E4; OUTBOUND=CLOSED; send_allowed=0."
+  ],
+  "next": {
+    "route": "OBSERVE_SUB0020_ECV_RUN_33228986096_THEN_CHAIN_SUB0021",
+    "staged_batch": "HS-MEMBER-DE-33206402141:WORK:0001:SUB:0020",
+    "staged_items_sha256": "52cf15deec4f63e877805850a8175342cf05bd3d701899d64973491d6d1c1162",
+    "next_original_candidate_offset_if_safe": 380,
+    "provider_dependency": "DISCOVER_SWISS_SUBSCRIPTION_KEY",
+    "mapping_blocker": "EFFECTIVE_RECONCILE_REQUIRED_1434_NOT_ZERO",
+    "reverse_gap_blocker": 66
+  },
+  "authority_advanced": false,
+  "h_id_allocations": 0,
+  "outbound": "CLOSED",
+  "send_allowed": 0
+}

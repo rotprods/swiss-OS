@@ -1,0 +1,79 @@
+{
+  "schema_version": "GRAPH_REFACTOR_V2_SEED_1",
+  "project_id": "SWITZERLAND_JOB_OS",
+  "north_star_id": "G-0001",
+  "program_id": "PROGRAM-GRAPH-V2",
+  "authority_ceiling": "ARCHITECTURE_ONLY",
+  "operational_authority_mutated": false,
+  "components": [
+    {"id": "C-V2-DOMAIN-AUTHORITY", "name": "Domain Authority Stores", "owner": "DATA_ENGINE", "critical": true, "test": "TEST-V2-AUTHORITY"},
+    {"id": "C-V2-EVENT-LEDGER", "name": "Causal Event Ledger", "owner": "EVENT_SOURCING_ARCHITECT", "critical": true, "test": "TEST-V2-LEDGER"},
+    {"id": "C-V2-HYPERGRAPH", "name": "Temporal Hypergraph Kernel", "owner": "GRAPH_SYSTEMS_ARCHITECT", "critical": true, "test": "TEST-V2-GRAPH"},
+    {"id": "C-V2-COORDINATION", "name": "Session Claim Lease Fencing Registry", "owner": "AGENTIC_SYSTEMS_ARCHITECT", "critical": true, "test": "TEST-V2-FENCING"},
+    {"id": "C-V2-CONTEXTPACK", "name": "ContextPack Compiler", "owner": "MEMORY_SYSTEMS_ENGINEER", "critical": true, "test": "TEST-V2-CONTEXT"},
+    {"id": "C-V2-ASSURANCE", "name": "Assurance Kernel", "owner": "TEST_ARCHITECT", "critical": true, "test": "TEST-V2-ASSURANCE"},
+    {"id": "C-V2-IMPLEMENTATION", "name": "Implementation Compiler", "owner": "TECHNICAL_PRODUCT_MANAGER", "critical": true, "test": "TEST-V2-COMPILER"},
+    {"id": "C-V2-PROJECTIONS", "name": "COS Projection Registry", "owner": "KNOWLEDGE_GRAPH_ENGINEER", "critical": true, "test": "TEST-V2-PROJECTIONS"},
+    {"id": "C-V2-RECOVERY", "name": "Recovery Compiler", "owner": "RECOVERY_ENGINEER", "critical": true, "test": "TEST-V2-RECOVERY"},
+    {"id": "C-V2-MEP-WOP", "name": "MEP WOP Domain Engine Bridge", "owner": "MISSION_COMMANDER", "critical": true, "test": "TEST-V2-BRIDGE"}
+  ],
+  "engines": [
+    "MISSION_COMMANDER", "AUTHORITY_RECONCILIATION_ENGINE", "WAVE_TRANSACTION_ENGINE",
+    "MARKET_DISCOVERY_ENGINE", "ENTITY_RESOLUTION_ENGINE", "EVIDENCE_ENGINE",
+    "VACANCY_ENGINE", "HOUSING_ENGINE", "PEOPLE_ENGINE", "CHANNEL_ENGINE",
+    "INTELLIGENCE_ENGINE", "OPERATIONAL_GRAPH_ENGINE", "META_GRAPH_ENGINE",
+    "SCHEDULER_TTL_ENGINE", "SCORING_ENGINE", "CANDIDATE_TRUTH_ENGINE",
+    "TEMPLATE_ENGINE", "QA_GOVERNANCE_ENGINE", "OBSERVABILITY_ENGINE",
+    "RECOVERY_PERSISTENCE_ENGINE", "GIT_CI_ENGINE", "SECURITY_OUTBOUND_ENGINE"
+  ],
+  "contracts": [
+    "MEP-2.0", "WOP-1.1", "PRG-1.0", "CUP-1.1", "DSA-1.0", "MDM-1.0",
+    "SSR-1.0", "PAB-1.0", "ASR-1.0", "NPP-1.0", "HGA-2.0", "LEX-2.0"
+  ],
+  "stores": [
+    "STORE-CONSTRAINED-DB", "STORE-HOTELS-MASTER", "STORE-OPERATIONAL-GRAPH",
+    "STORE-INTELLIGENCE", "STORE-GITHUB", "STORE-DRIVE", "STORE-LIBRARY",
+    "STORE-EVENT-LEDGER"
+  ],
+  "tools": [
+    "TOOL-GITHUB", "TOOL-DRIVE", "TOOL-SHEETS", "TOOL-LIBRARY",
+    "TOOL-WEB", "TOOL-PYTHON", "TOOL-CI"
+  ],
+  "risks": [
+    {"id": "RISK-HIDDEN-AUTHORITY", "severity": "P0", "title": "Projection or cache becomes hidden authority", "state": "RESOLVED"},
+    {"id": "RISK-STALE-WRITER", "severity": "P0", "title": "Expired agent writes after takeover", "state": "RESOLVED"},
+    {"id": "RISK-CONTEXT-DRIFT", "severity": "P1", "title": "Agent resumes from stale ContextPack", "state": "RESOLVED"},
+    {"id": "RISK-EVENT-CORRUPTION", "severity": "P1", "title": "Duplicate or altered event chain", "state": "RESOLVED"},
+    {"id": "RISK-GRAPH-DRIFT", "severity": "P1", "title": "Graph projection diverges from authority", "state": "RESOLVED"},
+    {"id": "RISK-LEGACY-HISTORY", "severity": "P2", "title": "Legacy actions lack complete event history", "state": "OPEN"},
+    {"id": "RISK-PROVIDER-IDENTITY", "severity": "P2", "title": "Provider identifier changes", "state": "OPEN"},
+    {"id": "RISK-RECOVERY-SLO", "severity": "P2", "title": "Five-minute recovery target unqualified", "state": "OPEN"},
+    {"id": "RISK-ISSUE-CREATE-LOOP", "severity": "P1", "title": "Repeated irreversible create mutation during tool-selection loop", "state": "RESOLVED"},
+    {"id": "RISK-OVERENGINEERING", "severity": "P1", "title": "Distributed infrastructure without measured trigger", "state": "RESOLVED"}
+  ],
+  "invariants": [
+    {"id": "INV-V2-001", "severity": "P0", "description": "No projection can advance operational authority", "owner": "AUTHORITY_RECONCILIATION_ENGINE", "test": "TEST-V2-AUTHORITY"},
+    {"id": "INV-V2-002", "severity": "P0", "description": "A stale fencing token cannot authorize a write", "owner": "AGENTIC_SYSTEMS_ARCHITECT", "test": "TEST-V2-FENCING"},
+    {"id": "INV-V2-003", "severity": "P0", "description": "Event hash chain is complete and immutable", "owner": "EVENT_SOURCING_ARCHITECT", "test": "TEST-V2-LEDGER"},
+    {"id": "INV-V2-004", "severity": "P1", "description": "ContextPack rejects moved ancestry or watermark", "owner": "MEMORY_SYSTEMS_ENGINEER", "test": "TEST-V2-CONTEXT"},
+    {"id": "INV-V2-005", "severity": "P1", "description": "Critical nodes have owners and tests", "owner": "TEST_ARCHITECT", "test": "TEST-V2-ASSURANCE"},
+    {"id": "INV-V2-006", "severity": "P1", "description": "Implementation program is acyclic and tasks have objective DoD", "owner": "TECHNICAL_PRODUCT_MANAGER", "test": "TEST-V2-COMPILER"},
+    {"id": "INV-V2-007", "severity": "P1", "description": "All COS L0 through L19 dimensions are explicit", "owner": "KNOWLEDGE_GRAPH_ENGINEER", "test": "TEST-V2-PROJECTIONS"},
+    {"id": "INV-V2-008", "severity": "P0", "description": "Outbound remains independently closed", "owner": "SECURITY_OUTBOUND_ENGINE", "test": "TEST-V2-AUTHORITY"},
+    {"id": "INV-V2-009", "severity": "P1", "description": "Secrets are removed from public ContextPack", "owner": "SECURITY_OUTBOUND_ENGINE", "test": "TEST-V2-CONTEXT"},
+    {"id": "INV-V2-010", "severity": "P1", "description": "Repeated create operations require an idempotency key and loop budget", "owner": "WAVE_TRANSACTION_ENGINE", "test": "TEST-V2-LOOP-GUARD"}
+  ],
+  "tests": [
+    "TEST-V2-AUTHORITY", "TEST-V2-LEDGER", "TEST-V2-GRAPH", "TEST-V2-FENCING",
+    "TEST-V2-CONTEXT", "TEST-V2-ASSURANCE", "TEST-V2-COMPILER",
+    "TEST-V2-PROJECTIONS", "TEST-V2-RECOVERY", "TEST-V2-BRIDGE",
+    "TEST-V2-LOOP-GUARD"
+  ],
+  "decisions": [
+    {"id": "DEC-V2-001", "title": "Use typed temporal hypergraph projections over existing stores"},
+    {"id": "DEC-V2-002", "title": "Use append-only hash-chained events before distributed event infrastructure"},
+    {"id": "DEC-V2-003", "title": "Make sessions claims leases and fencing first-class"},
+    {"id": "DEC-V2-004", "title": "Compile ContextPack and reject stale ancestry"},
+    {"id": "DEC-V2-005", "title": "Adopt strangler migration instead of big-bang rewrite"}
+  ]
+}

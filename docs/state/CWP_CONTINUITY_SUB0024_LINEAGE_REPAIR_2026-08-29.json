@@ -16,11 +16,12 @@
   },
   "candidate_export": {
     "path": "docs/state/CRM_CANDIDATE_EXPORT_33206402141.json.gz",
-    "gzip_sha256": "8107499196092fe3a505ee54b64b26362ea3669380e3ee57754825f6acd5c95f",
+    "gzip_sha256": "071e2cf1b895b63457c56066de7d8653b3182a12d1260ff9be7709a684fcf194",
     "records_sha256": "34d9aa9cfa4fe896bf1db8fba4dedfded9a1dbf2e135b847101904644d16bba0",
     "records": 1438,
     "drive_recovery_pointer_id": "1bQ74_WJlXFP6-nyGmkD97u-jgk6xhlz22j6t9H0e9sE",
-    "durable_data_plane": "GITHUB"
+    "durable_data_plane": "GITHUB",
+    "gzip_transport": "DETERMINISTIC_BINARY_GIT_BLOB_MTIME_0"
   },
   "sub0024": {
     "all_verified": true,

@@ -1,0 +1,28 @@
+{
+  "schema_version": "META-GRAPH-DELTA-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "generated_at": "2026-08-29T22:48:45Z",
+  "parent_git_sha": "ed32e0f1b7686d44fb524c5b45fe9d15111a5cb8",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "nodes": [
+    {"id":"DEC-0103","type":"Decision","state":"VERIFIED","label":"Dynamic checkpoint denominators follow live 690; completed checkpoints preserve completion snapshot"},
+    {"id":"DRIFT-CHECKPOINT-DENOMINATOR-686-690","type":"HistoricalDebt","state":"RESOLVED_VISIBLE_CONTROL_PLANE","label":"Stale dynamic checkpoint denominator projection"},
+    {"id":"AUTH-E4-690","type":"Authority","state":"ACTIVE","label":"E4 repaired active canonical denominator 690"},
+    {"id":"CP-0800-GRAPH-CUTOVER","type":"Checkpoint","state":"COMPLETE","label":"Historical graph cutover completion 686/686"},
+    {"id":"SSR-DISCOVER-SWISS-KEY","type":"Blocker","state":"BLOCKED_PROVIDER_CREDENTIAL_BOUNDARY","label":"discover.swiss subscription key absent"},
+    {"id":"CLAIM-CRM-PIE050-CAPTURED27-D42F9A","type":"Claim","state":"ACTIVE","label":"Fenced provider identity review claim token 3"}
+  ],
+  "edges": [
+    {"from":"DEC-0103","to":"DRIFT-CHECKPOINT-DENOMINATOR-686-690","type":"RESOLVES","authority":"CONTROL_PLANE_ONLY"},
+    {"from":"DEC-0103","to":"AUTH-E4-690","type":"DERIVED_FROM","authority":"LIVE_AUTHORITY_PROJECTION"},
+    {"from":"CP-0800-GRAPH-CUTOVER","to":"AUTH-E4-690","type":"PRECEDES","validity":"completion snapshot predates repaired current authority"},
+    {"from":"SSR-DISCOVER-SWISS-KEY","to":"AUTH-E4-690","type":"DOES_NOT_ADVANCE","authority":"NO_SSR_PROMOTION"},
+    {"from":"CLAIM-CRM-PIE050-CAPTURED27-D42F9A","to":"DEC-0103","type":"ISOLATES","authority":"NO_SCOPE_COLLISION"}
+  ],
+  "invariants": {
+    "authority_advanced": false,
+    "canonical_id_reservations": 0,
+    "outbound": "CLOSED",
+    "send_allowed": 0
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "schema_version":"PROVIDER-RECORD-LINEAGE-RESOLUTION-1.0",
+  "project":"SWITZERLAND_JOB_OS",
+  "generated_at":"2026-08-29T05:47:00Z",
+  "parent_git_sha":"c95df7b75037647cd7266ab49b32747d82217360",
+  "authority_epoch":"HS_ENTITY_EPOCH_2026-08-25_E4",
+  "qualified_source_snapshot_id":"HS-MEMBER-DE-33206402141",
+  "qualified_source_artifact_id":9700376482,
+  "qualified_source_artifact_zip_sha256":"721f9ff9f84e2d5d9df62c6b22f12e7354cef3a298cb8990be66a202e1e769ce",
+  "evidence_batch_id":"HS-MEMBER-DE-33206402141:WORK:0001:SUB:0027",
+  "evidence_run_id":33236852551,
+  "evidence_artifact_id":9710186658,
+  "evidence_packet_sha256":"0ffc33ba51b30855dbfb13e167171539d0bf6877c7cc2ca167ec2c7b74e05d49",
+  "resolution_basis":["qualified 2061-record frozen member-directory manifest lookup by exact source_record_key","qualified manifest lookup by exact detail_url","qualified manifest lookup by normalized provider name","current E4 authority lookup by normalized canonical name","terminal live provider evidence from ECV-PROVIDER-EVIDENCE-1.0"],
+  "records":[
+    {"original_candidate_offset":501,"work_item_source_record_key":"MD-539ff80e0bfde6e12be8","expected_name":"hotel alte post","expected_city":"davos platz","provider_state":"CURRENT_DETAIL_NAME_ONLY","staged_detail_url":"https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-hotel-alte-post-1","frozen_source_detail_url":"https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-hotel-alte-post","staged_url_exact_manifest_match":{"source_record_key":"MD-b901e6c9d0420dcaa090","name":"Hotel Alte Post","city":"Grindelwald"},"frozen_source_name_matches":[{"source_record_key":"MD-539ff80e0bfde6e12be8","city":"Davos Platz"},{"source_record_key":"MD-b901e6c9d0420dcaa090","city":"Grindelwald"}],"authority_normalized_name_matches":0,"resolution":"WORK_PACKET_DETAIL_URL_LINEAGE_MISMATCH","repair":"REVERIFY_SAME_FROZEN_SOURCE_KEY_WITH_FROZEN_DETAIL_URL","qualified_source_mapping_effect":"NONE","canonical_effect":"NONE"},
+    {"original_candidate_offset":511,"work_item_source_record_key":"MD-5673b95bc2d59f543351","expected_name":"hotel belmont","expected_city":"engelberg","provider_state":"CURRENT_DETAIL_NAME_ONLY","staged_detail_url":"https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-hotel-belmont","frozen_source_detail_url":"https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-hotel-belmont-2","staged_url_exact_manifest_matches":0,"frozen_source_name_matches":[{"source_record_key":"MD-5673b95bc2d59f543351","city":"Engelberg"}],"authority_normalized_name_matches":0,"resolution":"WORK_PACKET_DETAIL_URL_LINEAGE_MISMATCH","repair":"REVERIFY_SAME_FROZEN_SOURCE_KEY_WITH_FROZEN_DETAIL_URL","qualified_source_mapping_effect":"NONE","canonical_effect":"NONE"}
+  ],
+  "summary":{"input_provider_record_changes":2,"work_packet_lineage_mismatches":2,"provider_record_change_review_open":0,"lineage_reverify_required":2,"qualified_source_terminal_mapping_delta":0,"authority_mapping_delta":0},
+  "adversarial_constraints":["The two NAME_ONLY results are not promoted as provider identity drift because the staged URLs did not belong to the frozen source record keys.","The repair changes only verification inputs; it does not alter the frozen candidate source_record_key or original_candidate_offset.","No canonical ID is allocated or reserved; authority remains unchanged."],
+  "authority_advanced":false,"h_id_allocations":0,"outbound":"CLOSED","send_allowed":0
+}

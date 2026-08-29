@@ -1,0 +1,8 @@
+{
+  "schema_version":"META-GRAPH-DELTA-1.0","project":"SWITZERLAND_JOB_OS","cycle_id":"META-20260829-ECV-SUB0028-SUB0029","parent_git_sha":"4e66823b82e09374f5b911bca7f5ab1931d204f4","authority_epoch":"HS_ENTITY_EPOCH_2026-08-25_E4","checkpoint":"CRM_UNIVERSE_COMPLETE",
+  "colette":{"collect":"Fresh main, SUB0028 artifact and qualified frozen candidate export.","observe":"SUB0028 is 20/20 strict verified and validator-clean.","locate":"Continue the immutable exact-current frontier over the next untouched frozen candidates.","execute":"Persist SUB0028 evidence and stage SUB0029 offsets 541..560.","test":"Require CWP lineage, handoff frontier, unit suite and manifest canary.","transact":"Git-only pre-authority state; no canonical mutation.","evolve":"On green merge observe SUB0029 and continue at offset 561 when safe."},
+  "frontier_before":{"current_detail_verified":530,"remaining_never_verified":908,"contiguous_verified_end":520},
+  "frontier_after":{"current_detail_verified":550,"remaining_never_verified":888,"contiguous_verified_end":540,"pending_requeue":0},
+  "next":{"batch":"HS-MEMBER-DE-33206402141:WORK:0001:SUB:0029","offsets":"541..560","next_forward_offset":561,"mapping_blocker":1434,"reverse_gap_blocker":66,"provider_dependency":"DISCOVER_SWISS_SUBSCRIPTION_KEY"},
+  "authority_advanced":false,"h_id_allocations":0,"outbound":"CLOSED","send_allowed":0
+}

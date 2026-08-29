@@ -1,6 +1,6 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest chained Meta Execution reconciliation: **2026-08-29T05:53:00Z**. Parent main SHA: **`ac5428e2e83b434b3653682b982e061f6e28b858`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
+Latest chained Meta Execution reconciliation: **2026-08-29T05:59:00Z**. Parent main SHA: **`4e66823b82e09374f5b911bca7f5ab1931d204f4`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
 
 ## Authority — unchanged / locked
 
@@ -17,7 +17,7 @@ OUTBOUND                        CLOSED
 send_allowed                      0
 ```
 
-Authority SHA `70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`; workbook recovery SHA `434fab60a1260f08b647e9f6ed718575de195a11fc09177a4c42da84b66b920e`. Live Drive `HOTELS_V2` was re-read this activation: `H-0690` exists and `H-0691` is absent. ECV/staging/cache/canary remain non-authoritative.
+Authority SHA `70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`; workbook recovery SHA `434fab60a1260f08b647e9f6ed718575de195a11fc09177a4c42da84b66b920e`. Live Drive authority remains 690 rows and `H-0691` absent. ECV/staging/cache/canary remain non-authoritative.
 
 ## CRM universe / mapping frontier
 
@@ -31,25 +31,23 @@ candidate records                   1438
 candidate records SHA               34d9aa9cfa4fe896bf1db8fba4dedfded9a1dbf2e135b847101904644d16bba0
 ```
 
-## Exact-current frontier — SUB0027R1 green
+## Exact-current frontier — SUB0028 green
 
-Actions `33237135564`, job `99059958718`, artifact `9710247208`, ZIP SHA `fd6b85ae0933e930e6f2e4dd124b4bbe35f68dc627c5c8dc2e196c3d43fd7b68`; normalized packet SHA `20abb85d91bf2540e2917f4408602dbe1d113b41577ed4bd87f7624bc0a8dbbd`; 2/2 `CURRENT_DETAIL_VERIFIED`, provider changes `0`, validator violations `0`.
-
-The two SUB0027 lineage holes at offsets `501` and `511` are closed with exact frozen-source URLs. Strict verified lineage is contiguous through original candidate offset `520`.
+Actions `33237308859`, job `99060430338`, artifact `9710309203`, ZIP SHA `d0e21006bf1f6b0c323db89f8afa60299445570914191a695739156be7ef3461`; normalized packet SHA `223026f226c0847176e8df0bbd0d8493c8f0a1cf83754c2c7c80cae7ded5ee65`; 20/20 `CURRENT_DETAIL_VERIFIED`, provider changes `0`, validator violations `0`.
 
 ```text
-ECV verified frontier             530 / 1438
-ECV remaining never verified     908
+ECV verified frontier             550 / 1438
+ECV remaining never verified     888
 ECV pending requeue                 0
-contiguous candidate prefix       0..520 (521 records)
+contiguous candidate prefix       0..540 (541 records)
 ```
 
-## Staged next bounded wave — SUB0028
+## Staged next bounded wave — SUB0029
 
-`SUB0028` contains exact original candidate offsets **521..540** from the same frozen candidate export. Items count `20`; canonical items SHA `5117849aa02d800c018606d8030cb1062ed991bac3f183a7248d6f6ef03f6dda`; next untouched forward offset `541`. Staging reserves/allocates no H-ID and cannot advance authority.
+`SUB0029` contains exact original candidate offsets **541..560**, 20 items, canonical items SHA `0d68ad00b695cd8cbeeff158871a055df082a9bbfff2899a35f06292f20c33de`; next untouched offset `561`. No H-ID reservation/allocation and no authority advance.
 
 ## P0 / NEXT
 
-`RECONCILE_REQUIRED=1434`, reverse authority/source gaps `66`, discover.swiss subscription key unavailable. Require green repo-guard + adversarial review → merge SUB0027R1 persistence / SUB0028 staging → observe auto SUB0028 ECV → persist typed evidence and continue. Full 2061 terminal mapping, `RECONCILE_REQUIRED=0`, reverse gaps `0`, SSR-1.0 and fresh cross-plane reconciliation remain mandatory before authority eligibility.
+`RECONCILE_REQUIRED=1434`, reverse authority/source gaps `66`, discover.swiss subscription key unavailable. Require green CI/adversarial review → merge → auto SUB0029 ECV → persist typed evidence and chain. Full 2061 terminal mapping, `RECONCILE_REQUIRED=0`, reverse gaps `0`, SSR-1.0 and fresh cross-plane reconciliation remain mandatory before authority eligibility.
 
 Canonical pointer: `docs/state/NEXT.json`. OUTBOUND remains CLOSED; send_allowed=0.

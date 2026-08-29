@@ -1,0 +1,10 @@
+{
+  "schema_version":"CWP-CONTINUITY-1.0","project":"SWITZERLAND_JOB_OS","generated_at":"2026-08-29T04:53:13Z","cycle_id":"META-20260829-ECV-SUB0025-SUB0026","parent_git_sha":"7a0578751073f5add5014b2c96e40b3677291e62","authority_epoch":"HS_ENTITY_EPOCH_2026-08-25_E4",
+  "authority_state":{"physical_rows":690,"active_canonical":690,"persisted_hid_alias_edges":0,"next_physical_id":"H-0691_UNALLOCATED"},
+  "source_replay":{"snapshot_id":"HS-MEMBER-DE-33206402141","source_records":2061,"exact_authority_matches":623,"candidate_records":1438,"candidate_records_sha256":"34d9aa9cfa4fe896bf1db8fba4dedfded9a1dbf2e135b847101904644d16bba0"},
+  "latest_ecv":{"batch_id":"HS-MEMBER-DE-33206402141:WORK:0001:SUB:0025","state":"SUCCESS","current_detail_verified":20,"provider_record_change_count":0,"validator_violations":0,"run_id":33234769738,"artifact_id":9709584365,"packet_sha256":"a5e48cbf6da63b94f261827c495732ddba620feb86dbcd5779c57d58e6a5f9eb"},
+  "frontier":{"unique_current_detail_verified":490,"remaining_never_verified":948,"contiguous_original_candidate_offset_start":0,"contiguous_original_candidate_offset_end":480,"contiguous_original_candidate_records":481,"pending_requeue":0},
+  "next_staged":{"batch_id":"HS-MEMBER-DE-33206402141:WORK:0001:SUB:0026","path":"docs/state/CMI_WORK_BATCH_0001_SUB0026_33206402141.json","original_candidate_offsets":[481,482,483,484,485,486,487,488,489,490,491,492,493,494,495,496,497,498,499,500],"items_count":20,"items_sha256":"cb89bacd92256ffe43753b8b9530d8c78c994ce9b4bee735a6c0ea73031339ab","next_forward_original_candidate_offset":501},
+  "mapping_frontier_unchanged":{"effective_terminal_source_mappings":627,"effective_reconcile_required":1434,"reverse_authority_without_exact_source_match":66},
+  "authority_advanced":false,"h_id_allocations":0,"outbound":"CLOSED","send_allowed":0
+}

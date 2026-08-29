@@ -1,0 +1,112 @@
+name: graph-v2-migration-shadow
+
+on:
+  pull_request:
+    paths:
+      - "src/swiss_os/v2_migration.py"
+      - "scripts/compile_graph_v2_migration_shadow.py"
+      - "tests/test_v2_migration.py"
+      - "tests/fixtures/v2_migration_inventory.json"
+      - "docs/operations/GRAPH_V2_MIGRATION.md"
+      - ".github/workflows/graph-v2-migration-shadow.yml"
+  push:
+    branches: [main]
+    paths:
+      - "src/swiss_os/v2_migration.py"
+      - "scripts/compile_graph_v2_migration_shadow.py"
+      - "tests/test_v2_migration.py"
+      - "tests/fixtures/v2_migration_inventory.json"
+      - "docs/operations/GRAPH_V2_MIGRATION.md"
+      - ".github/workflows/graph-v2-migration-shadow.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  cp13-shadow-migration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout exact revision
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Repository and contract guards
+        run: |
+          python scripts/repo_guard.py
+          python scripts/system_contract_guard.py
+
+      - name: Full regression suite
+        run: python -m unittest discover -s tests -v
+
+      - name: Compile deterministic synthetic CP13 shadow
+        env:
+          COMMIT_SHA: ${{ github.sha }}
+          BRANCH_NAME: ${{ github.ref_name }}
+          SWISS_OS_V2_PSEUDONYM_SALT: ci-synthetic-pseudonym-salt-v2
+        run: |
+          GENERATED_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          python scripts/compile_graph_v2_migration_shadow.py \
+            --inventory tests/fixtures/v2_migration_inventory.json \
+            --out build/graph-v2-migration-shadow \
+            --compiler-sha "$COMMIT_SHA" \
+            --branch "$BRANCH_NAME" \
+            --generated-at "$GENERATED_AT"
+
+      - name: Assert privacy parity rollback and authority locks
+        env:
+          COMMIT_SHA: ${{ github.sha }}
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import re
+          import os
+
+          root = Path("build/graph-v2-migration-shadow")
+          manifest = json.loads((root / "manifest.json").read_text(encoding="utf-8"))
+          public = json.loads((root / "public_attestation.json").read_text(encoding="utf-8"))
+          graph = json.loads((root / "private_shadow_graph.json").read_text(encoding="utf-8"))
+          id_map = json.loads((root / "private_id_map.json").read_text(encoding="utf-8"))
+          rollback = json.loads((root / "rollback_manifest.json").read_text(encoding="utf-8"))
+          plan = json.loads((root / "migration_plan.json").read_text(encoding="utf-8"))
+          context = json.loads((root / "contextpack.json").read_text(encoding="utf-8"))
+
+          assert manifest["compiler_sha"] == os.environ["COMMIT_SHA"]
+          assert manifest["state"] == "SHADOW_PARITY_VERIFIED"
+          assert manifest["physical_count"] == 4
+          assert manifest["active_count"] == 3
+          assert manifest["alias_count"] == 1
+          assert manifest["entity_binding_count"] == 4
+          assert public["parity"]["physical_pk_set_exact"] is True
+          assert public["parity"]["active_pk_set_exact"] is True
+          assert public["parity"]["alias_edge_set_exact"] is True
+          assert len(graph["hyperedges"]) == 4
+          assert len(id_map) == 4
+          assert len(set(id_map.values())) == 4
+          assert not re.search(r"H-\d{4}", json.dumps(public, sort_keys=True))
+          assert rollback["authority_writes_performed"] == 0
+          assert rollback["operational_rows_modified"] == 0
+          assert plan["state"] == "SHADOW_PARITY_VERIFIED"
+          assert context["payload"]["migration_state"] == "SHADOW_PARITY_VERIFIED"
+          for payload in (manifest, public, rollback, plan):
+              assert payload.get("authority_advanced", False) is False
+              assert payload.get("h_id_allocations", 0) == 0
+              assert payload.get("outbound_opened", False) is False
+              assert payload.get("send_allowed", 0) == 0
+          assert manifest["files"]["private_id_map.json"]["public_safe"] is False
+          assert manifest["files"]["private_shadow_graph.json"]["public_safe"] is False
+          PY
+
+      - name: Upload exact CP13 synthetic artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: graph-v2-migration-shadow-${{ github.sha }}
+          path: build/graph-v2-migration-shadow
+          if-no-files-found: error
+          retention-days: 30

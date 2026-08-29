@@ -35,20 +35,29 @@ jobs:
           import json
           from pathlib import Path
           report=json.load(open('.artifacts/CWP_MATERIALIZE_REPORT.json'))
+          assert report['authority_advanced'] is False
+          assert report['h_id_allocations'] == 0 and type(report['h_id_allocations']) is int
+          assert report['outbound'] == 'CLOSED'
+          assert report['send_allowed'] == 0 and type(report['send_allowed']) is int
           packets=[p for p in Path('.artifacts').glob('CMI_WORK_BATCH_*.json')]
-          assert len(packets)==1, packets
-          packet=json.load(open(packets[0]))
-          assert packet['authority_advanced'] is False
-          assert packet['h_id_allocations'] == 0 and type(packet['h_id_allocations']) is int
-          assert packet['outbound'] == 'CLOSED'
-          assert packet['send_allowed'] == 0 and type(packet['send_allowed']) is int
-          assert packet['items_count'] == len(packet['items']) == report['items_count']
-          assert packet['items_sha256'] == report['items_sha256']
-          assert all(item.get('matched_hotel_id','') == '' for item in packet['items'])
-          assert all(item.get('decision') == 'CANDIDATE_NEW_ENTITY_PREAUTH' for item in packet['items'])
+          if report['materialized']:
+              assert report['state'] == 'MATERIALIZED'
+              assert len(packets)==1, packets
+              packet=json.load(open(packets[0]))
+              assert packet['authority_advanced'] is False
+              assert packet['h_id_allocations'] == 0 and type(packet['h_id_allocations']) is int
+              assert packet['outbound'] == 'CLOSED'
+              assert packet['send_allowed'] == 0 and type(packet['send_allowed']) is int
+              assert packet['items_count'] == len(packet['items']) == report['items_count']
+              assert packet['items_sha256'] == report['items_sha256']
+              assert all(item.get('matched_hotel_id','') == '' for item in packet['items'])
+              assert all(item.get('decision') == 'CANDIDATE_NEW_ENTITY_PREAUTH' for item in packet['items'])
+          else:
+              assert report['state'] == 'NO_ACTIVE_CWP_REQUEST'
+              assert packets == []
           print(json.dumps(report, indent=2, sort_keys=True))
           PY
-      - name: Upload materialized packet
+      - name: Upload materialization report
         uses: actions/upload-artifact@v4
         with:
           name: cwp-next-batch-${{ github.run_id }}

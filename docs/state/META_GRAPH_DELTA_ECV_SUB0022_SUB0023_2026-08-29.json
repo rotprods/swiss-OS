@@ -1,0 +1,8 @@
+{
+  "schema_version":"META-GRAPH-DELTA-1.0","project":"SWITZERLAND_JOB_OS","cycle_id":"META-20260829-ECV-SUB0022-SUB0023","parent_git_sha":"a4f6fc1d0906fed9142e90fe4db8147220e72343","authority_epoch":"HS_ENTITY_EPOCH_2026-08-25_E4","checkpoint":"CRM_UNIVERSE_COMPLETE",
+  "colette":{"observe":"SUB0022 live ECV green: 20/20 CURRENT_DETAIL_VERIFIED, zero provider changes, zero validator violations.","bottleneck":"Advance immutable exact-current frontier while 1434 source mappings and 66 reverse gaps remain unresolved; discover parity remains key-blocked.","execute":"Persist SUB0022 and stage deterministic original-candidate offsets 420..439 as SUB0023.","learn":"CWP lineage remains coherent; exact authority matches are excluded without consuming candidate offsets.","test":"Artifact hashes, validator, source ordering, authority locks and outbound locks pass.","evaluate":"PASS_PRE_AUTHORITY"},
+  "frontier_before":{"current_detail_verified":409,"remaining_never_verified":1029},"frontier_after":{"current_detail_verified":429,"remaining_never_verified":1009},
+  "decisions":["SUB0022 evidence accepted verification-only; no canonical mapping effect until entity resolution.","SUB0023 staged with items SHA be3c98406b9c7e5051890ce7f1ec141e4a5c9ed18999f1e4d4eddaefd5548a6e.","H-0691 remains unallocated; authority E4 unchanged; OUTBOUND=CLOSED; send_allowed=0."],
+  "next":{"route":"SUB0023_LIVE_ECV_THEN_CHAIN_SUB0024","next_original_candidate_offset_if_safe":440,"provider_dependency":"DISCOVER_SWISS_SUBSCRIPTION_KEY","mapping_blocker":"EFFECTIVE_RECONCILE_REQUIRED_1434_NOT_ZERO","reverse_gap_blocker":66},
+  "authority_advanced":false,"h_id_allocations":0,"outbound":"CLOSED","send_allowed":0
+}

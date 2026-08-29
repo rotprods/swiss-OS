@@ -30,6 +30,8 @@ reverse authority/source gaps        66
 candidate records                   1438
 candidate records SHA               34d9aa9cfa4fe896bf1db8fba4dedfded9a1dbf2e135b847101904644d16bba0
 ECV verified frontier              1438 / 1438
+ECV remaining never verified          0
+ECV pending requeue                   0
 ```
 
 The mapping counters above remain authoritative until review decisions are actually transferred through SRR/source-resolution and, where required, later authority commit. Diagnostic projections below MUST NOT replace them.

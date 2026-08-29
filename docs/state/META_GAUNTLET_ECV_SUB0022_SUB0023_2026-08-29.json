@@ -1,0 +1,15 @@
+{
+  "schema_version":"META-GAUNTLET-1.0","project":"SWITZERLAND_JOB_OS","cycle_id":"META-20260829-ECV-SUB0022-SUB0023","parent_git_sha":"a4f6fc1d0906fed9142e90fe4db8147220e72343","authority_epoch":"HS_ENTITY_EPOCH_2026-08-25_E4","verdict":"PASS_PRE_AUTHORITY",
+  "assertions":[
+    {"id":"G-01","assertion":"SUB0022 validator valid, zero violations, 20/20 terminal verified","pass":true},
+    {"id":"G-02","assertion":"SUB0022 provider_record_change_count=0","pass":true},
+    {"id":"G-03","assertion":"SUB0023 is candidate offsets 420..439 in source_record_key order","pass":true},
+    {"id":"G-04","assertion":"Known exact authority matches in continuation are skipped without candidate-offset consumption","pass":true},
+    {"id":"G-05","assertion":"No staging H-ID reservation/allocation; H-0691 unallocated","pass":true},
+    {"id":"G-06","assertion":"Authority remains E4 690/690/0 and ECV evidence is non-authoritative","pass":true},
+    {"id":"G-07","assertion":"OUTBOUND=CLOSED and send_allowed=0","pass":true},
+    {"id":"G-08","assertion":"P0 blockers and discover.swiss provider dependency are preserved in NEXT","pass":true}
+  ],
+  "residual_blockers":["EFFECTIVE_RECONCILE_REQUIRED_1434_NOT_ZERO","REVERSE_AUTHORITY_SOURCE_DISCREPANCIES_66_REQUIRE_RESOLUTION","DISCOVER_SWISS_SUBSCRIPTION_KEY_UNAVAILABLE"],
+  "authority_advanced":false,"h_id_allocations":0,"outbound":"CLOSED","send_allowed":0
+}

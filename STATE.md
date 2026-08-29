@@ -8,7 +8,7 @@ Latest chained Meta Execution reconciliation: **2026-08-29T20:02:00Z**. Current 
 physical / active HOTELS          690 / 690
 next physical ID                  H-0691 UNALLOCATED
 CRM_UNIVERSE_COMPLETE             FALSE
-OUTBOUND                          CLOSED
+OUTBOUND                        CLOSED
 send_allowed                      0
 H-ID / canonical reservations     0 / 0
 ```
@@ -26,7 +26,9 @@ effective terminal / reconcile    656 / 1405
 RAGR covered active canonicals    656 / 690
 RAGR reverse gaps                  34
 same-city / no-same-city gaps      21 / 13
-ECV current-detail verified       1438 / 1438
+ECV verified frontier              1438 / 1438
+ECV remaining never verified          0
+ECV pending requeue                   0
 ```
 
 Lineage: source records SHA `62e26d62d8677a5437e081302b6b4d206c0d27a0fe268c6356aef01da5428dc2`; candidate records SHA `34d9aa9cfa4fe896bf1db8fba4dedfded9a1dbf2e135b847101904644d16bba0`; base SMC SHA `2f9413318c410eb0f0443de260213d31e9ab2bdc1058581c0fa9c0340474aa27`; cumulative 32-delta materialization SHA `e8a6da1bfe5e585807e41f91db9ecccb507c60140366e9dab7f36290c613a368`; RAGR terminal coverage SHA `95c48f65fbf67c2fb2c284c9ba603be03d706d2f46ef7373dc8ebb7272b3c176`; RAGR-34 queue SHA `cf47dc91057df8653cd75729cb39320605e193e476c6828f24956b69e2848b9c`.

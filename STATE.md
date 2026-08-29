@@ -21,12 +21,13 @@ Authority SHA `70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`
 ```text
 source records                         2061
 candidate records                      1438
-ECV current-detail verified       1438/1438
-base terminal mappings                  624
-explicit SRR/SMO deltas                  32
-effective terminal mappings             656
-RECONCILE_REQUIRED                     1405
-RAGR reverse authority gaps              34
+ECV verified frontier              1438 / 1438
+ECV remaining never verified              0
+base terminal mappings                    624
+explicit SRR/SMO deltas                   32
+effective terminal mappings               656
+RECONCILE_REQUIRED                       1405
+RAGR reverse authority gaps                34
 ```
 
 Lineage: source SHA `62e26d62d8677a5437e081302b6b4d206c0d27a0fe268c6356aef01da5428dc2`; candidate SHA `34d9aa9cfa4fe896bf1db8fba4dedfded9a1dbf2e135b847101904644d16bba0`; candidate gzip SHA `071e2cf1b895b63457c56066de7d8653b3182a12d1260ff9be7709a684fcf194`; SMC candidate SHA `2f9413318c410eb0f0443de260213d31e9ab2bdc1058581c0fa9c0340474aa27`; overlay SHA `e8a6da1bfe5e585807e41f91db9ecccb507c60140366e9dab7f36290c613a368`; terminal coverage SHA `95c48f65fbf67c2fb2c284c9ba603be03d706d2f46ef7373dc8ebb7272b3c176`; RAGR-34 queue SHA `cf47dc91057df8653cd75729cb39320605e193e476c6828f24956b69e2848b9c`.

@@ -1,6 +1,6 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest chained Meta Execution reconciliation: **2026-08-29T20:37:00Z**. Current wave parent main SHA: **`55b8e6cf570cc603018b92f36de97b07995b7f3a`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
+Latest chained Meta Execution reconciliation: **2026-08-29T20:49:00Z**. Wave parent main SHA: **`8e35ef8a492a81e166e9562b745607dfef60467b`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
 
 ## Authority — unchanged / locked
 
@@ -16,46 +16,41 @@ send_allowed                      0
 
 Authority SHA `70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`. Staging, ECV, SRR, SMO, RAGR, SRET, provider-enrichment, cache and canary remain non-authoritative. HOTELS_MASTER remains 690 rows and H-0691 remains absent. No H-ID has been allocated or reserved.
 
-## Effective source-resolution frontier
+## Frozen source / pre-authority mapping
 
 ```text
-source pages / records              172 / 2061
-candidate records                           1438
-base terminal mappings                    624
-cumulative SMO terminal deltas              32
-effective terminal mappings                656
-RECONCILE_REQUIRED                         1405
-ECV verified frontier              1438 / 1438
-ECV remaining never verified              0
-RAGR residual reverse gaps                  34
+source records                         2061
+candidate records                      1438
+ECV current-detail verified       1438/1438
+base terminal mappings                  624
+explicit SRR/SMO deltas                  32
+effective terminal mappings             656
+RECONCILE_REQUIRED                     1405
+RAGR reverse authority gaps              34
 ```
 
-Pinned lineage: source records SHA `62e26d62d8677a5437e081302b6b4d206c0d27a0fe268c6356aef01da5428dc2`; candidate records SHA `34d9aa9cfa4fe896bf1db8fba4dedfded9a1dbf2e135b847101904644d16bba0`; base SMC candidate SHA `2f9413318c410eb0f0443de260213d31e9ab2bdc1058581c0fa9c0340474aa27`; cumulative 32-delta materialization SHA `e8a6da1bfe5e585807e41f91db9ecccb507c60140366e9dab7f36290c613a368`; terminal coverage SHA `95c48f65fbf67c2fb2c284c9ba603be03d706d2f46ef7373dc8ebb7272b3c176`; RAGR-34 queue SHA `cf47dc91057df8653cd75729cb39320605e193e476c6828f24956b69e2848b9c`.
+Lineage: source SHA `62e26d62d8677a5437e081302b6b4d206c0d27a0fe268c6356aef01da5428dc2`; candidate SHA `34d9aa9cfa4fe896bf1db8fba4dedfded9a1dbf2e135b847101904644d16bba0`; candidate gzip SHA `071e2cf1b895b63457c56066de7d8653b3182a12d1260ff9be7709a684fcf194`; SMC candidate SHA `2f9413318c410eb0f0443de260213d31e9ab2bdc1058581c0fa9c0340474aa27`; overlay SHA `e8a6da1bfe5e585807e41f91db9ecccb507c60140366e9dab7f36290c613a368`; terminal coverage SHA `95c48f65fbf67c2fb2c284c9ba603be03d706d2f46ef7373dc8ebb7272b3c176`; RAGR-34 queue SHA `cf47dc91057df8653cd75729cb39320605e193e476c6828f24956b69e2848b9c`.
 
-## SRET-1.0 — full source triage + provider identity wave
+## SRET provider-identity frontier
 
-Full SRET remains review-only: 656 carried terminal mappings plus 1405 triage records. Full items SHA `b15ed2d019759b3730a225207cdb1ba674b16b93ac925b74dbabff2d495aecf6`; triage SHA `e82127ea2abc0ac68ef194496cd0de6bfddab2596a9dda15bf13411316d6f790`. Corrected ambiguity queue SHA `1fdf800a0b7bd9ad64a7a47c9c9c41c87c2c38a3d4b91e1fea2b54c93230cee8`.
+Full SRET remains review-only: 656 carried terminal mappings + 1405 triage records, items SHA `b15ed2d019759b3730a225207cdb1ba674b16b93ac925b74dbabff2d495aecf6`, triage SHA `e82127ea2abc0ac68ef194496cd0de6bfddab2596a9dda15bf13411316d6f790`.
 
-The eight exact-name/locality ambiguities have now been independently checked against current property identity fields. All eight source properties have address/domain/phone identity distinct from every exact-name canonical signal. Evidence packet: `docs/state/SRET_PROVIDER_IDENTITY_AMBIGUITY8_33206402141.json`; items SHA `609f622584d1283714f7cf409ba933782984a7ecdd662dbcf4ea34e1d1a9ca21`; packet SHA `ee1ee5c753f568ee03d61c1b7de8140af43cf90e440702eb4c350f27802afb6c`.
+The earlier 8 exact-name/locality ambiguities are independently distinctness-corroborated. This wave additionally materialized the deterministic **20 highest-risk same-city similarity records** (`max token_jaccard_ppm >= 600000`) and independently checked current property identity against every suggested canonical.
 
-Evidence outcomes, all **review-only / no H-ID**:
-- Hotel De la Paix / Interlaken is a current Bernastrasse 24 property on `hotel-de-la-paix.ch`, distinct from H-0600 Hôtel de la Paix / Lausanne at Avenue Benjamin-Constant 5 on `hoteldelapaix.net`.
-- Hotel Du Lac / Därligen is a current Dorfstrasse 76 property on `dulac-thunersee.ch`, distinct from exact-name properties H-0505 Villars-sur-Ollon/Bretaye, H-0506 Interlaken and H-0507 Crans-Montana.
-- Hôtel Du Port / Villeneuve is a current Rue du Quai 6 property on `duport.ch`, distinct from H-0620 Lausanne at Place du Port 5 on `hotel-du-port.ch`.
-- Hotel Astoria / Luzern is the current Pilatusstrasse 29 property on `astoria-luzern.ch`, distinct from the exact-name canonical set in Samnaun-Ravaisch, Leukerbad, Zermatt, Genève and Arosa.
-- Hotel Silberhorn / Wengen is the current Wengiboden 1347 property on `silberhorn.ch`, distinct from H-0151 Lauterbrunnen at Bir Zuben 465 on `silberhorn.com`; the within-region locality overlap is therefore explicitly resolved by address/domain/phone rather than city strings.
-- Hotel De la Paix / Luzern is the current Museggstrasse 2 property on `de-la-paix.ch`, distinct from H-0600 Lausanne.
-- Hotel Allegra / Pontresina is the current Via Maistra 171 property on `allegrahotel.ch`, distinct from H-0382 Zuoz on `allegra-zuoz.ch`.
-- Hotel Drei Könige / Einsiedeln is the current Paracelsuspark 1 property on `hotel-dreikoenige.ch`, distinct from H-0650 Luzern on `drei-koenige.ch` and H-0677 Chur on `dreikoenige.ch`.
+Queue: `docs/state/SRET_HIGH_RISK_NOVELTY_QUEUE_GE060_33206402141.json`, items SHA `0eec664511c1dca4d70f6171cbb95a733c9b3cffa05a9d4c7a1998baac58ec91`, queue SHA `fe18c0b005ad26caeaddb563cbd2a883f1e9f19ad17f0adc3376e0edf455fe97`.
 
-This closes the **ambiguity classification** for those eight into `NOVELTY_REVIEW_DISTINCTNESS_CORROBORATED`; it does not create canonical records, terminal source mappings or authority actions. The source-mapping frontier therefore remains 656 terminal / 1405 `RECONCILE_REQUIRED`.
+Provider evidence: `docs/state/SRET_HIGH_RISK20_PROVIDER_IDENTITY_33206402141.json`, items SHA `a6ff1f3faeec52fe676e0480a7659da64b791925f85ca8223cd611216c119612`, packet SHA `73ce1df88a717542e5a97dd038590727360d1126bfc81acde98e3ba0278a1a51`.
 
-## NEXT — attack highest-risk novelty tail
+Result: **20/20 distinctness corroborated**, 0 evidence-review pending. This includes the adversarial control `ibis budget Zürich City West` vs H-0180 `ibis Zürich City West`: current official property addresses and telephone identities are distinct. The same property-identity rule was applied to all 20; multi-candidate B&B Hotel Basel is distinct from all three suggested Basel canonicals. Similarity remains review-space reduction only.
 
-The next safe bottleneck is the highest-risk subset of the 1397 novelty records, beginning with the **116 same-city similarity-hint records** and prioritizing the 20 records at Jaccard ≥0.60. Similarity remains review-space reduction only; independently corroborate provider identity fields before any explicit resolution decision. The known-distinct ibis budget Zürich City West versus ibis Zürich City West case remains an adversarial control against fuzzy auto-binding.
+These are `NOVELTY_REVIEW_DISTINCTNESS_CORROBORATED`, not terminal source mappings. Mapping stays **656 terminal / 1405 RECONCILE_REQUIRED**. No canonical row, canonical target, authority action or H-ID was created.
 
-No remaining ambiguity record should be bound to an existing canonical from name/locality. For distinctness-proven new-property candidates, keep `canonical_hotel_id` empty and H-0691 unallocated until a separately authorized authority transaction becomes eligible. Authoritative cross-plane reconciliation remains blocked while 1405 source decisions remain nonterminal.
+## NEXT
 
-SSR-1.0 remains provider-boundary blocked on the missing discover.swiss `Infocenter Open` subscription key / capture-valid structured API manifest. Continue the qualified HotellerieSuisse member-directory + exact-current MEP fallback without claiming structured API equivalence.
+The same-city similarity-risk frontier was 116 records. Twenty at `>=0.60` are now provider-distinctness corroborated, leaving **96**. Deterministically materialize the next bucket: **47 records with max Jaccard `0.50 <= x < 0.60`**, then provider-enrich current address/domain/phone and emit only evidence-backed review classification. The remaining lower-similarity 49 follow after that.
+
+Do not reduce `RECONCILE_REQUIRED` from distinctness review alone. Do not reserve H-0691. Authoritative cross-plane reconciliation remains ineligible while source decisions remain nonterminal.
+
+SSR-1.0 remains provider-blocked on a missing discover.swiss `Infocenter Open` subscription key / capture-valid structured API manifest. Continue the qualified HotellerieSuisse member-directory + exact-current MEP route without claiming structured API equivalence.
 
 Drive HOTELS_MASTER: `1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w`. Private review: `1Ktlvg04MbDrgZ0LD0wGYrpz65xTHBRyiNdD8KWLxNhk`. Recovery: `1leVfYwda8g0B5Co5zaSUIpo245t37tpUEiTaYlLds_s`. RAGR recovery: `12X7sQZDWIFm8Ss9DyxYYzvit6zSKq6ZeAliM6lEvNVg`.

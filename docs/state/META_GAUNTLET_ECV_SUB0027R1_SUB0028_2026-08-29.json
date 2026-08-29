@@ -1,13 +1,16 @@
 {
-  "schema_version":"META-GAUNTLET-1.0","project":"SWITZERLAND_JOB_OS","cycle_id":"META-20260829-ECV-SUB0027R1-SUB0028","parent_git_sha":"ac5428e2e83b434b3653682b982e061f6e28b858","authority_epoch":"HS_ENTITY_EPOCH_2026-08-25_E4","verdict":"PASS_PRE_MERGE_PENDING_CI",
+  "schema_version":"META-GAUNTLET-1.0","project":"SWITZERLAND_JOB_OS","cycle_id":"META-20260829-ECV-SUB0027R1-SUB0028","parent_git_sha":"ac5428e2e83b434b3653682b982e061f6e28b858","authority_epoch":"HS_ENTITY_EPOCH_2026-08-25_E4","verdict":"PASS_PRE_AUTHORITY",
+  "ci":{"run_id":33237270633,"job_id":99060320400,"conclusion":"success"},
   "assertions":[
     {"id":"G-01","assertion":"SUB0027R1 is 2/2 CURRENT_DETAIL_VERIFIED with zero provider changes and validator violations","pass":true},
     {"id":"G-02","assertion":"Lineage holes 501 and 511 are closed; strict prefix reaches offset 520","pass":true},
     {"id":"G-03","assertion":"SUB0028 is exact frozen candidate offsets 521..540 with canonical items SHA 5117849aa02d800c018606d8030cb1062ed991bac3f183a7248d6f6ef03f6dda","pass":true},
-    {"id":"G-04","assertion":"No H-ID reservation/allocation; H-0691 remains unallocated","pass":true},
-    {"id":"G-05","assertion":"E4 remains 690/690/0; staging and ECV are non-authoritative","pass":true},
-    {"id":"G-06","assertion":"OUTBOUND=CLOSED and send_allowed=0","pass":true},
-    {"id":"G-07","assertion":"Repo-guard/CWP lineage/handoff/unit/manifest CI must be green before merge","pass":"PENDING_CI"}
+    {"id":"G-04","assertion":"CWP candidate lineage guard PASS","pass":true},
+    {"id":"G-05","assertion":"Durable handoff frontier guard PASS","pass":true},
+    {"id":"G-06","assertion":"Unit tests and manifest semantics canary PASS","pass":true},
+    {"id":"G-07","assertion":"No H-ID reservation/allocation; H-0691 remains unallocated","pass":true},
+    {"id":"G-08","assertion":"E4 remains 690/690/0; staging and ECV are non-authoritative","pass":true},
+    {"id":"G-09","assertion":"OUTBOUND=CLOSED and send_allowed=0","pass":true}
   ],
   "residual_blockers":["EFFECTIVE_RECONCILE_REQUIRED_1434_NOT_ZERO","REVERSE_AUTHORITY_SOURCE_DISCREPANCIES_66_REQUIRE_RESOLUTION","DISCOVER_SWISS_SUBSCRIPTION_KEY_UNAVAILABLE"],
   "authority_advanced":false,"h_id_allocations":0,"outbound":"CLOSED","send_allowed":0

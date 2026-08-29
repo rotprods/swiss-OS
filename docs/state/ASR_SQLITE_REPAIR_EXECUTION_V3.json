@@ -1,0 +1,41 @@
+{
+  "schema_version": "ASR_SQLITE_REPAIR_EXECUTION_PUBLIC_V3",
+  "generated_at": "2026-08-28T20:42:00+02:00",
+  "issue": 89,
+  "status": "CANARY_PASS_NON_AUTHORITY",
+  "engine": "SRS-2.0",
+  "source": {
+    "manifest": "OPERATIONAL_DB_SHADOW_MANIFEST_V13",
+    "sqlite_sha256": "0e605b412f29893ca1775f1e8fccd5987d0613baab4ac29b6699988cde0fdfe5"
+  },
+  "target": "ASR_REPAIR_CANARY_2026-08-28_V2",
+  "validation": {
+    "exact_source_sha_gate": "PASS",
+    "schema_table_set_gate": "PASS",
+    "whole_database_post_fingerprint": "PASS",
+    "transaction": "PASS",
+    "multiset_row_preconditions": "PASS",
+    "integrity_check": "ok",
+    "foreign_key_violations": 0,
+    "logical_differences_vs_target": 0,
+    "replay_state": "NOOP_ALREADY_APPLIED",
+    "source_backup_sha_preserved": true,
+    "unaffected_table_tamper_rejected": true
+  },
+  "private_artifacts": [
+    "ASR_SQLITE_REPAIR_SPEC_V13_TO_V2_SRS2.json",
+    "ASR_SQLITE_REPAIR_EXECUTION_RECEIPT_V3.json",
+    "ASR_SQLITE_REPAIR_REPLAY_V3.sqlite",
+    "ASR_SQLITE_REPAIR_REPLAY_V3_SOURCE_BACKUP.sqlite",
+    "ASR_SQLITE_REPAIR_UNAFFECTED_TAMPER_PROBE_V3.sqlite"
+  ],
+  "authority": {
+    "advanced": false,
+    "safe_published_active_denominator": "RECONCILE_REQUIRED",
+    "canonical_h_id_allocations": 0,
+    "crm_universe_complete": false,
+    "outbound": "CLOSED",
+    "send_allowed": 0
+  },
+  "next_route": "AAR_1_0_CROSS_PLANE_AUTHORITY_RECONCILIATION"
+}

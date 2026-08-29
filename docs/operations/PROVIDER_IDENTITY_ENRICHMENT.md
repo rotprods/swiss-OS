@@ -24,6 +24,12 @@ Packet invariants: `authority_advanced=false`, `h_id_allocations=0`, `crm_univer
 
 PIE evidence may support a later explicit SRR only after independent comparison with the canonical property's current identity. Similarity is review-space reduction, never authority.
 
+## Packet selection
+
+For `workflow_dispatch`, the explicit `packet_path` is validated and used. For a push to `main`, the canary derives the packet from the GitHub push event and requires **exactly one** added or modified `docs/state/PROVIDER_IDENTITY_WORK_*.json` path. Zero or multiple candidate packets fail closed. Removed packets are ignored. Absolute paths, traversal and non-work-packet paths are rejected.
+
+This prevents a later work-packet merge from silently re-running a stale default packet.
+
 ## Run
 
 ```bash

@@ -1,0 +1,51 @@
+{
+  "schema_version": "META-GRAPH-DELTA-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "cycle_id": "META-20260829-ECV-PROVIDER-RECORD-CHANGE",
+  "parent_git_sha": "b1ff292d4fadb886401a9eef3e500a4624bc41d6",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "decision": "STOP_BLIND_REQUEUE_AND_TYPE_DETERMINISTIC_PROVIDER_RECORD_CHANGE",
+  "facts": {
+    "requeue_github_actions_run_id": 33227654867,
+    "requeue_github_actions_job_id": 99034382133,
+    "requeue_artifact_id": 9707422829,
+    "requeue_artifact_zip_sha256": "6cc8789e4bae1d500517a9307851dc5f2cc2fadc7f8400d67841510827ff069b",
+    "requeue_packet_sha256": "4fd6827be5370dfd37b757bac45a757434093490de32a623493daf71ca751268",
+    "repeat_http_404": 10,
+    "repeat_current_detail_name_only": 1,
+    "current_detail_verified_delta": 0,
+    "cumulative_current_detail_verified": 349,
+    "remaining_never_verified": 1089
+  },
+  "system_definition": {
+    "normalizer": "ECV-PROVIDER-EVIDENCE-1.0",
+    "url_not_found_state": "CURRENT_DETAIL_URL_NOT_FOUND",
+    "provider_change_followup": "PROVIDER_RECORD_CHANGE_REVIEW",
+    "all_terminal_is_not_all_verified": true,
+    "all_terminal_is_not_authority": true,
+    "mixed_or_transient_fetch_failures_remain_requeue": true
+  },
+  "edges": [
+    {"from":"ECV_SUB0018_REQUEUE01","to":"ECV_PROVIDER_RECORD_CHANGE_SEMANTICS","type":"REPEATED_DETERMINISTIC_EVIDENCE_EXHAUSTED_REQUEUE"},
+    {"from":"ECV_PROVIDER_RECORD_CHANGE_SEMANTICS","to":"ECV_SUB0018_RECLASSIFY01","type":"ONE_SHOT_SEMANTIC_CANARY"},
+    {"from":"ECV_SUB0018_RECLASSIFY01","to":"ECV_SUB0019","type":"UNLOCKS_IF_ALL_TERMINAL_WITHOUT_AUTHORITY_PROMOTION"},
+    {"from":"DISCOVER_SWISS_PARITY","to":"HOTELLERIESUISSE_MEP","type":"CAPABILITY_FALLBACK","reason":"DISCOVER_SWISS_SUBSCRIPTION_KEY_UNAVAILABLE"}
+  ],
+  "gauntlet": {
+    "hotel_absence_inferred_from_detail_404": false,
+    "novelty_inferred_from_detail_404": false,
+    "canonical_mapping_inferred_from_provider_change": false,
+    "canonical_id_reservation_from_staging": false,
+    "authority_advanced": false,
+    "h_id_allocations": 0,
+    "outbound": "CLOSED",
+    "send_allowed": 0
+  },
+  "next": {
+    "route": "MERGE_TESTED_ECV_PROVIDER_RECORD_CHANGE_SEMANTICS_THEN_OBSERVE_RECLASSIFY01",
+    "reclassify_path": "docs/state/CMI_WORK_BATCH_0001_SUB0018_RECLASSIFY01_33206402141.json",
+    "reclassify_items_sha256": "6c8c3fb448f8710e5460e6a91fb538aacd311ef7a9820d31889f9342c2019e34",
+    "if_all_terminal": "PERSIST_PROVIDER_CHANGE_QUEUE_AND_STAGE_IMMUTABLE_SUB0019_AT_OFFSET_360",
+    "if_not_all_terminal": "PERSIST_TYPED_TRANSIENT_BLOCKER_AND_CONTINUE_MEP_ENTITY_RESOLUTION_WITHOUT_AUTHORITY_PROMOTION"
+  }
+}

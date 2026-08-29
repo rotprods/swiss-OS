@@ -1,0 +1,179 @@
+{
+  "schema_version": "GRAPH_V2_CP14_ADOPTION_CANDIDATE_1",
+  "current_main_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "authority_epoch": "EPOCH-TEST",
+  "authority_manifest_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "state_pointer_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "next_pointer_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+  "observed_at": "2026-08-30T22:00:00Z",
+  "feature_mode": "ENFORCED_FOR_NEW_MATERIAL_WAVES",
+  "compatibility_mode": "LEGACY_DOMAIN_AUTHORITY_PRESERVED",
+  "adoption_scope": "COORDINATION_CAUSAL_HISTORY_CONTEXTPACK_ASSURANCE",
+  "domain_authority_preserved": true,
+  "rollback_verified": true,
+  "active_conflicting_write_claims": [],
+  "open_conflicting_prs": [],
+  "crm_universe_complete": false,
+  "outbound": "CLOSED",
+  "send_allowed": 0,
+  "authority_advance_allowed": false,
+  "canonical_id_allocation_allowed": false,
+  "outbound_allowed": false,
+  "cp_evidence": [
+    {
+      "checkpoint_id": "CP7",
+      "state": "VERIFIED_FOR_DECLARED_SCOPE",
+      "commit_sha": "1111111111111111111111111111111111111111",
+      "artifact_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "evidence_ref": "fixture:cp7",
+      "scope": "architecture bundle zero-context recovery",
+      "ancestor_verified": true,
+      "lineage_evidence_ref": "fixture:lineage:cp7",
+      "authority_advanced": false,
+      "h_id_allocations": 0,
+      "outbound_opened": false,
+      "send_allowed": 0
+    },
+    {
+      "checkpoint_id": "CP8",
+      "state": "VERIFIED_FOR_DECLARED_SCOPE",
+      "commit_sha": "2222222222222222222222222222222222222222",
+      "artifact_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+      "evidence_ref": "fixture:cp8",
+      "scope": "process-local agent death and takeover",
+      "ancestor_verified": true,
+      "lineage_evidence_ref": "fixture:lineage:cp8",
+      "authority_advanced": false,
+      "h_id_allocations": 0,
+      "outbound_opened": false,
+      "send_allowed": 0
+    },
+    {
+      "checkpoint_id": "CP9",
+      "state": "VERIFIED_FOR_DECLARED_SCOPE",
+      "commit_sha": "3333333333333333333333333333333333333333",
+      "artifact_sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+      "evidence_ref": "fixture:cp9",
+      "scope": "process-local concurrency and fencing",
+      "ancestor_verified": true,
+      "lineage_evidence_ref": "fixture:lineage:cp9",
+      "authority_advanced": false,
+      "h_id_allocations": 0,
+      "outbound_opened": false,
+      "send_allowed": 0
+    },
+    {
+      "checkpoint_id": "CP10",
+      "state": "VERIFIED_FOR_DECLARED_SCOPE",
+      "commit_sha": "4444444444444444444444444444444444444444",
+      "artifact_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+      "evidence_ref": "fixture:cp10",
+      "scope": "defined security corpus",
+      "ancestor_verified": true,
+      "lineage_evidence_ref": "fixture:lineage:cp10",
+      "authority_advanced": false,
+      "h_id_allocations": 0,
+      "outbound_opened": false,
+      "send_allowed": 0
+    },
+    {
+      "checkpoint_id": "CP11",
+      "state": "VERIFIED_FOR_DECLARED_SCOPE",
+      "commit_sha": "5555555555555555555555555555555555555555",
+      "artifact_sha256": "5555555555555555555555555555555555555555555555555555555555555555",
+      "evidence_ref": "fixture:cp11",
+      "scope": "read-only real CRM NEXT shadow",
+      "ancestor_verified": true,
+      "lineage_evidence_ref": "fixture:lineage:cp11",
+      "authority_advanced": false,
+      "h_id_allocations": 0,
+      "outbound_opened": false,
+      "send_allowed": 0
+    },
+    {
+      "checkpoint_id": "CP12",
+      "state": "VERIFIED_FOR_DECLARED_SCOPE",
+      "commit_sha": "6666666666666666666666666666666666666666",
+      "artifact_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+      "evidence_ref": "fixture:cp12",
+      "scope": "repeated single-node empirical qualification",
+      "ancestor_verified": true,
+      "lineage_evidence_ref": "fixture:lineage:cp12",
+      "authority_advanced": false,
+      "h_id_allocations": 0,
+      "outbound_opened": false,
+      "send_allowed": 0
+    },
+    {
+      "checkpoint_id": "CP13",
+      "state": "SHADOW_PARITY_VERIFIED",
+      "commit_sha": "7777777777777777777777777777777777777777",
+      "artifact_sha256": "7777777777777777777777777777777777777777777777777777777777777777",
+      "evidence_ref": "fixture:cp13",
+      "scope": "live immutable cross-plane PK shadow parity",
+      "ancestor_verified": true,
+      "lineage_evidence_ref": "fixture:lineage:cp13",
+      "authority_advanced": false,
+      "h_id_allocations": 0,
+      "outbound_opened": false,
+      "send_allowed": 0
+    }
+  ],
+  "workflow_evidence": [
+    {
+      "name": "repo-guard",
+      "state": "SUCCESS",
+      "commit_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "run_id": "1",
+      "evidence_ref": "fixture:workflow:repo-guard"
+    },
+    {
+      "name": "graph-v2-guard",
+      "state": "SUCCESS",
+      "commit_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "run_id": "2",
+      "evidence_ref": "fixture:workflow:graph-v2-guard"
+    },
+    {
+      "name": "graph-v2-runtime-drills",
+      "state": "SUCCESS",
+      "commit_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "run_id": "3",
+      "evidence_ref": "fixture:workflow:runtime"
+    },
+    {
+      "name": "graph-v2-empirical-qualification",
+      "state": "SUCCESS",
+      "commit_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "run_id": "4",
+      "evidence_ref": "fixture:workflow:empirical"
+    },
+    {
+      "name": "graph-v2-migration-shadow",
+      "state": "SUCCESS",
+      "commit_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "run_id": "5",
+      "evidence_ref": "fixture:workflow:migration"
+    }
+  ],
+  "persistence_receipts": [
+    {
+      "surface": "GITHUB",
+      "state": "VERIFIED",
+      "artifact_set_sha256": "8888888888888888888888888888888888888888888888888888888888888888",
+      "evidence_ref": "fixture:persistence:github"
+    },
+    {
+      "surface": "LIBRARY",
+      "state": "VERIFIED",
+      "artifact_set_sha256": "9999999999999999999999999999999999999999999999999999999999999999",
+      "evidence_ref": "fixture:persistence:library"
+    },
+    {
+      "surface": "DRIVE",
+      "state": "VERIFIED",
+      "artifact_set_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "evidence_ref": "fixture:persistence:drive"
+    }
+  ]
+}

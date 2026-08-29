@@ -1,7 +1,7 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest chained Meta Execution reconciliation: **2026-08-28T23:53:00Z**.  
-GitHub parent for this wave: **`1a2b7f6d9e4e46e57ebd2e39cb17b29c30e98c0b`**.  
+Latest chained Meta Execution reconciliation: **2026-08-28T23:59:00Z**.  
+GitHub parent for this wave: **`e7c9b99a33617b08e1f27d72d0cbedad6a41d76f`**.  
 Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**.  
 Open GitHub issues labelled `P0`: **0**.  
 Frozen current CRM source snapshot: **`HS-MEMBER-DE-33206402141`**.
@@ -42,11 +42,9 @@ canonical MDM manifest SHA-256  e5c7e2d52eed1dd585a9a00f1bd98015997ec902e8890d0a
 CMI records SHA-256             22bfc4ee304b37b426e6e8f4da03ca73febc7d2283882caf58fd13edaee5081f
 ```
 
-discover.swiss subscription access remains unavailable. MEP therefore continues with the qualified HotellerieSuisse member-directory source instead of idling.
+discover.swiss subscription access remains unavailable. MEP continues through the qualified HotellerieSuisse member-directory source.
 
-## 3. Immutable CMI/CWP lineage recovered
-
-Durable Drive evidence plus deterministic replay establish the original intake frontier as:
+## 3. Immutable CMI/CWP lineage
 
 ```text
 CMI ACTIVE_MATCH                        623
@@ -57,7 +55,7 @@ CWP packet internal SHA-256     2741ca3b870c83d5fe424243bb06f599a96517f5922ec13b
 CWP JSON file SHA-256           60ecb59fb8947aee90267c777792fa51238e4bd19bb6e6a993c64cdeb8587b1d
 ```
 
-The later 624/1437 source-mapping frontier is downstream reconciliation state and must not be used as immutable CWP ordering. A fresh replay of all 2061 source records against the 690-row E4 authority reproduces 623 exact matches / 1438 candidates / 0 conflicts. Reconstructed offsets 100..179 hash exactly to persisted SUB0006..SUB0009, proving the current immutable continuation. Recovery proof: `docs/state/CWP_LINEAGE_RECOVERY_2026-08-29.json`.
+Deterministic replay remains 623 exact matches / 1438 candidates / 0 conflicts. Persisted slices SUB0006..SUB0010 are contiguous with the recovered immutable ordering. Recovery proof: `docs/state/CWP_LINEAGE_RECOVERY_2026-08-29.json`.
 
 ## 4. Source mapping frontier — pre-authority
 
@@ -65,29 +63,30 @@ The later 624/1437 source-mapping frontier is downstream reconciliation state an
 base terminal mappings                  624
 base RECONCILE_REQUIRED                1437
 base candidate SHA-256          2f9413318c410eb0f0443de260213d31e9ab2bdc1058581c0fa9c0340474aa27
-SMO overlay terminal deltas               2
-effective terminal mappings             626
-effective RECONCILE_REQUIRED           1435
-effective terminal coverage         30.373605%
+SMO overlay terminal deltas               3
+effective terminal mappings             627
+effective RECONCILE_REQUIRED           1434
+effective terminal coverage         30.422125%
 reverse authority/source gaps            66
+overlay SHA-256                  e5ed0c76dd84e630679007e9cf209c1239dc68660c1b2c5158798f1302d4aa87
 ```
 
-Persisted SMO terminal overlays remain: `MD-025e7888dfc33e19723a -> H-0686` and `MD-0672b5697de8a818d65b -> H-0022`. They are source-mapping state only and do not mutate E4 authority.
+Validated pre-authority terminal mappings are `MD-025e7888dfc33e19723a -> H-0686`, `MD-0672b5697de8a818d65b -> H-0022`, and `MD-11d7b5eca200ae61af52 -> H-0554` (Schorta's Alvetern, Ardez). The third mapping is supported by exact-current HotellerieSuisse verification plus stable official identity evidence. These mappings do not mutate E4 authority.
 
 ## 5. Exact-current verification frontier
 
-SUB0009 completed successfully under GitHub Actions run `33221492594`:
+SUB0010 completed successfully under GitHub Actions run `33221998437`:
 
 ```text
-ECV verified frontier             180 / 1438
-ECV remaining never verified     1258
+ECV verified frontier             200 / 1438
+ECV remaining never verified     1238
 pending requeue                     0
-SUB0009 items                     20 / 20 CURRENT_DETAIL_VERIFIED
-SUB0009 packet SHA-256     047e1f06dd924377104560cd3a6942f96e6147c7d524679c4fcbebd54dd6b79f
-SUB0009 artifact SHA-256   7b4ae910716f3e3a7af88dbe4a646ec9146d0833f7da206816dd8423cd62ea2e
+SUB0010 items                     20 / 20 CURRENT_DETAIL_VERIFIED
+SUB0010 packet SHA-256     dabc3bcfb71f331bc82c55992768360d60b221352325eb99bc173c2f6f7b40f9
+SUB0010 artifact SHA-256   7c2f6e3722ad4ed94272ddd6d80a9bc78b01b6ff590c2e53868daad492d26866
 ```
 
-SUB0010 is staged at original candidate offset 180..199, first key `MD-1d9dde7e3f8c5fa1cbe0`, last key `MD-20a7100c59ab78d21080`, items SHA `71e775b1e87b5680dc59b7ce6fbc84245fb36539a1882cee53bd0c5b2bb37b81`. It remains evidence-only until the live exact-current canary succeeds.
+SUB0011 is staged at original candidate offset 200..219, first key `MD-20b0f8eb58f55904faee`, last key `MD-2387bb16d01ae9adc807`, items SHA `43a480a2e1da8643b2ffe2f556db99af62387b3e2de4b7d8de04653f83af459e`. It remains evidence-only until the live exact-current canary succeeds.
 
 ## 6. Protocol / capability state
 
@@ -107,15 +106,15 @@ Library historical staging                NON-AUTHORITATIVE
 ## 7. NEXT
 
 ```text
-run ECV SUB0010
-→ persist ECV result and advance evidence frontier only if 20/20 verifies
+run ECV SUB0011
+→ persist result and advance evidence frontier only if verification succeeds
 → continue bounded untouched CWP slices while provider pacing remains healthy
-→ entity-resolve verified candidates and persist only base-membership-proven SMO terminal overlays
-→ replay/materialize full 2061-record source mapping
+→ entity-resolve verified candidates and add only evidence-proven MATCH_EXISTING mappings
+→ replay/materialize all 2061 source mappings
 → resolve reverse gaps 66
 → RECONCILE_REQUIRED = 0
 → SSR-1.0
-→ only then construct an authority-eligible cross-plane candidate
+→ only then construct an authority-eligible DB → HOTELS_MASTER → Intelligence → Graph transaction
 ```
 
 ```text

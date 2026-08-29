@@ -1,0 +1,16 @@
+{
+  "schema_version":"META-GRAPH-DELTA-1.0",
+  "project":"SWITZERLAND_JOB_OS",
+  "parent_git_sha":"94f645e815991758572b3d8f006522b5b146f538",
+  "authority_epoch":"HS_ENTITY_EPOCH_2026-08-25_E4",
+  "nodes":[
+    {"id":"EVD-PIE-050-SUB03","type":"Artifact","state":"VERIFIED","artifact_id":9722145032,"packet_sha256":"17dcdee8cb5f1dec528b4f0da2880d3faa12b10c08f791d6092a215e412ffd30"},
+    {"id":"DEC-PIE-050-SUB03","type":"Decision","state":"EVIDENCE_CAPTURED_REVIEW_REQUIRED","statement":"Provider evidence for 10 records is durable; identity remains undecided pending independent canonical comparison."},
+    {"id":"WORK-PIE-050-FINAL17","type":"Wave","state":"STAGED","path":"docs/state/PROVIDER_IDENTITY_WORK_0003_33206402141.json","items":17,"items_sha256":"a0799fd578ed008bbef2896b2c3d4fbfc4269ef82afafbc5cc29a80d537073b6"}
+  ],
+  "edges":[
+    {"from":"EVD-PIE-050-SUB03","type":"SUPPORTS","to":"DEC-PIE-050-SUB03"},
+    {"from":"DEC-PIE-050-SUB03","type":"PRECEDES","to":"WORK-PIE-050-FINAL17"}
+  ],
+  "invariants":{"authority_advanced":false,"h_id_allocations":0,"canonical_id_reservations":0,"reconcile_required":1404,"outbound":"CLOSED","send_allowed":0}
+}

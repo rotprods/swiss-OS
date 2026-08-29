@@ -1,0 +1,194 @@
+name: graph-v2-runtime-drills
+
+on:
+  pull_request:
+    paths:
+      - "src/swiss_os/v2_*.py"
+      - "scripts/compile_graph_v2.py"
+      - "scripts/verify_graph_v2_bundle.py"
+      - "scripts/run_graph_v2_runtime_drills.py"
+      - "tests/test_v2_*.py"
+      - "docs/state/NEXT.json"
+      - "docs/audits/GRAPH_V2_RUNTIME_DRILLS.md"
+      - ".github/workflows/graph-v2-runtime-drills.yml"
+  push:
+    branches: [main]
+    paths:
+      - "src/swiss_os/v2_*.py"
+      - "scripts/compile_graph_v2.py"
+      - "scripts/verify_graph_v2_bundle.py"
+      - "scripts/run_graph_v2_runtime_drills.py"
+      - "tests/test_v2_*.py"
+      - "docs/state/NEXT.json"
+      - "docs/audits/GRAPH_V2_RUNTIME_DRILLS.md"
+      - ".github/workflows/graph-v2-runtime-drills.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  physical-runtime-drills:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout exact revision
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Repository and contract guards
+        run: |
+          python scripts/repo_guard.py
+          python scripts/system_contract_guard.py
+
+      - name: Full regression suite including physical V2 drills
+        run: python -m unittest discover -s tests -v
+
+      - name: Build exact-SHA foundation attestation
+        env:
+          COMMIT_SHA: ${{ github.sha }}
+          RUN_ID: ${{ github.run_id }}
+          RUN_ATTEMPT: ${{ github.run_attempt }}
+        run: |
+          python - <<'PY'
+          import datetime
+          import json
+          import os
+          from pathlib import Path
+
+          seed = json.loads(Path("docs/graph/v2/canonical_seed.json").read_text(encoding="utf-8"))
+          executed_at = datetime.datetime.now(datetime.timezone.utc).isoformat().replace("+00:00", "Z")
+          payload = {
+              "schema_version": "GRAPH_V2_TEST_ATTESTATION_1",
+              "commit_sha": os.environ["COMMIT_SHA"],
+              "workflow_run_id": os.environ["RUN_ID"],
+              "workflow_run_attempt": os.environ["RUN_ATTEMPT"],
+              "results": [
+                  {
+                      "test_id": test_id,
+                      "state": "PASS",
+                      "evidence_ref": f"GITHUB_ACTIONS:{os.environ['RUN_ID']}:{os.environ['RUN_ATTEMPT']}",
+                      "executed_at": executed_at,
+                  }
+                  for test_id in seed["tests"]
+              ],
+          }
+          target = Path("build/v2_test_attestation.json")
+          target.parent.mkdir(parents=True, exist_ok=True)
+          target.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+          PY
+
+      - name: Compile exact foundation bundle
+        env:
+          COMMIT_SHA: ${{ github.sha }}
+          BRANCH_NAME: ${{ github.ref_name }}
+        run: |
+          GENERATED_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          python scripts/compile_graph_v2.py \
+            --out build/foundation/graph-v2 \
+            --main-sha "$COMMIT_SHA" \
+            --branch "$BRANCH_NAME" \
+            --generated-at "$GENERATED_AT" \
+            --test-attestation build/v2_test_attestation.json
+          python - <<'PY'
+          from pathlib import Path
+          import zipfile
+
+          source = Path("build/foundation/graph-v2")
+          target = Path("build/graph-v2-recovery-bundle.zip")
+          with zipfile.ZipFile(target, "w", zipfile.ZIP_DEFLATED) as archive:
+              for path in sorted(source.rglob("*")):
+                  if path.is_file():
+                      archive.write(path, Path("graph-v2") / path.relative_to(source))
+              archive.write("build/v2_test_attestation.json", "v2_test_attestation.json")
+          PY
+
+      - name: Zero-context recovery in isolated directory
+        env:
+          COMMIT_SHA: ${{ github.sha }}
+        run: |
+          mkdir -p /tmp/graph-v2-zero-context
+          cp scripts/verify_graph_v2_bundle.py /tmp/graph-v2-zero-context/verifier.py
+          cp build/graph-v2-recovery-bundle.zip /tmp/graph-v2-zero-context/bundle.zip
+          cd /tmp/graph-v2-zero-context
+          START_NS="$(date +%s%N)"
+          python -I verifier.py bundle.zip \
+            --expected-sha "$COMMIT_SHA" \
+            --out zero_context_recovery.json
+          END_NS="$(date +%s%N)"
+          DURATION_MS="$(( (END_NS - START_NS) / 1000000 ))"
+          python - "$DURATION_MS" <<'PY'
+          import json
+          from pathlib import Path
+          import sys
+
+          path = Path("zero_context_recovery.json")
+          payload = json.loads(path.read_text(encoding="utf-8"))
+          payload["duration_ms"] = int(sys.argv[1])
+          payload["recovery_slo_ms"] = 300000
+          payload["recovery_slo_pass"] = payload["duration_ms"] <= payload["recovery_slo_ms"]
+          assert payload["state"] == "PASS"
+          assert payload["recovery_slo_pass"] is True
+          assert payload["authority_advanced"] is False
+          assert payload["h_id_allocations"] == 0
+          assert payload["outbound_opened"] is False
+          assert payload["send_allowed"] == 0
+          path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+          PY
+          cp zero_context_recovery.json "$GITHUB_WORKSPACE/build/zero_context_recovery.json"
+
+      - name: Agent-death, concurrency, security and CRM NEXT shadow
+        env:
+          COMMIT_SHA: ${{ github.sha }}
+        run: |
+          python scripts/run_graph_v2_runtime_drills.py \
+            --commit-sha "$COMMIT_SHA" \
+            --next docs/state/NEXT.json \
+            --out build/runtime-drills
+
+      - name: Final runtime assertions
+        env:
+          COMMIT_SHA: ${{ github.sha }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          recovery = json.loads(Path("build/zero_context_recovery.json").read_text(encoding="utf-8"))
+          manifest = json.loads(Path("build/runtime-drills/manifest.json").read_text(encoding="utf-8"))
+          runtime = json.loads(Path("build/runtime-drills/runtime_drills.json").read_text(encoding="utf-8"))
+          shadow = json.loads(Path("build/runtime-drills/crm_next_shadow.json").read_text(encoding="utf-8"))
+
+          assert recovery["main_sha"] == os.environ["COMMIT_SHA"]
+          assert recovery["state"] == "PASS"
+          assert recovery["recovery_slo_pass"] is True
+          assert manifest["commit_sha"] == os.environ["COMMIT_SHA"]
+          assert manifest["runtime_drills_passed"] is True
+          assert manifest["crm_shadow_passed"] is True
+          assert manifest["runtime_drill_count"] == 4
+          assert manifest["crm_shadow_event_count"] == 7
+          assert runtime["passed"] is True
+          assert shadow["passed"] is True
+          for payload in (recovery, manifest, runtime, shadow):
+              assert payload["authority_advanced"] is False
+              assert payload["h_id_allocations"] == 0
+              assert payload["outbound_opened"] is False
+              assert payload["send_allowed"] == 0
+          PY
+
+      - name: Upload exact runtime-drill artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: graph-v2-runtime-drills-${{ github.sha }}
+          path: |
+            build/graph-v2-recovery-bundle.zip
+            build/zero_context_recovery.json
+            build/runtime-drills
+            build/v2_test_attestation.json
+          if-no-files-found: error
+          retention-days: 30

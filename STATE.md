@@ -23,7 +23,7 @@ OUTBOUND                        CLOSED
 send_allowed                      0
 ```
 
-Immutable V13 base SHA-256: `0e605b412f29893ca1775f1e8fccd5987d0613baab4ac29b6699988cde0fdfe5`. Repaired constrained-parent SHA-256: `70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`. Staging, provider responses, exact-current evidence and recovery copies remain non-authoritative. No canonical IDs have been reserved from staging.
+Immutable V13 base SHA-256: `0e605b412f29893ca1775f1e8fccd5987d0613baab4ac29b6699988cde0fdfe5`. Repaired constrained-parent SHA-256: `70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`. Staging, provider responses, exact-current canary evidence and recovery copies remain non-authoritative. No canonical IDs have been reserved from staging.
 
 ## 2. Qualified current source / intake lineage
 

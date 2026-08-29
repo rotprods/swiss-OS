@@ -8,7 +8,14 @@ from pathlib import Path
 import tempfile
 import unittest
 
-from swiss_os.cwp_lineage_guard import CwpLineageError, _load_gzip_json, parse_offset_spec, validate_candidate_export, validate_staged_lineage
+from swiss_os.cwp_lineage_guard import (
+    CwpLineageError,
+    _load_gzip_json,
+    _load_multipart_candidate_export,
+    parse_offset_spec,
+    validate_candidate_export,
+    validate_staged_lineage,
+)
 
 
 def sha(value: object) -> str:
@@ -28,6 +35,39 @@ def row(offset: int, key: str) -> dict[str, object]:
         "reason": "NO_EXACT_CURRENT_CANONICAL_MATCH",
         "matched_hotel_id": "",
     }
+
+
+def write_multipart(root: Path, payload: dict[str, object], chunk_size: int = 31) -> tuple[Path, bytes]:
+    compressed = gzip.compress(json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8"), mtime=0)
+    encoded = base64.b64encode(compressed)
+    parts = []
+    for index, start in enumerate(range(0, len(encoded), chunk_size)):
+        data = encoded[start : start + chunk_size]
+        relative = f"parts/part-{index:02d}.b64"
+        path = root / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(data)
+        parts.append({"path": relative, "bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()})
+    manifest = {
+        "schema_version": "CRM-CANDIDATE-EXPORT-MULTIPART-1.0",
+        "project": "SWITZERLAND_JOB_OS",
+        "snapshot_id": "TEST",
+        "encoding": "base64(gzip(json))",
+        "gzip_mtime": 0,
+        "gzip_sha256": hashlib.sha256(compressed).hexdigest(),
+        "records_sha256": sha(payload["records"]),
+        "records_count": len(payload["records"]),
+        "source_records": payload["source_records"],
+        "exact_name_city_matches": payload["exact_name_city_matches"],
+        "parts": parts,
+        "authority_advanced": False,
+        "h_id_allocations": 0,
+        "outbound": "CLOSED",
+        "send_allowed": 0,
+    }
+    manifest_path = root / "manifest.json"
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    return manifest_path, compressed
 
 
 class CwpLineageGuardTests(unittest.TestCase):
@@ -58,6 +98,39 @@ class CwpLineageGuardTests(unittest.TestCase):
             path.write_text("not-gzip-and-not-base64%%%", encoding="utf-8")
             with self.assertRaises(CwpLineageError):
                 _load_gzip_json(path)
+
+    def test_multipart_transport_reconstructs_exact_gzip(self):
+        payload = {"records": [{"id": 1}, {"id": 2}], "source_records": 2061, "exact_name_city_matches": 623}
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            manifest_path, compressed = write_multipart(root, payload)
+            loaded, digest, manifest = _load_multipart_candidate_export(root, manifest_path)
+        self.assertEqual(loaded, payload)
+        self.assertEqual(digest, hashlib.sha256(compressed).hexdigest())
+        self.assertEqual(manifest["records_sha256"], sha(payload["records"]))
+
+    def test_multipart_part_corruption_fails_closed(self):
+        payload = {"records": [{"id": 1}], "source_records": 2061, "exact_name_city_matches": 623}
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            manifest_path, _ = write_multipart(root, payload)
+            first = root / "parts/part-00.b64"
+            data = bytearray(first.read_bytes())
+            data[0] = ord("A") if data[0] != ord("A") else ord("B")
+            first.write_bytes(bytes(data))
+            with self.assertRaisesRegex(CwpLineageError, "PART_SHA_MISMATCH"):
+                _load_multipart_candidate_export(root, manifest_path)
+
+    def test_multipart_reordered_manifest_fails_closed(self):
+        payload = {"records": [{"id": 1}, {"id": 2}], "source_records": 2061, "exact_name_city_matches": 623}
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            manifest_path, _ = write_multipart(root, payload, chunk_size=17)
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            manifest["parts"][0], manifest["parts"][1] = manifest["parts"][1], manifest["parts"][0]
+            manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+            with self.assertRaises(CwpLineageError):
+                _load_multipart_candidate_export(root, manifest_path)
 
     def test_export_contract_detects_order_drift(self):
         records = [row(i, f"MD-{i:04d}") for i in range(1438)]

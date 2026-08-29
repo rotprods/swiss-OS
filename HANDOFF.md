@@ -18,6 +18,6 @@ Read, in order:
 7. `TASKS.md`
 8. latest applicable domain handoff under `docs/handoffs/`
 
-The ContextPack is acceleration, not authority. Reject it when its `main_sha`, `projection_revision`, authority revision, or event watermark is stale.
+The ContextPack is acceleration, not authority. V2.1 does **not** require its base SHA to equal the current `main` HEAD: concurrent unrelated commits may advance `main`. Reject the pack when its `base_main_sha` is no longer an ancestor of the execution head, when any declared `relevant_paths` changed relative to `relevant_scope_revision`, or when projection, authority revision, event watermark or pack hash is stale. A newer descendant HEAD with no relevant-scope drift is valid.
 
 Current V2 workstream is architecture/pre-authority only. Hotel authority, canonical-ID allocation and outbound execution remain outside this handoff's authority ceiling.

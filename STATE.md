@@ -1,6 +1,6 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest chained Meta Execution reconciliation: **2026-08-29T19:24:00Z**. Current wave parent main SHA: **`625012ebb724365324118247fd098904bbcc1342`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
+Latest chained Meta Execution reconciliation: **2026-08-29T19:33:00Z**. Current wave parent main SHA: **`f099fce7ae823a55c2c9156003b7ac8c9b16bd7d`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
 
 ## Authority — unchanged / locked
 
@@ -26,12 +26,12 @@ source pages / records              172 / 2061
 ACTIVE_MATCH / TRUE_MISSING          623 / 1438
 base terminal mappings                    624
 base RECONCILE_REQUIRED                  1437
-cumulative SMO terminal deltas              14
-effective terminal mappings                638
-RECONCILE_REQUIRED                         1423
-RAGR covered active canonicals              638
-RAGR reverse gaps                            52
-RAGR gaps with same-city candidate           37
+cumulative SMO terminal deltas              22
+effective terminal mappings                646
+RECONCILE_REQUIRED                         1415
+RAGR covered active canonicals              646
+RAGR reverse gaps                            44
+RAGR gaps with same-city candidate           29
 RAGR gaps without same-city candidate        15
 candidate records                           1438
 candidate records SHA               34d9aa9cfa4fe896bf1db8fba4dedfded9a1dbf2e135b847101904644d16bba0
@@ -40,46 +40,68 @@ ECV remaining never verified          0
 ECV pending requeue                   0
 ```
 
-`effective terminal mappings=638` is the validated SMO-1.0 **pre-authority** frontier over base candidate SHA `2f9413318c410eb0f0443de260213d31e9ab2bdc1058581c0fa9c0340474aa27`. It does not mutate operational authority.
+`effective terminal mappings=646` is the validated SMO-1.0 **pre-authority** frontier over base candidate SHA `2f9413318c410eb0f0443de260213d31e9ab2bdc1058581c0fa9c0340474aa27`; it does not mutate operational authority.
 
 ## Durable recovery inputs
 
 - qualified member-directory fallback artifact `9700376482`: 2061 records, records SHA `62e26d62d8677a5437e081302b6b4d206c0d27a0fe268c6356aef01da5428dc2`; qualified fallback only, **not** SSR-1.0 API equivalence.
 - candidate export workflow `33266739167`, artifact `9718866661`, digest `d58c57c5a83cd2ff740f0ec900163f5c7aa795b032045cf9d30ffd194733465e`: 1438 records, SHA `34d9aa9cfa4fe896bf1db8fba4dedfded9a1dbf2e135b847101904644d16bba0`.
-- cumulative SMO overlay SHA `280b34924567f360af0122275493474ab61e59902ea2f50b95863f31e2fd1add`.
+- cumulative SMO overlay SHA `7a98c1b34da7bc996ceac31b1f236ae8aa18657dfba201f3036fcc0b1fd3d4b2`.
+- RAGR terminal coverage SHA `594c6167d1984bbe78f25241795103c5c602a248a3520d8591faa1484153577d`.
+- RAGR-44 queue SHA `5f1d4d828292dc7718f388377e538780f72142f21a64e2ed9c63f7a181cc485d`.
 - HOTELS_MASTER Drive ID `1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w`.
 
-## RAGR-1.0 — deterministic 52-gap queue materialized
+## Wave 0004 — RAGR high-confidence 8 verified and terminalized pre-authority
 
-The reverse authority/source coverage gate was rebuilt from the exact 2061-record source universe, a live 690-active canonical projection and 638 source→canonical terminal coverage rows (624 unique exact normalized name+city matches + 14 validated SMO deltas).
+Strict exact-current workflow run `33270992647`, artifact `9720099550`, artifact digest `c075b2862c46b5e4d3ad3419207662578a830b368e173cdcca615192ebc037ff`, packet SHA `9cca54e884971e3a71fe21f387d2f83395f7d1ca75f8faf0160c462ecfee30cf` completed **8/8 CURRENT_DETAIL_VERIFIED**. Every item returned HTTP 200 with `name_match=true`, `city_match=true`, provider-change count 0, and a pinned response SHA.
+
+The eight identity reviews were additionally corroborated against current official/public property identity evidence and are now explicit SRR-1.1 `MATCH_EXISTING` reviews only:
+
+- H-0001 ← Hotel Matthiol / Matthiol current property identity.
+- H-0020 ← Grand Hotel Zermatterhof; the canonical group suffix is corroborated by the official property/group page.
+- H-0021 ← Hotel Alpenroyal, Zermatt.
+- H-0025 ← Hotel Sonne, Zermatt.
+- H-0453 ← Valaisia Crans-Montana; current Faern rebrand identity corroborated.
+- H-0685 ← Aspen Alpin Lifestyle Hotel, Grindelwald.
+- H-0687 ← Hotel Seepark Thun.
+- H-0688 ← Hotel Alpenruhe / Vintage Design Hotel, Wengen.
+
+Durable files:
+- `docs/state/ECV_BATCH_0003_SUB0001_RESULT.json`
+- `docs/state/SOURCE_RESOLUTION_REVIEW_BATCH_0004_33206402141.json`
+- `docs/state/SOURCE_MAPPING_OVERLAY_SRR_BATCH_0004_33206402141.json`
+- `docs/state/RAGR_REVIEW_QUEUE_44_33206402141.json`
+
+Cumulative overlay:
 
 ```text
-source records SHA              62e26d62d8677a5437e081302b6b4d206c0d27a0fe268c6356aef01da5428dc2
-catalog projection SHA          a0d9c97105f106b50a5636d21bb2d40d7333b60af6228b8c6ac8521d8aa1245b
-terminal coverage SHA           b0cb512d56497fd90d52e2303c56e7de72d875314ab178de4685e24156564823
-RAGR queue SHA                  1c75e431fc6aba869053e062cf95fc222d2cdddd60f0c05d2684ef21c05834bc
-covered active canonicals       638 / 690
-reverse gaps                    52
-with same-city source candidate 37
-without same-city candidate     15
+overlay SHA                  7a98c1b34da7bc996ceac31b1f236ae8aa18657dfba201f3036fcc0b1fd3d4b2
+base terminal / reconcile    624 / 1437
+terminal deltas               22
+effective terminal/reconcile 646 / 1415
+H-ID allocations               0
+authority advanced          FALSE
+OUTBOUND                    CLOSED
+send_allowed                    0
 ```
 
-The exact gap set is persisted in `docs/state/RAGR_REVIEW_QUEUE_52_33206402141.json`. RAGR remains review-only: suggestions reduce search space but encode no terminal decision, authority mutation, canonical reservation or deletion inference.
+RAGR was recomputed over 646 unique covered canonicals: **44 reverse gaps remain**, 29 with same-city source candidates and 15 requiring locality/global identity recovery. RAGR remains review-only and cannot create terminal mappings by itself.
 
-The highest-value next evidence batch is pinned to eight same-city identity variants: H-0001/Hotel Matthiol, H-0020/Grand Hotel Zermatterhof, H-0021/Hotel Alpenroyal, H-0025/Hotel Sonne, H-0453/Hotel Valaisia Crans-Montana, H-0685/Aspen alpin lifestyle, H-0687/Hotel Seepark Thun and H-0688/Hotel Alpenruhe. Candidate source keys and original offsets are durable in the RAGR attestation; they are **not mappings yet**.
+CMRQ is closed for all safe MATCH proposals. `MD-034c1c3b0f7ba9d69c80` ibis budget Zürich City West remains a distinct nonterminal `NEW_CANONICAL` candidate and **no H-ID is reserved**.
 
-CMRQ safe MATCH proposals are closed at the current 14-delta overlay. `MD-034c1c3b0f7ba9d69c80` ibis budget Zürich City West remains a distinct nonterminal `NEW_CANONICAL` candidate and no H-ID is reserved.
+## NEXT — strict ECV of seven locality/name variants, then explicit SRR only
 
-The `cwp-materialize-next` phase-transition fix from PR #251 is healthy on main; both repo-guard and CWP no-op workflow passed on merge SHA `625012ebb724365324118247fd098904bbcc1342`.
+Pinned evidence-only review candidates:
 
-## NEXT — strict ECV reverify of RAGR high-confidence 8, then explicit SRR/SMO only
+1. H-0002 Hotel Europa Suites AG ← `MD-fed86d7933175b3cb112` Hotel Europa Suites, Champfèr; locality is a subset of `Champfèr / St. Moritz`.
+2. H-0681 Seehotel Wilerbad Seminar & Spa ← `MD-70fee4f734bf530fb6fd` Seehotel Wilerbad, Wilen (Sarnen).
+3. H-0063 Appenzeller Huus, Huus Quell ← `MD-418c10f59064a67a4ffb` HUUS QUELL, Gonten; do **not** bind the sibling Huus Bären/Löwen suggestions.
+4. H-0474 Hotel Schweizerhof, Sils Maria, a Faern Collection Hotel ← `MD-615a31fb4402ea4abf2e` Hotel Schweizerhof, Sils/Segl Maria.
+5. H-0478 Hôtel-Restaurant Les Cernets ← `MD-1e66aa8d213855517131` Hôtel Les Cernets “Val-de-Travers”, Les Verrières.
+6. H-0652 Sedartis Swiss Quality Hotel ← `MD-d09653a62d86bff5e672` Lifestyle Hotel Sedartis Lake Zurich, Thalwil.
+7. H-0060 Apart Hotel Wetterhorn ← `MD-466d0a46fe05df051926` Wetterhorn Apartments, Hasliberg Hohfluh.
 
-1. Stage the eight pinned RAGR source records through strict exact-current verification; do not pre-bind their H-IDs in the CMI packet.
-2. Accept a MATCH_EXISTING review only when the exact-current item is terminal verified and same-property identity evidence is sufficient; otherwise keep the gap unresolved.
-3. Recompute RAGR from the resulting overlay and continue bounded evidence waves over the remaining reverse gaps.
-4. In parallel, continue CP-R01/CP-R02 toward a complete 2061-record SMC/SRR rebuild; no fuzzy auto-binding.
-5. Keep ibis budget Zürich City West nonterminal until an authority-eligible `NEW_CANONICAL` transaction; never reserve H-0691 from staging.
-6. Final authority promotion remains ineligible until source-resolution conservation and SSR-1.0 are both satisfied.
+Stage these without target H-IDs, run strict exact-current evidence, accept only independently corroborated same-property identities, recompute RAGR, and continue bounded waves. In parallel continue CP-R01/CP-R02 toward a complete 2061-record SMC/SRR rebuild; no fuzzy auto-binding.
 
 SSR-1.0 remains blocked on the missing discover.swiss `Infocenter Open` subscription key / capture-valid structured API manifest. MEP fallback remains qualified member-directory + exact-current without claiming API equivalence. Issues #240, #239 and #14 remain the execution, resolver-safety and structured-source boundaries.
 

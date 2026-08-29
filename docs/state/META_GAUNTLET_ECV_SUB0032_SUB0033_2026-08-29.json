@@ -1,0 +1,31 @@
+{
+  "schema_version":"META-GAUNTLET-1.0",
+  "generated_at":"2026-08-29T06:43:00Z",
+  "cycle_id":"META-20260829-ECV-SUB0032-SUB0033",
+  "parent_git_sha":"71494fbfbfbe7753f8cd7fc1f747656c5654417c",
+  "checks":{
+    "sub0032_terminal_20_of_20":true,
+    "sub0032_validator_violations_zero":true,
+    "sub0032_provider_record_changes_zero":true,
+    "artifact_zip_sha256_verified":true,
+    "source_artifact_zip_sha256_verified":true,
+    "drive_authority_rows_690":true,
+    "reconstructed_active_match_623":true,
+    "reconstructed_true_missing_1438":true,
+    "sub0032_reconstruction_sha_matches_frozen":"347495f49d199e12727a51c84e60dd2d87b287eb39c5a7fd062ea763d59c2228",
+    "sub0033_items_count":20,
+    "sub0033_items_sha256":"10cc67ddc4a40680522e6eff785e66546de51f5df27c564fde07bae3cf5917e2",
+    "sub0033_offsets":"621..640",
+    "canonical_id_allocations":0,
+    "authority_advanced":false,
+    "outbound":"CLOSED",
+    "send_allowed":0
+  },
+  "adversarial_questions":[
+    "Can staging reserve H-0691? NO.",
+    "Can 20/20 canary evidence advance authority? NO.",
+    "Can absent discover.swiss credentials be bypassed? NO.",
+    "Does the staged wave preserve immutable source order? YES; SUB0032 frozen SHA was independently reproduced before slicing offsets 621..640."
+  ],
+  "decision":"PASS_TO_PR_CI"
+}

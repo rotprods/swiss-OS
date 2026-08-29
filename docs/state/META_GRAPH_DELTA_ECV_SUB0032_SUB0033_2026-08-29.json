@@ -1,0 +1,18 @@
+{
+  "schema_version":"META-GRAPH-DELTA-1.0",
+  "generated_at":"2026-08-29T06:43:00Z",
+  "cycle_id":"META-20260829-ECV-SUB0032-SUB0033",
+  "nodes":[
+    {"id":"ECV_SUB0032","state":"TERMINAL_VERIFIED","evidence":"actions:33238675348/artifact:9710705070"},
+    {"id":"ECV_SUB0033","state":"STAGED","offsets":"621..640","items_sha256":"10cc67ddc4a40680522e6eff785e66546de51f5df27c564fde07bae3cf5917e2"},
+    {"id":"AUTHORITY_E4","state":"LOCKED","rows":690,"next_id":"H-0691_UNALLOCATED"},
+    {"id":"CRM_UNIVERSE_COMPLETE","state":"FALSE","reconcile_required":1434}
+  ],
+  "edges":[
+    {"from":"ECV_SUB0032","to":"ECV_SUB0033","type":"SAFE_NEXT_WAVE"},
+    {"from":"ECV_SUB0033","to":"AUTHORITY_E4","type":"NO_AUTHORITY_ADVANCE"},
+    {"from":"ECV_SUB0033","to":"CRM_UNIVERSE_COMPLETE","type":"EVIDENCE_ONLY"}
+  ],
+  "outbound":"CLOSED",
+  "send_allowed":0
+}

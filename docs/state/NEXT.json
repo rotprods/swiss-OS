@@ -1,15 +1,15 @@
 {
   "schema_version": "NPP-1.0",
   "project": "SWITZERLAND_JOB_OS",
-  "generated_at": "2026-08-29T01:58:00Z",
-  "cycle_id": "META-20260829-ECV-PROVIDER-RECORD-CHANGE",
-  "parent_git_sha": "b1ff292d4fadb886401a9eef3e500a4624bc41d6",
+  "generated_at": "2026-08-29T02:16:00Z",
+  "cycle_id": "META-20260829-ECV-SUB0018-RECLASSIFY-SUB0019",
+  "parent_git_sha": "ffe403d946337e8d1380ec822e41eb0c394415e3",
   "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
   "authority_parent": "ISSUE_89_COMPOSITE_CONSTRAINED_PARENT",
   "authority_parent_materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
   "execution_mode": "PRE_AUTHORITY_SOURCE_RECONCILIATION",
-  "selected_route": "ECV_PROVIDER_RECORD_CHANGE_SEMANTICS",
-  "next_route": "MERGE_TESTED_SEMANTICS_THEN_OBSERVE_SUB0018_RECLASSIFY01_AND_STAGE_SUB0019_IF_ALL_TERMINAL",
+  "selected_route": "ECV_SUB0018_PROVIDER_RECORD_CHANGE_TERMINALIZATION_AND_CWP_CONTINUITY",
+  "next_route": "MERGE_GREEN_STATE_WAVE_THEN_OBSERVE_AUTO_SUB0019_ECV_AND_CHAIN",
   "goal_id": "G-0500",
   "checkpoint_id": "CRM_UNIVERSE_COMPLETE",
   "authority_state": {
@@ -31,8 +31,7 @@
     "cmi_active_match": 623,
     "cmi_true_missing": 1438,
     "cwp_packet_internal_sha256": "2741ca3b870c83d5fe424243bb06f599a96517f5922ec13bdc6621252b3273c0",
-    "cwp_json_file_sha256": "60ecb59fb8947aee90267c777792fa51238e4bd19bb6e6a993c64cdeb8587b1d",
-    "lineage_recovery_artifact": "docs/state/CWP_LINEAGE_RECOVERY_2026-08-29.json"
+    "cwp_json_file_sha256": "60ecb59fb8947aee90267c777792fa51238e4bd19bb6e6a993c64cdeb8587b1d"
   },
   "mapping_frontier": {
     "effective_terminal_source_mappings": 627,
@@ -43,81 +42,60 @@
   "ecv_frontier": {
     "candidate_records_total": 1438,
     "current_detail_verified": 349,
-    "remaining_unverified": 1089,
     "remaining_never_verified": 1089,
-    "pending_requeue": 11,
+    "pending_requeue": 0,
     "pending_provider_record_change_review": 11,
-    "latest_subbatch_id": "HS-MEMBER-DE-33206402141:WORK:0001:SUB:0018:REQUEUE:0001",
-    "latest_subbatch_packet_sha256": "4fd6827be5370dfd37b757bac45a757434093490de32a623493daf71ca751268",
-    "latest_github_actions_run_id": 33227654867,
-    "latest_github_actions_job_id": 99034382133,
-    "latest_artifact_id": 9707422829,
-    "latest_artifact_zip_sha256": "6cc8789e4bae1d500517a9307851dc5f2cc2fadc7f8400d67841510827ff069b",
+    "latest_subbatch_id": "HS-MEMBER-DE-33206402141:WORK:0001:SUB:0018:RECLASSIFY:0001",
+    "latest_subbatch_packet_sha256": "9e9a4fb60a7b6f1991ff0913ddcd17752b96b9f01b1133904127af951d1c2536",
+    "latest_github_actions_run_id": 33228015270,
+    "latest_artifact_id": 9707536383,
+    "latest_artifact_zip_sha256": "fe6abd9128b010b1d9914274dbdfa29791a4f6cece38e4b7146c1f26f6cec4f8",
     "latest_counts": {
-      "CURRENT_DETAIL_NAME_ONLY": 1,
-      "FETCH_FAILED": 10
+      "CURRENT_DETAIL_URL_NOT_FOUND": 10,
+      "CURRENT_DETAIL_NAME_ONLY": 1
     },
+    "all_terminal": true,
     "all_verified": false,
-    "blind_requeue_exhausted": true,
-    "reclassify_batch_id": "HS-MEMBER-DE-33206402141:WORK:0001:SUB:0018:RECLASSIFY:0001",
-    "reclassify_path": "docs/state/CMI_WORK_BATCH_0001_SUB0018_RECLASSIFY01_33206402141.json",
-    "reclassify_items": 11,
-    "reclassify_items_sha256": "6c8c3fb448f8710e5460e6a91fb538aacd311ef7a9820d31889f9342c2019e34",
-    "next_untouched_offset": 360
-  },
-  "system_definition": {
-    "normalizer": "ECV-PROVIDER-EVIDENCE-1.0",
-    "url_not_found_state": "CURRENT_DETAIL_URL_NOT_FOUND",
-    "provider_change_followup": "PROVIDER_RECORD_CHANGE_REVIEW",
-    "all_terminal_is_not_all_verified": true,
-    "authority_effect": "NONE"
-  },
-  "continuation_candidate": {
-    "status": "RECOVERY_INPUT_ONLY_NOT_STAGED",
-    "source_closed_pr": 133,
-    "source_head_sha": "dd3d93f28a34b38c843fa93d8e5651bd3dd78dc8",
-    "expected_subbatch": "SUB0019",
-    "offset_start": 360,
-    "offset_end_inclusive": 379,
-    "first_key": "MD-383f381de10462fb0875",
-    "last_key": "MD-3c8d2a88eedd678efa02",
-    "items_sha256": "2e9da88fba2d5fefbc20dfd6fb3876e38823387e3af8262c7496d717c4b0241f",
-    "precondition": "RECLASSIFY01_ALL_TERMINAL_AND_VERIFY_IMMUTABLE_CWP_CONTINUITY"
+    "next_untouched_offset": 360,
+    "next_staged_batch": "HS-MEMBER-DE-33206402141:WORK:0001:SUB:0019",
+    "next_staged_items": 20,
+    "next_staged_items_sha256": "2e9da88fba2d5fefbc20dfd6fb3876e38823387e3af8262c7496d717c4b0241f"
   },
   "hard_blockers": [
     "EFFECTIVE_RECONCILE_REQUIRED_1434_NOT_ZERO",
     "REVERSE_AUTHORITY_SOURCE_DISCREPANCIES_66_REQUIRE_RESOLUTION",
     "DISCOVER_SWISS_SUBSCRIPTION_KEY_UNAVAILABLE_FOR_DISCOVER_PARITY"
   ],
-  "capability_fallbacks": [
-    "discover.swiss key unavailable -> continue qualified HotellerieSuisse source route",
-    "deterministic 404/identity drift -> provider-record-change review, never novelty or H-ID allocation",
-    "transient/mixed fetch failure -> bounded ECV requeue",
-    "entity-resolve terminal evidence in parallel and persist only evidence-proven pre-authority mappings"
+  "capability_state": {
+    "github_read_write_ci": true,
+    "drive_read": true,
+    "native_sheets_writer": true,
+    "file_library_read": true,
+    "qualified_hotelleriesuisse_live_ecv": true,
+    "discover_swiss_key": false
+  },
+  "mep_fallbacks": [
+    "discover.swiss key unavailable -> continue coherent HotellerieSuisse source universe and exact-current/entity-resolution routes",
+    "typed provider record changes -> provider-record-change review; never infer novelty or allocate H-IDs",
+    "non-terminal fetch failures -> bounded requeue only",
+    "green SUB0019 ECV -> persist evidence, recompute NEXT, then stage next immutable CWP subbatch in a fresh meta-PR"
   ],
   "required_inputs": [
-    "GitHub main at or descendant of b1ff292d4fadb886401a9eef3e500a4624bc41d6",
+    "GitHub main at or descendant of ffe403d946337e8d1380ec822e41eb0c394415e3",
     "E4 authority 690 physical / 690 active canonical / 0 aliases; H-0691 unallocated",
-    "HOTELS_MASTER Drive ID 1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w",
-    "CWP recovery proof docs/state/CWP_LINEAGE_RECOVERY_2026-08-29.json",
-    "SUB0018 requeue summary docs/state/ECV_BATCH_0001_SUB0018_REQUEUE01_RESULT.json",
-    "provider semantics docs/operations/ECV_PROVIDER_RECORD_CHANGE_SEMANTICS.md",
-    "reclassify batch docs/state/CMI_WORK_BATCH_0001_SUB0018_RECLASSIFY01_33206402141.json",
-    "requeue artifact 9707422829 SHA256 6cc8789e4bae1d500517a9307851dc5f2cc2fadc7f8400d67841510827ff069b"
+    "repaired authority SHA256 70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+    "docs/state/ECV_BATCH_0001_SUB0018_RECLASSIFY01_RESULT.json",
+    "docs/state/META_GAUNTLET_ECV_SUB0018_RECLASSIFY_SUB0019_2026-08-29.json",
+    "docs/state/CMI_WORK_BATCH_0001_SUB0019_33206402141.json",
+    "reclassify Actions run 33228015270 / artifact 9707536383 / ZIP SHA256 fe6abd9128b010b1d9914274dbdfa29791a4f6cece38e4b7146c1f26f6cec4f8"
   ],
   "resume_instructions": [
-    "Require green CI and adversarial review before merging the provider-record-change semantics PR.",
-    "After merge, observe the auto-triggered RECLASSIFY01 ECV artifact and inspect all_terminal as well as all_verified.",
-    "If all 11 are terminal evidence, persist them into provider-record-change review and verify immutable CWP continuity before staging SUB0019 offset 360..379.",
-    "If any transient non-terminal state remains, persist that exact blocker and continue MEP through entity resolution rather than looping blindly.",
-    "Before authority eligibility require full 2061 source mapping replay, RECONCILE_REQUIRED=0, resolution of all 66 reverse gaps, SSR-1.0 and a fresh cross-plane transaction."
-  ],
-  "promotion_preconditions": [
-    "Full 2061-record source mapping replay/materialization validates exactly once per source record.",
-    "RECONCILE_REQUIRED=0.",
-    "All 66 reverse authority/source discrepancies are resolved or explicitly justified.",
-    "SSR-1.0 passes on coherent frozen source scope.",
-    "Any authority promotion uses a fresh bounded DB -> HOTELS_MASTER -> Intelligence -> Graph -> control-plane transaction with ASR/restore/replay/idempotency gates."
+    "Require green repo CI and adversarial review before merging this state/staging wave.",
+    "After merge, observe the automatically triggered ECV run for the single changed SUB0019 batch.",
+    "Download and validate ECV_RESULT, ECV_PROVIDER_EVIDENCE and ECV_VALIDATE; enforce authority_advanced=false, h_id_allocations=0, OUTBOUND=CLOSED, send_allowed=0.",
+    "Persist exact SUB0019 evidence and immediately compute/stage the next immutable CWP subbatch if no genuine provider/authorization boundary blocks it.",
+    "Continue entity resolution/source mapping replay in parallel where terminal evidence exists.",
+    "Before authority eligibility require full 2061-record mapping replay, RECONCILE_REQUIRED=0, resolution of all 66 reverse gaps, SSR-1.0 and fresh cross-plane reconciliation."
   ],
   "authority_advance_allowed": false,
   "canonical_id_allocation_allowed": false,

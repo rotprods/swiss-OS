@@ -1,0 +1,33 @@
+{
+  "authority_effect": "NONE",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "decision_nodes": [
+    {
+      "evidence_sha256": "15892b137e8c0afdbf75aa21c591b721e6a9c7014c89f1e17a9c88dac5ac3b83",
+      "id": "CRM_RECON_CMRQ_REVIEW_20260829",
+      "state": "PREAUTH_REVIEW_PROPOSALS_COMPILED",
+      "type": "DECISION"
+    },
+    {
+      "dependency": "CMRQ_16_EXPLICIT_REVIEW_APPLICATION",
+      "id": "CRM_REVERSE_GAP_52_NEXT",
+      "state": "READY_BOUNDED_REVIEW",
+      "type": "NEXT"
+    }
+  ],
+  "delta_sha256": "0b49b31a565f11c2ff9d8ab80c1495bf663d3c2dec0face7deb5c0a3a50c258c",
+  "edges": [
+    {
+      "from": "CRM_RECON_CMRQ_REVIEW_20260829",
+      "to": "CRM_REVERSE_GAP_52_NEXT",
+      "type": "UNLOCKS_IF_ACCEPTED"
+    }
+  ],
+  "generated_at": "2026-08-29T18:45:00Z",
+  "h_id_allocations": 0,
+  "outbound": "CLOSED",
+  "parent_git_sha": "f8d496870c8696c42b5e80fb794d1bdcaa85003a",
+  "project": "SWITZERLAND_JOB_OS",
+  "schema_version": "META-GRAPH-DELTA-1.0",
+  "send_allowed": 0
+}

@@ -1,0 +1,44 @@
+{
+  "schema_version": "SRET-PROVIDER-IDENTITY-SUBWAVE-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "snapshot_id": "HS-MEMBER-DE-33206402141",
+  "parent_git_sha": "94f645e815991758572b3d8f006522b5b146f538",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "authority_parent_materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+  "source_queue_sha256": "eed5f949c55da71b7a69d3dd481778992f316bfdd35e4655f85070dc46a14429",
+  "provider_enrichment": {
+    "protocol": "PIE-1.1",
+    "github_actions_run_id": 33278148054,
+    "github_actions_job_id": 99168454573,
+    "artifact_id": 9722145032,
+    "artifact_digest_sha256": "d57e61df6b6351640434721fc0c5b945054baa4d35f17351ef3553ed9ccabc09",
+    "packet_sha256": "17dcdee8cb5f1dec528b4f0da2880d3faa12b10c08f791d6092a215e412ffd30",
+    "results_sha256": "c107ed3f05f309b3c737ddb8c1fa0cfce4ad87378c8809ed7e308d3b5d9d4142",
+    "results_count": 10,
+    "state": "EXECUTED_VALIDATED_REVIEW_ONLY"
+  },
+  "processed_source_keys": [
+    "MD-0bc05b76e74e4bf37b9d","MD-1c67bec9e4e6883dcc51","MD-2883d04e3588f7215630","MD-4a9768f6c335edab67ca","MD-4d727160a4b32b3096cd","MD-51f9aade5e736df8a56b","MD-5249a86c12e8d2df0c4a","MD-5716424f7d4b099c64d4","MD-587ba810db73aba0d22a","MD-6547373922845094a08d"
+  ],
+  "provider_response_sha256": {
+    "MD-0bc05b76e74e4bf37b9d":"57cb6cff8069ed7bd93a65261d10250b2b7f37dd9c2fd7b564e5d6e6c441e459",
+    "MD-1c67bec9e4e6883dcc51":"72a185a751eeadf5d6834bb58c999033656f3780f2108f1c05ddf4968180c9db",
+    "MD-2883d04e3588f7215630":"42bd1ae7837f81a89d7e7a38d11a21121e3148ab378bd3d9026f21c18b515f93",
+    "MD-4a9768f6c335edab67ca":"0295c0523d4158716b85a7c2fbba1e3592c6614a4a95c886af10d175beb008a4",
+    "MD-4d727160a4b32b3096cd":"965db2b082d40144ee866daf415566d6962815cac7e2301211c53755a57f851c",
+    "MD-51f9aade5e736df8a56b":"ae17f04c0192fda657c30bf4cb564bec376f708ea4574df6ccd451bec332ed92",
+    "MD-5249a86c12e8d2df0c4a":"780bc25570f72968c070c552d81607b5d172fb61093b5fb6c8eb4b2e3181b42c",
+    "MD-5716424f7d4b099c64d4":"3422ce41a1d3a4f0d064df8ab29c40d38722d404e882df9e25844263f9b5576a",
+    "MD-587ba810db73aba0d22a":"e3aeca8993cfeb85ca441f2e7d786da468bb4d12e63422c2e6aa153997c1125a",
+    "MD-6547373922845094a08d":"8830186875d9a6420b599374d58c6f9ce5ec20ee1a67d4b83559d45be3702224"
+  },
+  "review": {
+    "review_state": "EVIDENCE_CAPTURED_REVIEW_REQUIRED",
+    "reason": "PIE provider identity signals are durable, but no same-property or distinctness decision is promoted without independent canonical comparison.",
+    "terminal_decision_allowed": false
+  },
+  "mapping_effect": {"terminal_mappings":0,"reconcile_required_delta":0,"effective_reconcile_required":1404},
+  "frontier": {"provider_evidence_executed":30,"identity_review_completed":20,"identity_review_pending_from_evidence":10,"unprocessed_in_050_059":17},
+  "hard_invariants": {"authority_advanced":false,"h_id_allocations":0,"canonical_id_reservations":0,"crm_universe_complete":false,"outbound":"CLOSED","send_allowed":0},
+  "next_route": "PIE_050_FINAL17_EXECUTION"
+}

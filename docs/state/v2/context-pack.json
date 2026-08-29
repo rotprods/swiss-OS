@@ -1,0 +1,13 @@
+{
+  "active_claim_ids": ["CLAIM-ARCH-GRAPH-V2-A7F3C1"],
+  "authority_revision": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+  "blockers": ["SSR-1.0 provider-blocked: discover.swiss Infocenter Open subscription key/capture-valid manifest absent.","Open PR overlap/supersession is not machine-managed in V1.","No first-class V1 Session/Claim/EventWatermark/ContextPack contract."],
+  "context_pack_revision": "36ef89da4706696f80f56aeaad3aeaa408f3ebd56afed4d231cd8cabcb428988",
+  "event_watermark": {"event_id":"EVT-20260829T214200Z-GRAPHV2-WORK-STARTED","occurred_at":"2026-08-29T21:42:00Z"},
+  "main_sha": "d6c49f158c3691f44868cb9a55a52bc6c6aea225",
+  "next_safe_actions": ["Implement and test V2 coordination kernel.","Freeze V2 architecture/ontology/lexicon/authority boundaries.","Compile machine-readable tasks/checkpoints/gap matrix.","Run CI and adversarial review; reread main before merge."],
+  "project_id": "SWITZERLAND_JOB_OS",
+  "projection_revision": "6d43676ed98267ed71b0141e1abf0c94cc353e65ba920c33098d3be3dd6c55ea",
+  "schema_version": "COS-V2-CONTEXT-PACK-1.0",
+  "state_refs": ["GOAL.md","STATE.md","ARCHITECTURE.md","HANDOFF.md","TASKS.md","LEXICON.md","docs/state/v2/project-state.json","docs/state/v2/checkpoint.json"]
+}

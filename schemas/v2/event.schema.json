@@ -1,0 +1,9 @@
+{
+  "$id": "cos-v2-event-1.0",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "properties": {"agent_id":{"minLength":1,"type":"string"},"authority_ceiling":{"minLength":1,"type":"string"},"base_sha":{"pattern":"^[0-9a-f]{64}$","type":"string"},"canonical_hotel_mutation_allowed":{"type":"boolean"},"correlation_id":{"minLength":1,"type":"string"},"event_id":{"minLength":1,"type":"string"},"event_type":{"minLength":1,"type":"string"},"h_id_allocation_allowed":{"type":"boolean"},"idempotency_key":{"minLength":1,"type":"string"},"main_sha_observed":{"pattern":"^[0-9a-f]{64}$","type":"string"},"next_action":{"minLength":1,"type":"string"},"objective_id":{"minLength":1,"type":"string"},"occurred_at":{"minLength":1,"type":"string"},"outbound_allowed":{"type":"boolean"},"project_id":{"minLength":1,"type":"string"},"repo":{"minLength":1,"type":"string"},"schema_version":{"const":"COS-V2-EVENT-1.0"},"session_id":{"minLength":1,"type":"string"},"summary":{"minLength":1,"type":"string"},"workstream_id":{"minLength":1,"type":"string"}},
+  "required": ["schema_version","event_id","event_type","occurred_at","project_id","agent_id","session_id","workstream_id","objective_id","correlation_id","repo","main_sha_observed","base_sha","authority_ceiling","summary","next_action","idempotency_key","canonical_hotel_mutation_allowed","h_id_allocation_allowed","outbound_allowed"],
+  "title": "COS V2 Event",
+  "type": "object"
+}

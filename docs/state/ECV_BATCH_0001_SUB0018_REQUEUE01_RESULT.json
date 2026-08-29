@@ -6,6 +6,7 @@
   "artifact_zip_sha256": "6cc8789e4bae1d500517a9307851dc5f2cc2fadc7f8400d67841510827ff069b",
   "authority_advanced": false,
   "batch_id": "HS-MEMBER-DE-33206402141:WORK:0001:SUB:0018:REQUEUE:0001",
+  "blind_requeue_exhausted": true,
   "counts_by_state": {
     "CURRENT_DETAIL_NAME_ONLY": 1,
     "FETCH_FAILED": 10
@@ -17,10 +18,10 @@
   "h_id_allocations": 0,
   "input_items": 11,
   "input_items_sha256": "6c8c3fb448f8710e5460e6a91fb538aacd311ef7a9820d31889f9342c2019e34",
-  "note": "The bounded requeue reproduced the same deterministic evidence: ten detail URLs returned HTTP 404 on all three attempts and one current detail page matched name but not expected city. Blind requeue is now exhausted. These states do not imply hotel absence, novelty, exclusion, aliasing, terminal canonical mapping, or H-ID allocation.",
+  "note": "The bounded requeue reproduced the same deterministic evidence: ten detail URLs returned HTTP 404 on all three attempts and one current detail page matched name but not expected city. pending_requeue remains 11 as legacy unresolved-frontier accounting until those records receive terminal typed evidence; blind network requeue is exhausted. These states do not imply hotel absence, novelty, exclusion, aliasing, terminal canonical mapping, or H-ID allocation.",
   "outbound": "CLOSED",
   "pending_provider_record_change_review": 11,
-  "pending_requeue": 0,
+  "pending_requeue": 11,
   "project": "SWITZERLAND_JOB_OS",
   "remaining_never_verified": 1089,
   "remaining_unverified": 1089,

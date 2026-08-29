@@ -1,0 +1,46 @@
+{
+  "schema_version": "CWP-CONTINUITY-RECOVERY-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "generated_at": "2026-08-29T02:24:00Z",
+  "parent_git_sha": "6e89d197c4425579e8fef2e30dc09cc80d02e6cd",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "authority_materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+  "authority_sheet_id": "1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w",
+  "authority_export_xlsx_sha256": "434fab60a1260f08b647e9f6ed718575de195a11fc09177a4c42da84b66b920e",
+  "authority_rows_verified": 690,
+  "authority_hid_sequence": "H-0001..H-0690_CONTIGUOUS_UNIQUE",
+  "source_artifact_id": 9700376482,
+  "source_artifact_zip_sha256": "721f9ff9f84e2d5d9df62c6b22f12e7354cef3a298cb8990be66a202e1e769ce",
+  "source_manifest_path": "hslca/member-directory-manifest.json",
+  "source_records": 2061,
+  "normalization_contract": "strip + whitespace collapse + casefold",
+  "deterministic_anti_join": {
+    "exact_name_city_matches": 623,
+    "candidate_new_entity_preauth": 1438,
+    "conflicts": 0,
+    "candidate_order": "source_record_key ascending"
+  },
+  "continuity_proofs": {
+    "sub0017_offset_range": "320..339",
+    "sub0017_reconstructed_items_sha256": "9fb65344f12ad30a1aafb53d99af24da4509ae65711a5abd79c6a4b5eb59b7f2",
+    "sub0017_persisted_items_sha256": "9fb65344f12ad30a1aafb53d99af24da4509ae65711a5abd79c6a4b5eb59b7f2",
+    "sub0017_match": true,
+    "sub0019_recovery_offset_range": "340..359",
+    "sub0019_reconstructed_items_sha256": "2e9da88fba2d5fefbc20dfd6fb3876e38823387e3af8262c7496d717c4b0241f",
+    "sub0019_persisted_items_sha256": "2e9da88fba2d5fefbc20dfd6fb3876e38823387e3af8262c7496d717c4b0241f",
+    "sub0019_match": true
+  },
+  "sub0020": {
+    "offset_range": "360..379",
+    "items_count": 20,
+    "first_source_record_key": "MD-3cbd369e03c65a520e13",
+    "last_source_record_key": "MD-40755d97fcad5b327554",
+    "items_sha256": "52cf15deec4f63e877805850a8175342cf05bd3d701899d64973491d6d1c1162",
+    "lineage_eligible": true
+  },
+  "adversarial_note": "The historical malformed SUB0018 packet is not treated as consumption of the immutable original 1438-candidate order. Correct original offsets 340..359 were recovered and verified as SUB0019; the next untouched original slice is therefore 360..379. No H-ID is allocated or reserved by this reconstruction.",
+  "authority_advanced": false,
+  "h_id_allocations": 0,
+  "outbound": "CLOSED",
+  "send_allowed": 0
+}

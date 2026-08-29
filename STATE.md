@@ -59,6 +59,8 @@ Exact-current verification alone never creates a terminal mapping. Entity resolu
 SUB0018 ran under GitHub Actions run `33227269515` / job `99033305291`; the workflow itself completed successfully, but the evidence packet is **not all-verified**:
 
 ```text
+ECV verified frontier             349 / 1438
+ECV remaining never verified     1089
 CURRENT_DETAIL_VERIFIED             9
 CURRENT_DETAIL_NAME_ONLY            1
 FETCH_FAILED                       10

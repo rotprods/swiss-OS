@@ -8,17 +8,17 @@
     "Open PR overlap/supersession is not machine-managed in V1."
   ],
   "branch": "refactor/cos-20d-hypergraph-v2",
-  "context_pack_revision": "10b495767584a9785fdc75cb411082016ad2acb0fe2835ce5f7ea07fd2c68b1a",
+  "context_pack_revision": "9b159f8cf8678713ccd773db06212ecea1b64b4ebda0b41d7b891e419847d11f",
   "current_objective_id": "OBJ-GRAPH-REFACTOR-V2",
   "event_watermark": {"event_id":"EVT-20260829T214200Z-GRAPHV2-WORK-STARTED","occurred_at":"2026-08-29T21:42:00Z"},
   "h_id_allocation_allowed": false,
   "live_frontier": {"active_canonical":690,"candidate_records":1438,"next_h_id":"H-0691 UNALLOCATED","reconcile_required":1404,"reverse_authority_gaps":34,"source_records":2061,"terminal_mappings":657},
   "main_sha_observed": "e467f112e63aac9b84079d6594a639c205963ba1",
   "next_safe_actions": [
-    "Run repository CI on the rebased V2+PIE state.",
-    "Adversarially inspect PR #288 for authority/domain mutation.",
-    "If CI stays green, merge V2 coordination architecture without advancing hotel authority.",
-    "Migrate one active domain workstream to Session→Claim→Event→ContextPack semantics and execute recovery/death/concurrency qualification."
+    "Run repository CI with ContextPack 1.1 ancestry/scope semantics.",
+    "Verify PR #288 merge candidate against live main ancestry and relevant-scope drift.",
+    "Merge V2 coordination architecture only if CI and final concurrency barrier pass.",
+    "Migrate one active domain workstream and execute projection-recovery / zero-context death drill."
   ],
   "north_star_ref": "GOAL.md#G-0001",
   "open_prs": [269,273,275,288,135,137,139],
@@ -30,14 +30,13 @@
     "STATE prose can lag live main ancestry while retaining newer counters.",
     "Concurrent agents can duplicate coordination actions without deterministic idempotency/fencing.",
     "Stale PRs can look active after their semantic work was superseded.",
-    "Project recovery currently relies on many handoff artifacts without one machine-validated zero-context pack."
+    "ContextPack freshness must use ancestry + relevant-scope drift, not exact live-HEAD equality."
   ],
   "schema_version": "COS-V2-PROJECT-STATE-1.0",
   "source_refs": ["STATE.md@e467f112e63aac9b84079d6594a639c205963ba1","GOAL.md","AGENTS.md","docs/architecture/AUTHORITY_MODEL.md","docs/architecture/SYSTEM_MAP.md","GitHub:issue#281","docs/state/FULL_SOURCE_MAPPING_REBUILD_657_ATTESTATION_33206402141.json"],
   "state": "V2_IMPLEMENTING_PREAUTHORITY",
   "unverified_work": [
-    "37 provider-identity reviews remain in similarity 0.50 bucket.",
-    "49 lower-similarity tail remains after that.",
+    "Provider-identity work continues concurrently on main.",
     "V2 coordination architecture is CI-tested on its branch but not yet merged/migrated/empirically qualified."
   ],
   "verified_work": [
@@ -46,6 +45,6 @@
     "Preauthority mapping frontier 657 terminal / 1404 reconcile.",
     "Full deterministic 657-row terminal coverage rebuild executed and re-attested.",
     "RAGR reverse authority gaps 34 over 656 unique canonical targets.",
-    "ASR repair is historical-complete and authority revision pinned."
+    "ContextPack 1.1 semantics derived from observed concurrent-main movement."
   ]
 }

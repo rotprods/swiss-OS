@@ -7,6 +7,8 @@
   "source_queue_path": "docs/state/SRET_SIMILARITY_RISK_QUEUE_050_059_33206402141.json",
   "source_queue_sha256": "eed5f949c55da71b7a69d3dd481778992f316bfdd35e4655f85070dc46a14429",
   "selection": "bounded 10-record collision-risk provider evidence wave; excludes 20 records represented in SRET_PROVIDER_IDENTITY_050_SUB01/SUB02",
+  "replay_reason": "REPLAY_AFTER_MERGE_PUSH_PACKET_SELECTOR_FIX; prior canary run 33277988578 failed closed before any provider fetch",
+  "replay_after_selector_fix_sha": "181502bbb41f85d87d944c5a751b3b9a6db9e771",
   "items_count": 10,
   "items_sha256": "07b12092f1e621f55a9e53df20b9d79465adbb989e1357307247af3714db3657",
   "items": [

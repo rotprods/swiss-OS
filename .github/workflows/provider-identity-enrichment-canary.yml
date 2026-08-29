@@ -1,0 +1,54 @@
+name: provider-identity-enrichment-canary
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/state/PROVIDER_IDENTITY_WORK_*.json'
+  workflow_dispatch:
+    inputs:
+      packet_path:
+        description: 'Repository-relative provider identity work packet'
+        required: true
+        default: 'docs/state/PROVIDER_IDENTITY_WORK_0001_33206402141.json'
+
+permissions:
+  contents: read
+
+jobs:
+  enrich:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      DEFAULT_PACKET: docs/state/PROVIDER_IDENTITY_WORK_0001_33206402141.json
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install package
+        run: python -m pip install -e .
+      - name: Select packet
+        id: packet
+        shell: bash
+        run: |
+          set -euo pipefail
+          INPUT='${{ github.event.inputs.packet_path }}'
+          if [[ -n "$INPUT" ]]; then PACKET="$INPUT"; else PACKET="$DEFAULT_PACKET"; fi
+          [[ "$PACKET" == docs/state/PROVIDER_IDENTITY_WORK_*.json ]]
+          [[ -f "$PACKET" ]]
+          echo "path=$PACKET" >> "$GITHUB_OUTPUT"
+      - name: Run read-only provider identity enrichment
+        run: |
+          set -euo pipefail
+          python -m swiss_os.provider_identity_enrichment run '${{ steps.packet.outputs.path }}' --out provider-identity-enrichment.json
+          python -m swiss_os.provider_identity_enrichment validate provider-identity-enrichment.json
+      - name: Artifact hashes
+        run: sha256sum provider-identity-enrichment.json > provider-identity-enrichment.sha256
+      - uses: actions/upload-artifact@v4
+        with:
+          name: provider-identity-enrichment
+          path: |
+            provider-identity-enrichment.json
+            provider-identity-enrichment.sha256
+          if-no-files-found: error

@@ -17,7 +17,7 @@ OUTBOUND                        CLOSED
 send_allowed                      0
 ```
 
-Authority SHA `70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`; workbook recovery SHA `434fab60a1260f08b647e9f6ed718575de195a11fc09177a4c42da84b66b920e`. Drive recovery pointer `1bQ74_WJlXFP6-nyGmkD97u-jgk6xhlz22j6t9H0e9sE` is readable and non-authoritative. Source reconstruction remains **623 ACTIVE_MATCH / 1438 TRUE_MISSING** over 2061 records.
+Authority SHA `70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`; workbook recovery SHA `434fab60a1260f08b647e9f6ed718575de195a11fc09177a4c42da84b66b920e`. Drive recovery pointer `1bQ74_WJlXFP6-nyGmkD97u-jgk6xhlz22j6t9H0e9sE` is readable and non-authoritative. Source reconstruction remains **623 ACTIVE_MATCH / 1438 TRUE_MISSING** over 2061 records. ECV/staging/materialization/cache/canary remain non-authoritative.
 
 ## CRM universe / mapping frontier
 

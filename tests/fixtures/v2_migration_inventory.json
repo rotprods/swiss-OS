@@ -1,0 +1,64 @@
+{
+  "schema_version": "GRAPH_V2_CP13_PRIVATE_INVENTORY_1",
+  "source_main_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "authority_epoch": "EPOCH-TEST",
+  "authority_manifest_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "observed_at": "2026-08-30T20:00:00Z",
+  "alias_semantics_state": "EXACT",
+  "expected_physical_count": 4,
+  "expected_active_count": 3,
+  "sources_immutable": true,
+  "active_write_claims": [],
+  "historical_unknowns": [
+    "pre-V2 event causation is incomplete"
+  ],
+  "crm_universe_complete": false,
+  "outbound": "CLOSED",
+  "send_allowed": 0,
+  "authority_advance_allowed": false,
+  "canonical_id_allocation_allowed": false,
+  "outbound_allowed": false,
+  "planes": {
+    "constrained_db": {
+      "artifact_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "physical_ids": ["H-0001", "H-0002", "H-0003", "H-0004"],
+      "active_ids": ["H-0001", "H-0002", "H-0004"],
+      "alias_edges": [
+        {
+          "alias_hotel_id": "H-0003",
+          "canonical_hotel_id": "H-0002"
+        }
+      ],
+      "integrity_check": "ok",
+      "foreign_key_violations": 0
+    },
+    "hotels_master": {
+      "artifact_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "physical_ids": ["H-0001", "H-0002", "H-0003", "H-0004"],
+      "active_ids": ["H-0001", "H-0002", "H-0004"],
+      "alias_edges": [
+        {
+          "alias_hotel_id": "H-0003",
+          "canonical_hotel_id": "H-0002"
+        }
+      ]
+    },
+    "intelligence": {
+      "artifact_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "physical_ids": ["H-0001", "H-0002", "H-0004"],
+      "active_ids": ["H-0001", "H-0002", "H-0004"],
+      "alias_edges": []
+    },
+    "operational_graph": {
+      "artifact_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "physical_ids": ["H-0001", "H-0002", "H-0003", "H-0004"],
+      "active_ids": ["H-0001", "H-0002", "H-0004"],
+      "alias_edges": [
+        {
+          "alias_hotel_id": "H-0003",
+          "canonical_hotel_id": "H-0002"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,54 @@
+name: candidate-export-materialize
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Materialize durable candidate export
+        run: python -m swiss_os.candidate_export_materialize --out-dir .artifacts
+      - name: Adversarial safety assertions
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(Path('.artifacts/CANDIDATE_EXPORT_MATERIALIZE_REPORT.json').read_text())
+          payload = json.loads(Path('.artifacts/CRM_CANDIDATE_EXPORT.json').read_text())
+          assert report['records_count'] == 1438
+          assert report['records_sha256'] == '34d9aa9cfa4fe896bf1db8fba4dedfded9a1dbf2e135b847101904644d16bba0'
+          assert report['source_records'] == 2061
+          assert report['exact_name_city_matches'] == 623
+          assert report['authority_advanced'] is False
+          assert report['h_id_allocations'] == 0 and type(report['h_id_allocations']) is int
+          assert report['outbound'] == 'CLOSED'
+          assert report['send_allowed'] == 0 and type(report['send_allowed']) is int
+          assert payload['records_count'] == len(payload['records']) == 1438
+          assert payload['authority_advanced'] is False
+          assert payload['h_id_allocations'] == 0
+          assert payload['outbound'] == 'CLOSED'
+          assert payload['send_allowed'] == 0
+          print(json.dumps(report, indent=2, sort_keys=True))
+          PY
+      - name: Upload ephemeral materialization
+        uses: actions/upload-artifact@v4
+        with:
+          name: crm-candidate-export-${{ github.run_id }}
+          path: .artifacts
+          if-no-files-found: error
+          include-hidden-files: true
+          retention-days: 2

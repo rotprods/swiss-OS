@@ -1,0 +1,93 @@
+name: graph-v2-adoption-gate
+
+on:
+  pull_request:
+    paths:
+      - "src/swiss_os/v2_adoption.py"
+      - "scripts/evaluate_graph_v2_adoption.py"
+      - "tests/test_v2_adoption.py"
+      - "tests/fixtures/v2_adoption_candidate.json"
+      - "docs/operations/GRAPH_V2_ADOPTION.md"
+      - ".github/workflows/graph-v2-adoption-gate.yml"
+  push:
+    branches: [main]
+    paths:
+      - "src/swiss_os/v2_adoption.py"
+      - "scripts/evaluate_graph_v2_adoption.py"
+      - "tests/test_v2_adoption.py"
+      - "tests/fixtures/v2_adoption_candidate.json"
+      - "docs/operations/GRAPH_V2_ADOPTION.md"
+      - ".github/workflows/graph-v2-adoption-gate.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  cp14-adoption-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout exact revision
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Repository and contract guards
+        run: |
+          python scripts/repo_guard.py
+          python scripts/system_contract_guard.py
+
+      - name: Full regression suite
+        run: python -m unittest discover -s tests -v
+
+      - name: Evaluate synthetic complete CP14 candidate
+        run: |
+          python scripts/evaluate_graph_v2_adoption.py \
+            --candidate tests/fixtures/v2_adoption_candidate.json \
+            --out build/graph-v2-adoption-evaluation.json
+
+      - name: Assert evidence completeness and authority boundary
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(Path("build/graph-v2-adoption-evaluation.json").read_text(encoding="utf-8"))
+          candidate = report["candidate"]
+          assert report["state"] == "ADOPTION_ELIGIBLE"
+          assert report["v2_coordination_authority_allowed"] is True
+          assert report["v2_coordination_authority_activated"] is False
+          assert len(candidate["checkpoint_evidence"]) == 7
+          assert {item["checkpoint_id"] for item in candidate["checkpoint_evidence"]} == {f"CP{i}" for i in range(7, 14)}
+          assert len(candidate["workflow_evidence"]) == 5
+          assert {item["name"] for item in candidate["workflow_evidence"]} == {
+              "repo-guard",
+              "graph-v2-guard",
+              "graph-v2-runtime-drills",
+              "graph-v2-empirical-qualification",
+              "graph-v2-migration-shadow",
+          }
+          assert {item["surface"] for item in candidate["persistence_receipts"]} == {"GITHUB", "LIBRARY", "DRIVE"}
+          assert candidate["active_conflicting_write_claim_count"] == 0
+          assert candidate["open_conflicting_pr_count"] == 0
+          assert candidate["domain_authority_preserved"] is True
+          assert candidate["rollback_verified"] is True
+          assert candidate["outbound"] == "CLOSED"
+          assert candidate["send_allowed"] == 0
+          assert report["domain_authority_mutated"] is False
+          assert report["h_id_allocations"] == 0
+          assert report["outbound_opened"] is False
+          assert report["send_allowed"] == 0
+          PY
+
+      - name: Upload exact adoption-gate artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: graph-v2-adoption-gate-${{ github.sha }}
+          path: build/graph-v2-adoption-evaluation.json
+          if-no-files-found: error
+          retention-days: 30

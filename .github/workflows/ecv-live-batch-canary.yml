@@ -70,11 +70,15 @@ jobs:
           mkdir -p .artifacts
           PYTHONPATH=src python -m swiss_os.exact_current_verify verify \
             "$BATCH_PATH" \
-            --out .artifacts/ECV_RESULT.json \
+            --out .artifacts/ECV_RESULT.raw.json \
             --delay 3.0 \
             --timeout 30 \
             --attempts 3 \
             > .artifacts/ECV_RUNTIME.json
+          PYTHONPATH=src python -m swiss_os.ecv_provider_evidence \
+            .artifacts/ECV_RESULT.raw.json \
+            --out .artifacts/ECV_RESULT.json \
+            > .artifacts/ECV_PROVIDER_EVIDENCE.json
           PYTHONPATH=src python -m swiss_os.exact_current_verify validate \
             .artifacts/ECV_RESULT.json \
             > .artifacts/ECV_VALIDATE.json
@@ -90,7 +94,10 @@ jobs:
           assert p['send_allowed'] == 0 and type(p['send_allowed']) is int
           assert type(p['items_count']) is int and p['items_count'] > 0
           assert p['items_count'] == p['results_count']
-          print(json.dumps({'items_count':p['items_count'],'counts':p['counts_by_state'],'all_verified':p['all_verified'],'packet_sha256':p['packet_sha256']},indent=2,sort_keys=True))
+          assert type(p['all_terminal']) is bool
+          assert type(p['terminal_evidence_count']) is int
+          assert type(p['provider_record_change_count']) is int
+          print(json.dumps({'items_count':p['items_count'],'counts':p['counts_by_state'],'all_verified':p['all_verified'],'all_terminal':p['all_terminal'],'terminal_evidence_count':p['terminal_evidence_count'],'provider_record_change_count':p['provider_record_change_count'],'packet_sha256':p['packet_sha256']},indent=2,sort_keys=True))
           PY
       - name: Upload ECV evidence
         if: always()

@@ -1,7 +1,7 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest chained Meta Execution reconciliation: **2026-08-29T01:50:00Z**.  
-GitHub parent for this wave: **`7ec1bc6cf51466203b71273f10fa09c73721a32d`**.  
+Latest chained Meta Execution reconciliation: **2026-08-29T01:58:00Z**.  
+GitHub parent for this wave: **`b1ff292d4fadb886401a9eef3e500a4624bc41d6`**.  
 Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**.  
 Open GitHub issues labelled `P0`: **0**.  
 Frozen current CRM source snapshot: **`HS-MEMBER-DE-33206402141`**.
@@ -40,7 +40,7 @@ CWP packet SHA-256        2741ca3b870c83d5fe424243bb06f599a96517f5922ec13bdc6621
 CWP JSON SHA-256          60ecb59fb8947aee90267c777792fa51238e4bd19bb6e6a993c64cdeb8587b1d
 ```
 
-Deterministic reconstruction remains 623 exact matches / 1438 candidates / 0 conflicts. The recovered immutable CWP order is authoritative only for pre-authority work scheduling, never for H-ID allocation.
+The recovered immutable CWP order is authoritative only for pre-authority work scheduling, never for H-ID allocation.
 
 ## 3. Source mapping frontier — pre-authority
 
@@ -52,34 +52,38 @@ reverse authority/source gaps            66
 overlay SHA-256                  e5ed0c76dd84e630679007e9cf209c1239dc68660c1b2c5158798f1302d4aa87
 ```
 
-Exact-current verification alone never creates a terminal mapping. Entity resolution may add only evidence-proven pre-authority mappings.
+Exact-current evidence alone never creates a terminal canonical mapping. Entity resolution may add only evidence-proven pre-authority mappings.
 
 ## 4. Exact-current verification frontier
 
-SUB0018 ran under GitHub Actions run `33227269515` / job `99033305291`; the workflow itself completed successfully, but the evidence packet is **not all-verified**:
+The bounded SUB0018 requeue ran under GitHub Actions run `33227654867` / job `99034382133`, artifact `9707422829`. It reproduced the same deterministic provider-record evidence: ten detail URLs returned HTTP 404 on all three attempts and one current detail page matched name but not expected city.
 
 ```text
 ECV verified frontier             349 / 1438
 ECV remaining never verified     1089
-CURRENT_DETAIL_VERIFIED             9
 CURRENT_DETAIL_NAME_ONLY            1
 FETCH_FAILED                       10
 all_verified                    FALSE
-cumulative verified              349 / 1438
-remaining unverified            1089
-pending requeue                   11
+pending requeue                    0
+pending provider-change review    11
 next untouched offset            360
-SUB0018 ECV packet SHA     5cc158183d53fe60aa282a8b654d2faed7555b322b7fbf6381d22781935ad241
-artifact ZIP SHA           ee2ec0328056aba21cbd7809e57adfc6ee4bbfc201f74ad5c432ad9fa9b290ed
+SUB0018 requeue packet SHA  4fd6827be5370dfd37b757bac45a757434093490de32a623493daf71ca751268
+artifact ZIP SHA            6cc8789e4bae1d500517a9307851dc5f2cc2fadc7f8400d67841510827ff069b
 ```
 
-The ten fetch failures were repeated HTTP 404 responses across the verifier's three attempts; the remaining non-verified record matched name but not city. No absence, novelty, exclusion, alias, H-ID or authority inference is made from these states.
+Durable summary: `docs/state/ECV_BATCH_0001_SUB0018_REQUEUE01_RESULT.json`.
 
-Durable summary: `docs/state/ECV_BATCH_0001_SUB0018_RESULT.json`.
+Blind requeue is exhausted. No hotel absence, novelty, exclusion, alias, terminal mapping, H-ID or authority inference is made from these states.
 
-A bounded fail-closed requeue of exactly those 11 records is staged as `docs/state/CMI_WORK_BATCH_0001_SUB0018_REQUEUE01_33206402141.json`, items SHA `6c8c3fb448f8710e5460e6a91fb538aacd311ef7a9820d31889f9342c2019e34`.
+## 5. Provider-record-change semantics wave
 
-## 5. Protocol / capability state
+A bounded system-definition change introduces `ECV-PROVIDER-EVIDENCE-1.0` after the raw exact-current fetch. It normalizes only repeated all-attempt HTTP 404 evidence to `CURRENT_DETAIL_URL_NOT_FOUND`; successful-page identity drift routes to `PROVIDER_RECORD_CHANGE_REVIEW`; mixed/transient failures remain `FETCH_FAILED` and requeueable.
+
+The additive `all_terminal` field means every item has non-transient exact-current evidence. It is not equivalent to `all_verified`, source-to-canonical reconciliation, or authority eligibility.
+
+One one-shot semantic canary is staged at `docs/state/CMI_WORK_BATCH_0001_SUB0018_RECLASSIFY01_33206402141.json`, containing exactly the same 11 source records, items SHA `6c8c3fb448f8710e5460e6a91fb538aacd311ef7a9820d31889f9342c2019e34`. It exists only to classify the already-bounded provider evidence under the new semantics after the defining PR passes CI/review and merges.
+
+## 6. Protocol / capability state
 
 ```text
 MEP-2.0 / COLETTE / WOP                  ACTIVE
@@ -93,30 +97,30 @@ qualified HotellerieSuisse exact-current AVAILABLE
 discover.swiss subscription key           UNAVAILABLE / MEP FALLBACK ACTIVE
 ```
 
-Structured discover.swiss parity remains independently blocked by `DISCOVER_SWISS_SUBSCRIPTION_KEY`; productive MEP work continues through the qualified HotellerieSuisse directory and existing 2061-record coherent manifest.
+Structured discover.swiss parity remains independently blocked by `DISCOVER_SWISS_SUBSCRIPTION_KEY`; productive MEP work continues through the qualified HotellerieSuisse directory and coherent 2061-record manifest.
 
-## 6. Gauntlet decision
+## 7. Gauntlet decision
 
-A green GitHub Actions job is not equivalent to `all_verified=true`. SUB0018 therefore does **not** advance a contiguous completed frontier to 360 and does **not** unlock authority. The nine verified records are retained as valid evidence; the eleven non-verified records must resolve through a bounded requeue or an explicit provider-record-change/current-absence protocol.
+Repeated 404 is evidence that the recorded provider detail URL is not currently resolving; it is not evidence that the underlying hotel entity is absent. Name/city drift is provider identity-change evidence, not a reason for infinite network retries. Both remain pre-authority and require entity/provider-change review.
 
-If the same HTTP 404 / identity mismatch states persist on requeue, the next safe system-definition wave is a tested PR that models explicit current absence/provider record change without converting it into novelty or canonical allocation. Blind infinite requeue is forbidden.
+The normalizer rejects any packet that attempts `authority_advanced=true`, non-zero H-ID allocation, open outbound, or non-zero send permission. Existing exact-current packet validation runs after normalization and the canonical packet hash is recomputed.
 
-## 7. NEXT
+## 8. NEXT
 
 ```text
-run ECV SUB0018:REQUEUE:0001
-→ inspect artifact, counts and all_verified (workflow green alone is insufficient)
-→ if all 11 verify: persist result, verify immutable continuity and stage SUB0019 at offset 360..379
-→ if 404/name-city mismatch persists: system PR for explicit provider-record-change/current-absence evidence semantics
-→ continue deterministic entity resolution for verified candidates
-→ replay/materialize all 2061 source mappings
+PR/CI/adversarial review/merge ECV-PROVIDER-EVIDENCE-1.0
+→ observe auto-triggered SUB0018:RECLASSIFY:0001 canary
+→ inspect all_terminal as well as all_verified
+→ if all 11 are terminal evidence: persist provider-change queue and continuity-verify/stage SUB0019 offset 360..379
+→ if any transient non-terminal state remains: persist exact blocker; continue MEP entity resolution without blind retries
+→ continue deterministic entity resolution / source mapping replay
 → resolve reverse gaps 66
 → RECONCILE_REQUIRED = 0
 → SSR-1.0
 → only then construct an authority-eligible DB → HOTELS_MASTER → Intelligence → Graph transaction
 ```
 
-Recovery candidate for SUB0019 exists only as non-staged input from closed superseded PR #133 head `dd3d93f28a34b38c843fa93d8e5651bd3dd78dc8`: expected offset 360..379, first `MD-383f381de10462fb0875`, last `MD-3c8d2a88eedd678efa02`, items SHA `2e9da88fba2d5fefbc20dfd6fb3876e38823387e3af8262c7496d717c4b0241f`. It must be continuity-verified before reuse and must be relabelled SUB0019.
+Recovery candidate for SUB0019 remains non-staged input from closed superseded PR #133 head `dd3d93f28a34b38c843fa93d8e5651bd3dd78dc8`: expected offset 360..379, first `MD-383f381de10462fb0875`, last `MD-3c8d2a88eedd678efa02`, historical items SHA `2e9da88fba2d5fefbc20dfd6fb3876e38823387e3af8262c7496d717c4b0241f`. It must be continuity-verified before reuse and relabelled SUB0019.
 
 ```text
 authority_advance_allowed = FALSE

@@ -1,10 +1,14 @@
 from __future__ import annotations
 
+import base64
+import gzip
 import hashlib
 import json
+from pathlib import Path
+import tempfile
 import unittest
 
-from swiss_os.cwp_lineage_guard import parse_offset_spec, validate_candidate_export, validate_staged_lineage
+from swiss_os.cwp_lineage_guard import CwpLineageError, _load_gzip_json, parse_offset_spec, validate_candidate_export, validate_staged_lineage
 
 
 def sha(value: object) -> str:
@@ -31,6 +35,29 @@ class CwpLineageGuardTests(unittest.TestCase):
         self.assertEqual(parse_offset_spec("3..5"), [3, 4, 5])
         self.assertEqual(parse_offset_spec([7, 9]), [7, 9])
         self.assertEqual(parse_offset_spec("12"), [12])
+
+    def test_text_safe_base64_gzip_transport_is_transport_neutral(self):
+        payload = {"schema_version": "T", "records": [{"id": 1}]}
+        raw = json.dumps(payload, separators=(",", ":")).encode("utf-8")
+        compressed = gzip.compress(raw, mtime=0)
+        with tempfile.TemporaryDirectory() as tmp:
+            binary_path = Path(tmp) / "binary.json.gz"
+            text_path = Path(tmp) / "text.json.gz"
+            binary_path.write_bytes(compressed)
+            text_path.write_bytes(base64.b64encode(compressed) + b"\n")
+            binary_payload, binary_sha = _load_gzip_json(binary_path)
+            text_payload, text_sha = _load_gzip_json(text_path)
+        self.assertEqual(binary_payload, payload)
+        self.assertEqual(text_payload, payload)
+        self.assertEqual(binary_sha, hashlib.sha256(compressed).hexdigest())
+        self.assertEqual(text_sha, binary_sha)
+
+    def test_invalid_text_transport_fails_closed(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "bad.json.gz"
+            path.write_text("not-gzip-and-not-base64%%%", encoding="utf-8")
+            with self.assertRaises(CwpLineageError):
+                _load_gzip_json(path)
 
     def test_export_contract_detects_order_drift(self):
         records = [row(i, f"MD-{i:04d}") for i in range(1438)]

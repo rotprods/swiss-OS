@@ -1,6 +1,6 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest chained Meta Execution reconciliation: **2026-08-29T21:18:00Z**. Wave parent main SHA: **`450e4f0bd06ee6e0efc95c482fab6e35e8ba5abc`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
+Latest chained Meta Execution reconciliation: **2026-08-29T21:50:00Z**. Wave parent main SHA: **`d6c49f158c3691f44868cb9a55a52bc6c6aea225`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
 
 ## Authority — unchanged / locked
 
@@ -23,38 +23,31 @@ source records                         2061
 candidate records                      1438
 ECV verified frontier              1438 / 1438
 ECV remaining never verified              0
-base terminal mappings                    624
+exact name+city mappings                  623
+pinned exact correction                    1
 explicit SRR/SMO deltas                   33
-effective terminal mappings               657
+terminal source mappings                  657
+unique canonical targets                  656
 RECONCILE_REQUIRED                       1404
 RAGR reverse authority gaps                34
 ```
 
-Pinned source/candidate lineage is unchanged. Prior fully rebuilt terminal coverage remains SHA `95c48f65fbf67c2fb2c284c9ba603be03d706d2f46ef7373dc8ebb7272b3c176` for 656 terminal source records; a **full 657-row terminal coverage rebuild is pending**. The new cumulative incremental lineage SHA is `80bdac00c83fcee25c112f01d1189b7212073fc50cfe50c02c2e75cf147e8281` and is explicitly reconstructible from the prior `e8a6da1bfe5e585807e41f91db9ecccb507c60140366e9dab7f36290c613a368` frontier plus one review delta.
+The deterministic **657-row terminal source coverage rebuild is now executed and re-attested** from the pinned source/candidate artifacts plus the E4 690-row canonical projection. Terminal-pair SHA is `5698591ab5c89bc8651dda6f7e2cfeba8c80312e3c19c78736adf1d0e521727e`; unresolved-key SHA is `7285cbcd5936cfabd33ea6f1769cfbf99acd3639562306c0e1bf0632d5400323`. Recovery recipe and all 34 exceptional mappings are durable in `docs/state/FULL_SOURCE_MAPPING_REBUILD_657_ATTESTATION_33206402141.json`.
 
-## Wave 15 — explicit pre-authority SRR/SMO
+RAGR was recomputed from the rebuilt terminal plane: **656 unique canonical H-ID targets, 34 reverse gaps**. Gap-list SHA is `bca692c105efac8c8929c1639e1ebe643dd03f0a6ecab4bb42d86e0acccba568`. The count is unchanged because H-0452 already had an exact source record and Wave 15 added a second provider/component record (`FIVE Zürich - EAST WING`) to the same canonical target. This is an expected many-to-one source alias, not an H-ID collision or authority mutation.
 
-The Wave-14 corroborated review for `MD-7c70baeb19408c2e971b` **FIVE Zürich - EAST WING** has been promoted from review-only into an explicit SRR-1.1 pre-authority source mapping to H-0452 **FIVE Zurich**. Evidence remains current and official-provider grounded; no fuzzy identity rule was used.
+## Recovery durability
 
-Durable artifacts:
-- `docs/state/SOURCE_RESOLUTION_REVIEW_BATCH_0007_33206402141.json`
-- `docs/state/SOURCE_MAPPING_OVERLAY_SRR_BATCH_0007_ATTESTATION_33206402141.json`
-- cumulative terminal deltas: 33
-- effective source mapping: **657 terminal / 1404 RECONCILE_REQUIRED**
-- incremental lineage SHA `80bdac00c83fcee25c112f01d1189b7212073fc50cfe50c02c2e75cf147e8281`
-
-H-0452 is not in the attested RAGR-34 gap set, so this source alias does not close an authority reverse gap; RAGR remains 34 pending a later full terminal-coverage rebuild. Authority E4 is unchanged and this mapping cannot allocate or reserve H-IDs.
+Source artifact `9700376482` (2061 records SHA `62e26d62d8677a5437e081302b6b4d206c0d27a0fe268c6356aef01da5428dc2`) and candidate artifact `9718866661` (1438 records SHA `34d9aa9cfa4fe896bf1db8fba4dedfded9a1dbf2e135b847101904644d16bba0`) remain pinned inputs. A direct connector-to-Drive ZIP recovery upload was attempted but blocked by connector file-reference egress; the MEP fallback is the GitHub compact recovery attestation plus pinned Actions IDs/hashes. Drive is not promoted to authority.
 
 ## Provider-identity frontier
 
-The 47-record Jaccard-0.50 queue has 10 provider-reviewed records: 9 independently distinct novelty reviews and the FIVE East Wing match now explicitly mapped pre-authority. **37 records remain** in that bucket. The lower-similarity tail remains 49.
+The 47-record Jaccard-0.50 queue has 10 provider-reviewed records: 9 independently distinct novelty reviews and the FIVE East Wing match explicitly mapped pre-authority. **37 records remain** in that bucket. The lower-similarity tail remains 49. Review/distinctness alone never decrements `RECONCILE_REQUIRED`.
 
 ## NEXT
 
-Continue bounded provider-identity review over the remaining **37** records in the 0.50 bucket, prioritizing same-provider/same-complex and multi-candidate collisions. In parallel, when a deterministic 657-row coverage rebuild route is available, rebuild terminal coverage and re-attest RAGR before using its hash as current. After the 37, materialize/review the 49-record lower-similarity tail.
+Highest-value safe route is now **provider identity review over the remaining 37 Jaccard-0.50 records**, using read-only current provider evidence and explicit SRR only where same-property identity is independently proven. Then process the lower-similarity 49. The full-coverage rebuild blocker is cleared; exact-current ECV remains 1438/1438.
 
-Do not decrement `RECONCILE_REQUIRED` from novelty/distinctness review alone. Never reserve H-0691 from review/staging. `OUTBOUND=CLOSED`; `send_allowed=0`.
-
-SSR-1.0 remains provider-blocked on the absent discover.swiss `Infocenter Open` subscription key / capture-valid structured API manifest. MEP remains qualified HotellerieSuisse member-directory + exact-current, without API-equivalence claims.
+Never reserve H-0691 or any H-ID from staging/review. `OUTBOUND=CLOSED`; `send_allowed=0`. SSR-1.0 remains provider-blocked on the absent discover.swiss `Infocenter Open` subscription key / capture-valid structured API manifest; MEP remains qualified HotellerieSuisse member-directory + exact-current without API-equivalence claims.
 
 Drive HOTELS_MASTER: `1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w`. Private review: `1Ktlvg04MbDrgZ0LD0wGYrpz65xTHBRyiNdD8KWLxNhk`. Recovery: `1leVfYwda8g0B5Co5zaSUIpo245t37tpUEiTaYlLds_s`. RAGR recovery: `12X7sQZDWIFm8Ss9DyxYYzvit6zSKq6ZeAliM6lEvNVg`.

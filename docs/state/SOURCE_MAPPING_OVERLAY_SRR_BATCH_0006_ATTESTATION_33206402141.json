@@ -1,0 +1,31 @@
+{
+  "schema_version": "CRM-SOURCE-MAPPING-OVERLAY-ATTESTATION-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "snapshot_id": "HS-MEMBER-DE-33206402141",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "previous_overlay_attestation_path": "docs/state/SOURCE_MAPPING_OVERLAY_SRR_BATCH_0005_ATTESTATION_33206402141.json",
+  "previous_materialization_sha256": "845cfb0d5faf4dd01d097f69ee9bb8f0a82045f558235ad80e5d8191d10a054a",
+  "previous_terminal_deltas": 29,
+  "incremental_review_path": "docs/state/SOURCE_RESOLUTION_REVIEW_BATCH_0006_33206402141.json",
+  "incremental_terminal_deltas": 3,
+  "incremental_pairs": [
+    {"canonical_hotel_id":"H-0019","reason_code":"CURRENT_EXACT_DETAIL_AND_OFFICIAL_SAME_PROPERTY_NAME_CITY","source_record_key":"MD-7db3357bbcfbad01a7ec"},
+    {"canonical_hotel_id":"H-0121","reason_code":"CURRENT_EXACT_DETAIL_AND_OFFICIAL_BOUTIQUE_NAME_VARIANT","source_record_key":"MD-9e3233153af5ab2e8c01"},
+    {"canonical_hotel_id":"H-0242","reason_code":"CURRENT_EXACT_DETAIL_AND_OFFICIAL_LOCALITY_SUFFIX_VARIANT","source_record_key":"MD-aabf05311b7763fe5929"}
+  ],
+  "base_source_records": 2061,
+  "base_terminal_mappings": 624,
+  "base_reconcile_required": 1437,
+  "cumulative_terminal_deltas": 32,
+  "effective_terminal_mappings": 656,
+  "effective_reconcile_required": 1405,
+  "cumulative_overlay_materialization_sha256": "e8a6da1bfe5e585807e41f91db9ecccb507c60140366e9dab7f36290c613a368",
+  "materialization_recipe": "BASE_SMC_PLUS_PREVIOUS_29_DELTAS_PLUS_BATCH_0006_3_REVIEW_DELTAS_SORTED_BY_SOURCE_RECORD_KEY",
+  "materialization_state": "ATTESTED_FULL_REBUILD_DEFERRED",
+  "authority_advanced": false,
+  "h_id_allocations": 0,
+  "crm_universe_complete": false,
+  "outbound": "CLOSED",
+  "send_allowed": 0,
+  "attestation_sha256": "99511d03446d6a510ece68c1f082897905f01b57fab3864adc1bb53523b382a2"
+}

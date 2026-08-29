@@ -55,7 +55,8 @@ def main() -> int:
     graph=load("docs/state/v2/graph-snapshot.json")
     for key,expected in (("authority_advanced",False),("h_id_allocations",0),("outbound","CLOSED"),("send_allowed",0)):
         value=graph.get(key)
-        if value!=expected or (expected==0 and isinstance(value,bool)): errors.append(f"GRAPH_SAFETY_LOCK_MISMATCH:{key}")
+        if value!=expected or (type(expected) is int and isinstance(value,bool)):
+            errors.append(f"GRAPH_SAFETY_LOCK_MISMATCH:{key}")
     if state.get("authority_advanced") is not False: errors.append("STATE_AUTHORITY_ADVANCED_FORBIDDEN")
     if state.get("h_id_allocation_allowed") is not False: errors.append("STATE_H_ID_ALLOCATION_FORBIDDEN")
     if state.get("outbound_allowed") is not False: errors.append("STATE_OUTBOUND_FORBIDDEN")

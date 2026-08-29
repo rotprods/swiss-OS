@@ -1,6 +1,6 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest chained Meta Execution reconciliation: **2026-08-29T10:27:00Z**. Parent main SHA: **`843a49f2ab2a476c6f103f0aae857a2867250bf1`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
+Latest chained Meta Execution reconciliation: **2026-08-29T10:35:00Z**. Parent main SHA: **`12d8ff45b87e9783c67166c182319f50f8640b62`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
 
 ## Authority — unchanged / locked
 
@@ -17,7 +17,7 @@ OUTBOUND                        CLOSED
 send_allowed                      0
 ```
 
-Authority SHA `70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`; workbook recovery SHA `434fab60a1260f08b647e9f6ed718575de195a11fc09177a4c42da84b66b920e`. Live Drive `HOTELS_V2` tail remains reverified in this activation: `H-0690` present, `H-0691` absent. ECV/staging/materialization/cache/canary remain non-authoritative.
+Authority SHA `70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`; workbook recovery SHA `434fab60a1260f08b647e9f6ed718575de195a11fc09177a4c42da84b66b920e`. Live Drive `HOTELS_V2` tail remains previously reverified: `H-0690` present, `H-0691` absent. ECV/staging/materialization/cache/canary remain non-authoritative.
 
 ## CRM universe / mapping frontier
 
@@ -31,26 +31,26 @@ candidate records                   1438
 candidate records SHA               34d9aa9cfa4fe896bf1db8fba4dedfded9a1dbf2e135b847101904644d16bba0
 ```
 
-## Exact-current frontier — SUB0050 green
+## Exact-current frontier — SUB0051 green
 
-SUB0050 ECV Actions `33247638664`, job `99087780690`, artifact `9713365465`, ZIP SHA `4093226ea033485ce4a26e57456fa566a2b0ca5c4082690a3e969068f5598038`; normalized packet SHA `b9d963f9da4ad731023a9bb6e3cdb0cbed25aa4316d83394bc803dfe8d769b35`; 20/20 `CURRENT_DETAIL_VERIFIED`, HTTP 200=20, provider changes `0`, validator violations `0`, URL aliases `0`; no authority change.
+SUB0051 ECV Actions `33247929325`, job `99088526123`, artifact `9713452543`, ZIP SHA `fda0566a916614809b0c43d81aff362aa1755ec0e372f9cc87ca49ff785eeca3`; normalized packet SHA `18d7727da9c73fae4a7b5b9db2d65face81ff2a234bd6deb33431deabf81ef62`; 20/20 `CURRENT_DETAIL_VERIFIED`, HTTP 200=20, name matches=20, city matches=20, provider changes `0`, validator violations `0`. Runtime safety assertions: `authority_advanced=false`, `h_id_allocations=0`, `OUTBOUND=CLOSED`, `send_allowed=0`. All 20 follow-ups remain `DEDUPE_GROUP_ALIAS_REVIEW`; this is current evidence only and does not resolve entities.
 
 ```text
-ECV verified frontier             990 / 1438
-ECV remaining never verified     448
+ECV verified frontier            1010 / 1438
+ECV remaining never verified     428
 ECV pending requeue                 0
-contiguous candidate prefix       0..980 (981 records)
-next untouched candidate offset     981
+contiguous candidate prefix       0..1000 (1001 records)
+next untouched candidate offset    1001
 ```
 
-## SUB0051 — exact materialization verified and staged
+## NEXT exact slice — SUB0052 materialization requested
 
-Read-only CWP materialization run `33247810136` / job `99088223367` succeeded from main `843a49f2ab2a476c6f103f0aae857a2867250bf1`. Artifact `9713399959`, ZIP SHA `22f64f7dc90ac6ddfe953ab11f8e4bf4cb650ad855b09fff6c77b3df32c5a968`; packet SHA `589bf6654e2b4a8f33fb6e271c24f18b8f537c1c35a83cf22f0fcee42c37cd3a`; report SHA `c33d422dbc19c3ed8b7a6acd0f92f7557bfb7d6c980a76e68c84acf3840ab1be`; items SHA `ceeb07256c14adb9f2a2808920675224d9a405bb7fcc1461991e74acae806c8e`. Exact immutable offsets **981..1000**, 20 items. All remain `CANDIDATE_NEW_ENTITY_PREAUTH` / `VERIFY_NEW_ENTITY`, all `matched_hotel_id` empty, `authority_advanced=false`, `h_id_allocations=0`; staging cannot reserve H-0691 or advance E4.
+The next immutable CWP slice is **SUB0052**, original candidate offsets **1001..1020**, 20 items, materialized only from the durable candidate export. The request cannot allocate/reserve a canonical ID or advance authority. A green merge triggers read-only `cwp-materialize-next`; the resulting artifact must be independently hash-verified and persisted through a separate green PR before automatic ECV is eligible.
 
 ## Drive / Library / structured acquisition
 
-Drive `HOTELS_MASTER` (`1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w`) remains readable; native Sheets writer is canary-verified but no authority write is eligible. Non-authoritative Drive recovery doc: `1WauJVqAE9mccEiuX-vmx8F8goUN9G7Vhq1-nH9QoZww`; candidate recovery pointer: `1bQ74_WJlXFP6-nyGmkD97u-jgk6xhlz22j6t9H0e9sE`. File Library `CRM_UNIVERSE_STAGING_2026-08-28_v6.xlsx` remains recovery-only. discover.swiss `Infocenter Open` key remains absent; MEP continues through the qualified HotellerieSuisse universe + deterministic anti-join + exact-current. SSR-1.0 remains a hard pre-authority gate.
+Drive recovery remains available through `MASTER_CONTEXT_V3.md` plus the existing HOTELS_MASTER/recovery pointers; exact workbook-title lookup did not surface the `.xlsx` by filename in this activation, so GitHub authority/recovery pointers remain the MEP path. File Library search returned no relevant SWITZERLAND_JOB_OS artifact; `CRM_UNIVERSE_STAGING_2026-08-28_v6.xlsx` therefore remains a prior recovery input rather than current authority. discover.swiss `Infocenter Open` key remains absent; MEP continues through the qualified HotellerieSuisse universe + deterministic anti-join + exact-current. SSR-1.0 remains a hard pre-authority gate.
 
 ## P0 / NEXT
 
-Issue #14 remains controlling P0. Current safe route: green CI + adversarial review → merge exact SUB0051 staging → observe automatic SUB0051 ECV → persist typed evidence/provider-change handling → immediately continue. `RECONCILE_REQUIRED=1434`, reverse gaps `66`, full 2061 terminal mapping, SSR-1.0 and fresh authoritative cross-plane reconciliation remain mandatory before authority eligibility. Canonical pointer: `docs/state/NEXT.json`. OUTBOUND remains CLOSED; send_allowed=0.
+Issue #14 remains controlling P0. Current route: green CI + adversarial review → merge SUB0051 result/NEXT request → materialize and hash-verify exact SUB0052 → persist exact staging → observe automatic SUB0052 ECV → continue. `RECONCILE_REQUIRED=1434`, reverse gaps `66`, full 2061 terminal mapping, SSR-1.0 and fresh authoritative cross-plane reconciliation remain mandatory before authority eligibility. Canonical pointer: `docs/state/NEXT.json`. OUTBOUND remains CLOSED; send_allowed=0.

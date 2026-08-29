@@ -1,0 +1,25 @@
+{
+  "schema_version": "META-GAUNTLET-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "cycle_id": "META-20260829-ECV-SUB0021-SUB0022",
+  "parent_git_sha": "f389084b04c8cfc76ad0e6c7875ff60b25a24067",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "verdict": "PASS_PRE_AUTHORITY",
+  "assertions": [
+    {"id":"G-01","assertion":"SUB0021 validator valid with zero violations","pass":true},
+    {"id":"G-02","assertion":"SUB0021 results_count=20 and CURRENT_DETAIL_VERIFIED=20","pass":true},
+    {"id":"G-03","assertion":"SUB0021 provider_record_change_count=0","pass":true},
+    {"id":"G-04","assertion":"SUB0021 authority_advanced=false and h_id_allocations=0","pass":true},
+    {"id":"G-05","assertion":"SUB0022 contains exactly original candidate offsets 400..419 in source_record_key order","pass":true},
+    {"id":"G-06","assertion":"SUB0022 has no overlap with SUB0021 and items hash matches compact UTF-8 JSON contract","pass":true},
+    {"id":"G-07","assertion":"No staging record reserves H-0691 or any canonical H-ID","pass":true},
+    {"id":"G-08","assertion":"Authority epoch remains E4; physical/active canonical remains 690/690 with zero aliases","pass":true},
+    {"id":"G-09","assertion":"OUTBOUND=CLOSED and send_allowed=0 across result, work packet, graph delta and NEXT","pass":true},
+    {"id":"G-10","assertion":"Canary/cache evidence is not promoted to authority","pass":true}
+  ],
+  "residual_blockers": ["EFFECTIVE_RECONCILE_REQUIRED_1434_NOT_ZERO","REVERSE_AUTHORITY_SOURCE_DISCREPANCIES_66_REQUIRE_RESOLUTION","DISCOVER_SWISS_SUBSCRIPTION_KEY_UNAVAILABLE"],
+  "authority_advanced": false,
+  "h_id_allocations": 0,
+  "outbound": "CLOSED",
+  "send_allowed": 0
+}

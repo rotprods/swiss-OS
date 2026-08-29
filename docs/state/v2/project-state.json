@@ -8,7 +8,7 @@
     "Legacy workstreams/open PRs are not yet fully migrated to first-class V2 claims."
   ],
   "branch": "main",
-  "context_pack_revision": "ff0a57cdd6b7fb80e40d05856478593b688ef11ba5eb6318e61ffd50175e531b",
+  "context_pack_revision": "4989f4c270dae23a6824516782104521351c7fe1987d344d9b7abd85a642a491",
   "current_objective_id": "OBJ-GRAPH-REFACTOR-V2",
   "event_watermark": {"event_id":"EVT-20260829T222031Z-GRAPHV2-WORK-COMPLETED","occurred_at":"2026-08-29T22:20:31Z"},
   "h_id_allocation_allowed": false,

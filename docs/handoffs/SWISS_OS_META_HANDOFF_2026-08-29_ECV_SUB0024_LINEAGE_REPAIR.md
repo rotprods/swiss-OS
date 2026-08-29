@@ -8,7 +8,7 @@ Deterministic replay of frozen source artifact `9700376482` against E4 reproduce
 
 Recovery is bounded: `SUB0024R1` contains only offset `453`, one item, SHA `274a92b447ca1272dfbad5ffe214254aad3bb1be48c72f66b87e0e0225d933f6`. It allocates/reserves no H-ID and cannot advance authority. After a green recovery result, forward staging starts at original candidate offset `461` and SUB0025 must cover `461..480` from the durable candidate export.
 
-Full deterministic candidate export is persisted as `docs/state/CRM_CANDIDATE_EXPORT_33206402141.json.gz`, gzip SHA `8107499196092fe3a505ee54b64b26362ea3669380e3ee57754825f6acd5c95f`, records SHA `34d9aa9cfa4fe896bf1db8fba4dedfded9a1dbf2e135b847101904644d16bba0`. Drive recovery pointer sheet: `1bQ74_WJlXFP6-nyGmkD97u-jgk6xhlz22j6t9H0e9sE`; it is non-authoritative. Local spreadsheet artifact materialization degraded, so MEP used Git as the durable data plane.
+Full deterministic candidate export is persisted as `docs/state/CRM_CANDIDATE_EXPORT_33206402141.json.gz`, deterministic binary gzip SHA `071e2cf1b895b63457c56066de7d8653b3182a12d1260ff9be7709a684fcf194`, records SHA `34d9aa9cfa4fe896bf1db8fba4dedfded9a1dbf2e135b847101904644d16bba0`. A failed UTF-8 contents-writer path was treated as a capability failure: MEP switched to a low-level binary Git blob, while the guard retains strict base64-of-gzip decoding only as a transport fallback. Drive recovery pointer sheet: `1bQ74_WJlXFP6-nyGmkD97u-jgk6xhlz22j6t9H0e9sE`; it is non-authoritative.
 
 Hard locks: E4 remains `690/690/0`; `H-0691` unallocated; `authority_advance_allowed=false`; `canonical_id_allocation_allowed=false`; `OUTBOUND=CLOSED`; `send_allowed=0`.
 

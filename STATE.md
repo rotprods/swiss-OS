@@ -1,6 +1,6 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest chained Meta Execution reconciliation: **2026-08-29T04:19:00Z**. Parent main SHA: **`6c64f747dd7ec707d42a221c8c7e2eaa4ce9329f`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
+Latest chained Meta Execution reconciliation: **2026-08-29T04:47:25Z**. Parent main SHA: **`29812585f14b0793e9c65ac9dd1f6d20b1aaa4e0`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
 
 ## Authority — unchanged / locked
 
@@ -17,7 +17,7 @@ OUTBOUND                        CLOSED
 send_allowed                      0
 ```
 
-Authority parent SHA `70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`; authority workbook recovery SHA `434fab60a1260f08b647e9f6ed718575de195a11fc09177a4c42da84b66b920e`. ECV, staging, provider, cache and canary state are non-authoritative.
+Authority parent SHA `70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`; authority workbook recovery SHA `434fab60a1260f08b647e9f6ed718575de195a11fc09177a4c42da84b66b920e`. Live Drive HOTELS_V2 was re-read in this activation: exactly 690 H-ID rows H-0001..H-0690, zero `SUPERSEDED_DUPLICATE`, H-0691 absent. ECV, staging, provider, cache and canary state remain non-authoritative.
 
 ## CRM universe / mapping frontier
 
@@ -34,49 +34,39 @@ candidate records SHA               34d9aa9cfa4fe896bf1db8fba4dedfded9a1dbf2e135
 candidate gzip SHA                  071e2cf1b895b63457c56066de7d8653b3182a12d1260ff9be7709a684fcf194
 ```
 
-The full deterministic candidate export is durable at `docs/state/CRM_CANDIDATE_EXPORT_33206402141.json.gz`. It is now a valid deterministic binary gzip Git blob (`mtime=0`), and CI validates all 1,438 ordered records plus the gzip digest. The CWP reader also accepts strict base64-of-gzip only as a fail-closed MEP transport fallback. Drive recovery pointer sheet `1bQ74_WJlXFP6-nyGmkD97u-jgk6xhlz22j6t9H0e9sE` is explicitly non-authoritative. Discover.swiss structured parity remains blocked by missing `DISCOVER_SWISS_SUBSCRIPTION_KEY`.
+The deterministic candidate export remains durable under `docs/state/CRM_CANDIDATE_EXPORT_33206402141.*`, guarded by pinned multipart/gzip and records digests. Discover.swiss structured parity remains blocked by missing `DISCOVER_SWISS_SUBSCRIPTION_KEY`.
 
-## Exact-current frontier — SUB0024 green
+## Exact-current frontier — SUB0024R1 green
 
-Actions `33232080824`, job `99046528179`, artifact `9708807620`, artifact ZIP SHA `56a21fe827881a3ea4a8ac860c7d73092d67eea4bbfc33a7c3746f23e6f62dce`; normalized ECV packet SHA `8685490197f0a580e6cfc69a03c71161eb66b5ee4775a7b82ddd4b373915fb79`; validator violations `0`.
+Actions `33234381770`, job `99052661724`, artifact `9709457433`, artifact ZIP SHA `d58dae872067d9c76dafdfc72f83fb27f4cbb714395def56a6cdee695fda407e`; normalized ECV packet SHA `c02b1b320d9f179baf1ddbf033bd710518ba44b5c77fcdf328be824978726de6`; validator violations `0`.
 
 ```text
-ECV verified frontier             469 / 1438
-ECV remaining never verified     969
+ECV verified frontier             470 / 1438
+ECV remaining never verified     968
 ECV pending requeue                 0
+contiguous candidate prefix       0..460 (461 records)
 ```
 
-SUB0024 is 20/20 `CURRENT_DETAIL_VERIFIED`, provider-record changes `0`. Exact-current evidence reserves/allocates no canonical ID and advances no authority.
+SUB0024R1 is 1/1 `CURRENT_DETAIL_VERIFIED`, provider-record changes `0`. It verifies the previously skipped original candidate offset 453 (`MD-4ac3fbacbb0490ec9371`, Hotel Stern Chur | Chur). The CWP lineage hole is closed; already-valid offset 460 evidence remains preserved.
 
-## CWP lineage repair
+## Staged next bounded wave — SUB0025
 
-Replay of the frozen source against E4 reproduced exactly `2061 / 623 / 1438` and proved that merged SUB0024 did **not** correspond to original candidate offsets `440..459`. Its actual source keys map to `440..452,454..460`: offset `453` was skipped while offset `460` was verified early.
+`SUB0025` contains exact original candidate offsets **461..480** from the same frozen 1,438-record candidate export. Items count `20`; items SHA `15daa56019f9e6017a56338de32a088c33e82b534d41f62783d9edafca2319af`; next untouched forward offset `481`.
 
-```text
-lineage hole offset                 453
-lineage hole key                    MD-4ac3fbacbb0490ec9371
-lineage hole entity                 Hotel Stern Chur | Chur
-recovery batch                      SUB0024R1
-recovery items                      1
-recovery items SHA                  274a92b447ca1272dfbad5ffe214254aad3bb1be48c72f66b87e0e0225d933f6
-next forward offset after repair    461
-```
-
-No verified evidence is discarded. SUB0024R1 stages only the skipped source record and remains non-authoritative.
+This staging reserves/allocates no H-ID, mutates no authority, and cannot be promoted from ECV evidence.
 
 ## P0 / NEXT
 
-Open P0s are `CWP_LINEAGE_HOLE_SUB0024_OFFSET_453` until SUB0024R1 verifies, `EFFECTIVE_RECONCILE_REQUIRED_1434_NOT_ZERO`, `REVERSE_AUTHORITY_SOURCE_DISCREPANCIES_66_REQUIRE_RESOLUTION`, and discover.swiss provider-key absence.
+Open P0s are `EFFECTIVE_RECONCILE_REQUIRED_1434_NOT_ZERO`, `REVERSE_AUTHORITY_SOURCE_DISCREPANCIES_66_REQUIRE_RESOLUTION`, and discover.swiss provider-key absence.
 
 ```text
-require green repo-guard + adversarial review on PR #147
-→ merge lineage repair
-→ observe auto SUB0024R1 ECV
+require green repo-guard + adversarial review
+→ merge SUB0024R1 persistence / SUB0025 staging wave
+→ observe auto SUB0025 ECV
 → validate/persist evidence with authority_advanced=false, h_id_allocations=0, OUTBOUND=CLOSED, send_allowed=0
-→ if green, contiguous verified lineage reaches offset 460 and forward staging starts at 461
-→ stage offsets 461..480 as SUB0025 from the durable candidate export
-→ continue terminal entity-resolution + reverse-gap work
-→ require full 2061 mapping replay, RECONCILE_REQUIRED=0, reverse gaps=0 and SSR-1.0 before any authoritative cross-plane reconciliation
+→ if green, stage original offsets 481..500 as SUB0026
+→ if ECV fails, MEP-route to terminal entity-resolution/reverse-gap work
+→ require full 2061 mapping replay, RECONCILE_REQUIRED=0, reverse gaps=0 and SSR-1.0 before authoritative cross-plane reconciliation
 ```
 
 Canonical recovery pointer: `docs/state/NEXT.json`. E4 remains `690/690/0`; `H-0691` remains unallocated.

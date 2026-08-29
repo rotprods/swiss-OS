@@ -1,6 +1,6 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest chained Meta Execution reconciliation: **2026-08-29T08:52:00Z**. Parent main SHA: **`16d8631a1e4b4f9b0f31b72c7f93b5bca01d32e0`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
+Latest chained Meta Execution reconciliation: **2026-08-29T08:56:00Z**. Parent main SHA: **`eca39d540d2c58ca33cad9a790577bbb57c5bc39`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
 
 ## Authority — unchanged / locked
 
@@ -42,16 +42,16 @@ ECV pending requeue                 0
 contiguous candidate prefix       0..840 (841 records)
 ```
 
-## Next bounded route — deterministic SUB0044 materialization
+## SUB0044 — exact materialization verified and staged
 
-The validated read-only CWP materializer remains the MEP transport for forward scanning. Planned `SUB0044` is exact original candidate offsets **841..860**, 20 items; packet/items SHA remains unset until deterministic materialization from the validated candidate export. A separate PR must persist the exact artifact before live ECV. No staging result can reserve H-0691 or advance E4 authority.
+Read-only materialization run `33244259937` / job `99078853979` succeeded. Artifact `9712320333`, ZIP SHA `e241bd02a5520589c0d40ba8114ada0eb26b2ddd74eb939c524c2d3bfa7acb45`; packet file SHA `df701738a6b953aefdac34efb4ad79a738cf58ca8770f6bf92462c2c7e191449`; materialization report SHA `0e828a05e52d670386943b0ed6745456c81271adf0783390e4c7135a9eaa9f95`; canonical items SHA `cb30e2becd407877430403de8a410876138a606afa4b2734401f4b0acf94e6cb`. Exact immutable candidate offsets **841..860**, 20 items. No canonical H-ID reservation/allocation and no authority advance.
 
 ## Structured acquisition boundary
 
-Authenticated developer.discover.swiss `Infocenter Open` subscription key remains absent. MEP continues through the qualified HotellerieSuisse 2061-record member-directory universe, deterministic anti-join/staging and exact-current evidence; no credential is fabricated or bypassed.
+Authenticated developer.discover.swiss `Infocenter Open` subscription key remains absent. MEP continues through the qualified HotellerieSuisse 2061-record member-directory universe; no credential is fabricated or bypassed.
 
 ## P0 / NEXT
 
-`RECONCILE_REQUIRED=1434`, reverse authority/source gaps `66`, discover.swiss key absent. Current route: green CI/adversarial review → merge SUB0043 typed result + SUB0044 materialization request → validate the read-only SUB0044 artifact → persist exact SUB0044 packet in a further meta-PR → merge → observe automatic SUB0044 ECV and continue chaining. Full 2061 terminal mapping, `RECONCILE_REQUIRED=0`, reverse gaps `0`, SSR-1.0 and fresh authoritative cross-plane reconciliation remain mandatory before authority eligibility.
+`RECONCILE_REQUIRED=1434`, reverse authority/source gaps `66`, discover.swiss key absent. Current route: green CI + adversarial review → merge exact SUB0044 staging → observe automatic SUB0044 ECV → persist typed terminal evidence → continue exact-current frontier. Full 2061 terminal mapping, `RECONCILE_REQUIRED=0`, reverse gaps `0`, SSR-1.0 and fresh authoritative cross-plane reconciliation remain mandatory before authority eligibility.
 
 Canonical pointer: `docs/state/NEXT.json`. OUTBOUND remains CLOSED; send_allowed=0.

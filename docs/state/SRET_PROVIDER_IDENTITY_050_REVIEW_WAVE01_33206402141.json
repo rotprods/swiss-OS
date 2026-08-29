@@ -1,0 +1,121 @@
+{
+  "schema_version": "SRET-PROVIDER-IDENTITY-REVIEW-WAVE-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "snapshot_id": "HS-MEMBER-DE-33206402141",
+  "parent_git_sha": "56345881f20f4fa03c45442430359ecd9c0aeb7e",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "authority_parent_materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+  "source_queue_path": "docs/state/SRET_SIMILARITY_RISK_QUEUE_050_059_33206402141.json",
+  "source_queue_sha256": "eed5f949c55da71b7a69d3dd481778992f316bfdd35e4655f85070dc46a14429",
+  "provider_evidence": {
+    "artifact_id": 9722212725,
+    "artifact_digest_sha256": "bfa30d4c89193d62ea02ca5b0120e55977f6508c9ba84cafce120afa4faa8a0e",
+    "artifact_json_sha256": "633e4f38047dfe2e5db41ce3a80f5b69845ffd6235e2c3e769d3f787db112b7f",
+    "packet_sha256": "422f27d7d0e85c5bbba12ac55b77eafc7930204d5e8fec2c3d24f51395b06d7e",
+    "results_sha256": "63bf8781509a968227cbfc1d470a5638aab49b14cf0582e201fefe646e7d0f65",
+    "state": "EXECUTED_VALIDATED_REVIEW_ONLY"
+  },
+  "canonical_comparator_plane": {
+    "drive_spreadsheet_id": "1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w",
+    "sheet": "HOTELS_V2",
+    "role": "PROJECTION_COMPARATOR_NOT_AUTHORITY",
+    "authority_mutation_allowed": false
+  },
+  "selection": {
+    "processed_items": 8,
+    "source_keys_sha256": "346fb3361c45694df145b4832194be12f09aef15aff8348dcd7247cc0ef55435",
+    "rule": "bounded independent current-identity review of evidence-captured 0.50-0.59 collisions with strong property-separating official evidence",
+    "remaining_identity_review_pending": 19
+  },
+  "items": [
+    {
+      "source_record_key":"MD-93d88fb61a77fd5a967d","name":"Hotel des Alpes","city":"Luzern","candidate_hotel_ids":["H-0649"],
+      "source_identity":{"name":"Hotel des Alpes","address":"Furrengasse 3, 6004 Luzern","evidence_url":"https://www.luzern.com/en/hotel/hotel-des-alpes"},
+      "candidate_identities":[{"hotel_id":"H-0649","name":"Hotel Des Balances","address":"Weinmarkt, 6004 Luzern","evidence_url":"https://www.balances.ch/"}],
+      "provider_evidence_ref":{"artifact_id":9722212725,"provider_response_sha256":"64288a4d40aa4b4ecb1e078171212674e42d20501dd0fe4b70292e579a771540"},
+      "reason_code":"CURRENT_SEPARATE_HOTEL_NAMES_AND_STREET_ADDRESSES_IN_LUZERN","review_state":"NOVELTY_REVIEW_DISTINCTNESS_CORROBORATED"
+    },
+    {
+      "source_record_key":"MD-a5398d49d8ecd5b730d7","name":"Hôtel Mirabeau Lausanne","city":"Lausanne","candidate_hotel_ids":["H-0614"],
+      "source_identity":{"name":"Hôtel Mirabeau","address":"Avenue de la Gare 31, 1003 Lausanne","evidence_url":"https://www.mirabeau.ch/"},
+      "candidate_identities":[{"hotel_id":"H-0614","name":"Mövenpick Hotel Lausanne","address":"Avenue de Rhodanie 4, 1007 Lausanne","evidence_url":"https://movenpick.accor.com/en/europe/switzerland/lausanne/hotel-lausanne/location.html"}],
+      "provider_evidence_ref":{"artifact_id":9722212725,"provider_response_sha256":"b73582f2165ef264ed5faec71a9297d184d4eb664af3286b38797259e007f6cf"},
+      "reason_code":"CURRENT_SEPARATE_HOTEL_NAMES_AND_STREET_ADDRESSES_IN_LAUSANNE","review_state":"NOVELTY_REVIEW_DISTINCTNESS_CORROBORATED"
+    },
+    {
+      "source_record_key":"MD-eaa9591c67a4016cf6c4","name":"B&B Hotel Lausanne Crissier","city":"Crissier","candidate_hotel_ids":["H-0602"],
+      "source_identity":{"name":"B&B HOTEL Lausanne Crissier","address":"24 Chemin des Lentillières, 1023 Lausanne/Crissier","evidence_url":"https://www.hotel-bb.com/en/hotel/lausanne-crissier"},
+      "candidate_identities":[{"hotel_id":"H-0602","name":"ibis Lausanne Crissier","address":"Chemin de l'Esparcette 4, 1023 Lausanne/Crissier","evidence_url":"https://all.accor.com/hotel/1185/index.en.shtml"}],
+      "provider_evidence_ref":{"artifact_id":9722212725,"provider_response_sha256":"89e016a90813b6b218ea5479d0a6ee6e67cc16cea6bd82f231600c56aff01205"},
+      "reason_code":"CURRENT_SEPARATE_BRANDS_AND_STREET_ADDRESSES_IN_CRISSIER","review_state":"NOVELTY_REVIEW_DISTINCTNESS_CORROBORATED"
+    },
+    {
+      "source_record_key":"MD-6a4331093c8de2eca2fb","name":"Sunstar Hotel Pontresina","city":"Pontresina","candidate_hotel_ids":["H-0471"],
+      "source_identity":{"name":"Sunstar Hotel Pontresina","address":"Fulluns 6, 7504 Pontresina","evidence_url":"https://pontresina.sunstar.ch/"},
+      "candidate_identities":[{"hotel_id":"H-0471","name":"Hotel Schweizerhof Pontresina","address":"Via Maistra 175, 7504 Pontresina","evidence_url":"https://www.pontresina.ch/de/guide/unterkuenfte/hotels/hotel-schweizerhof-pontresina"}],
+      "provider_evidence_ref":{"artifact_id":9722212725,"provider_response_sha256":"0deb8402507ff107766ac989dab2bdb4adca9c90fdd9cd0f00db163d2ccc35f5"},
+      "reason_code":"CURRENT_SEPARATE_HOTEL_NAMES_AND_STREET_ADDRESSES_IN_PONTRESINA","review_state":"NOVELTY_REVIEW_DISTINCTNESS_CORROBORATED"
+    },
+    {
+      "source_record_key":"MD-6c3153de9fbb5a337f6f","name":"Hôtel de Ville","city":"Gruyères","candidate_hotel_ids":["H-0275"],
+      "source_identity":{"name":"Hôtel de Ville","address":"Rue du Bourg 29, 1663 Gruyères","evidence_url":"https://hoteldeville.ch/"},
+      "candidate_identities":[{"hotel_id":"H-0275","name":"Hôtel de Gruyères","address":"Ruelle des Chevaliers 7, 1663 Gruyères","evidence_url":"https://www.gruyereshotels.ch/en/"}],
+      "provider_evidence_ref":{"artifact_id":9722212725,"provider_response_sha256":"db1b260de5afaf3a804cb2532f57836353ff391a9dc8c24e1f9bbfadcfa00159"},
+      "reason_code":"CURRENT_SEPARATE_HOTEL_NAMES_AND_STREET_ADDRESSES_IN_GRUYERES","review_state":"NOVELTY_REVIEW_DISTINCTNESS_CORROBORATED"
+    },
+    {
+      "source_record_key":"MD-c6bfaec6d1420cb70c35","name":"ibis Styles Zürich City Center","city":"Zürich","candidate_hotel_ids":["H-0180"],
+      "source_identity":{"name":"ibis Styles Zürich City Center","address":"Stampfenbachstrasse 60, 8006 Zürich","provider_property_code":"B5J7","evidence_url":"https://all.accor.com/hotel/B5J7/index.en.shtml"},
+      "candidate_identities":[{"hotel_id":"H-0180","name":"ibis Zürich City West","address":"Schiffbaustrasse 11, 8005 Zürich","provider_property_code":"2942","evidence_url":"https://all.accor.com/hotel/2942/index.en.shtml"}],
+      "provider_evidence_ref":{"artifact_id":9722212725,"provider_response_sha256":"704322ae664b1bb464093c6ec64505e1eeb3f6e99b02cd8c81074c501f73cb9c"},
+      "reason_code":"SAME_PROVIDER_BUT_DISTINCT_PROPERTY_CODES_NAMES_AND_STREET_ADDRESSES","review_state":"NOVELTY_REVIEW_DISTINCTNESS_CORROBORATED"
+    },
+    {
+      "source_record_key":"MD-699c71bb6bce540f641c","name":"ibis Lugano Paradiso","city":"Paradiso","candidate_hotel_ids":["H-0206"],
+      "source_identity":{"name":"ibis Lugano Paradiso","address":"Via Geretta 10a, 6900 Paradiso","provider_property_code":"6776","evidence_url":"https://all.accor.com/hotel/6776/index.en.shtml"},
+      "candidate_identities":[{"hotel_id":"H-0206","name":"Novotel Lugano Paradiso","address":"Viale San Salvatore 11, 6900 Paradiso","provider_property_code":"6775","evidence_url":"https://all.accor.com/hotel/6775/index.en.shtml"}],
+      "provider_evidence_ref":{"artifact_id":9722212725,"provider_response_sha256":"34dcb94966b981ca636f852ecd4189485b3da4a8238554335ed6473df58683dd"},
+      "reason_code":"SAME_PROVIDER_BUT_DISTINCT_PROPERTY_CODES_BRANDS_AND_STREET_ADDRESSES","review_state":"NOVELTY_REVIEW_DISTINCTNESS_CORROBORATED"
+    },
+    {
+      "source_record_key":"MD-6d5fffc699aa640f4bb8","name":"ibis Bern Expo","city":"Bern","candidate_hotel_ids":["H-0203"],
+      "source_identity":{"name":"ibis Bern Expo","address":"Am Guisanplatz 4, 3014 Bern","provider_property_code":"5007","evidence_url":"https://all.accor.com/hotel/5007/index.en.shtml"},
+      "candidate_identities":[{"hotel_id":"H-0203","name":"Novotel Bern Expo","address":"Am Guisanplatz 2, 3014 Bern","provider_property_code":"5009","evidence_url":"https://all.accor.com/hotel/5009/index.en.shtml"}],
+      "provider_evidence_ref":{"artifact_id":9722212725,"provider_response_sha256":"bb26dc42197ddd997e736907972659718c506c804d3fde1bacf1412b5b34fa83"},
+      "reason_code":"SAME_COMPLEX_AND_PROVIDER_BUT_DISTINCT_PROPERTY_CODES_BRANDS_AND_ADDRESSES","review_state":"NOVELTY_REVIEW_DISTINCTNESS_CORROBORATED"
+    }
+  ],
+  "items_sha256": "488ae59ffa1a873ffbbd94aec37ca3c779f5608f7e2a0314ae8bdb68712b687d",
+  "review": {
+    "review_state": "NOVELTY_REVIEW_DISTINCTNESS_CORROBORATED",
+    "result_count": 8,
+    "semantics": "Independent current identity comparison proves the selected sources are distinct from their suggested canonical comparators. Distinctness is review evidence only: not NEW_CANONICAL authorization, not a terminal source mapping, not anti-join decrement, not canonical ID reservation and not authority promotion."
+  },
+  "mapping_effect": {
+    "terminal_mappings": 0,
+    "reconcile_required_delta": 0,
+    "effective_reconcile_required": 1404,
+    "state": "REVIEW_ONLY_NO_SRR_SMO_APPLICATION"
+  },
+  "result_counts": {
+    "NOVELTY_REVIEW_DISTINCTNESS_CORROBORATED": 8,
+    "EVIDENCE_REVIEW_REQUIRED": 0,
+    "MATCH_EXISTING_REVIEW_CORROBORATED": 0
+  },
+  "frontier_after_review": {
+    "provider_evidence_executed": 47,
+    "identity_review_completed": 28,
+    "identity_review_pending_from_evidence": 19,
+    "unprocessed_in_050_059": 0,
+    "lower_similarity_tail_remaining": 49
+  },
+  "hard_invariants": {
+    "authority_advanced": false,
+    "h_id_allocations": 0,
+    "canonical_id_reservations": 0,
+    "crm_universe_complete": false,
+    "outbound": "CLOSED",
+    "send_allowed": 0
+  },
+  "next_route": "PIE_050_CAPTURED_19_IDENTITY_REVIEW_THEN_LOWER_49"
+}

@@ -1,0 +1,27 @@
+{
+  "all_verified": true,
+  "artifact_id": 9706618663,
+  "artifact_zip_sha256": "daf73813a91660b7852c57d8870152ace35102a8141705d844805813626c0834",
+  "authority_advanced": false,
+  "batch_id": "HS-MEMBER-DE-33206402141:WORK:0001:SUB:0017",
+  "counts_by_state": {
+    "CURRENT_DETAIL_VERIFIED": 20
+  },
+  "cumulative_current_detail_verified": 340,
+  "ecv_packet_sha256": "07c696b5993c7643619589a96af8f4dd7fc9a6d1961ed2826f6b6157e7d322bb",
+  "github_actions_job_id": 99027353047,
+  "github_actions_run_id": 33225192983,
+  "h_id_allocations": 0,
+  "input_items": 20,
+  "input_items_sha256": "9fb65344f12ad30a1aafb53d99af24da4509ae65711a5abd79c6a4b5eb59b7f2",
+  "note": "All 20 exact current detail pages verified. Evidence frontier advances to 340/1438; no canonical ID is reserved or authority advanced. H-0691 remains unallocated.",
+  "outbound": "CLOSED",
+  "pending_requeue": 0,
+  "project": "SWITZERLAND_JOB_OS",
+  "remaining_never_verified": 1098,
+  "results_count": 20,
+  "schema_version": "ECV-RESULT-SUMMARY-1.0",
+  "send_allowed": 0,
+  "source_snapshot_id": "HS-MEMBER-DE-33206402141",
+  "terminal_mapping_effect": "NONE_UNTIL_ENTITY_RESOLUTION"
+}

@@ -1,0 +1,29 @@
+{
+  "authority_mutation": false,
+  "cycle_id": "META-20260829-CWP-LINEAGE-ECV-SUB0018-MANUAL",
+  "generated_at": "2026-08-29T01:12:00Z",
+  "graph_type": "PROJECT_MEMORY_META_GRAPH_DELTA",
+  "schema_version": "1.4",
+  "project": "SWITZERLAND_JOB_OS",
+  "nodes": [
+    {"id":"ECV-SUB0017","type":"EVIDENCE_BATCH","state":"VERIFIED","items":20,"packet_sha256":"07c696b5993c7643619589a96af8f4dd7fc9a6d1961ed2826f6b6157e7d322bb"},
+    {"id":"ECV-SUB0018","type":"EVIDENCE_BATCH","state":"STAGED","items":20,"items_sha256":"c78e0f4650a0a080991f9fb85616df380def1ba2fec4580a60e460bdf38910d8"},
+    {"id":"ECV-FRONTIER-340","type":"EVIDENCE_FRONTIER","verified":340,"remaining":1098},
+    {"id":"AUTHORITY-E4","type":"AUTHORITY_STATE","physical":690,"active":690,"aliases":0},
+    {"id":"GATE-CRM-UNIVERSE-COMPLETE","type":"GATE","state":false},
+    {"id":"OUTBOUND","type":"GATE","state":"CLOSED","send_allowed":0}
+  ],
+  "edges": [
+    ["ECV-SUB0017","ADVANCES","ECV-FRONTIER-340"],
+    ["ECV-FRONTIER-340","STAGES_NEXT","ECV-SUB0018"],
+    ["ECV-SUB0017","DOES_NOT_MUTATE","AUTHORITY-E4"],
+    ["GATE-CRM-UNIVERSE-COMPLETE","BLOCKS","OUTBOUND"]
+  ],
+  "invariants": {
+    "candidate_order":"IMMUTABLE_CWP_1438",
+    "authority_advanced":false,
+    "h_id_allocations":0,
+    "outbound":"CLOSED",
+    "send_allowed":0
+  }
+}

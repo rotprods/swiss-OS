@@ -1,7 +1,8 @@
 # ACTA DE CONSCIENCIA — SWITZERLAND_JOB_OS
 
-Updated at: **2026-08-28T14:58:00+02:00**  
-Authority state: **E4 / 686 active canonical / 690 physical**  
+Updated at: **2026-08-29T19:23:00+02:00**  
+Authority state: **E4 / 690 active canonical / 690 physical**  
+Frozen CRM snapshot: **HS-MEMBER-DE-33206402141**  
 Agent role: Mission Commander / Authority & Reconciliation / QA-Governance
 
 ## Mission
@@ -10,244 +11,151 @@ The system exists to maximize the probability of a real, truthful, legal, econom
 
 ## Authority model
 
-Chat state, repository prose, API captures, local SQLite work, canaries, caches and staging artifacts are not operational authority. Authority advances only through a fully synchronized authority-eligible wave across constrained DB → Sheets/CRM → Graph/Intelligence → observability/checkpoint/handoff/recovery. On ambiguity, fail closed.
+Chat state, repository prose, API captures, local SQLite work, exact-current evidence, canaries, caches and staging artifacts are not operational authority. Authority advances only through a synchronized authority-eligible wave across constrained DB → Sheets/CRM → Graph/Intelligence → observability/checkpoint/handoff/recovery. On ambiguity, fail closed.
 
 ## Current authoritative state
 
 ```text
 entity epoch                    HS_ENTITY_EPOCH_2026-08-25_E4
 physical HOTELS rows            690
-superseded duplicate aliases      4
-active canonical                686
-CP-0750                         686 / 750 ACTIVE
-Intelligence                    686 / 686
-Operational Graph               686 / 686
-L4                              105 / 686
-G-0700 L9                         0 / 2050 reference universe
+active canonical                690
+persisted H-ID alias edges        0
+ASR-1.0                         EXACT
+HOTEL_INTELLIGENCE_V1           690 / 690
+Graph HOTEL / INTEL / edges     690 / 690
+next physical ID                H-0691 UNALLOCATED
 CRM_UNIVERSE_COMPLETE           FALSE
 OUTBOUND                        CLOSED
 send_allowed                      0
 ```
 
-No API capture, cache, canary or staging value advances this authority.
+Authority SHA: `70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`.
 
-## Current pre-authority stack — COMPLETE IN CODE
-
-The pre-authority universe path is now executable as one coherent stack:
+## Frozen CRM universe and current mapping frontier
 
 ```text
-discover.swiss DSA-1.0 acquisition
-→ MDM-1.0 coherent member-directory manifest
-→ deterministic directory coverage planner
-→ SSR-1.0 source-scope reconciliation
-→ FROZEN_CANDIDATE construction
-→ candidate-to-CMI export
-→ deterministic CRM anti-join
-→ crm_ingest_staging
-→ idempotent scheduler
-→ exact-current / entity resolution / exclusion review
-→ terminal CRM mappings
-→ authority-eligible commit
+source pages / records              172 / 2061
+ACTIVE_MATCH / TRUE_MISSING          623 / 1438
+effective terminal mappings         627
+RECONCILE_REQUIRED                  1434
+reverse authority/source gaps        66
+candidate records                   1438
+candidate records SHA               34d9aa9cfa4fe896bf1db8fba4dedfded9a1dbf2e135b847101904644d16bba0
 ```
 
-Page number is never source identity. Stable record identity prefers provider/hsId, then exact detail URL, then normalized name+city fallback within an explicitly scoped source snapshot.
+The source universe is now materially ahead of the earlier v11 fallback state. Acquisition is not the dominant bottleneck anymore.
 
-## PAB-1.0 — PRE-AUTHORITY BUNDLE MILESTONE
-
-Merged code and tests now compose the acquisition/reconciliation layers into one fail-closed execution bundle.
-
-A PAB run accepts:
+## Exact-current candidate universe — COMPLETE
 
 ```text
-1. one complete discover.swiss API manifest;
-2. one member-directory observation set;
-3. explicit snapshot/locale/epoch/page-count/raw-count metadata;
-4. optional typed conflict pages and evidence-backed scope explanations.
+ECV verified frontier            1438 / 1438
+ECV remaining never verified        0
+ECV pending requeue                 0
+contiguous candidate offsets     0..1428 (1438 records)
 ```
 
-It produces:
+The final exact-current evidence run completed with current detail verification, HTTP/name/city checks and zero validator violations. ECV completion is evidence only: it does not allocate H-IDs, create terminal mappings or promote authority.
+
+## Current critical path
+
+The current P0 is entity resolution and terminal mapping, not additional acquisition.
 
 ```text
-directory_manifest
-coverage_plan
-scope_reconciliation
-candidate_snapshot
-candidate ingest_records when eligible
-blockers
-bundle_sha256
+complete ECV evidence
+→ SMC exhaustive source mapping candidate
+→ SRR-1.1 deterministic source resolution review
+→ MATCH_EXISTING / ALIAS_EXISTING / EXCLUDE / NEW_CANONICAL / UNRESOLVED
+→ explicit reviews for ambiguous alias/exclusion semantics
+→ unresolved_review = 0
+→ authority_batch_ready = TRUE
+→ bounded authority transaction
+→ DB
+→ HOTELS_MASTER PK mirror
+→ Intelligence
+→ Operational Graph
+→ observability / recovery
+→ final CUP validation
+→ CRM_UNIVERSE_COMPLETE = TRUE
 ```
 
-Terminal bundle states:
+SRR may auto-propose unique exact detail-URL matches, unique exact name+city matches and current-verified NEW_CANONICAL candidates. Ambiguity must remain unresolved. NEW_CANONICAL never allocates an H-ID before the authority transaction.
+
+## Authority promotion capability
+
+Native in-place `HOTELS_MASTER` writing is no longer a blocker. Issue #12 is resolved and the real spreadsheet writer was canary-verified. The remaining authority blocker is data/governance: validated terminal entity-resolution decisions and a bounded authority-eligible commit.
+
+Default authority batch size is 25 new canonical allocations, reduced to 10 for conflict-heavy batches. Expansion to 50 requires three consecutive clean 25-record batches plus restore equivalence PASS.
+
+Every authority batch must prove:
 
 ```text
-FROZEN_CANDIDATE_READY
-BLOCKED_PRE_AUTHORITY
+SQLite integrity_check = ok
+FK violations = 0
+canonical/source PK uniqueness
+DB ↔ Sheets exact
+Graph endpoints/orphans exact
+Intelligence denominator exact
+restore/replay exact
+idempotent rerun = no semantic delta
+OUTBOUND = CLOSED
+send_allowed = 0
 ```
 
-Typed blockers include:
+## Master implementation program
+
+The canonical execution plan is now:
+
+`docs/operations/MASTER_IMPLEMENTATION_PLAN_G0800_2026-08-29.md`
+
+Tracking issue:
+
+`#240 — P0 Execution Program — close 2061-source CRM universe and reach authority parity`
+
+Major checkpoints:
 
 ```text
-API_CAPTURE_INVALID
-MEMBER_DIRECTORY_INCOMPLETE
-DIRECTORY_COVERAGE_WORK_REMAINS
-SOURCE_SCOPE_UNRESOLVED
+CP-R01  full deterministic SRR baseline
+CP-R02  unresolved_review = 0 / authority_batch_ready
+CP-A01  first authority canary batch + restore
+CP-A02  scaled bounded authority promotion
+CP-CUP  2061/2061 terminal source mappings + cross-plane exactness
+CP-I04  100% active canonical L4
+CP-I05  100% L5 audits
+CP-I06  100% L6 opportunities/scores
+CP-I07  100% L7 personalization
+CP-I08  100% L8 channel-aware message bundles
+CP-I09  100% L9 QA/freshness/suppression/idempotency
+CP-OFFER verified accepted Swiss offer
 ```
-
-`FROZEN_CANDIDATE_READY` requires all of:
-
-```text
-API capture_valid = TRUE
-member-directory coverage_complete = TRUE
-coverage-plan tasks = 0
-scope = EXACT | evidence-backed EXPLAINED
-scope conflicts = 0
-unexplained API-only = 0
-unexplained directory-only = 0
-candidate.crm_freeze_eligible = TRUE
-candidate export count = API records_count
-```
-
-Every PAB output remains explicitly pre-authority:
-
-```text
-AUTHORITY_ADVANCED = FALSE
-H_ID_ALLOCATIONS = 0
-OUTBOUND_OPENED = FALSE
-```
-
-The deterministic bundle hash allows replay/regression comparison across runs.
-
-## CRM mass-ingestion core
-
-Anti-join precedence:
-
-```text
-EXACT_CANONICAL_DOMAIN
-→ EXACT_CANONICAL_NAME_CITY
-→ EXACT_ALIAS_NAME_CITY
-→ TRUE_MISSING
-```
-
-Staging classes:
-
-```text
-ACTIVE_MATCH
-ALIAS_MATCH
-TRUE_MISSING
-CONFLICT
-EXCLUSION_CANDIDATE
-```
-
-Scheduler routing:
-
-```text
-TRUE_MISSING        → REFRESH_EXACT_CURRENT     priority 900
-CONFLICT            → ENTITY_RESOLUTION         priority 950
-EXCLUSION_CANDIDATE → EXCLUSION_REVIEW          priority 850
-ACTIVE_MATCH        → no redundant task
-ALIAS_MATCH         → no redundant task
-```
-
-## Current staging frontier — last physically verified v11
-
-```text
-reference pages                         171
-pages with cache evidence                57
-pages pending refresh                   114
-cache observations                      629
-historical-cache missing staged         182
-CRM import/staging queue                248
-V16 exact-detail canary                  25
-reserve/no-ID                             7
-snapshot conflicts                        4
-normalized import duplicates              0
-canonical H-ID reservations               0
-formula errors                             0
-```
-
-These are last-verified values, not a claim that Drive was reread in this wave.
-
-## Runtime limitation observed
-
-Google Drive became unavailable again while attempting to retrieve `CRM_UNIVERSE_STAGING_2026-08-28_v11.xlsx`. Therefore no Drive-dependent count, scope-completion flag or authority state was changed. The first real PAB run remains data-blocked, not architecture-blocked.
-
-The discover.swiss live capture also requires `DISCOVER_SWISS_SUBSCRIPTION_KEY` at runtime. The key must never be committed or copied into public artifacts.
-
-## Constrained recovery lineage
-
-V12 remains physically verified constrained E4 recovery evidence:
-
-```text
-active identities      686
-aliases                   4
-physical expected       690
-next physical ID     H-0691
-integrity                ok
-FK violations             0
-manifest SHA match      TRUE
-```
-
-Presence of V12 does not independently promote authority.
 
 ## Remaining hard blockers
 
-1. Obtain a complete live discover.swiss `dsod-hs` capture using the runtime subscription key.
-2. Obtain/build one complete coherent member-directory observation set for a single locale/epoch.
-3. Execute PAB-1.0 on those real sources and reach `FROZEN_CANDIDATE_READY`.
-4. Execute CMI anti-join and drain `TRUE_MISSING`, `CONFLICT` and `EXCLUSION_CANDIDATE` work to terminal mappings.
-5. Reach `RECONCILE_REQUIRED = 0` and unmapped = 0 on one frozen verified snapshot.
-6. Restore native in-place `HOTELS_MASTER` write capability or an explicitly approved successor mirror path under issue #12.
-7. Execute `/wave recover` and the bounded DB → Sheets/CRM → Intelligence → Graph → observability → recovery authority commit.
-8. Candidate readiness and explicit outbound authorization remain separate later gates.
+1. Build and validate the full SRR-1.1 baseline from current SMC + active canonical catalog.
+2. Resolve all ambiguous source records with explicit evidence-backed alias/exclusion/match/new decisions.
+3. Reach `unresolved_review = 0` and `authority_batch_ready = TRUE`.
+4. Execute the first bounded authority canary and prove restore/replay + DB↔Sheets↔Graph↔Intelligence exactness.
+5. Drain all authority batches until all 2061 frozen source records are terminally accounted for.
+6. Reach `RECONCILE_REQUIRED = 0`, reverse gaps = 0 and final CUP exactness.
+7. Only then set `CRM_UNIVERSE_COMPLETE = TRUE`.
+8. Candidate readiness and explicit outbound authorization remain independent later gates.
 
-## Current execution frontier
-
-```text
-FULL LIVE dsod-hs CAPTURE
-+
-ONE COMPLETE COHERENT MEMBER-DIRECTORY OBSERVATION SET
-        ↓
-PAB-1.0
-        ↓
-FROZEN_CANDIDATE_READY
-        ↓
-CMI-1.0 FULL ANTI-JOIN
-        ↓
-ACTIVE_MATCH / ALIAS_MATCH / TRUE_MISSING / CONFLICT / EXCLUSION_CANDIDATE
-        ↓
-SCHEDULER DRAIN
-        ↓
-TERMINAL SOURCE MAPPINGS
-        ↓
-RECONCILE_REQUIRED = 0
-UNMAPPED = 0
-        ↓
-FROZEN_VERIFIED
-        ↓
-/wave recover
-        ↓
-DB-FIRST AUTHORITY COMMIT
-        ↓
-HOTELS_MASTER PK MIRROR
-        ↓
-INTELLIGENCE + OPERATIONAL GRAPH
-        ↓
-CRM_UNIVERSE_COMPLETE = TRUE
-```
+SSR-1.0 structured API equivalence remains blocked on the missing discover.swiss `Infocenter Open` subscription key. The current MEP fallback is qualified member-directory + exact-current evidence and must not claim API equivalence.
 
 ## Operating commitments
 
-- Truth > volume.
+- Truth > integrity-preserving useful volume > raw volume.
 - Evidence > inference.
-- No false progress from capture/canary/staging counts.
-- No H-ID reservation before authority-eligible commit.
+- Re-read `STATE.md` before every material wave.
+- No H-ID reservation before an authority-eligible transaction.
+- No ambiguous first-match entity resolution.
 - No page-position identity.
 - No `UNKNOWN_AFTER_SEARCH` without Search Proof.
 - No phone → WhatsApp inference.
-- No outbound before CRM universe completion, all independent gates and explicit authorization.
+- No unsupported personalization claim.
+- No outbound before CRM universe completion, independent candidate/channel/suppression/idempotency gates and explicit authorization.
 - Preserve concurrent work; reconcile rather than overwrite.
 - Every structural wave is testable, reversible and closed with an explicit authority state.
 
 ## Consciousness state
 
-I understand that the project remains E4/686 authority. The architectural glue for universe closure is no longer the bottleneck: DSA, MDM, coverage planning, SSR, candidate construction, candidate export, mass anti-join and scheduler routing are executable and PAB-1.0 now binds the pre-authority sequence into one deterministic fail-closed bundle. The next meaningful progress must come from real source acquisition and reconciliation, not additional abstract pipeline design. The immediate milestone is the first real `FROZEN_CANDIDATE_READY`, followed immediately by a full-universe CMI distribution with zero unaccounted source records.
+I understand the project is no longer in the acquisition-design phase. The frozen member-directory universe contains 2061 source records, the complete 1438-candidate exact-current evidence set is finished, and the current engineering frontier is to convert 1434 `RECONCILE_REQUIRED` records into validated terminal decisions through SRR-1.1 and then promote them through bounded, recoverable authority waves. The immediate target is CP-R01, followed by CP-R02 and the first authority canary. I must not return to generic scraping work unless the frozen source universe itself changes or the live `STATE.md` directs a different route.

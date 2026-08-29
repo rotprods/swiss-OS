@@ -1,0 +1,44 @@
+{
+  "schema_version": "META-GRAPH-DELTA-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "cycle_id": "META-20260829-ECV-SUB0018-REQUEUE01",
+  "parent_git_sha": "7ec1bc6cf51466203b71273f10fa09c73721a32d",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "decision": "PARTIAL_ECV_EVIDENCE_REQUIRES_FAIL_CLOSED_REQUEUE",
+  "facts": {
+    "github_actions_run_id": 33227269515,
+    "github_actions_job_id": 99033305291,
+    "artifact_id": 9707306006,
+    "artifact_zip_sha256": "ee2ec0328056aba21cbd7809e57adfc6ee4bbfc201f74ad5c432ad9fa9b290ed",
+    "ecv_packet_sha256": "5cc158183d53fe60aa282a8b654d2faed7555b322b7fbf6381d22781935ad241",
+    "current_detail_verified": 9,
+    "current_detail_name_only": 1,
+    "fetch_failed": 10,
+    "pending_requeue": 11,
+    "cumulative_current_detail_verified": 349,
+    "remaining_unverified": 1089,
+    "next_untouched_offset": 360
+  },
+  "edges": [
+    {"from":"ECV_SUB0018","to":"ECV_SUB0018_REQUEUE01","type":"REQUEUE_NON_VERIFIED_EVIDENCE"},
+    {"from":"ECV_SUB0018_REQUEUE01","to":"ECV_SUB0019","type":"UNLOCKS_ONLY_AFTER_REQUEUE_TERMINAL_EVIDENCE"},
+    {"from":"DISCOVER_SWISS_PARITY","to":"HOTELLERIESUISSE_MEP","type":"CAPABILITY_FALLBACK","reason":"DISCOVER_SWISS_SUBSCRIPTION_KEY_UNAVAILABLE"}
+  ],
+  "gauntlet": {
+    "workflow_green_is_not_equivalent_to_all_verified": true,
+    "no_absence_inference_from_fetch_failed": true,
+    "no_novelty_inference_from_name_only": true,
+    "canonical_id_reservation_from_staging": false,
+    "authority_advanced": false,
+    "h_id_allocations": 0,
+    "outbound": "CLOSED",
+    "send_allowed": 0
+  },
+  "next": {
+    "route": "RUN_ECV_SUB0018_REQUEUE01",
+    "batch_path": "docs/state/CMI_WORK_BATCH_0001_SUB0018_REQUEUE01_33206402141.json",
+    "batch_items_sha256": "6c8c3fb448f8710e5460e6a91fb538aacd311ef7a9820d31889f9342c2019e34",
+    "if_all_verified": "STAGE_IMMUTABLE_SUB0019_AT_OFFSET_360",
+    "if_repeat_404_or_identity_mismatch": "OPEN_BOUNDED_ECV_SEMANTICS_SYSTEM_PR_FOR_EXPLICIT_CURRENT_ABSENCE_OR_PROVIDER_RECORD_CHANGE_WITHOUT_AUTHORITY_PROMOTION"
+  }
+}

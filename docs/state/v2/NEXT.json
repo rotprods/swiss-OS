@@ -1,0 +1,51 @@
+{
+  "schema_version": "NPP-V2-FOUNDATION-1",
+  "project_id": "PROJECT:SWITZERLAND_JOB_OS",
+  "workstream_id": "WORKSTREAM:GRAPH-REFACTOR-V2",
+  "authority": "ACCELERATION_NOT_AUTHORITY",
+  "verify_live_truth_before_execution": true,
+  "parent_git_sha": "BIND_FROM_MERGED_MAIN_OR_CI_ARTIFACT",
+  "authority_epoch": "READ_FROM_LIVE_CONTROL_PLANE",
+  "authority_manifest": "READ_FROM_LIVE_CONTROL_PLANE",
+  "event_watermark": "READ_FROM_LATEST_VERIFIED_V2_BUNDLE",
+  "projection_revision": "READ_FROM_LATEST_VERIFIED_V2_BUNDLE",
+  "selected_route": "V2_FOUNDATION",
+  "next_route": "V2_PHYSICAL_RECOVERY_AND_AGENT_DEATH_DRILLS",
+  "required_tasks": [
+    "V2-T02",
+    "V2-T12",
+    "V2-T13",
+    "V2-T14",
+    "V2-T15",
+    "V2-T17",
+    "V2-T16"
+  ],
+  "next_safe_actions": [
+    "reconstruct current main authority claims and CRM production frontier",
+    "download and verify exact merged-main graph-v2 CI artifact",
+    "execute a timed zero-context recovery drill",
+    "execute session-abort lease-takeover and stale-fencing-token drill",
+    "run security and provider-poisoning campaign",
+    "shadow one read-only CRM work item through V2 events graph assurance and NEXT",
+    "measure replay projection and recovery SLOs",
+    "prepare migration only after exact shadow parity and non-overlapping claims"
+  ],
+  "hard_barriers": [
+    "OPERATIONAL_V2_MIGRATION_REQUIRES_CP7_TO_CP12",
+    "LIVE_CRM_PRODUCTION_CLAIMS_MUST_BE_RECONCILED",
+    "AUTHORITY_TRANSITION_REQUIRES_CP13_AND_CP14"
+  ],
+  "required_inputs": [
+    "current GitHub main and open PR set",
+    "latest authority-eligible constrained manifest",
+    "live HOTELS_MASTER Graph and Intelligence revisions",
+    "latest V2 CI artifact manifest ContextPack and event ledger",
+    "latest CRM production STATE and NEXT",
+    "active Session Claim Lease and FencingToken state"
+  ],
+  "authority_advance_allowed": false,
+  "canonical_id_allocation_allowed": false,
+  "outbound_allowed": false,
+  "send_allowed": 0,
+  "closure_requirement": "persist exact SHA watermark projection revision claims evidence and successor NEXT"
+}

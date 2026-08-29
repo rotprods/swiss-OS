@@ -1,6 +1,6 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest chained Meta Execution reconciliation: **2026-08-29T10:24:00Z**. Parent main SHA: **`203af97568ef7b3884ad66d2f4b8d50e939891f5`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
+Latest chained Meta Execution reconciliation: **2026-08-29T10:27:00Z**. Parent main SHA: **`843a49f2ab2a476c6f103f0aae857a2867250bf1`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
 
 ## Authority — unchanged / locked
 
@@ -33,7 +33,7 @@ candidate records SHA               34d9aa9cfa4fe896bf1db8fba4dedfded9a1dbf2e135
 
 ## Exact-current frontier — SUB0050 green
 
-SUB0050 ECV Actions `33247638664`, job `99087780690`, artifact `9713365465`, ZIP SHA `4093226ea033485ce4a26e57456fa566a2b0ca5c4082690a3e969068f5598038`; normalized packet SHA `b9d963f9da4ad731023a9bb6e3cdb0cbed25aa4316d83394bc803dfe8d769b35`; 20/20 `CURRENT_DETAIL_VERIFIED`, HTTP 200=20, provider changes `0`, validator violations `0`, URL aliases `0`. Runtime safety assertions: `authority_advanced=false`, `h_id_allocations=0`, `OUTBOUND=CLOSED`, `send_allowed=0`.
+SUB0050 ECV Actions `33247638664`, job `99087780690`, artifact `9713365465`, ZIP SHA `4093226ea033485ce4a26e57456fa566a2b0ca5c4082690a3e969068f5598038`; normalized packet SHA `b9d963f9da4ad731023a9bb6e3cdb0cbed25aa4316d83394bc803dfe8d769b35`; 20/20 `CURRENT_DETAIL_VERIFIED`, HTTP 200=20, provider changes `0`, validator violations `0`, URL aliases `0`; no authority change.
 
 ```text
 ECV verified frontier             990 / 1438
@@ -43,9 +43,9 @@ contiguous candidate prefix       0..980 (981 records)
 next untouched candidate offset     981
 ```
 
-## NEXT exact slice — SUB0051 materialization requested
+## SUB0051 — exact materialization verified and staged
 
-The next immutable CWP slice is **SUB0051**, original candidate offsets **981..1000**, 20 items, materialized only from the durable candidate export. The request cannot allocate/reserve a canonical ID or advance authority. A green merge triggers read-only `cwp-materialize-next`; the resulting artifact must be independently hash-verified and persisted through a separate green PR before automatic ECV is eligible.
+Read-only CWP materialization run `33247810136` / job `99088223367` succeeded from main `843a49f2ab2a476c6f103f0aae857a2867250bf1`. Artifact `9713399959`, ZIP SHA `22f64f7dc90ac6ddfe953ab11f8e4bf4cb650ad855b09fff6c77b3df32c5a968`; packet SHA `589bf6654e2b4a8f33fb6e271c24f18b8f537c1c35a83cf22f0fcee42c37cd3a`; report SHA `c33d422dbc19c3ed8b7a6acd0f92f7557bfb7d6c980a76e68c84acf3840ab1be`; items SHA `ceeb07256c14adb9f2a2808920675224d9a405bb7fcc1461991e74acae806c8e`. Exact immutable offsets **981..1000**, 20 items. All remain `CANDIDATE_NEW_ENTITY_PREAUTH` / `VERIFY_NEW_ENTITY`, all `matched_hotel_id` empty, `authority_advanced=false`, `h_id_allocations=0`; staging cannot reserve H-0691 or advance E4.
 
 ## Drive / Library / structured acquisition
 
@@ -53,4 +53,4 @@ Drive `HOTELS_MASTER` (`1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w`) remains r
 
 ## P0 / NEXT
 
-Issue #14 remains controlling P0. Current route: green CI + adversarial review → merge SUB0050 result/NEXT request → materialize and hash-verify exact SUB0051 → persist exact staging → observe automatic SUB0051 ECV → continue. `RECONCILE_REQUIRED=1434`, reverse gaps `66`, full 2061 terminal mapping, SSR-1.0 and fresh authoritative cross-plane reconciliation remain mandatory before authority eligibility. Canonical pointer: `docs/state/NEXT.json`. OUTBOUND remains CLOSED; send_allowed=0.
+Issue #14 remains controlling P0. Current safe route: green CI + adversarial review → merge exact SUB0051 staging → observe automatic SUB0051 ECV → persist typed evidence/provider-change handling → immediately continue. `RECONCILE_REQUIRED=1434`, reverse gaps `66`, full 2061 terminal mapping, SSR-1.0 and fresh authoritative cross-plane reconciliation remain mandatory before authority eligibility. Canonical pointer: `docs/state/NEXT.json`. OUTBOUND remains CLOSED; send_allowed=0.

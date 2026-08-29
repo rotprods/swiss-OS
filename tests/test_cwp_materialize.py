@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import unittest
 
-from swiss_os.cwp_materialize import CwpMaterializeError, build_work_packet
+from swiss_os.cwp_materialize import CwpMaterializeError, build_idle_report, build_work_packet
 
 
 def row(offset: int, key: str, *, matched_hotel_id: str = "") -> dict[str, object]:
@@ -39,6 +39,16 @@ class CwpMaterializeTests(unittest.TestCase):
         self.assertEqual(packet["outbound"], "CLOSED")
         self.assertEqual(packet["send_allowed"], 0)
         self.assertEqual(len(packet["items_sha256"]), 64)
+
+    def test_idle_report_is_safe_when_no_request_is_active(self):
+        report = build_idle_report({"source_universe": {"snapshot_id": "SNAP"}})
+        self.assertEqual(report["state"], "NO_ACTIVE_CWP_REQUEST")
+        self.assertFalse(report["materialized"])
+        self.assertEqual(report["snapshot_id"], "SNAP")
+        self.assertFalse(report["authority_advanced"])
+        self.assertEqual(report["h_id_allocations"], 0)
+        self.assertEqual(report["outbound"], "CLOSED")
+        self.assertEqual(report["send_allowed"], 0)
 
     def test_lineage_gap_fails_closed(self):
         records = [row(i, f"MD-{i:04d}") for i in range(5)]

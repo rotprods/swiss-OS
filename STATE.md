@@ -1,6 +1,6 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest chained Meta Execution reconciliation: **2026-08-29T09:16:00Z**. Parent main SHA: **`ce2e3f87e211431218486526348edb39124f9e92`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
+Latest chained Meta Execution reconciliation: **2026-08-29T09:22:00Z**. Parent main SHA: **`07a5ad74d5f685f1203aeb07aee7312dc7ad1c72`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
 
 ## Authority — unchanged / locked
 
@@ -42,9 +42,9 @@ ECV pending requeue                 0
 contiguous candidate prefix       0..860 (861 records)
 ```
 
-## Next bounded route — deterministic SUB0045 materialization
+## SUB0045 — exact materialization verified and staged
 
-The validated read-only CWP materializer remains the MEP transport for forward scanning. Planned `SUB0045` is exact original candidate offsets **861..880**, 20 items; packet/items SHA stays unset until deterministic materialization from the validated candidate export. A separate PR must persist the exact artifact before live ECV. No staging result can reserve H-0691 or advance E4 authority.
+Read-only materialization run `33245264770` / job `99081528926` succeeded. Artifact `9712624656`, ZIP SHA `3b81fce27596ac55adecfb5ede72df81fb05bb162d7c38d0dc62d91ae264e8c0`; packet file SHA `fba75f7bec6568b957241d0d1cc13684f22e342249ddc2e652c90f0aa0950e5a`; report SHA `15e7c7d40faf9fac3069d7856252218754346d5429acdf301963ce99df8ff811`; canonical items SHA `42d045a939f7ddd408ca3e7cbaf811c3548e2789fd19bb2336fb6cf6495a5a6f`. Exact immutable candidate offsets **861..880**, 20 items. Every item remains `CANDIDATE_NEW_ENTITY_PREAUTH` / `VERIFY_NEW_ENTITY`, carries no canonical hotel ID, and cannot reserve H-0691 or advance E4 authority.
 
 ## Structured acquisition boundary
 
@@ -52,6 +52,6 @@ Authenticated developer.discover.swiss `Infocenter Open` subscription key remain
 
 ## P0 / NEXT
 
-`RECONCILE_REQUIRED=1434`, reverse authority/source gaps `66`, discover.swiss key absent. Current route: green CI/adversarial review → merge SUB0044 typed result + SUB0045 materialization request → validate the read-only SUB0045 artifact → persist exact SUB0045 packet in a further meta-PR → merge → observe automatic SUB0045 ECV and continue chaining. Full 2061 terminal mapping, `RECONCILE_REQUIRED=0`, reverse gaps `0`, SSR-1.0 and fresh authoritative cross-plane reconciliation remain mandatory before authority eligibility.
+`RECONCILE_REQUIRED=1434`, reverse authority/source gaps `66`, discover.swiss key absent. Current route: green CI + adversarial review → merge exact SUB0045 staging → observe automatic SUB0045 ECV → persist typed terminal evidence → continue exact-current frontier. Full 2061 terminal mapping, `RECONCILE_REQUIRED=0`, reverse gaps `0`, SSR-1.0 and fresh authoritative cross-plane reconciliation remain mandatory before authority eligibility.
 
 Canonical pointer: `docs/state/NEXT.json`. OUTBOUND remains CLOSED; send_allowed=0.

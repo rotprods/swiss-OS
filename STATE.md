@@ -1,7 +1,7 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest chained Meta Execution reconciliation: **2026-08-29T00:23:00Z**.  
-GitHub parent for this wave: **`00872281c4c6360e9fbfee8da8381c1dac810fee`**.  
+Latest chained Meta Execution reconciliation: **2026-08-29T00:29:00Z**.  
+GitHub parent for this wave: **`ee88dbff41cf91bd0f26db5d7ad38ccc49b808ab`**.  
 Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**.  
 Open GitHub issues labelled `P0`: **0**.  
 Frozen current CRM source snapshot: **`HS-MEMBER-DE-33206402141`**.
@@ -55,7 +55,7 @@ CWP packet internal SHA-256     2741ca3b870c83d5fe424243bb06f599a96517f5922ec13b
 CWP JSON file SHA-256           60ecb59fb8947aee90267c777792fa51238e4bd19bb6e6a993c64cdeb8587b1d
 ```
 
-Deterministic replay remains 623 exact matches / 1438 candidates / 0 conflicts. Persisted slices SUB0006..SUB0012 are contiguous with the recovered immutable ordering. Recovery proof: `docs/state/CWP_LINEAGE_RECOVERY_2026-08-29.json`.
+Deterministic replay remains 623 exact matches / 1438 candidates / 0 conflicts. Persisted slices SUB0006..SUB0013 are contiguous with the recovered immutable ordering. Recovery proof: `docs/state/CWP_LINEAGE_RECOVERY_2026-08-29.json`.
 
 ## 4. Source mapping frontier — pre-authority
 
@@ -75,18 +75,18 @@ Validated pre-authority terminal mappings remain `MD-025e7888dfc33e19723a -> H-0
 
 ## 5. Exact-current verification frontier
 
-SUB0012 completed successfully under GitHub Actions run `33223253058` / job `99021620627`:
+SUB0013 completed successfully under GitHub Actions run `33223543929` / job `99022499333`:
 
 ```text
-ECV verified frontier             240 / 1438
-ECV remaining never verified     1198
+ECV verified frontier             260 / 1438
+ECV remaining never verified     1178
 pending requeue                     0
-SUB0012 items                     20 / 20 CURRENT_DETAIL_VERIFIED
-SUB0012 packet SHA-256     f747c586f6631908b8da3fe5b346759413b01c1e2bf3ae46ef0418f8ed48f4b8
-SUB0012 artifact SHA-256   529dec141cb42ab6bf313ef2020654436c16325912cbb344de81ae736e562e51
+SUB0013 items                     20 / 20 CURRENT_DETAIL_VERIFIED
+SUB0013 packet SHA-256     2add2017db7508938a5fecb824d62a4367eb1216c95c7dab90725f6421b08c7f
+SUB0013 artifact SHA-256   42cbeb0bbd3fb29f8827eac62f7a9fcde77cffc2c2151f617449dc98ae28aaac
 ```
 
-Durable summary: `docs/state/ECV_BATCH_0001_SUB0012_RESULT.json`. SUB0013 is staged at original candidate offset 240..259, first key `MD-26d6ac303682d57e316c`, last key `MD-29671ff37e9eb4c0f842`, items SHA `8b43efd4a1b3af46c4d6a830944b5bc8279f2c391ae36d01150b29e9cd9bf2b3`. It remains evidence-only until its live exact-current canary succeeds.
+Durable summary: `docs/state/ECV_BATCH_0001_SUB0013_RESULT.json`. SUB0014 is staged at original candidate offset 260..279, first key `MD-296b4b6f9126f8bdb8b9`, last key `MD-2cb42de69d80a623d19e`, items SHA `0bcacfc6941924a48b2bc6feb2f6c5bc70defbcf5d88d742616a495a9081f982`. It remains evidence-only until its live exact-current canary succeeds.
 
 ## 6. Protocol / capability state
 
@@ -106,7 +106,7 @@ Library historical staging                NON-AUTHORITATIVE
 ## 7. NEXT
 
 ```text
-run ECV SUB0013
+run ECV SUB0014
 → persist result and advance evidence frontier only if verification succeeds
 → immediately stage the next untouched 20-record immutable CWP slice while provider pacing remains healthy
 → entity-resolve CURRENT_DETAIL_VERIFIED candidates and add only evidence-proven MATCH_EXISTING mappings

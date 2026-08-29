@@ -1,0 +1,57 @@
+name: cwp-materialize-next
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/state/ECV_BATCH_*_RESULT.json'
+      - 'docs/state/NEXT.json'
+      - 'src/swiss_os/cwp_materialize.py'
+      - '.github/workflows/cwp-materialize-next.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Materialize exact next CWP slice
+        run: python -m swiss_os.cwp_materialize --out-dir .artifacts
+      - name: Adversarial safety assertions
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report=json.load(open('.artifacts/CWP_MATERIALIZE_REPORT.json'))
+          packets=[p for p in Path('.artifacts').glob('CMI_WORK_BATCH_*.json')]
+          assert len(packets)==1, packets
+          packet=json.load(open(packets[0]))
+          assert packet['authority_advanced'] is False
+          assert packet['h_id_allocations'] == 0 and type(packet['h_id_allocations']) is int
+          assert packet['outbound'] == 'CLOSED'
+          assert packet['send_allowed'] == 0 and type(packet['send_allowed']) is int
+          assert packet['items_count'] == len(packet['items']) == report['items_count']
+          assert packet['items_sha256'] == report['items_sha256']
+          assert all(item.get('matched_hotel_id','') == '' for item in packet['items'])
+          assert all(item.get('decision') == 'CANDIDATE_NEW_ENTITY_PREAUTH' for item in packet['items'])
+          print(json.dumps(report, indent=2, sort_keys=True))
+          PY
+      - name: Upload materialized packet
+        uses: actions/upload-artifact@v4
+        with:
+          name: cwp-next-batch-${{ github.run_id }}
+          path: .artifacts
+          if-no-files-found: error
+          retention-days: 7

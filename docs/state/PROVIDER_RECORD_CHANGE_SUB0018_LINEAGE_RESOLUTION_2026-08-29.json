@@ -1,0 +1,52 @@
+{
+  "schema_version": "PROVIDER-RECORD-LINEAGE-RESOLUTION-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "generated_at": "2026-08-29T02:30:00Z",
+  "parent_git_sha": "3bbad2657bddb97d5467dd03f6c3cd9ec1b372b6",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "qualified_source_snapshot_id": "HS-MEMBER-DE-33206402141",
+  "qualified_source_artifact_id": 9700376482,
+  "qualified_source_artifact_zip_sha256": "721f9ff9f84e2d5d9df62c6b22f12e7354cef3a298cb8990be66a202e1e769ce",
+  "evidence_batch_id": "HS-MEMBER-DE-33206402141:WORK:0001:SUB:0018:RECLASSIFY:0001",
+  "evidence_run_id": 33228015270,
+  "evidence_artifact_id": 9707536383,
+  "evidence_packet_sha256": "9e9a4fb60a7b6f1991ff0913ddcd17752b96b9f01b1133904127af951d1c2536",
+  "resolution_basis": [
+    "qualified 2061-record frozen member-directory manifest lookup by exact detail_url",
+    "qualified manifest lookup by normalized provider name",
+    "current E4 authority lookup by normalized canonical name",
+    "terminal live provider evidence from ECV-PROVIDER-EVIDENCE-1.0"
+  ],
+  "records": [
+    {"work_item_source_record_key":"MD-3550ba25915fa1791dc8","expected_name":"hotel garni aristella","expected_city":"zermatt","provider_state":"CURRENT_DETAIL_URL_NOT_FOUND","manifest_exact_url_matches":0,"manifest_normalized_name_matches":0,"authority_normalized_name_matches":0,"resolution":"NON_MANIFEST_STALE_WORK_ITEM","terminal_work_item_lineage":true,"qualified_source_mapping_effect":"NONE","canonical_effect":"NONE"},
+    {"work_item_source_record_key":"MD-35d662d29fa5c800f765","expected_name":"hotel dasbreitehotel","expected_city":"basel","provider_state":"CURRENT_DETAIL_URL_NOT_FOUND","manifest_exact_url_matches":0,"manifest_normalized_name_matches":0,"authority_normalized_name_matches":0,"resolution":"NON_MANIFEST_STALE_WORK_ITEM","terminal_work_item_lineage":true,"qualified_source_mapping_effect":"NONE","canonical_effect":"NONE"},
+    {"work_item_source_record_key":"MD-364b43561df9fb7e8083","expected_name":"romantik seehotel sonne","expected_city":"küsnacht zh","provider_state":"CURRENT_DETAIL_URL_NOT_FOUND","manifest_exact_url_matches":0,"manifest_normalized_name_matches":0,"authority_normalized_name_matches":0,"resolution":"NON_MANIFEST_STALE_WORK_ITEM","terminal_work_item_lineage":true,"qualified_source_mapping_effect":"NONE","canonical_effect":"NONE"},
+    {"work_item_source_record_key":"MD-36781c9a96af8f4dd7fc9","expected_name":"sporthotel victoria","expected_city":"saanenmöser","provider_state":"CURRENT_DETAIL_NAME_ONLY","manifest_exact_url_matches":1,"manifest_normalized_name_matches":1,"authority_normalized_name_matches":0,"resolution":"SOURCE_RECORD_REDIRECT_WITH_CITY_DRIFT","redirect_source_record_key":"MD-e9a4756e4bd6482a5ced","redirect_name":"Sporthotel Victoria","redirect_city":"Gstaad","redirect_original_candidate_offset":1319,"terminal_work_item_lineage":true,"qualified_source_mapping_effect":"DEFER_TO_ORIGINAL_CANDIDATE_RECORD","canonical_effect":"NONE"},
+    {"work_item_source_record_key":"MD-36c3c8304ff4354ef62f","expected_name":"hotel alpine lodge","expected_city":"gstaad","provider_state":"CURRENT_DETAIL_URL_NOT_FOUND","manifest_exact_url_matches":0,"manifest_normalized_name_matches":0,"authority_normalized_name_matches":0,"resolution":"NON_MANIFEST_STALE_WORK_ITEM","terminal_work_item_lineage":true,"qualified_source_mapping_effect":"NONE","canonical_effect":"NONE"},
+    {"work_item_source_record_key":"MD-36f23a9ce8bded840557","expected_name":"hotel hirschen grindelwald","expected_city":"grindelwald","provider_state":"CURRENT_DETAIL_URL_NOT_FOUND","manifest_exact_url_matches":0,"manifest_normalized_name_matches":0,"authority_normalized_name_matches":0,"resolution":"NON_MANIFEST_STALE_WORK_ITEM","terminal_work_item_lineage":true,"qualified_source_mapping_effect":"NONE","canonical_effect":"NONE"},
+    {"work_item_source_record_key":"MD-373dc2514379ef9ba0e3","expected_name":"hotel ernens restaurant","expected_city":"schönried","provider_state":"CURRENT_DETAIL_URL_NOT_FOUND","manifest_exact_url_matches":0,"manifest_normalized_name_matches":0,"authority_normalized_name_matches":0,"resolution":"NON_MANIFEST_STALE_WORK_ITEM","terminal_work_item_lineage":true,"qualified_source_mapping_effect":"NONE","canonical_effect":"NONE"},
+    {"work_item_source_record_key":"MD-37a122c38bcbfe538b09","expected_name":"hotel interlaken","expected_city":"interlaken","provider_state":"CURRENT_DETAIL_URL_NOT_FOUND","manifest_exact_url_matches":0,"manifest_normalized_name_matches":0,"authority_normalized_name_matches":0,"resolution":"NON_MANIFEST_STALE_WORK_ITEM","terminal_work_item_lineage":true,"qualified_source_mapping_effect":"NONE","canonical_effect":"NONE"},
+    {"work_item_source_record_key":"MD-37e6b043547a85425084","expected_name":"hotel schlüssel","expected_city":"luzern","provider_state":"CURRENT_DETAIL_URL_NOT_FOUND","manifest_exact_url_matches":0,"manifest_normalized_name_matches":0,"authority_normalized_name_matches":0,"resolution":"NON_MANIFEST_STALE_WORK_ITEM","terminal_work_item_lineage":true,"qualified_source_mapping_effect":"NONE","canonical_effect":"NONE"},
+    {"work_item_source_record_key":"MD-37e947506a551102de8b","expected_name":"swiss chocolate hotel zurich","expected_city":"zurich","provider_state":"CURRENT_DETAIL_URL_NOT_FOUND","manifest_exact_url_matches":0,"manifest_normalized_name_matches":0,"authority_normalized_name_matches":0,"resolution":"NON_MANIFEST_STALE_WORK_ITEM","terminal_work_item_lineage":true,"qualified_source_mapping_effect":"NONE","canonical_effect":"NONE"},
+    {"work_item_source_record_key":"MD-37eb49aaefb166d15e31","expected_name":"wolfschlucht","expected_city":"büren an der aare","provider_state":"CURRENT_DETAIL_URL_NOT_FOUND","manifest_exact_url_matches":0,"manifest_normalized_name_matches":0,"authority_normalized_name_matches":0,"resolution":"NON_MANIFEST_STALE_WORK_ITEM","terminal_work_item_lineage":true,"qualified_source_mapping_effect":"NONE","canonical_effect":"NONE"}
+  ],
+  "summary": {
+    "input_provider_record_changes": 11,
+    "terminal_work_item_lineage_resolutions": 11,
+    "non_manifest_stale_work_items": 10,
+    "source_record_redirects": 1,
+    "provider_record_change_review_open": 0,
+    "qualified_source_terminal_mapping_delta": 0,
+    "authority_mapping_delta": 0
+  },
+  "adversarial_constraints": [
+    "NON_MANIFEST_STALE_WORK_ITEM means the malformed work item is outside the frozen qualified 2061-record manifest; it is not a claim that a hotel does not exist.",
+    "SOURCE_RECORD_REDIRECT_WITH_CITY_DRIFT redirects only source-work lineage to the frozen manifest record; it is not a canonical H-ID mapping.",
+    "Sporthotel Victoria MD-e9a4756e4bd6482a5ced remains an unresolved original CWP candidate at offset 1319 and must pass normal ECV/entity-resolution flow.",
+    "No canonical ID is allocated or reserved; authority remains unchanged."
+  ],
+  "authority_advanced": false,
+  "h_id_allocations": 0,
+  "outbound": "CLOSED",
+  "send_allowed": 0
+}

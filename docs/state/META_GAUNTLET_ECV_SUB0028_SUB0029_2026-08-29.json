@@ -1,12 +1,15 @@
 {
-  "schema_version":"META-GAUNTLET-1.0","project":"SWITZERLAND_JOB_OS","cycle_id":"META-20260829-ECV-SUB0028-SUB0029","parent_git_sha":"4e66823b82e09374f5b911bca7f5ab1931d204f4","authority_epoch":"HS_ENTITY_EPOCH_2026-08-25_E4","verdict":"PASS_PRE_MERGE_PENDING_CI",
+  "schema_version":"META-GAUNTLET-1.0","project":"SWITZERLAND_JOB_OS","cycle_id":"META-20260829-ECV-SUB0028-SUB0029","parent_git_sha":"4e66823b82e09374f5b911bca7f5ab1931d204f4","authority_epoch":"HS_ENTITY_EPOCH_2026-08-25_E4","verdict":"PASS_PRE_AUTHORITY",
+  "ci":{"run_id":33237483275,"job_id":99060895404,"conclusion":"success"},
   "assertions":[
     {"id":"G-01","assertion":"SUB0028 is 20/20 CURRENT_DETAIL_VERIFIED with zero provider changes and validator violations","pass":true},
     {"id":"G-02","assertion":"Strict candidate prefix reaches offset 540","pass":true},
     {"id":"G-03","assertion":"SUB0029 is exact frozen offsets 541..560 with items SHA 0d68ad00b695cd8cbeeff158871a055df082a9bbfff2899a35f06292f20c33de","pass":true},
-    {"id":"G-04","assertion":"No H-ID reservation/allocation; E4 remains 690/690/0","pass":true},
-    {"id":"G-05","assertion":"OUTBOUND=CLOSED and send_allowed=0","pass":true},
-    {"id":"G-06","assertion":"Repo-guard/CWP lineage/handoff/unit/manifest CI must be green before merge","pass":"PENDING_CI"}
+    {"id":"G-04","assertion":"CWP candidate lineage guard PASS","pass":true},
+    {"id":"G-05","assertion":"Durable handoff frontier guard PASS","pass":true},
+    {"id":"G-06","assertion":"Unit tests and manifest canary PASS","pass":true},
+    {"id":"G-07","assertion":"No H-ID reservation/allocation; E4 remains 690/690/0","pass":true},
+    {"id":"G-08","assertion":"OUTBOUND=CLOSED and send_allowed=0","pass":true}
   ],
   "residual_blockers":["EFFECTIVE_RECONCILE_REQUIRED_1434_NOT_ZERO","REVERSE_AUTHORITY_SOURCE_DISCREPANCIES_66_REQUIRE_RESOLUTION","DISCOVER_SWISS_SUBSCRIPTION_KEY_UNAVAILABLE"],
   "authority_advanced":false,"h_id_allocations":0,"outbound":"CLOSED","send_allowed":0

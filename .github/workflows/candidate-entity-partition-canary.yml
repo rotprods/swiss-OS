@@ -1,0 +1,75 @@
+name: candidate-entity-partition-canary
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/swiss_os/candidate_entity_partition.py'
+      - 'tests/test_candidate_entity_partition.py'
+      - 'docs/operations/CANDIDATE_ENTITY_PARTITION.md'
+      - 'docs/state/CRM_CANDIDATE_EXPORT_33206402141.json.gz'
+      - 'docs/state/CRM_CANDIDATE_EXPORT_33206402141.manifest.json'
+      - '.github/workflows/candidate-entity-partition-canary.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  partition:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build whole-universe candidate entity partition
+        run: |
+          set -euo pipefail
+          mkdir -p .artifacts/cep
+          python -m swiss_os.candidate_entity_partition \
+            docs/state/CRM_CANDIDATE_EXPORT_33206402141.json.gz \
+            docs/state/CRM_CANDIDATE_EXPORT_33206402141.manifest.json \
+            --out .artifacts/cep/CANDIDATE_ENTITY_PARTITION_33206402141.json \
+            --summary-out .artifacts/cep/CANDIDATE_ENTITY_PARTITION_33206402141.summary.json \
+            | tee .artifacts/cep/CANDIDATE_ENTITY_PARTITION_33206402141.runtime.json
+      - name: Enforce pre-authority and whole-set invariants
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path(
+              ".artifacts/cep/"
+              "CANDIDATE_ENTITY_PARTITION_33206402141.summary.json"
+          )
+          payload = json.loads(path.read_text(encoding="utf-8"))
+          summary = payload["summary"]
+          assert payload["validation_pass"] is True, payload["validation_violations"]
+          assert summary["candidate_records"] == 1438
+          assert summary["exact_assignment_count"] == 1438
+          assert summary["assignment_duplicates"] == 0
+          assert summary["omitted_source_records"] == 0
+          assert summary["foreign_source_records"] == 0
+          assert summary["partition_clusters"] >= 1
+          assert payload["authority_advanced"] is False
+          assert payload["h_id_allocations"] == 0
+          assert not isinstance(payload["h_id_allocations"], bool)
+          assert payload["canonical_id_reservations"] == 0
+          assert not isinstance(payload["canonical_id_reservations"], bool)
+          assert payload["outbound"] == "CLOSED"
+          assert payload["outbound_opened"] is False
+          assert payload["send_allowed"] == 0
+          assert not isinstance(payload["send_allowed"], bool)
+          print(json.dumps(payload, indent=2, sort_keys=True))
+          PY
+      - name: Upload deterministic CEP evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: candidate-entity-partition-33206402141
+          path: .artifacts/cep
+          if-no-files-found: error
+          retention-days: 14

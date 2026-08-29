@@ -45,7 +45,7 @@
     "current_detail_verified": 349,
     "remaining_unverified": 1089,
     "remaining_never_verified": 1089,
-    "pending_requeue": 0,
+    "pending_requeue": 11,
     "pending_provider_record_change_review": 11,
     "latest_subbatch_id": "HS-MEMBER-DE-33206402141:WORK:0001:SUB:0018:REQUEUE:0001",
     "latest_subbatch_packet_sha256": "4fd6827be5370dfd37b757bac45a757434093490de32a623493daf71ca751268",

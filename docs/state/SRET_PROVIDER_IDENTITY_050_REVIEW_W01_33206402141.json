@@ -1,0 +1,23 @@
+{
+  "schema_version":"SRET-PROVIDER-IDENTITY-REVIEW-WAVE-1.0",
+  "project":"SWITZERLAND_JOB_OS",
+  "snapshot_id":"HS-MEMBER-DE-33206402141",
+  "parent_git_sha":"ff65e9bd79945294accae55536faeb42f3135a16",
+  "session_id":"SES-20260829T223600Z-PIE050-D42F9A",
+  "claim_id":"CLAIM-CRM-PIE050-CAPTURED27-D42F9A",
+  "fencing_token":3,
+  "authority_epoch":"HS_ENTITY_EPOCH_2026-08-25_E4",
+  "provider_evidence":{"artifact_id":9722212725,"packet_sha256":"422f27d7d0e85c5bbba12ac55b77eafc7930204d5e8fec2c3d24f51395b06d7e","results_sha256":"63bf8781509a968227cbfc1d470a5638aab49b14cf0582e201fefe646e7d0f65"},
+  "reviews":[
+    {"source_record_key":"MD-7400cffb0d22c9b2d01d","source_name":"Hotel Crowne Plaza","source_city":"Zürich","provider_response_sha256":"43d59b4d2e2e1f9fd3574e8686c1af54fc81622e3d4a30b7e2509f349c309c5f","candidate_hotel_id":"H-0257","canonical_name":"Central Plaza Hotel","canonical_city":"Zürich","canonical_state":"PARITY_PENDING","canonical_identity_confidence":0.75,"decision":"NOVELTY_REVIEW_DISTINCTNESS_CORROBORATED","reason":"Current provider identity is Crowne Plaza; suggested canonical is Central Plaza Hotel. Names identify different hotel brands/properties in the same city; no same-property evidence exists.","terminal_mapping":false},
+    {"source_record_key":"MD-a5398d49d8ecd5b730d7","source_name":"Hôtel Mirabeau Lausanne","source_city":"Lausanne","provider_response_sha256":"b73582f2165ef264ed5faec71a9297d184d4eb664af3286b38797259e007f6cf","candidate_hotel_id":"H-0614","canonical_name":"Mövenpick Hotel Lausanne","canonical_city":"Lausanne","canonical_state":"CANONICAL_CURRENT_RECONCILED","canonical_identity_confidence":0.99,"decision":"NOVELTY_REVIEW_DISTINCTNESS_CORROBORATED","reason":"Current provider identity Hôtel Mirabeau Lausanne differs from current reconciled Mövenpick Hotel Lausanne; no alias/rebrand evidence links them.","terminal_mapping":false},
+    {"source_record_key":"MD-93d88fb61a77fd5a967d","source_name":"Hotel des Alpes","source_city":"Luzern","provider_response_sha256":"64288a4d40aa4b4ecb1e078171212674e42d20501dd0fe4b70292e579a771540","candidate_hotel_id":"H-0649","canonical_name":"Hotel Des Balances","canonical_city":"Luzern","canonical_state":"CANONICAL_CURRENT_RECONCILED","canonical_identity_confidence":0.99,"decision":"NOVELTY_REVIEW_DISTINCTNESS_CORROBORATED","reason":"Current Hotel des Alpes provider identity is distinct from current reconciled Hotel Des Balances; token overlap is generic and not identity evidence.","terminal_mapping":false},
+    {"source_record_key":"MD-699c71bb6bce540f641c","source_name":"ibis Lugano Paradiso","source_city":"Paradiso","provider_response_sha256":"34dcb94966b981ca636f852ecd4189485b3da4a8238554335ed6473df58683dd","candidate_hotel_id":"H-0206","canonical_name":"Novotel Lugano Paradiso","canonical_city":"Paradiso","canonical_state":"PARITY_PENDING","canonical_identity_confidence":0.75,"decision":"NOVELTY_REVIEW_DISTINCTNESS_CORROBORATED","reason":"ibis and Novotel are separately named provider hotel identities in Paradiso; same locality/Accor-family context is insufficient for same-property identity.","terminal_mapping":false},
+    {"source_record_key":"MD-6e3f71832d698c2f256e","source_name":"Zürich Marriott Hotel","source_city":"Zürich","provider_response_sha256":"7a5be4d589455c14a7eb4c369c127bcf63271b7ee6295922b49ded147be43978","candidate_hotel_id":"H-0473","canonical_name":"Hotel Schweizerhof Zürich","canonical_city":"Zürich","canonical_state":"PARITY_PENDING","canonical_identity_confidence":0.8,"decision":"NOVELTY_REVIEW_DISTINCTNESS_CORROBORATED","reason":"Marriott and Hotel Schweizerhof Zürich are distinct named hotel identities; city overlap plus generic hotel tokens cannot establish same-property identity.","terminal_mapping":false}
+  ],
+  "result_counts":{"NOVELTY_REVIEW_DISTINCTNESS_CORROBORATED":5,"MATCH_EXISTING_REVIEW_CORROBORATED":0,"EVIDENCE_REVIEW_REQUIRED":0},
+  "frontier":{"provider_evidence_executed":47,"identity_review_completed":25,"identity_review_pending_from_evidence":22,"unprocessed_in_050_059":0,"lower_similarity_tail_remaining":49},
+  "mapping_effect":{"terminal_mappings":0,"reconcile_required_delta":0,"effective_reconcile_required":1404},
+  "hard_invariants":{"authority_advanced":false,"h_id_allocations":0,"canonical_id_reservations":0,"crm_universe_complete":false,"outbound":"CLOSED","send_allowed":0},
+  "next_route":"PIE_050_CAPTURED_22_IDENTITY_REVIEW_THEN_LOWER_49"
+}

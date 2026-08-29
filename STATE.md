@@ -1,6 +1,6 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest chained Meta Execution reconciliation: **2026-08-29T09:37:00Z**. Parent main SHA: **`ecc9a9eb250d62d3f5b599a3549fba64096c9887`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
+Latest chained Meta Execution reconciliation: **2026-08-29T09:44:10Z**. Parent main SHA: **`a606cebf9f83a186775ccdf37ff7e7111548f8a7`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
 
 ## Authority — unchanged / locked
 
@@ -40,16 +40,15 @@ ECV verified frontier             910 / 1438
 ECV remaining never verified     528
 ECV pending requeue                 0
 contiguous candidate prefix       0..900 (901 records)
-next untouched candidate offset     901
 ```
 
-## NEXT exact slice — SUB0047 materialization requested
+## SUB0047 — exact materialization verified and staged
 
-The next immutable CWP slice is **SUB0047**, original candidate offsets **901..920**, 20 items, materialized only from the durable candidate export. This request cannot allocate/reserve a canonical ID and cannot advance authority. Merge of this state change triggers the read-only `cwp-materialize-next` workflow; its artifact must be hash-verified and persisted through a separate green branch/PR before the live ECV canary is eligible.
+Read-only CWP materialization run `33246163445` / job `99083878585` succeeded. Artifact `9712898058`, ZIP SHA `e95f37e13e579a0665c7acbcf0be466eb20789ee6aa3b49ea62c51a494671f3d`; packet file SHA `c058284b80c5c54f87659987d5017d18a85f4edd8646b90099ba56d569d319b0`; report SHA `97d28572e01a35d648412aa34e8a8bf08f5e1e890cfac755fe2f50cc54e677f7`; canonical items SHA `3b132c5c696cb930544e7ffb385658c365bc0fe2ae55a557661689f33b6ba224`. Exact immutable candidate offsets **901..920**, 20 items. Every item remains `CANDIDATE_NEW_ENTITY_PREAUTH` / `VERIFY_NEW_ENTITY`, every `matched_hotel_id` is empty, and the artifact cannot reserve H-0691 or advance E4 authority.
 
 ## Drive / Library reconstruction
 
-Drive `HOTELS_MASTER` (`1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w`) is readable with the expected operational planes including `HOTELS_V2`, `ENTITY_RESOLUTION`, `EVIDENCE_LEDGER`, `OUTREACH_GATES_V2`, `DISCOVERY_CANDIDATES_V3`, `DEDUPE_REGISTRY_V2`, `GOAL_STATE`, and `AGENT_HANDOFF_LOG`. File Library exposes `CRM_UNIVERSE_STAGING_2026-08-28_v6.xlsx`; its directory crawl queue still contains `PENDING_REFRESH` / historical-cache discovery state and is explicitly non-authoritative.
+Drive `HOTELS_MASTER` (`1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w`) is readable with the expected operational planes including `HOTELS_V2`, `ENTITY_RESOLUTION`, `EVIDENCE_LEDGER`, `OUTREACH_GATES_V2`, `DISCOVERY_CANDIDATES_V3`, `DEDUPE_REGISTRY_V2`, `GOAL_STATE`, and `AGENT_HANDOFF_LOG`. File Library exposes `CRM_UNIVERSE_STAGING_2026-08-28_v6.xlsx`; its directory crawl queue remains non-authoritative staging/recovery state.
 
 ## Structured acquisition boundary
 
@@ -57,6 +56,6 @@ Authenticated developer.discover.swiss `Infocenter Open` subscription key remain
 
 ## P0 / NEXT
 
-`RECONCILE_REQUIRED=1434`, reverse authority/source gaps `66`, discover.swiss key absent, and `P0-GSHEETS-E4-BULK-READ-PARTIAL` remains open as a recovery-path limitation rather than an authority license. Current route: green CI + adversarial review → merge SUB0046 result/NEXT request → materialize and hash-verify exact SUB0047 → persist exact staging through its own PR → observe automatic SUB0047 ECV → continue. Full 2061 terminal mapping, `RECONCILE_REQUIRED=0`, reverse gaps `0`, SSR-1.0 and fresh authoritative cross-plane reconciliation remain mandatory before authority eligibility.
+`RECONCILE_REQUIRED=1434`, reverse authority/source gaps `66`, discover.swiss key absent, and `P0-GSHEETS-E4-BULK-READ-PARTIAL` remains open as a recovery-path limitation rather than an authority license. Current route: green CI + adversarial review → merge exact SUB0047 staging → observe automatic SUB0047 ECV → persist typed terminal evidence or provider-change handling → immediately request/materialize the next immutable slice if safe. Full 2061 terminal mapping, `RECONCILE_REQUIRED=0`, reverse gaps `0`, SSR-1.0 and fresh authoritative cross-plane reconciliation remain mandatory before authority eligibility.
 
 Canonical pointer: `docs/state/NEXT.json`. OUTBOUND remains CLOSED; send_allowed=0.

@@ -1,0 +1,46 @@
+{
+  "schema_version": "META-GRAPH-DELTA-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "cycle_id": "META-20260829-ECV-SUB0019-SUB0020",
+  "parent_git_sha": "6e89d197c4425579e8fef2e30dc09cc80d02e6cd",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "checkpoint": "CRM_UNIVERSE_COMPLETE",
+  "colette": {
+    "observe": "SUB0019 live ECV completed green: 20/20 CURRENT_DETAIL_VERIFIED, zero provider record changes, zero validation violations.",
+    "bottleneck": "Continue immutable exact-current acquisition while discover.swiss structured parity is provider-key blocked and authoritative mapping remains 627/2061.",
+    "execute": "Persist SUB0019 evidence, deterministically reconstruct immutable CWP candidate order from source artifact + current authority, and stage original offsets 360..379 as SUB0020.",
+    "learn": "Later-format reconstruction exactly reproduces persisted SUB0017 and recovered/live-verified SUB0019 hashes; malformed historical SUB0018 must not consume original-candidate lineage.",
+    "test": "Authority workbook H-IDs are contiguous H-0001..H-0690; anti-join is 623/1438; SUB0017 and SUB0019 continuity hashes match; SUB0020 hash is deterministic.",
+    "evaluate": "PASS_PRE_AUTHORITY"
+  },
+  "frontier_before": {
+    "current_detail_verified": 349,
+    "remaining_never_verified": 1089,
+    "pending_requeue_machine_frontier": 11
+  },
+  "frontier_after": {
+    "current_detail_verified": 369,
+    "remaining_never_verified": 1069,
+    "pending_requeue": 0,
+    "provider_record_change_review": 11
+  },
+  "decisions": [
+    "D-META-ECV-019-01: accept SUB0019 exact-current evidence as verification-only; no terminal canonical mapping effect until entity resolution.",
+    "D-META-CWP-020-01: source artifact 9700376482 plus current E4 authority is sufficient to reconstruct future immutable candidate slices after exact continuity hashes reproduce SUB0017 and SUB0019.",
+    "D-META-CWP-020-02: historical malformed SUB0018 is excluded from original-candidate consumption accounting; original offsets 340..359 were consumed only by corrected SUB0019.",
+    "D-META-SAFETY-01: H-0691 remains unallocated; authority promotion remains prohibited; OUTBOUND=CLOSED; send_allowed=0."
+  ],
+  "next": {
+    "route": "SUB0020_LIVE_ECV_THEN_CHAIN_SUB0021",
+    "staged_batch": "HS-MEMBER-DE-33206402141:WORK:0001:SUB:0020",
+    "staged_items_sha256": "52cf15deec4f63e877805850a8175342cf05bd3d701899d64973491d6d1c1162",
+    "next_original_candidate_offset_if_green": 380,
+    "provider_dependency": "DISCOVER_SWISS_SUBSCRIPTION_KEY",
+    "mapping_blocker": "EFFECTIVE_RECONCILE_REQUIRED_1434_NOT_ZERO",
+    "reverse_gap_blocker": 66
+  },
+  "authority_advanced": false,
+  "h_id_allocations": 0,
+  "outbound": "CLOSED",
+  "send_allowed": 0
+}

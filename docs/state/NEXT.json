@@ -1,15 +1,15 @@
 {
   "schema_version": "NPP-1.0",
   "project": "SWITZERLAND_JOB_OS",
-  "generated_at": "2026-08-29T02:31:00Z",
-  "cycle_id": "META-20260829-PROVIDER-LINEAGE-CLOSE-SUB0020-LIVE",
-  "parent_git_sha": "3bbad2657bddb97d5467dd03f6c3cd9ec1b372b6",
+  "generated_at": "2026-08-29T02:35:00Z",
+  "cycle_id": "META-20260829-ECV-SUB0020-SUB0021",
+  "parent_git_sha": "a5997eab004e6775f72aa7f8a335c5d11c65f8ef",
   "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
   "authority_parent": "ISSUE_89_COMPOSITE_CONSTRAINED_PARENT",
   "authority_parent_materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
   "execution_mode": "PRE_AUTHORITY_SOURCE_RECONCILIATION",
-  "selected_route": "TERMINALIZE_MALFORMED_SUB0018_WORK_ITEM_LINEAGE_WHILE_SUB0020_LIVE",
-  "next_route": "OBSERVE_SUB0020_ECV_RUN_33228986096_THEN_PERSIST_AND_CHAIN_SUB0021",
+  "selected_route": "ECV_SUB0020_VERIFIED_AND_DETERMINISTIC_CWP_CONTINUITY",
+  "next_route": "MERGE_GREEN_STATE_WAVE_THEN_OBSERVE_AUTO_SUB0021_ECV_AND_CHAIN",
   "goal_id": "G-0500",
   "checkpoint_id": "CRM_UNIVERSE_COMPLETE",
   "authority_state": {
@@ -43,36 +43,23 @@
   },
   "ecv_frontier": {
     "candidate_records_total": 1438,
-    "current_detail_verified": 369,
-    "remaining_unverified": 1069,
-    "remaining_never_verified": 1069,
+    "current_detail_verified": 389,
+    "remaining_unverified": 1049,
+    "remaining_never_verified": 1049,
     "pending_requeue": 0,
-    "latest_subbatch_id": "HS-MEMBER-DE-33206402141:WORK:0001:SUB:0019",
-    "latest_subbatch_packet_sha256": "87069101c2211dfd80bbc4775be49353c70d4a13dd906009fa56f75c136f9102",
-    "latest_github_actions_run_id": 33228604707,
-    "latest_github_actions_job_id": 99037094574,
-    "latest_artifact_id": 9707729092,
-    "latest_artifact_zip_sha256": "b283542ce30f23fa07dab72642809fa9085009a5d8dad2c9b3304987ec74660a",
-    "blind_network_requeue_pending": 0,
+    "latest_subbatch_id": "HS-MEMBER-DE-33206402141:WORK:0001:SUB:0020",
+    "latest_subbatch_packet_sha256": "b06d5d2125b664bc361e5bfaaaa74d326f9b797ab0d732bf7ba39f323b45c6aa",
+    "latest_github_actions_run_id": 33228986096,
+    "latest_github_actions_job_id": 99038177327,
+    "latest_artifact_id": 9707858847,
+    "latest_artifact_zip_sha256": "c69faf8023b12e40c85955ac9bbbbb5793a0515763be5d2917e282ffd5e4d620",
     "provider_record_change_review": 0,
     "provider_record_lineage_resolution": "docs/state/PROVIDER_RECORD_CHANGE_SUB0018_LINEAGE_RESOLUTION_2026-08-29.json",
-    "provider_record_lineage_terminalized": 11,
-    "provider_record_lineage_non_manifest_stale": 10,
-    "provider_record_lineage_redirects": 1,
-    "provider_record_redirect": {
-      "malformed_work_item_source_record_key": "MD-36781c9a96af8f4dd7fc9",
-      "qualified_source_record_key": "MD-e9a4756e4bd6482a5ced",
-      "qualified_source_city": "Gstaad",
-      "original_candidate_offset": 1319,
-      "canonical_mapping_effect": "NONE"
-    },
-    "next_untouched_original_candidate_offset": 380,
-    "next_staged_batch": "HS-MEMBER-DE-33206402141:WORK:0001:SUB:0020",
-    "next_staged_original_candidate_offset_range": "360..379",
+    "next_untouched_original_candidate_offset": 400,
+    "next_staged_batch": "HS-MEMBER-DE-33206402141:WORK:0001:SUB:0021",
+    "next_staged_original_candidate_offset_range": "380..399",
     "next_staged_items": 20,
-    "next_staged_items_sha256": "52cf15deec4f63e877805850a8175342cf05bd3d701899d64973491d6d1c1162",
-    "live_next_run_id": 33228986096,
-    "live_next_run_status_at_handoff": "IN_PROGRESS"
+    "next_staged_items_sha256": "b42407608bf0a0995b453485b40ad9016376426445fdcad59084d8bdd43045b2"
   },
   "continuity_recovery": {
     "authority_sheet_id": "1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w",
@@ -82,9 +69,9 @@
     "anti_join_candidates": 1438,
     "sub0017_hash_match": true,
     "sub0019_hash_match": true,
-    "sub0019_original_candidate_offset_range": "340..359",
+    "sub0020_all_verified": true,
     "malformed_historical_sub0018_consumes_original_candidate_offsets": false,
-    "proof": "docs/state/CWP_CONTINUITY_SUB0020_RECOVERY_2026-08-29.json"
+    "proof": "docs/state/CWP_CONTINUITY_SUB0021_RECOVERY_2026-08-29.json"
   },
   "hard_blockers": [
     "EFFECTIVE_RECONCILE_REQUIRED_1434_NOT_ZERO",
@@ -102,27 +89,28 @@
   },
   "mep_fallbacks": [
     "discover.swiss key unavailable -> continue coherent HotellerieSuisse source universe and exact-current/entity-resolution routes",
-    "malformed work-item provider changes -> close only work-lineage using frozen manifest; never infer hotel absence or canonical identity",
-    "green SUB0020 ECV -> persist evidence, recompute NEXT, reconstruct/stage original candidate offsets 380..399",
-    "nonterminal live fetch failure -> bounded requeue; repeated deterministic provider change -> typed provider-record-change evidence"
+    "green SUB0021 ECV -> persist evidence, recompute NEXT, reconstruct/stage original candidate offsets 400..419",
+    "nonterminal live fetch failure -> bounded requeue; deterministic provider change -> typed provider-record-change evidence",
+    "exact-current evidence remains non-authoritative until terminal entity mapping and full reconciliation"
   ],
   "required_inputs": [
-    "GitHub main at or descendant of 3bbad2657bddb97d5467dd03f6c3cd9ec1b372b6",
+    "GitHub main at or descendant of a5997eab004e6775f72aa7f8a335c5d11c65f8ef",
     "E4 authority 690 physical / 690 active canonical / 0 aliases; H-0691 unallocated",
     "repaired authority SHA256 70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
     "source artifact 9700376482 / ZIP SHA256 721f9ff9f84e2d5d9df62c6b22f12e7354cef3a298cb8990be66a202e1e769ce",
     "HOTELS_MASTER sheet 1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w / export SHA256 434fab60a1260f08b647e9f6ed718575de195a11fc09177a4c42da84b66b920e",
-    "docs/state/PROVIDER_RECORD_CHANGE_SUB0018_LINEAGE_RESOLUTION_2026-08-29.json",
-    "docs/state/CMI_WORK_BATCH_0001_SUB0020_33206402141.json",
-    "SUB0020 live Actions run 33228986096"
+    "docs/state/ECV_BATCH_0001_SUB0020_RESULT.json",
+    "docs/state/CWP_CONTINUITY_SUB0021_RECOVERY_2026-08-29.json",
+    "docs/state/CMI_WORK_BATCH_0001_SUB0021_33206402141.json",
+    "SUB0020 Actions run 33228986096 / artifact 9707858847 / ZIP SHA256 c69faf8023b12e40c85955ac9bbbbb5793a0515763be5d2917e282ffd5e4d620"
   ],
   "resume_instructions": [
-    "Observe Actions run 33228986096 to terminal state; do not infer outcome while in progress.",
+    "Require green repo CI and adversarial review before merging this state/staging wave.",
+    "After merge, observe the automatically triggered ECV run for the single changed SUB0021 batch.",
     "Download and validate ECV_RESULT, ECV_PROVIDER_EVIDENCE and ECV_VALIDATE; enforce authority_advanced=false, h_id_allocations=0, OUTBOUND=CLOSED, send_allowed=0.",
-    "Persist exact SUB0020 evidence and immediately reconstruct/stage original candidate offsets 380..399 as SUB0021 if safe.",
-    "Treat the Sporthotel Victoria redirect only as source-work lineage to MD-e9a4756e4bd6482a5ced at original candidate offset 1319; no canonical mapping until normal entity resolution.",
-    "Continue source entity resolution and reverse-gap resolution independently.",
-    "Before authority eligibility require full 2061-record mapping replay, RECONCILE_REQUIRED=0, resolution of all 66 reverse gaps, SSR-1.0 and fresh cross-plane reconciliation."
+    "Persist exact SUB0021 evidence and immediately reconstruct/stage original candidate offsets 400..419 if safe.",
+    "Continue source entity-resolution/terminal mapping replay and reverse-gap resolution independently.",
+    "Before authority eligibility require full 2061-record mapping replay, RECONCILE_REQUIRED=0, reverse gaps=0, SSR-1.0 and fresh cross-plane reconciliation."
   ],
   "authority_advance_allowed": false,
   "canonical_id_allocation_allowed": false,

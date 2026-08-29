@@ -1,10 +1,11 @@
 {
-  "schema_version":"CWP-CONTINUITY-1.0","project":"SWITZERLAND_JOB_OS","generated_at":"2026-08-29T04:58:31Z","cycle_id":"META-20260829-ECV-SUB0026-SUB0027","parent_git_sha":"216481c7993198daef4585fb90b9acbc9bfeeefc","authority_epoch":"HS_ENTITY_EPOCH_2026-08-25_E4",
+  "schema_version":"CWP-CONTINUITY-1.0","project":"SWITZERLAND_JOB_OS","generated_at":"2026-08-29T05:09:00Z","cycle_id":"META-20260829-ECV-SUB0026-SUB0027","parent_git_sha":"216481c7993198daef4585fb90b9acbc9bfeeefc","authority_epoch":"HS_ENTITY_EPOCH_2026-08-25_E4",
   "authority_state":{"physical_rows":690,"active_canonical":690,"persisted_hid_alias_edges":0,"next_physical_id":"H-0691_UNALLOCATED"},
   "source_replay":{"snapshot_id":"HS-MEMBER-DE-33206402141","source_records":2061,"exact_authority_matches":623,"candidate_records":1438,"candidate_records_sha256":"34d9aa9cfa4fe896bf1db8fba4dedfded9a1dbf2e135b847101904644d16bba0"},
   "latest_ecv":{"batch_id":"HS-MEMBER-DE-33206402141:WORK:0001:SUB:0026","state":"SUCCESS","current_detail_verified":20,"provider_record_change_count":0,"validator_violations":0,"run_id":33234983579,"artifact_id":9709651108,"packet_sha256":"a39cebfd453df089e4a42c1f7d93b613c8ef14240f72fb64c4571e21e9f5a539"},
   "frontier":{"unique_current_detail_verified":510,"remaining_never_verified":928,"contiguous_original_candidate_offset_start":0,"contiguous_original_candidate_offset_end":500,"contiguous_original_candidate_records":501,"pending_requeue":0},
-  "next_staged":{"batch_id":"HS-MEMBER-DE-33206402141:WORK:0001:SUB:0027","path":"docs/state/CMI_WORK_BATCH_0001_SUB0027_33206402141.json","original_candidate_offsets":[501,502,503,504,505,506,507,508,509,510,511,512,513,514,515,516,517,518,519,520],"items_count":20,"items_sha256":"61de2015102d7b110d42d32c05ae56261b7da3dca0f67fa4f19b96d57714a357","next_forward_original_candidate_offset":521},
+  "next_staged":{"batch_id":"HS-MEMBER-DE-33206402141:WORK:0001:SUB:0027","path":"docs/state/CMI_WORK_BATCH_0001_SUB0027_33206402141.json","original_candidate_offsets":[501,502,503,504,505,506,507,508,509,510,511,512,513,514,515,516,517,518,519,520],"items_count":20,"items_sha256":"f92f07e9d2753f9bf0b2d21965e05678c2633dfdf9029b09c332bb4428b2b5dd","next_forward_original_candidate_offset":521},
   "mapping_frontier_unchanged":{"effective_terminal_source_mappings":627,"effective_reconcile_required":1434,"reverse_authority_without_exact_source_match":66},
+  "adversarial_repair":{"finding":"STAGED_ITEMS_SHA_MISMATCH","failed_run_id":33235209478,"failed_job_id":99054888266,"resolution":"recomputed canonical sorted compact JSON items hash and propagated it across packet/NEXT/continuity/state/meta artifacts"},
   "authority_advanced":false,"h_id_allocations":0,"outbound":"CLOSED","send_allowed":0
 }

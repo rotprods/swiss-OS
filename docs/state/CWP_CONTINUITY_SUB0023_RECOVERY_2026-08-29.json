@@ -1,0 +1,18 @@
+{
+  "schema_version":"CWP-CONTINUITY-RECOVERY-1.0",
+  "project":"SWITZERLAND_JOB_OS",
+  "generated_at":"2026-08-29T02:55:00Z",
+  "parent_git_sha":"a4f6fc1d0906fed9142e90fe4db8147220e72343",
+  "authority_epoch":"HS_ENTITY_EPOCH_2026-08-25_E4",
+  "authority_materialized_sha256":"70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+  "authority_sheet_id":"1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w",
+  "authority_export_xlsx_sha256":"434fab60a1260f08b647e9f6ed718575de195a11fc09177a4c42da84b66b920e",
+  "source_artifact_id":9700376482,
+  "source_artifact_zip_sha256":"721f9ff9f84e2d5d9df62c6b22f12e7354cef3a298cb8990be66a202e1e769ce",
+  "deterministic_anti_join":{"exact_name_city_matches":623,"candidate_new_entity_preauth":1438,"candidate_order":"source_record_key ascending","normalization":"strip + whitespace collapse + casefold"},
+  "continuity":{"sub0022_offsets":"400..419","sub0022_live_all_verified":true,"sub0022_live_packet_sha256":"4a01083d33d119a0e2255c1966afd63113202c208ddca0f5e51c8c8f47a29442","sub0023_offsets":"420..439","sub0023_items_sha256":"be3c98406b9c7e5051890ce7f1ec141e4a5c9ed18999f1e4d4eddaefd5548a6e"},
+  "exact_authority_matches_skipped_between_source_indices_587_609":["MD-46003c559b2d8f063b4d|Hotel Zurigo Downtown|Lugano","MD-4660bd420331e7e177f2|Landgasthof Sternen|Benken SG","MD-46e45fb871da7f6f55fb|Chalet Hotel Schönegg|Zermatt"],
+  "sub0023":{"items_count":20,"first_source_record_key":"MD-4511e32be58c115a8b00","last_source_record_key":"MD-479fa7ea899f8039fb8a","items_sha256":"be3c98406b9c7e5051890ce7f1ec141e4a5c9ed18999f1e4d4eddaefd5548a6e","lineage_eligible":true},
+  "next_untouched_original_candidate_offset":440,
+  "authority_advanced":false,"h_id_allocations":0,"outbound":"CLOSED","send_allowed":0
+}

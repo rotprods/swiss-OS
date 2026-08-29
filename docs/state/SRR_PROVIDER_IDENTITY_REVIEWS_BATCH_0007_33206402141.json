@@ -1,0 +1,50 @@
+{
+  "schema_version": "SOURCE-RESOLUTION-EXPLICIT-REVIEWS-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "snapshot_id": "HS-MEMBER-DE-33206402141",
+  "generated_at": "2026-08-29T20:37:00Z",
+  "parent_git_sha": "55b8e6cf570cc603018b92f36de97b07995b7f3a",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "base_sret_ambiguity_queue_sha256": "1fdf800a0b7bd9ad64a7a47c9c9c41c87c2c38a3d4b91e1fea2b54c93230cee8",
+  "provider_identity_items_sha256": "074a4801ac90ac53a08f42ebfae1bcf6b0170ee35a4c52a366474a56bc5864e1",
+  "reviews": [
+    {"source_record_key":"MD-0ff4c70958631a70430d","action":"NEW_CANONICAL","canonical_hotel_id":"","reason_code":"CURRENT_EXACT_SOURCE_PLUS_INDEPENDENT_CURRENT_IDENTITY_PROVES_DISTINCT_PROPERTY_FROM_ALL_SAME_NAME_CANONICALS","evidence_ref":"docs/state/PROVIDER_IDENTITY_ENRICHMENT_SRET_AMBIGUITY_BATCH_0001_33206402141.json#source_record_key=MD-0ff4c70958631a70430d"},
+    {"source_record_key":"MD-178259a759ab38cf00da","action":"NEW_CANONICAL","canonical_hotel_id":"","reason_code":"CURRENT_EXACT_SOURCE_PLUS_INDEPENDENT_CURRENT_IDENTITY_PROVES_DISTINCT_PROPERTY_FROM_ALL_SAME_NAME_CANONICALS","evidence_ref":"docs/state/PROVIDER_IDENTITY_ENRICHMENT_SRET_AMBIGUITY_BATCH_0001_33206402141.json#source_record_key=MD-178259a759ab38cf00da"},
+    {"source_record_key":"MD-3572f83756b4c984411f","action":"NEW_CANONICAL","canonical_hotel_id":"","reason_code":"CURRENT_EXACT_SOURCE_PLUS_INDEPENDENT_CURRENT_IDENTITY_PROVES_DISTINCT_PROPERTY_FROM_ALL_SAME_NAME_CANONICALS","evidence_ref":"docs/state/PROVIDER_IDENTITY_ENRICHMENT_SRET_AMBIGUITY_BATCH_0001_33206402141.json#source_record_key=MD-3572f83756b4c984411f"},
+    {"source_record_key":"MD-640f8cf75c0e922e9c29","action":"NEW_CANONICAL","canonical_hotel_id":"","reason_code":"CURRENT_EXACT_SOURCE_PLUS_INDEPENDENT_CURRENT_IDENTITY_PROVES_DISTINCT_PROPERTY_FROM_ALL_SAME_NAME_CANONICALS","evidence_ref":"docs/state/PROVIDER_IDENTITY_ENRICHMENT_SRET_AMBIGUITY_BATCH_0001_33206402141.json#source_record_key=MD-640f8cf75c0e922e9c29"},
+    {"source_record_key":"MD-7e632f2f1bfed0e1af41","action":"NEW_CANONICAL","canonical_hotel_id":"","reason_code":"CURRENT_EXACT_SOURCE_PLUS_INDEPENDENT_CURRENT_IDENTITY_PROVES_DISTINCT_PROPERTY_FROM_ALL_SAME_NAME_CANONICALS","evidence_ref":"docs/state/PROVIDER_IDENTITY_ENRICHMENT_SRET_AMBIGUITY_BATCH_0001_33206402141.json#source_record_key=MD-7e632f2f1bfed0e1af41"},
+    {"source_record_key":"MD-a36014e20fcfce1236a8","action":"NEW_CANONICAL","canonical_hotel_id":"","reason_code":"CURRENT_EXACT_SOURCE_PLUS_INDEPENDENT_CURRENT_IDENTITY_PROVES_DISTINCT_PROPERTY_FROM_ALL_SAME_NAME_CANONICALS","evidence_ref":"docs/state/PROVIDER_IDENTITY_ENRICHMENT_SRET_AMBIGUITY_BATCH_0001_33206402141.json#source_record_key=MD-a36014e20fcfce1236a8"},
+    {"source_record_key":"MD-bba51d5c35760780d84d","action":"NEW_CANONICAL","canonical_hotel_id":"","reason_code":"CURRENT_EXACT_SOURCE_PLUS_INDEPENDENT_CURRENT_IDENTITY_PROVES_DISTINCT_PROPERTY_FROM_ALL_SAME_NAME_CANONICALS","evidence_ref":"docs/state/PROVIDER_IDENTITY_ENRICHMENT_SRET_AMBIGUITY_BATCH_0001_33206402141.json#source_record_key=MD-bba51d5c35760780d84d"},
+    {"source_record_key":"MD-d00afedb7be15f4b96aa","action":"NEW_CANONICAL","canonical_hotel_id":"","reason_code":"CURRENT_EXACT_SOURCE_PLUS_INDEPENDENT_CURRENT_IDENTITY_PROVES_DISTINCT_PROPERTY_FROM_ALL_SAME_NAME_CANONICALS","evidence_ref":"docs/state/PROVIDER_IDENTITY_ENRICHMENT_SRET_AMBIGUITY_BATCH_0001_33206402141.json#source_record_key=MD-d00afedb7be15f4b96aa"}
+  ],
+  "reviews_count": 8,
+  "reviews_sha256": "994cdc03e793d983d745cf3386e510a5ef05dce8e6146fd10fcca06536371bea",
+  "application_semantics": {
+    "target_contract": "SRR-1.1",
+    "expected_resolution_action": "NEW_CANONICAL",
+    "expected_mapping_state_after_review": "RECONCILE_REQUIRED",
+    "authority_action_on_valid_application": "ALLOCATE_NEW_CANONICAL_ON_AUTHORITY_COMMIT",
+    "authority_commit_authorized_now": false,
+    "canonical_h_id_reservation": "FORBIDDEN"
+  },
+  "qa": {
+    "all_review_keys_are_current_sret_ambiguities": true,
+    "all_reviews_have_current_exact_source_evidence": true,
+    "all_reviews_have_independent_distinctness_evidence": true,
+    "canonical_hotel_id_fields_empty": true,
+    "duplicate_source_record_keys": 0,
+    "authority_advanced": false,
+    "h_id_allocations": 0,
+    "canonical_id_reservations": 0,
+    "crm_universe_complete": false,
+    "outbound": "CLOSED",
+    "send_allowed": 0,
+    "violations": []
+  },
+  "authority_advanced": false,
+  "h_id_allocations": 0,
+  "canonical_id_reservations": 0,
+  "crm_universe_complete": false,
+  "outbound": "CLOSED",
+  "send_allowed": 0
+}

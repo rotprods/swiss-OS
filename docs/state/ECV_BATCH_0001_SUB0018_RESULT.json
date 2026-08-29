@@ -22,6 +22,7 @@
   "outbound": "CLOSED",
   "pending_requeue": 11,
   "project": "SWITZERLAND_JOB_OS",
+  "remaining_never_verified": 1089,
   "remaining_unverified": 1089,
   "requeue_reason": "10_HTTP_404_AFTER_3_ATTEMPTS_PLUS_1_NAME_ONLY_CITY_MISMATCH",
   "requeue_source_record_keys": [

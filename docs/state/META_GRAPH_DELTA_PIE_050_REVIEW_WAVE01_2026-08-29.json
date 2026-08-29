@@ -1,0 +1,21 @@
+{
+  "schema_version":"META-GRAPH-DELTA-1.0",
+  "project":"SWITZERLAND_JOB_OS",
+  "parent_git_sha":"56345881f20f4fa03c45442430359ecd9c0aeb7e",
+  "authority_epoch":"HS_ENTITY_EPOCH_2026-08-25_E4",
+  "nodes":[
+    {"id":"EVD-PIE-050-REVIEW-W01","type":"Evidence","state":"VERIFIED","items":8,"items_sha256":"488ae59ffa1a873ffbbd94aec37ca3c779f5608f7e2a0314ae8bdb68712b687d"},
+    {"id":"DEC-PIE-050-REVIEW-W01","type":"Decision","state":"NOVELTY_REVIEW_DISTINCTNESS_CORROBORATED","items":8,"terminal":false},
+    {"id":"FRONTIER-PIE-050-REVIEW-28","type":"Checkpoint","state":"IDENTITY_REVIEW_INCOMPLETE","provider_evidence_executed":47,"identity_review_completed":28,"identity_review_pending":19},
+    {"id":"WORK-PIE-050-REVIEW19","type":"Wave","state":"NEXT_SAFE_FRONTIER","items":19},
+    {"id":"WORK-PIE-LOWER49","type":"Wave","state":"BLOCKED_BY_REVIEW19_AND_QUEUE_DERIVATION","items":49}
+  ],
+  "edges":[
+    {"from":"EVD-PIE-050-REVIEW-W01","type":"SUPPORTS","to":"DEC-PIE-050-REVIEW-W01"},
+    {"from":"DEC-PIE-050-REVIEW-W01","type":"CONTRIBUTES_TO","to":"FRONTIER-PIE-050-REVIEW-28"},
+    {"from":"FRONTIER-PIE-050-REVIEW-28","type":"UNBLOCKS","to":"WORK-PIE-050-REVIEW19"},
+    {"from":"WORK-PIE-050-REVIEW19","type":"PRECEDES","to":"WORK-PIE-LOWER49"},
+    {"from":"DEC-PIE-050-REVIEW-W01","type":"DOES_NOT_AUTHORIZE","to":"WORK-PIE-LOWER49"}
+  ],
+  "invariants":{"authority_advanced":false,"h_id_allocations":0,"canonical_id_reservations":0,"terminal_mapping_delta":0,"reconcile_required":1404,"crm_universe_complete":false,"outbound":"CLOSED","send_allowed":0}
+}

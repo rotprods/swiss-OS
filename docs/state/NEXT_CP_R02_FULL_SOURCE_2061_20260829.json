@@ -1,0 +1,78 @@
+{
+  "schema_version": "NPP-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "generated_at": "2026-08-29T20:18:00Z",
+  "cycle_id": "META-20260829-FULL-SMC-SRR-2061-WAVE-10",
+  "parent_git_sha": "49b43df55e119d4b7df2beaf5c2405e67a28b8cd",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "authority_parent_materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+  "selected_route": "FULL_2061_SOURCE_MAPPING_AND_REVIEW_MATERIALIZED",
+  "next_route": "CP_R02_CLASSIFY_1405_RECONCILE_ROWS_WITH_DETERMINISTIC_EVIDENCE_LANES_NO_FUZZY_AUTOBIND",
+  "checkpoint_id": "CRM_UNIVERSE_COMPLETE",
+  "materialization_frontier": {
+    "source_records": 2061,
+    "candidate_records": 1438,
+    "base_terminal_semantic_equivalent": 624,
+    "explicit_srr_deltas": 32,
+    "effective_terminal_mappings": 656,
+    "effective_reconcile_required": 1405,
+    "full_source_coverage_materialized": true,
+    "source_conservation": true,
+    "drive_mapping_artifact_file_name": "FULL_SOURCE_MAPPING_2061_33206402141.json.gz",
+    "drive_review_artifact_file_name": "FULL_SOURCE_RESOLUTION_REVIEW_2061_33206402141.json.gz",
+    "github_attestation_path": "docs/state/FULL_SOURCE_MAPPING_2061_ATTESTATION_33206402141.json"
+  },
+  "authority_state": {
+    "physical_rows": 690,
+    "active_canonical": 690,
+    "next_physical_id": "H-0691_UNALLOCATED",
+    "crm_universe_complete": false,
+    "outbound": "CLOSED",
+    "send_allowed": 0
+  },
+  "source_lineage": {
+    "source_artifact_id": 9700376482,
+    "source_records_sha256": "62e26d62d8677a5437e081302b6b4d206c0d27a0fe268c6356aef01da5428dc2",
+    "candidate_artifact_id": 9718866661,
+    "candidate_records_sha256": "34d9aa9cfa4fe896bf1db8fba4dedfded9a1dbf2e135b847101904644d16bba0",
+    "pinned_base_smc_candidate_sha256": "2f9413318c410eb0f0443de260213d31e9ab2bdc1058581c0fa9c0340474aa27",
+    "explicit_overlay_source_sha256": "5aca28742358507bc64e40602895b809664810b9cb8732770a9cf69065c0676c",
+    "terminal_coverage_sha256": "95c48f65fbf67c2fb2c284c9ba603be03d706d2f46ef7373dc8ebb7272b3c176",
+    "ragr_34_queue_sha256": "cf47dc91057df8653cd75729cb39320605e193e476c6828f24956b69e2848b9c"
+  },
+  "review_state": {
+    "source_resolution_complete": false,
+    "authority_batch_ready": false,
+    "remaining_reconcile_required": 1405,
+    "remaining_ragr_reverse_gaps": 34,
+    "all_candidate_rows_current_detail_verified": true,
+    "fuzzy_autobind_count": 0,
+    "ibis_budget_source_record_key": "MD-034c1c3b0f7ba9d69c80",
+    "ibis_budget_state": "RECONCILE_REQUIRED_NEW_CANONICAL_PREAUTH_NO_ID_RESERVATION"
+  },
+  "structured_acquisition": {
+    "runtime_subscription_key_present": false,
+    "ssr_1_0_state": "BLOCKED_REQUIRES_CAPTURE_VALID_DISCOVER_SWISS_MANIFEST",
+    "fallback": "QUALIFIED_MEMBER_DIRECTORY_PLUS_EXACT_CURRENT"
+  },
+  "exact_dependency": "CP_R02_BUILD_DETERMINISTIC_EVIDENCE_CLASSIFICATION_OVER_1405_NONTERMINAL_SOURCE_RECORDS_AND_EMIT_EXPLICIT_REVIEW_LANES_WITH_ZERO_FUZZY_AUTOBIND",
+  "recovery_inputs": [
+    "GitHub main 49b43df55e119d4b7df2beaf5c2405e67a28b8cd or descendant",
+    "authority E4 / SHA 70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+    "source artifact 9700376482 / records SHA256 62e26d62d8677a5437e081302b6b4d206c0d27a0fe268c6356aef01da5428dc2",
+    "candidate artifact 9718866661 / records SHA256 34d9aa9cfa4fe896bf1db8fba4dedfded9a1dbf2e135b847101904644d16bba0",
+    "base SMC SHA256 2f9413318c410eb0f0443de260213d31e9ab2bdc1058581c0fa9c0340474aa27",
+    "32-delta overlay source SHA256 5aca28742358507bc64e40602895b809664810b9cb8732770a9cf69065c0676c",
+    "Drive FULL_SOURCE_MAPPING_2061_33206402141.json.gz",
+    "Drive FULL_SOURCE_RESOLUTION_REVIEW_2061_33206402141.json.gz",
+    "Drive HOTELS_MASTER 1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w; H-0691 absent"
+  ],
+  "hard_blockers": [
+    "RECONCILE_REQUIRED_1405_NOT_ZERO",
+    "SSR_1_0_REQUIRES_CAPTURE_VALID_DISCOVER_SWISS_MANIFEST",
+    "DISCOVER_SWISS_RUNTIME_SUBSCRIPTION_KEY_ABSENT"
+  ],
+  "authority_advance_allowed": false,
+  "canonical_id_allocation_allowed": false,
+  "outbound_allowed": false
+}

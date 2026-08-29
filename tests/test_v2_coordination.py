@@ -1,6 +1,7 @@
 import copy, unittest
 from swiss_os.v2_coordination import *
 GIT_SHA="a"*40
+SCOPE_REV="b"*64
 def event(event_id="EVT-1",idempotency="idem-1",event_type="WORK_STARTED"):
     return {"schema_version":"COS-V2-EVENT-1.0","event_id":event_id,"event_type":event_type,"occurred_at":"2026-08-29T21:42:00Z","project_id":"P","agent_id":"A","session_id":"S","workstream_id":"W","objective_id":"O","correlation_id":"C","repo":"owner/repo","main_sha_observed":GIT_SHA,"base_sha":GIT_SHA,"authority_ceiling":"PREAUTHORITY","summary":"x","next_action":"y","idempotency_key":idempotency,"canonical_hotel_mutation_allowed":False,"h_id_allocation_allowed":False,"outbound_allowed":False}
 def claim(claim_id="CL-1",scopes=None,semantics=None,token=1):
@@ -23,13 +24,21 @@ class T(unittest.TestCase):
     def test_duplicate_event(self):
         p=reduce_coordination([event("E1","i1"),event("E1","i2")],[])
         self.assertIn("DUPLICATE_EVENT_ID:E1",p["violations"])
-    def test_context(self):
+    def test_context_descendant_head_without_scope_drift_is_valid(self):
         p=reduce_coordination([event()],[claim()])
-        pack=build_context_pack(project_id="P",main_sha=GIT_SHA,authority_revision="A",projection=p,state_refs=[],blockers=[],next_safe_actions=[])
-        self.assertEqual(validate_context_pack(pack,current_main_sha=GIT_SHA,current_projection_revision=p["projection_revision"]),())
-        self.assertIn("STALE_MAIN_SHA",validate_context_pack(pack,current_main_sha="b"*40,current_projection_revision=p["projection_revision"]))
+        pack=build_context_pack(project_id="P",base_main_sha=GIT_SHA,authority_revision="A",projection=p,state_refs=[],relevant_paths=["ARCHITECTURE.md"],relevant_scope_revision=SCOPE_REV,blockers=[],next_safe_actions=[])
+        self.assertEqual(validate_context_pack(pack,base_is_ancestor=True,current_projection_revision=p["projection_revision"],current_relevant_scope_revision=SCOPE_REV,current_authority_revision="A"),())
+    def test_context_rejects_nonancestor_or_relevant_drift(self):
+        p=reduce_coordination([event()],[claim()])
+        pack=build_context_pack(project_id="P",base_main_sha=GIT_SHA,authority_revision="A",projection=p,state_refs=[],relevant_paths=["ARCHITECTURE.md"],relevant_scope_revision=SCOPE_REV,blockers=[],next_safe_actions=[])
+        self.assertIn("BASE_NOT_ANCESTOR",validate_context_pack(pack,base_is_ancestor=False,current_projection_revision=p["projection_revision"],current_relevant_scope_revision=SCOPE_REV,current_authority_revision="A"))
+        self.assertIn("RELEVANT_SCOPE_DRIFT",validate_context_pack(pack,base_is_ancestor=True,current_projection_revision=p["projection_revision"],current_relevant_scope_revision="c"*64,current_authority_revision="A"))
+    def test_context_tamper_and_authority_drift(self):
+        p=reduce_coordination([event()],[claim()])
+        pack=build_context_pack(project_id="P",base_main_sha=GIT_SHA,authority_revision="A",projection=p,state_refs=[],relevant_paths=["ARCHITECTURE.md"],relevant_scope_revision=SCOPE_REV,blockers=[],next_safe_actions=[])
         tam=copy.deepcopy(pack); tam["blockers"].append("x")
-        self.assertIn("CONTEXT_PACK_HASH_MISMATCH",validate_context_pack(tam,current_main_sha=GIT_SHA,current_projection_revision=p["projection_revision"]))
+        errs=validate_context_pack(tam,base_is_ancestor=True,current_projection_revision=p["projection_revision"],current_relevant_scope_revision=SCOPE_REV,current_authority_revision="B")
+        self.assertIn("CONTEXT_PACK_HASH_MISMATCH",errs); self.assertIn("STALE_AUTHORITY_REVISION",errs)
     def test_state(self):
         s={"schema_version":"COS-V2-PROJECT-STATE-1.0","project_id":"P","repo":"r","main_sha_observed":GIT_SHA,"authority_epoch":"E","authority_revision":"R","state":"I","current_objective_id":"O","authority_advanced":False,"h_id_allocation_allowed":False,"outbound_allowed":False}
         self.assertEqual(validate_project_state(s),())

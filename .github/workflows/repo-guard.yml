@@ -11,6 +11,8 @@ jobs:
       PYTHONPATH: src
     steps:
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
@@ -18,6 +20,8 @@ jobs:
         run: python scripts/repo_guard.py
       - name: Stable contract drift guard
         run: python scripts/system_contract_guard.py
+      - name: V2 coordination contract guard
+        run: python scripts/v2_contract_guard.py
       - name: CWP candidate lineage guard
         run: python -m swiss_os.cwp_lineage_guard
       - name: Durable handoff frontier guard

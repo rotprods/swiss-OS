@@ -1,0 +1,42 @@
+{
+  "authority_advanced": false,
+  "current_objective_id": "OBJ-GRAPH-REFACTOR-V2",
+  "north_star": {
+    "definition": "Verified viable Swiss offer accepted with sustainable relocation.",
+    "goal_id": "G-0001",
+    "ref": "GOAL.md#G-0001",
+    "state": "ACTIVE"
+  },
+  "objective": {
+    "issue": 281,
+    "objective_id": "OBJ-GRAPH-REFACTOR-V2",
+    "state": "IMPLEMENTING",
+    "why": "Remove continuity/coordination ambiguity without moving hotel authority."
+  },
+  "outbound_allowed": false,
+  "programs": [
+    {
+      "blocking": "CRM_UNIVERSE_COMPLETE=FALSE",
+      "goal_id": "G-0500",
+      "role": "Canonical CRM/source-universe parity",
+      "state": "ACTIVE"
+    },
+    {
+      "goal_id": "G-0600",
+      "role": "Truthful candidate readiness",
+      "state": "BLOCKED_USER_INPUT_OR_LANE_ASSETS"
+    },
+    {
+      "goal_id": "G-0700",
+      "role": "Hotel intelligence/outreach-readiness OS",
+      "state": "ACTIVE_PARALLEL"
+    },
+    {
+      "goal_id": "G-0800",
+      "role": "Maximum acquisition readiness",
+      "state": "ACTIVE_MAXIMUM"
+    }
+  ],
+  "project_id": "SWITZERLAND_JOB_OS",
+  "schema_version": "COS-V2-GOAL-STATE-1.0"
+}

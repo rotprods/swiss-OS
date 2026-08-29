@@ -1,0 +1,49 @@
+{
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "hard_invariants": {
+    "authority_advanced": false,
+    "canonical_id_reservations": 0,
+    "crm_universe_complete": false,
+    "h_id_allocations": 0,
+    "outbound": "CLOSED",
+    "outbound_opened": false,
+    "send_allowed": 0
+  },
+  "inputs": {
+    "active_canonical_records": 690,
+    "canonical_catalog_projection_sha256": "a0d9c97105f106b50a5636d21bb2d40d7333b60af6228b8c6ac8521d8aa1245b",
+    "smo_overlay_sha256": "280b34924567f360af0122275493474ab61e59902ea2f50b95863f31e2fd1add",
+    "source_records": 2061,
+    "source_records_sha256": "62e26d62d8677a5437e081302b6b4d206c0d27a0fe268c6356aef01da5428dc2",
+    "terminal_coverage_recipe": "624_UNIQUE_EXACT_NORMALIZED_NAME_CITY_PLUS_14_VALIDATED_SMO_DELTAS",
+    "terminal_coverage_sha256": "b0cb512d56497fd90d52e2303c56e7de72d875314ab178de4685e24156564823",
+    "terminal_coverage_source_records": 638,
+    "unique_covered_canonical_records": 638
+  },
+  "next_high_value_evidence_batch": [
+    {"candidate_offset":543,"canonical_city":"Zermatt","canonical_hotel_id":"H-0001","canonical_name":"Hotel Matthiol / Maisons Matthiol","combined_similarity":0.635556,"source_city":"Zermatt","source_detail_url":"https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-hotel-matthiol","source_name":"Hotel Matthiol","source_record_key":"MD-5c6730731bcb89467b0f"},
+    {"candidate_offset":143,"canonical_city":"Zermatt","canonical_hotel_id":"H-0020","canonical_name":"Grand Hotel Zermatterhof / Zermatt Hospitality Group","combined_similarity":0.604054,"source_city":"Zermatt","source_detail_url":"https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-grand-hotel-zermatterhof","source_name":"Grand Hotel Zermatterhof","source_record_key":"MD-16f3296ed9616c0ef6ec"},
+    {"candidate_offset":665,"canonical_city":"Zermatt","canonical_hotel_id":"H-0021","canonical_name":"Hotel Alpenroyal Zermatt","combined_similarity":0.76,"source_city":"Zermatt","source_detail_url":"https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-hotel-alpenroyal","source_name":"Hotel Alpenroyal","source_record_key":"MD-734757058decadaa6453"},
+    {"candidate_offset":1166,"canonical_city":"Zermatt","canonical_hotel_id":"H-0025","canonical_name":"Hotel Sonne Zermatt","combined_similarity":0.713333,"source_city":"Zermatt","source_detail_url":"https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-hotel-sonne-4","source_name":"Hotel Sonne","source_record_key":"MD-cd2a27fb3d4cb88a5bfd"},
+    {"candidate_offset":678,"canonical_city":"Crans-Montana","canonical_hotel_id":"H-0453","canonical_name":"Hotel Valaisia, Crans-Montana, a Faern Collection Resort","combined_similarity":0.649477,"source_city":"Crans-Montana","source_detail_url":"https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-hotel-valaisia-crans-montana","source_name":"Hotel Valaisia Crans-Montana","source_record_key":"MD-74d083ce2753ccb59292"},
+    {"candidate_offset":647,"canonical_city":"Grindelwald","canonical_hotel_id":"H-0685","canonical_name":"Aspen alpin lifestyle Hotel","combined_similarity":0.812727,"source_city":"Grindelwald","source_detail_url":"https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-aspen-alpin-lifestyle-hotel-grindelwald","source_name":"Aspen alpin lifestyle hotel Grindelwald","source_record_key":"MD-6e4b884c5f566102a50d"},
+    {"candidate_offset":1106,"canonical_city":"Thun","canonical_hotel_id":"H-0687","canonical_name":"Hotel Seepark","combined_similarity":0.787097,"source_city":"Thun","source_detail_url":"https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-hotel-seepark-thun","source_name":"Hotel Seepark Thun","source_record_key":"MD-c1bad65dc4e10ee53703"},
+    {"candidate_offset":1210,"canonical_city":"Wengen","canonical_hotel_id":"H-0688","canonical_name":"Hotel Alpenruhe","combined_similarity":0.561765,"source_city":"Wengen","source_detail_url":"https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-hotel-alpenruhe-vintage-design-hotel","source_name":"Hotel Alpenruhe - Vintage Design Hotel","source_record_key":"MD-d64716f571bf23669451"}
+  ],
+  "next_route": "STRICT_EXACT_CURRENT_REVERIFY_RAGR_HIGH_CONFIDENCE_8_THEN_EXPLICIT_SRR_REVIEW",
+  "parent_git_sha": "625012ebb724365324118247fd098904bbcc1342",
+  "project": "SWITZERLAND_JOB_OS",
+  "ragr": {
+    "authority_mutation_allowed_from_queue": false,
+    "gap_hotel_ids": ["H-0001","H-0002","H-0003","H-0016","H-0019","H-0020","H-0021","H-0025","H-0060","H-0063","H-0100","H-0121","H-0144","H-0161","H-0192","H-0218","H-0242","H-0291","H-0337","H-0352","H-0453","H-0464","H-0474","H-0478","H-0501","H-0521","H-0524","H-0623","H-0652","H-0657","H-0659","H-0660","H-0661","H-0662","H-0663","H-0664","H-0665","H-0666","H-0667","H-0668","H-0669","H-0670","H-0671","H-0672","H-0673","H-0674","H-0675","H-0677","H-0681","H-0685","H-0687","H-0688"],
+    "gaps_with_same_city_source_candidate": 37,
+    "gaps_without_same_city_source_candidate": 15,
+    "protocol": "RAGR-1.0",
+    "reverse_authority_source_gaps": 52,
+    "review_only": true,
+    "review_queue_sha256": "1c75e431fc6aba869053e062cf95fc222d2cdddd60f0c05d2684ef21c05834bc",
+    "terminal_decision_allowed_from_queue": false
+  },
+  "schema_version": "RAGR-MATERIALIZATION-ATTESTATION-1.0",
+  "snapshot_id": "HS-MEMBER-DE-33206402141"
+}

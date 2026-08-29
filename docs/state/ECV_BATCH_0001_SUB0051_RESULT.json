@@ -27,7 +27,11 @@
   "artifact_runtime_sha256": "43c762a3a4b08b3c09a5017f0038e00385624ec99ba5545f2df2e9f8da9c1f0a",
   "artifact_validate_sha256": "bf339e6fab97327eeeb98da4ff4ff1be8d9c6035b3ab92e5a97591fb0e37d1e0",
   "github_actions": {"run_id": 33247929325, "job_id": 99088526123, "artifact_id": 9713452543, "artifact_zip_sha256": "fda0566a916614809b0c43d81aff362aa1755ec0e372f9cc87ca49ff785eeca3"},
-  "safety": {"authority_advanced": false, "h_id_allocations": 0, "outbound": "CLOSED", "send_allowed": 0, "canonical_id_allocation_allowed": false},
+  "authority_advanced": false,
+  "h_id_allocations": 0,
+  "outbound": "CLOSED",
+  "send_allowed": 0,
+  "canonical_id_allocation_allowed": false,
   "terminal_mapping_effect": "NONE_UNTIL_ENTITY_RESOLUTION",
   "authority_advance_allowed": false
 }

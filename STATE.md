@@ -21,6 +21,8 @@ Authority SHA `70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`
 ```text
 source records                         2061
 candidate records                      1438
+ECV verified frontier              1438 / 1438
+ECV remaining never verified              0
 ECV exact-current                  1438 / 1438
 terminal source mappings                  657
 unique canonical targets                  656

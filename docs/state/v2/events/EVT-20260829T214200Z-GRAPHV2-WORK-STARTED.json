@@ -1,0 +1,71 @@
+{
+  "schema_version": "COS-V2-EVENT-1.0",
+  "event_id": "EVT-20260829T214200Z-GRAPHV2-WORK-STARTED",
+  "event_type": "WORK_STARTED",
+  "occurred_at": "2026-08-29T21:42:00Z",
+  "project_id": "SWITZERLAND_JOB_OS",
+  "agent_id": "AGENT-GPT56SOL-ARCH-001",
+  "session_id": "SES-20260829T213800Z-GRAPHV2-A7F3C1",
+  "workstream_id": "WS-ARCH-GRAPH-V2",
+  "objective_id": "OBJ-GRAPH-REFACTOR-V2",
+  "correlation_id": "CORR-20260829-GRAPHV2-A7F3C1",
+  "causation": ["USER:/GRAPH-REFACTOR-V2", "GitHub:issue#281"],
+  "repo": "rotprods/swiss-OS",
+  "main_sha_observed": "d6c49f158c3691f44868cb9a55a52bc6c6aea225",
+  "base_sha": "d6c49f158c3691f44868cb9a55a52bc6c6aea225",
+  "branch": "refactor/cos-20d-hypergraph-v2",
+  "pr": null,
+  "resource_scopes": [
+    "docs/architecture/**",
+    "docs/state/v2/**",
+    "schemas/v2/**",
+    "src/swiss_os/v2_coordination/**",
+    "tests/v2_coordination/**",
+    "ARCHITECTURE.md",
+    "HANDOFF.md",
+    "TASKS.md",
+    "LEXICON.md"
+  ],
+  "semantic_scopes": [
+    "ARCHITECTURE",
+    "HYPERGRAPH_ONTOLOGY",
+    "EVENT_SOURCING",
+    "SESSION_IDENTITY",
+    "CLAIMS_AND_LEASES",
+    "CONTEXT_PACK",
+    "CONTINUITY",
+    "RECOVERY",
+    "TEST_ASSURANCE",
+    "SECURITY",
+    "IMPLEMENTATION_COMPILER"
+  ],
+  "dependencies": [
+    "STATE.md@d6c49f158c3691f44868cb9a55a52bc6c6aea225",
+    "GOAL.md",
+    "AGENTS.md",
+    "docs/operations/META_EXECUTION_PROTOCOL.md",
+    "docs/operations/WAVE_OPERATING_PROTOCOL.md",
+    "docs/architecture/AUTHORITY_MODEL.md",
+    "docs/architecture/ENGINE_REGISTRY.md"
+  ],
+  "authority_ceiling": "ARCHITECTURE_AND_PREAUTHORITY_ONLY",
+  "canonical_hotel_mutation_allowed": false,
+  "h_id_allocation_allowed": false,
+  "outbound_allowed": false,
+  "active_frontier_observed": {
+    "source_records": 2061,
+    "candidate_records": 1438,
+    "effective_terminal_mappings": 657,
+    "reconcile_required": 1404,
+    "ragr_reverse_authority_gaps": 34,
+    "active_canonical": 690,
+    "next_h_id": "H-0691 UNALLOCATED"
+  },
+  "overlap_observed": {
+    "open_prs": [269, 273, 275, 135, 137, 139],
+    "note": "Several open PRs are stale or overlap historical/current resolution work; V2 will classify supersession before merging any architecture-adjacent change."
+  },
+  "summary": "Start COS 20D hypergraph V2 refactor from live main without advancing hotel authority.",
+  "next_action": "Reconstruct contracts, architecture, history, tests and failure graph; compile V2 contracts and executable continuity kernel.",
+  "idempotency_key": "SWITZERLAND_JOB_OS|SES-20260829T213800Z-GRAPHV2-A7F3C1|OBJ-GRAPH-REFACTOR-V2|WORK_STARTED"
+}

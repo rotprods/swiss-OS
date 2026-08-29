@@ -7,17 +7,17 @@
     {"evidence":["PR#288","main=fe08104ae668d1717c91d976ef33357917266ad9"],"id":"CP4","name":"V2 Architecture Frozen","state":"PASS"},
     {"evidence":["event/claim/context schemas","ADR-V2-005 ContextPack 1.1"],"id":"CP5","name":"Core Contracts Frozen","state":"PASS"},
     {"evidence":["src/swiss_os/v2_coordination.py","Actions run 33278293052 PASS"],"id":"CP6","name":"Implementation Kernel Verified","state":"PASS"},
-    {"id":"CP7","name":"Recovery Verified","state":"PENDING_EMPIRICAL_PROJECTION_DELETE_REBUILD"},
-    {"id":"CP8","name":"Agent Death Drill Passed","state":"PENDING_EMPIRICAL_ZERO_CONTEXT_RUN"},
+    {"evidence":["scripts/v2_empirical_drill.py","Actions run 33278690926 step V2 empirical recovery and death drill PASS","rebuilt projection e434a974386f91407f5dff92860cb8039b680bfacd201496b45036eeb89e3340","docs/state/v2/qualification/V2_EMPIRICAL_QUALIFICATION_33278690926.json"],"id":"CP7","name":"Recovery Verified","state":"PASS"},
+    {"evidence":["HANDOFF.md canonical zero-context route","ContextPack 1.1 validation","Actions run 33278690926 zero_context_death_drill=PASS"],"id":"CP8","name":"Agent Death Drill Passed","state":"PASS"},
     {"evidence":["main moved repeatedly during V2 execution","ContextPack 1.1 descendant-head regression tests","final CI against exact merge parent"],"id":"CP9","name":"Concurrency Verified","state":"PASS_ARCHITECTURE_SCOPE"},
     {"evidence":["repo public guard","authority ceilings","malformed bool/token/SHA regressions"],"id":"CP10","name":"Security Gauntlet Passed","state":"PASS_KERNEL_SCOPE_RESIDUAL_DOMAIN_SECURITY_SEPARATE"},
     {"id":"CP11","name":"E2E Product Path Passed","state":"DEFERRED_TO_DOMAIN_PATH"},
-    {"id":"CP12","name":"Empirical Qualification Passed","state":"PENDING_RECOVERY_DEATH_DRILL_AND_DOMAIN_MIGRATION"},
-    {"evidence":["V2 architecture merged","legacy/domain workstreams not yet fully converted to claims"],"id":"CP13","name":"Migration Complete","state":"PARTIAL_ARCHITECTURE_MERGED"},
+    {"evidence":["CP7 PASS","CP8 PASS","374 repository tests PASS in Actions 33278690926"],"id":"CP12","name":"Empirical Qualification Passed","state":"PASS_COORDINATION_SCOPE_DOMAIN_MIGRATION_REMAINS"},
+    {"evidence":["V2 architecture merged","coordination recovery/death drill qualified","legacy/domain workstreams not yet fully converted to claims"],"id":"CP13","name":"Migration Complete","state":"PARTIAL_DOMAIN_MIGRATION_PENDING"},
     {"id":"CP14","name":"Production Authority","reason":"Architecture coordination cannot advance hotel operational authority; separate authority gates remain mandatory.","state":"AUTHORITY_BLOCK"}
   ],
-  "objective_id":"OBJ-GRAPH-REFACTOR-V2",
+  "objective_id":"OBJ-V2-RECOVERY-DEATH-DRILL",
   "project_id":"SWITZERLAND_JOB_OS",
-  "promotion_authority":"V2 coordination architecture is merged and kernel-verified. Empirical recovery/death-drill/domain migration remain required before V2_FINAL. Hotel authority remains separately gated.",
+  "promotion_authority":"CP7 and CP8 are empirically verified in Actions run 33278690926. V2 coordination empirical qualification is complete; one real domain-workstream migration remains before migration completion. Hotel authority remains separately gated.",
   "schema_version":"COS-V2-CHECKPOINT-STATE-1.0"
 }

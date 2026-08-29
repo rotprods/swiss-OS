@@ -1,0 +1,64 @@
+{
+  "schema_version": "SOURCE-SNAPSHOT-DRIVE-RECOVERY-ATTESTATION-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "wave_id": "WAVE-20260830-SOURCE-RECOVERY-05",
+  "session_id": "SES-20260829T223900Z-SSR-CAPABILITY-A71C5E",
+  "workstream_id": "WS-CRM-SOURCE-RECOVERY",
+  "objective_id": "CRM_UNIVERSE_COMPLETE",
+  "correlation_id": "CORR-20260829-SOURCE-RECOVERY-A71C5E",
+  "generated_at": "2026-08-29T22:55:00Z",
+  "parent_git_sha": "2209eb04451b0b625d37491f679bb57e637badae",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "authority_parent_materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+  "source_snapshot": {
+    "snapshot_id": "HS-MEMBER-DE-33206402141",
+    "records": 2061,
+    "pages": 172,
+    "page_size": 12,
+    "coverage_rows": 2061,
+    "coverage_pct": 1.0,
+    "source_artifact_id": 9700376482,
+    "source_records_sha256": "62e26d62d8677a5437e081302b6b4d206c0d27a0fe268c6356aef01da5428dc2",
+    "mdm_records_sha256": "b02c6fae1215643088eafec0af8b2b139506e4e46dec9e81277a1a9e5e4e897f",
+    "mdm_manifest_sha256": "e5c7e2d52eed1dd585a9a00f1bd98015997ec902e8890d0abcb89cdc87aeb74f",
+    "state": "CURRENT_COHERENT_PREAUTH_RECOVERY_PROJECTION",
+    "ssr_equivalence": false
+  },
+  "drive_projection": {
+    "spreadsheet_id": "1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w",
+    "sheet": "SOURCE_SNAPSHOTS",
+    "row": 13,
+    "exact_readback": true,
+    "decision_id": "DEC-0104"
+  },
+  "mep_fallback": {
+    "triggered": true,
+    "reason": "Connector rejected the first oversized multi-cell mutation payload before execution.",
+    "fallback": "Split the reversible metadata write into bounded cell groups and require exact final row readback before qualification.",
+    "partial_state_qualified": false,
+    "final_state_qualified": true
+  },
+  "post_reconciliation_audit": {
+    "checkpoint_registry_search_686_matches": 1,
+    "only_match": "CP-0800-GRAPH-CUTOVER historical COMPLETE 686/686",
+    "stale_dynamic_686_remaining": 0
+  },
+  "concurrency": {
+    "active_claim_id": "CLAIM-CRM-PIE050-CAPTURED27-D42F9A",
+    "fencing_token": 3,
+    "claimed_semantic_scope": "CRM_ENTITY_RESOLUTION_REVIEW",
+    "source_recovery_scope_disjoint": true,
+    "collision": false
+  },
+  "hard_invariants": {
+    "authority_advanced": false,
+    "h_id_allocations": 0,
+    "canonical_id_reservations": 0,
+    "source_mapping_changes": 0,
+    "crm_universe_complete": false,
+    "outbound": "CLOSED",
+    "send_allowed": 0,
+    "external_irreversible_actions": 0
+  },
+  "result": "PASS_RECOVERY_PROJECTION_NON_AUTHORITATIVE"
+}

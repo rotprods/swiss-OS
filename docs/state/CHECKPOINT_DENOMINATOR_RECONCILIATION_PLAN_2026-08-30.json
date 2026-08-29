@@ -1,0 +1,77 @@
+{
+  "schema_version": "CHECKPOINT-DENOMINATOR-RECONCILIATION-PLAN-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "wave_id": "WAVE-20260830-CHECKPOINT-RECONCILE-03",
+  "session_id": "SES-20260829T223900Z-SSR-CAPABILITY-A71C5E",
+  "workstream_id": "WS-CONTROL-PLANE-RECONCILIATION",
+  "objective_id": "CRM_UNIVERSE_COMPLETE",
+  "correlation_id": "CORR-20260829-CHECKPOINT-690-A71C5E",
+  "generated_at": "2026-08-29T22:46:30Z",
+  "parent_git_sha": "2021fd9f735d01fe0c87655272af0704df989aae",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "authority_parent_materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+  "drive": {
+    "spreadsheet_id": "1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w",
+    "sheet": "CHECKPOINT_REGISTRY",
+    "sheet_id": 827522745
+  },
+  "evidence": {
+    "live_active_canonical": 690,
+    "drive_goal_g0700_denominator": 690,
+    "drive_goal_g0800_l4": "105/690",
+    "drive_hotels_tail": "H-0690 present; H-0691 absent",
+    "drive_intelligence_tail": "H-0690 present at L1; H-0691 absent",
+    "drive_graph_tail": "HOTEL:H-0690 + INTEL:H-0690 + HAS_INTELLIGENCE edge present"
+  },
+  "historical_semantics": {
+    "completed_checkpoint": "CP-0800-GRAPH-CUTOVER",
+    "completion_current": 686,
+    "completion_target": 686,
+    "rule": "PRESERVE_COMPLETION_TIME_NUMERATOR_AND_TARGET",
+    "repair": "Update notes only so 686 is explicitly historical completion baseline; current 690 parity is a later authority state and must not rewrite completion history."
+  },
+  "mutations": [
+    {"row":11,"checkpoint_id":"CP-1500","field":"current","old":686,"new":690,"reason":"planned canonical scale checkpoint current frontier is dynamic"},
+    {"row":12,"checkpoint_id":"CP-INTEL-1000","field":"current","old":686,"new":690,"reason":"active intelligence coverage is 690"},
+    {"row":12,"checkpoint_id":"CP-INTEL-1000","field":"blocking_issues","old":"CANONICAL_CAPACITY_686","new":"CANONICAL_CAPACITY_690","reason":"capacity blocker must match live canonical frontier"},
+    {"row":12,"checkpoint_id":"CP-INTEL-1000","field":"notes","old_contains":"Coverage counts 686 active canonical entities","new":"Coverage counts 690 active canonical/intelligence entities under repaired E4 authority; H-0691 remains unallocated. Four identities falsely superseded by the historical composite incident are restored as distinct canonical L1 entities; outbound remains CLOSED.","reason":"remove stale 686 and false alias-lineage narrative"},
+    {"row":13,"checkpoint_id":"CP-INTEL-1500","field":"current","old":686,"new":690,"reason":"planned intelligence milestone current frontier is dynamic"},
+    {"row":14,"checkpoint_id":"CP-2050-CANON","field":"current","old":686,"new":690,"reason":"planned canonical parity current frontier is dynamic"},
+    {"row":15,"checkpoint_id":"CP-INTEL-2050-L1","field":"current","old":686,"new":690,"reason":"planned L1 coverage current frontier is dynamic"},
+    {"row":26,"checkpoint_id":"CP-0800-GRAPH-CUTOVER","field":"notes","old_contains":"Graph V2 includes 686 active HOTEL↔INTELLIGENCE pairs plus four superseded alias lineages/ALIASES_TO edges","new":"Historical completion baseline remains 686/686 at 2026-08-23 and is not rewritten. After issue #89 composite recovery, current repaired E4 authority is 690 active HOTEL↔INTELLIGENCE pairs with persisted alias edges=0; H-0690 tail parity is present. Current denominator is tracked by G-0800 and live graph evidence.","reason":"preserve historical completion while eliminating stale-current interpretation"},
+    {"row":27,"checkpoint_id":"CP-0800-CURRENT-L4","field":"target","old":686,"new":690,"reason":"active L4 checkpoint denominator is current active canonical count"},
+    {"row":27,"checkpoint_id":"CP-0800-CURRENT-L4","field":"notes","old_contains":"105/686","new":"105/690 active canonical hotels are L4-resolved. The repaired four identities are restored at L1, so numerator remains 105 and 585 remain below L4. CRM_UNIVERSE_COMPLETE remains FALSE; outbound remains CLOSED.","reason":"align dynamic denominator and remainder with G-0800"},
+    {"row":28,"checkpoint_id":"CP-0800-CURRENT-L9","field":"target","old":686,"new":690,"reason":"planned current L9 denominator follows active canonical authority"},
+    {"row":28,"checkpoint_id":"CP-0800-CURRENT-L9","field":"notes","old_contains":"denominator is 686","new":"Dynamic current-active-canonical denominator is 690 under repaired E4 authority. L9 remains 0; no completion is inferred from L1/support-scoped identity rows. CRM_UNIVERSE_COMPLETE remains FALSE; outbound remains CLOSED.","reason":"align dynamic denominator without claiming L9 progress"}
+  ],
+  "preconditions": [
+    "Re-read all target rows immediately before write and abort on any old-value mismatch.",
+    "H-0690 remains present and H-0691 absent in HOTELS_V2 and HOTEL_INTELLIGENCE_V1.",
+    "G-0700/G-0800 still declare active denominator 690 and G-0800 L4 remains 105/690.",
+    "Active entity-review fencing claim token 3 is not modified or bypassed.",
+    "No hotel authority bytes, canonical IDs, source mappings or outbound gates are mutated."
+  ],
+  "postconditions": [
+    "Dynamic CHECKPOINT_REGISTRY current/target fields use 690 where live authority denominators apply.",
+    "CP-0800-GRAPH-CUTOVER remains historical 686/686 with notes that distinguish completion baseline from current 690 parity.",
+    "CP-INTEL-1000 blocker becomes CANONICAL_CAPACITY_690.",
+    "OUTBOUND remains CLOSED and send_allowed remains 0."
+  ],
+  "hard_invariants": {
+    "authority_advanced": false,
+    "h_id_allocations": 0,
+    "canonical_id_reservations": 0,
+    "source_mapping_changes": 0,
+    "crm_universe_complete": false,
+    "outbound": "CLOSED",
+    "send_allowed": 0
+  },
+  "rollback": "Because this is a reversible control-plane projection repair, restore the exact captured old cell values if post-write verification fails; never roll back hotel authority as part of this wave.",
+  "next_pointer": {
+    "next_route": "MERGE_PLAN_THEN_APPLY_DRIVE_CHECKPOINT_BATCH_WITH_PRECONDITION_REREAD",
+    "exact_blocker_dependency": "PR/CI/adversarial review must pass before Drive mutation; then verify target rows still match plan old values.",
+    "parent_sha": "2021fd9f735d01fe0c87655272af0704df989aae",
+    "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+    "recovery_inputs": ["docs/state/CROSS_PLANE_AUTHORITY_AUDIT_2026-08-30.json","Drive GOAL_STATE:G-0700/G-0800","Drive CHECKPOINT_REGISTRY rows 11-15,26-28"]
+  }
+}

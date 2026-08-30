@@ -6,6 +6,7 @@ ROOT = Path(__file__).resolve().parents[1]
 ART = ROOT / "docs/state/SRR_CURRENT_IDENTITY_EVIDENCE_500599_P1_B03_2026-08-30.json"
 WORK = ROOT / "docs/operations/CRM_IDENTITY_REVIEW_WORKSET_500599_REMAINING36_2026-08-30.json"
 NEXT = ROOT / "docs/state/NEXT.json"
+FINAL17 = ROOT / "docs/state/SRET_PROVIDER_IDENTITY_050_FINAL17_33206402141.json"
 
 
 def _sha(value):
@@ -17,6 +18,7 @@ def test_p1_b03_is_exact_evidence_bound_and_fail_closed():
     art = json.loads(ART.read_text(encoding="utf-8"))
     work = json.loads(WORK.read_text(encoding="utf-8"))
     nxt = json.loads(NEXT.read_text(encoding="utf-8"))
+    final17_text = FINAL17.read_text(encoding="utf-8")
 
     expected = work["batches"][2]["source_record_keys"]
     decisions = art["decisions"]
@@ -35,6 +37,23 @@ def test_p1_b03_is_exact_evidence_bound_and_fail_closed():
     assert all(item["canonical_h_id_reserved"] is False for item in decisions)
     assert all(item["h_id_allocated"] is False for item in decisions)
     assert all(len(item["evidence"]) >= 3 for item in decisions)
+
+    provider_evidence = [
+        evidence
+        for item in decisions
+        for evidence in item["evidence"]
+        if evidence.get("type") == "SOURCE_PROVIDER_RESPONSE"
+    ]
+    assert len(provider_evidence) == 8
+    assert all(
+        evidence["ref"] == "docs/state/SRET_PROVIDER_IDENTITY_050_FINAL17_33206402141.json"
+        for evidence in provider_evidence
+    )
+    assert all(evidence["response_sha256"] in final17_text for evidence in provider_evidence)
+
+    pilatus = next(item for item in decisions if item["source_record_key"] == "MD-cb01bf8880ce6c4e3d7c")
+    assert pilatus["reason_code"] == "CURRENT_OFFICIAL_OPERATOR_IDENTIFIES_PILATUS_KULM_AND_BELLEVUE_AS_DISTINCT_HOTELS_AND_ROOM_BUILDINGS"
+    assert any(e.get("type") == "CURRENT_FIRST_PARTY_GRANULARITY_EVIDENCE" for e in pilatus["evidence"])
 
     assert art["counts"]["terminal_mapping_delta"] == 0
     assert art["band_frontier"]["reviewed_after"] == 40
@@ -56,6 +75,7 @@ def test_p1_b03_is_exact_evidence_bound_and_fail_closed():
     assert nxt["next_route"] == "EXECUTE_500599_P1_B04_CURRENT_IDENTITY_REVIEW_WITHOUT_AUTOBIND"
     assert nxt["review_frontier"]["band500599"]["reviewed_after"] == 40
     assert nxt["review_frontier"]["band500599"]["remaining"] == 6
+    assert nxt["review_frontier"]["band500599"]["decisions_sha256"] == art["decisions_sha256"]
     assert nxt["source_universe"]["candidate_records_sha256"] == "34d9aa9cfa4fe896bf1db8fba4dedfded9a1dbf2e135b847101904644d16bba0"
     assert nxt["ecv_frontier"]["latest_subbatch_id"] == "HS-MEMBER-DE-33206402141:WORK:0001:SUB:0073"
     assert nxt["authority_advance_allowed"] is False

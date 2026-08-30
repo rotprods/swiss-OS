@@ -1,0 +1,42 @@
+{
+  "schema_version": "PROJECT-MEMORY-META-GRAPH-DELTA-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "graph_impact": "META",
+  "parent_main_sha": "c71af36dbe303e98e25f12369793e6e24504ba4f",
+  "decision": {
+    "selected_route": "BULK_2061_MARKET_ENRICHMENT_PARALLEL_TO_CRM_CLOSURE",
+    "reason": "CRM resolution is not a prerequisite for read-only source-record market intelligence. Running E07-E17 in parallel eliminates serial hotel-by-hotel latency while preserving authority and outbound gates.",
+    "authority_effect": "NONE"
+  },
+  "nodes": [
+    {"id":"SOURCE:HS-MEMBER-DE-33206402141","type":"FrozenSourceUniverse","records":2061},
+    {"id":"ENGINE:MEF-2061","type":"BulkEnrichmentFactory","shards":42,"state":"IMPLEMENTATION_PENDING_PR"},
+    {"id":"ENGINE:E07","type":"VacancyEngine"},
+    {"id":"ENGINE:E08","type":"HousingEngine"},
+    {"id":"ENGINE:E09","type":"PeopleEngine"},
+    {"id":"ENGINE:E10","type":"ChannelEngine"},
+    {"id":"ENGINE:E15","type":"ScoringEngine"},
+    {"id":"ENGINE:E17","type":"ApplicationSeedEngine"},
+    {"id":"GATE:CANDIDATE_TRUTH_PRIVATE_JOIN","type":"Gate","state":"REQUIRED_FOR_FINAL_DRAFT"},
+    {"id":"GATE:OUTBOUND","type":"Gate","state":"CLOSED"}
+  ],
+  "edges": [
+    ["SOURCE:HS-MEMBER-DE-33206402141","FEEDS","ENGINE:MEF-2061"],
+    ["ENGINE:MEF-2061","FEEDS","ENGINE:E07"],
+    ["ENGINE:MEF-2061","FEEDS","ENGINE:E08"],
+    ["ENGINE:MEF-2061","FEEDS","ENGINE:E09"],
+    ["ENGINE:MEF-2061","FEEDS","ENGINE:E10"],
+    ["ENGINE:MEF-2061","FEEDS","ENGINE:E15"],
+    ["ENGINE:MEF-2061","FEEDS","ENGINE:E17"],
+    ["ENGINE:E17","REQUIRES","GATE:CANDIDATE_TRUTH_PRIVATE_JOIN"],
+    ["GATE:CANDIDATE_TRUTH_PRIVATE_JOIN","PRECEDES","GATE:OUTBOUND"]
+  ],
+  "safety": {
+    "authority_advanced": false,
+    "canonical_id_allocations": 0,
+    "canonical_id_reservations": 0,
+    "crm_universe_complete": false,
+    "outbound": "CLOSED",
+    "send_allowed": 0
+  }
+}

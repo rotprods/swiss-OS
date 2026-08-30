@@ -1,0 +1,30 @@
+{
+  "schema_version": "MARKET-ENRICHMENT-RUN-REQUEST-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "run_id": "MER-2061-20260830-R1",
+  "source_snapshot_id": "HS-MEMBER-DE-33206402141",
+  "source_artifact_id": 9700376482,
+  "source_manifest_path": "hslca/member-directory-manifest.json",
+  "expected_records": 2061,
+  "records_sha256": "62e26d62d8677a5437e081302b6b4d206c0d27a0fe268c6356aef01da5428dc2",
+  "observed_at": "2026-08-30T21:05:00Z",
+  "shard_count": 42,
+  "max_parallel": 6,
+  "sleep_seconds_between_records": 0.8,
+  "execution_mode": "READ_ONLY_RESEARCH",
+  "engine_targets": ["E07", "E08", "E09", "E10", "E11", "E12", "E14", "E15", "E16", "E17", "E18", "E19", "E20", "E21", "E22"],
+  "outputs": {
+    "full_record_enrichment": "GITHUB_ACTIONS_ARTIFACT_ONLY",
+    "public_repo": "SUMMARY_AND_RUN_RECEIPT_ONLY",
+    "candidate_truth_join": "PRIVATE_PLANE_REQUIRED"
+  },
+  "safety": {
+    "authority_advance_allowed": false,
+    "canonical_id_allocation_allowed": false,
+    "canonical_id_reservations": 0,
+    "crm_universe_complete": false,
+    "outbound": "CLOSED",
+    "send_allowed": 0,
+    "irreversible_external_actions": 0
+  }
+}

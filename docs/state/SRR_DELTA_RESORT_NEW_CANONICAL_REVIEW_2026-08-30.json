@@ -1,0 +1,64 @@
+{
+  "schema_version": "SRR-1.1-EXPLICIT-REVIEW-PACKET-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "parent_git_sha": "41e4721d7b47779aac32f9998da7ac27b25de6d5",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "authority_materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+  "claim_id": "CLAIM-CRM-PIE050-LOWER49-005",
+  "fencing_token": 5,
+  "source_record_key": "MD-7976c173678dc89c9cf0",
+  "source_identity": {"name": "delta resort apartments", "city": "ascona", "snapshot_id": "HS-MEMBER-DE-33206402141"},
+  "resolution_review": {
+    "action": "NEW_CANONICAL",
+    "reason_code": "CURRENT_DISTINCT_SUBPROPERTY_PRODUCT_WITH_EXISTING_PARENT_RELATION",
+    "evidence_ref": "docs/state/PIE050_DELTA_SUBPROPERTY_RELATION_2026-08-30.json",
+    "evidence_tier": "CURRENT_FIRST_PARTY_PLUS_INDEPENDENT_TOURISM_IDENTITY",
+    "new_canonical_candidate": true,
+    "h_id_allocation_allowed_in_this_wave": false,
+    "terminal_mapping_allowed_in_this_wave": false
+  },
+  "relationship_proposal": {
+    "relation": "OPERATED_AS_SUBPROPERTY_OF",
+    "parent_hotel_id": "H-0220",
+    "parent_name": "Parkhotel Delta Wellbeing Resort",
+    "authority": "PROPOSED_ONLY",
+    "why_not_alias": "Current evidence distinguishes the apartments as a separate accommodation product/premises within the resort. Collapsing the source to H-0220 would erase product-level identity."
+  },
+  "authority_requirements": [
+    "fresh exact-current source evidence remains valid",
+    "current authority ancestry and H-0691 availability reread immediately before transaction",
+    "entity-granularity contract permits a separate canonical accommodation product with parent relation",
+    "allocate H-ID only inside DB-first authority transaction; never reserve from staging",
+    "mirror HOTELS_V2/ENTITY_RESOLUTION/Intelligence/Operational Graph by stable PK",
+    "validate restore/replay/idempotency and cross-plane exactness before authority promotion"
+  ],
+  "projected_effect_if_later_authority_commit_succeeds": {
+    "active_canonical": 691,
+    "terminal_source_mappings": 658,
+    "unique_canonical_targets": 657,
+    "reconcile_required": 1403,
+    "next_h_id_after_commit": "H-0692_UNALLOCATED",
+    "h_id_allocations_in_authority_transaction": 1
+  },
+  "effect_this_wave": {
+    "active_canonical": 690,
+    "terminal_source_mappings": 657,
+    "reconcile_required": 1404,
+    "h_id_allocations": 0,
+    "canonical_id_reservations": 0,
+    "authority_advanced": false,
+    "crm_universe_complete": false,
+    "outbound": "CLOSED",
+    "send_allowed": 0,
+    "irreversible_external_actions": 0
+  },
+  "lower49_resolution_frontier_after_review": {
+    "ordinary_distinctness_reviewed": 47,
+    "alias_existing_candidate": 1,
+    "new_canonical_candidate": 1,
+    "relationship_sensitive_unclassified": 0,
+    "total": 49
+  },
+  "next_route": "RECONSTRUCT_EXACT_AUTHORITY_TRANSACTION_INPUTS_FOR_NEUSCHOENSTATT_ALIAS_AND_DELTA_NEW_CANONICAL_OR_FAIL_TO_DURABLE_PROVIDER_BOUNDARY",
+  "packet_sha256": "9488389a40de89499119eba6e26d017db89055b30765052adee82a1621b994c6"
+}

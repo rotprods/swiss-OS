@@ -1,6 +1,6 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest chained Meta Execution coordination frontier: **2026-08-30T08:29:00Z**. Current execution parent main SHA: **`804a3ee8ea29e567cb93bc48a46b5cc5f2d8a33f`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
+Latest chained Meta Execution coordination frontier: **2026-08-30T09:01:56Z**. Current execution parent main SHA: **`db0bd9bb6eab966230e6a9cb42688be3a952867c`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
 
 ## Authority — unchanged / locked
 
@@ -22,33 +22,35 @@ Authority SHA `70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`
 source records / pages               2061 / 172
 candidate records                         1438
 ECV exact-current                    1438 / 1438
-ECV verified frontier                1438 / 1438
-ECV remaining never verified                   0
 pre-authority terminal source mappings       658
 unique canonical targets                    656
 RECONCILE_REQUIRED                         1403
 RAGR reverse authority gaps                  34
 explicit SRR deltas                          34
+full terminal coverage rebuild          COMPLETE
+terminal_pairs_sha256       cdcecdf445395fe36c6318c2f0103757b0a14ec08d33e229c138df2ec36ad56e
+unresolved_keys_sha256      910cfd92974025a836430612387d380be0f15d173d41f20fda6fea2bcca48581
 ```
 
-PR #344 independently re-proved exact lower49 classification coverage **49/49** from fresh main: 47 ordinary nonterminal distinctness reviews plus two relationship-sensitive cases. PR #345 quarantined the diverged stale token6 transition. PR #346 released token5 and activated fresh token6 for SRR-special preauthority only.
+The 657-row deterministic hash recipe was independently reproduced from the immutable source artifact plus the 690-row Drive `HOTELS_V2` read-only projection before applying batch0008. The historical terminal and unresolved hashes reproduced exactly. Adding only `MD-33d867e983644585e4b2 -> H-0114` yields 658 terminal mappings and 1403 unresolved keys with complete source-key conservation. H-0114 was already covered, so the RAGR gap set remains exactly 34.
 
 ## Coordination / SRR special frontier
 
-Fencing token **6** (`CLAIM-CRM-SRR-SPECIAL-006`) is **ACTIVE** with authority ceiling `PREAUTH_SRR_DECISION_ONLY_NO_CANONICAL_MUTATION`.
+Fencing token **6** (`CLAIM-CRM-SRR-SPECIAL-006`) remains bounded to `PREAUTH_SRR_DECISION_ONLY_NO_CANONICAL_MUTATION`.
 
-- Neu-Schönstatt `MD-33d867e983644585e4b2` is now accepted as a bounded explicit SRR-1.1 pre-authority `ALIAS_EXISTING -> H-0114` mapping. This advances only the pre-authority source overlay `657 -> 658` and `RECONCILE_REQUIRED 1404 -> 1403`; H-0114 was already source-covered, so unique canonical targets remain 656 and RAGR gaps remain 34. Full deterministic 658-row terminal coverage rebuild is pending.
-- Delta Resort Apartments `MD-7976c173678dc89c9cf0` remains `OPERATED_AS_SUBPROPERTY_OF -> H-0220`; canonical entity granularity is unresolved, so no identity collapse, NEW_CANONICAL terminal decision, or H-ID reservation is authorized.
+- Neu-Schönstatt is materialized in full preauthority coverage as `ALIAS_EXISTING -> H-0114`.
+- Delta Resort Apartments remains relationship-only (`OPERATED_AS_SUBPROPERTY_OF -> H-0220`) because entity granularity is unresolved.
+- No H-ID allocation, authority mutation, outbound action, or irreversible external action occurred.
 
 ## Provider / recovery boundaries
 
-Current discover.swiss documentation still requires an `Ocp-Apim-Subscription-Key` for Infocenter API requests; HotellerieSuisse AccommoDataHub access uses the HotellerieSuisse project selector. No runtime subscription key / capture-valid structured member-directory manifest is available in this activation, so SSR-1.0 remains blocked. The qualified member-directory snapshot plus exact-current verification is a fallback and is explicitly not SSR-equivalent.
+discover.swiss SSR-1.0 is still blocked without a runtime subscription key and capture-valid structured manifest. The qualified member-directory snapshot plus exact-current verification remains fallback evidence and is not SSR-equivalent.
 
-The exact E4 SQLite can be deterministically reconstructed from the verified Drive V13 parent, but generated local file-reference egress is unavailable through the current connector (`GENERATED_LOCAL_FILE_REFERENCE_EGRESS_UNAVAILABLE`). Therefore no Sheets-first authority promotion is allowed. Drive/canary/cache state cannot advance authority.
+Exact E4 DB-first durable egress remains unavailable, so cross-plane authoritative reconciliation is not eligible. Drive/canary/cache state cannot advance authority.
 
 ## NEXT
 
-Rebuild exact **658-row** terminal coverage from the immutable 2061-source snapshot plus 34 explicit SRR deltas, require source-key conservation and re-attest RAGR. Then continue bounded unresolved-source review/staging under token6 while probing only materially different provider-accepted DB-egress routes. Do not repeat failed local file-reference upload/replace/import variants. Never reserve H-0691 or any H-ID from preauthority work; keep `OUTBOUND=CLOSED` and `send_allowed=0`.
+Run evidence-qualified entity-resolution triage across the **1403 unresolved source keys** using the **1438/1438 exact-current corpus**. Only emit a bounded SRR batch for one-to-one first-party evidence; otherwise retain `RECONCILE_REQUIRED`. In parallel, use only materially different MEP routes for provider/DB egress boundaries. Never reserve H-0691; keep `OUTBOUND=CLOSED` and `send_allowed=0`.
 
 Recovery inputs and exact blockers are persisted in `docs/state/NEXT.json` and `docs/state/NEXT_META_EXECUTION_2026-08-30.json`.
 

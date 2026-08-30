@@ -74,6 +74,14 @@ def test_quarantine_still_prevents_stale_coordination_overwrite_and_keeps_hard_l
     transition = art["safe_successor_transition"]
     assert "fresh main" in transition["required_strategy"].lower()
     assert "do not merge or cherry-pick" in transition["required_strategy"].lower()
+    assert set(transition["forbidden_effects"]) == {
+        "CANONICAL_AUTHORITY_ADVANCE",
+        "H_ID_ALLOCATION",
+        "CANONICAL_ID_RESERVATION",
+        "TERMINAL_MAPPING_FROM_SIMILARITY_OR_DISTINCTNESS",
+        "OUTBOUND_OPEN",
+        "SEND_ALLOWED_1",
+    }
 
     safety = art["safety"]
     assert safety["h_0691"] == "UNALLOCATED"
@@ -81,6 +89,9 @@ def test_quarantine_still_prevents_stale_coordination_overwrite_and_keeps_hard_l
     assert safety["reconcile_required"] == 1404
     assert safety["crm_universe_complete"] is False
     assert safety["authority_advanced"] is False
+    assert safety["h_id_allocations"] == 0
+    assert safety["canonical_id_reservations"] == 0
+    assert safety["irreversible_external_actions"] == 0
     assert safety["outbound"] == "CLOSED"
     assert safety["send_allowed"] == 0
 

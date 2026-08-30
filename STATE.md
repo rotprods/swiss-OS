@@ -22,6 +22,8 @@ Authority SHA `70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`
 source records / pages               2061 / 172
 candidate records                         1438
 ECV exact-current                    1438 / 1438
+ECV verified frontier                1438 / 1438
+ECV remaining never verified                   0
 pre-authority terminal source mappings       658
 unique canonical targets                    656
 RECONCILE_REQUIRED                         1403
@@ -31,7 +33,7 @@ unresolved candidate anti-join            1403/1403 ATTESTED
 review staging batches                          29
 ```
 
-Source-key conservation remains `658 + 1403 = 2061`. Terminal-pair SHA remains `cdcecdf445395fe36c6318c2f0103757b0a14ec08d33e229c138df2ec36ad56e`; unresolved source-key SHA remains `910cfd92974025a836430612387d380be0f15d173d41f20fda6fea2bcca48581`.
+Source-key conservation remains `658 + 1403 = 2061`. Terminal-pair SHA remains `cdcecdf445395fe36c6318c2f0103757b0a14ec08d33e229c138df2ec36ad56e`; unresolved source-key SHA remains `910cfd92974025a836430612387d380be0f15d173d41f20fda6fea2bcca48581`; RAGR remains 34 / `bca692c105efac8c8929c1639e1ebe643dd03f0a6ecab4bb42d86e0acccba568`.
 
 ## Identity / granularity frontier
 

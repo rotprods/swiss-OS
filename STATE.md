@@ -1,6 +1,6 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest reconstructed frontier: **2026-08-30T22:00:00Z**. Verified main parent: **`b0ec94f4a13fb7c24d39454439d9792d90bb7e46`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Authority materialized SHA: **`70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`**.
+Latest reconstructed frontier: **2026-08-30T22:25:00Z**. Verified main parent: **`b0ec94f4a13fb7c24d39454439d9792d90bb7e46`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Authority materialized SHA: **`70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`**.
 
 ## Authority — unchanged / locked
 
@@ -23,6 +23,8 @@ partial HSLCA substrate records/pages    2061 / 172
 partial substrate records SHA             62e26d62d8677a5437e081302b6b4d206c0d27a0fe268c6356aef01da5428dc2
 candidate records                         1438
 ECV exact-current                         1438 / 1438
+ECV verified frontier                     1438 / 1438
+ECV remaining never verified                 0
 pre-authority terminal source mappings     658
 unique canonical targets                   656
 RECONCILE_REQUIRED                        1403
@@ -32,6 +34,8 @@ RAGR IN_SCOPE_NO_SOURCE_MATCH              24
 ```
 
 Source-key conservation for the historical partial substrate remains `658 + 1403 = 2061`. Those counts are preserved for lineage; they are **not** a claim that the 2061-record member-directory capture is coherent or complete.
+
+The 1438-row candidate export and completed 1438/1438 ECV frontier remain deterministic historical lineage from that partial substrate. They are valid pre-authority work products, but must not be reinterpreted as proof that the current member-directory universe is complete.
 
 ## Critical R2 correction — 2061 capture is partial, not coverage-complete
 

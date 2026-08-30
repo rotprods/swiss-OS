@@ -8,7 +8,14 @@
     "closure": "COMPLETE_READ_ONLY",
     "graph_impact": "META",
     "observed_at": "2026-08-30T08:23:03+02:00",
-    "parent_main_sha": "69fb96168479b210379d83937e8bf041944da450"
+    "parent_main_sha": "69fb96168479b210379d83937e8bf041944da450",
+    "reconciled_main_sha": "3afe2ef55acdc41b82f7899dec5bf9e7f7f40f6a",
+    "concurrent_main_merge": {
+      "pull_request": 342,
+      "merge_sha": "3afe2ef55acdc41b82f7899dec5bf9e7f7f40f6a",
+      "head_sha": "56f54375ce5c705a2ff7093dc2bca1a2f34569e6",
+      "effect": "GENERALIZED_EXISTING_CRM_E4_EGRESS_FALLBACK_TO_V1_1_NO_AUTHORITY_CHANGE"
+    }
   },
   "protocols": {
     "meta_execution": "MEP-2.0",
@@ -57,7 +64,7 @@
       "head_sha": "f00430437a17adec97f73b188ad341dac94a1c32",
       "merge_base_sha": "11a528dd1584b3606fed83356c006065e9785778",
       "ahead_by": 15,
-      "behind_by": 15,
+      "behind_by": 18,
       "pull_request_present": false,
       "current_authority": false,
       "instruction": "DO_NOT_TREAT_AS_RELEASE_OR_ACQUIRED_CLAIM; RECONCILE_OR_SUPERSEDE_FROM_FRESH_MAIN"
@@ -147,7 +154,6 @@
     "state_md_parent_sha": "c0168050e659290a0f171cc69ad6c00d5b918c4a",
     "next_json_parent_sha": "c0168050e659290a0f171cc69ad6c00d5b918c4a",
     "pointer_parent_is_ancestor_of_audit_parent": true,
-    "audit_parent_ahead_by_commits": 70,
     "shared_pointer_paths_claimed_by_token5": true,
     "audit_rewrote_shared_pointer_paths": false,
     "recovery_strategy_must_read": [
@@ -155,7 +161,9 @@
       "docs/recovery/DB_EGRESS_CAPABILITY_GAUNTLET_2026-08-30.json",
       "docs/state/DB_AUTHORITY_ARTIFACT_RECOVERY_PREFLIGHT_2026-08-30.json",
       "docs/handoffs/META_20260830_STATE_AUDIT_DB_EGRESS_HANDOFF.md"
-    ]
+    ],
+    "audit_start_parent_ahead_by_commits": 70,
+    "reconciled_main_ahead_by_commits": 73
   },
   "open_program_and_risks": {
     "github_program_issues": [
@@ -185,7 +193,8 @@
   },
   "pull_request_hygiene": {
     "merged_in_audit": [
-      340
+      340,
+      342
     ],
     "superseded_candidate_pr": 341,
     "stale_graph_v2_prs_do_not_merge_blindly": [
@@ -221,7 +230,7 @@
     ],
     "verify_live_truth_before_execution": true,
     "recovery_inputs": [
-      "GitHub main descendant of 69fb96168479b210379d83937e8bf041944da450",
+      "GitHub main descendant of 3afe2ef55acdc41b82f7899dec5bf9e7f7f40f6a",
       "authority epoch HS_ENTITY_EPOCH_2026-08-25_E4",
       "logical authority SHA 70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
       "Drive V13 file 1rIL6x_bmBoCbxVSAGFvdjoKnUqSX3YnT",

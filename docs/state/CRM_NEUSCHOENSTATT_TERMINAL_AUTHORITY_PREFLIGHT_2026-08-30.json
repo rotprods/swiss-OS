@@ -1,0 +1,59 @@
+{
+  "schema_version": "CRM-TERMINAL-AUTHORITY-PREFLIGHT-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "parent_git_sha": "5b1d556f37c5ed2e2fe845a75207110dc2db39b3",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "authority_materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+  "source_record_key": "MD-33d867e983644585e4b2",
+  "review_artifact": "docs/state/SRR_NEUSCHOENSTATT_ALIAS_EXISTING_REVIEW_2026-08-30.json",
+  "proposed_action": "ALIAS_EXISTING",
+  "canonical_target": "H-0114",
+  "live_cross_plane_readback": {
+    "HOTELS_V2": {"row": 115, "hotel_id": "H-0114", "name": "Hostel Neu-Schönstatt", "city": "Quarten", "state": "MIGRATED_LEGACY", "present": true},
+    "HOTEL_INTELLIGENCE_V1": {"row": 125, "hotel_id": "H-0114", "enrichment_level": "L1", "identity_state": "CANONICAL_EXISTING", "present": true},
+    "GRAPH_NODES_V2": {"hotel_node": "HOTEL:H-0114", "hotel_state": "CANONICAL_ACTIVE", "intel_node": "INTEL:H-0114", "intel_state": "L1", "present": true},
+    "ENTITY_RESOLUTION": {"source_record_key_present": false}
+  },
+  "capability_probe": {
+    "native_google_sheets_writer": "AVAILABLE_CANARY_VERIFIED",
+    "drive_read_recovery": "AVAILABLE",
+    "public_git_branch_pr_ci": "AVAILABLE",
+    "current_authoritative_sqlite_mutable_binary": "NOT_DISCOVERED_IN_CURRENT_DRIVE_OR_LIBRARY_RECOVERY_SEARCH",
+    "discover_swiss_subscription_key": "ABSENT_RUNTIME"
+  },
+  "authority_gate": {
+    "eligible_now": false,
+    "blocker_code": "CONSTRAINED_DB_FIRST_TRANSACTION_INPUT_UNAVAILABLE",
+    "exact_dependency": "The current E4/690 constrained SQLite authority binary matching authority revision 70307f4a... is not available as a verifiably mutable runtime input. WOP forbids Sheets-first terminalization; a Git/Sheets-only mapping would create cross-plane authority drift.",
+    "required_before_commit": [
+      "recover exact current constrained SQLite authority binary and verify sha256/integrity/FK",
+      "materialize source mapping delta keyed by MD-33d867e983644585e4b2 -> H-0114",
+      "apply DB-first bounded transaction with rollback",
+      "mirror source mapping/control plane by stable key without changing H-0114 identity",
+      "revalidate HOTELS_V2/HOTEL_INTELLIGENCE/Operational Graph exactness",
+      "recompute source-key conservation and RAGR",
+      "persist authority manifest, run log, handoff and recovery receipt"
+    ]
+  },
+  "projected_after_successful_authority_commit": {
+    "active_canonical": 690,
+    "terminal_source_mappings": 658,
+    "unique_canonical_targets": 656,
+    "reconcile_required": 1403,
+    "reverse_authority_source_gaps": 34,
+    "next_h_id": "H-0691_UNALLOCATED",
+    "h_id_allocations": 0
+  },
+  "effect_this_wave": {
+    "authority_advanced": false,
+    "terminal_source_mappings": 657,
+    "reconcile_required": 1404,
+    "h_id_allocations": 0,
+    "canonical_id_reservations": 0,
+    "outbound": "CLOSED",
+    "send_allowed": 0,
+    "irreversible_external_actions": 0
+  },
+  "mep_fallback_route": "DELTA_RESORT_ENTITY_GRANULARITY_DECISION_AND_CONTINUITY_RECONCILIATION",
+  "packet_sha256": "5dd3730a98f47dd3e468feed43eb851fe750b7772f7f179b80ec21609a2ba74c"
+}

@@ -1,6 +1,6 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest chained Meta Execution coordination frontier: **2026-08-30T15:20:00Z**. Current execution parent main SHA: **`a09f8cb722744c8e5c987a05278b8cd5192d9e11`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
+Latest chained Meta Execution coordination frontier: **2026-08-30T15:35:00Z**. Current execution parent main SHA: **`317d5892b5c80f0066a16339ed2a1f10dcdae1ef`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
 
 ## Authority — unchanged / locked
 
@@ -43,10 +43,15 @@ Source-key conservation remains `658 + 1403 = 2061`. Terminal-pair SHA remains `
 relationship/granularity reviewed          2 / 2
 relationship/granularity unresolved            0
 cumulative NEW_CANONICAL preauthority         67
+lower49 ordinary evidence-reviewed         47 / 47
+lower49 ordinary exact workset             47 / 47
+lower49 typed SRR materialized               0 / 47
 terminal mapping delta from review             0
 ```
 
-EGR-1.0 now makes the preauthority entity-granularity rule explicit: relationship is not identity. `Delta Resort Apartments` is a distinct preauthority canonical candidate with `OPERATED_AS_SUBPROPERTY_OF -> H-0220`; `OVERLOOK Lodge by CERVO Mountain Resort` is a distinct preauthority canonical candidate with `COMPONENT_OF_OR_OPERATED_WITHIN -> H-0012`. Both remain `RECONCILE_REQUIRED`; neither reserves an H-ID nor creates a terminal mapping. Existing `H-0012 CERVO Mountain Resort` and `H-0201 Nomad Lodge by CERVO Mountain Resort` provide live CRM granularity precedent for separately marketed CERVO components.
+The exact 47 ordinary lower49 evidence reviews are compiled into deterministic token6 workset `CRM_IDENTITY_WORKSET_LOWER49_ORDINARY_47_2026-08-30.json`, five batches `10/10/10/10/7`, workset SHA `8817941127ede8f9329d81b4831b1fd6643e9ab4c19438c3fa612b78e1169050`. Historical token5 packet results are evidence-only: `CURRENT_PUBLIC_DISTINCTNESS_SUPPORTED` clears weak similarity collisions but does not itself prove `NEW_CANONICAL`, reserve an ID, or create a typed SRR decision.
+
+EGR-1.0 remains active for entity-granularity semantics. Delta Resort Apartments and Overlook Lodge are separate preauthority canonical candidates with explicit parent/component relationships; both remain `RECONCILE_REQUIRED`.
 
 Fencing token **6** (`CLAIM-CRM-SRR-SPECIAL-006`) remains **ACTIVE** with authority ceiling `PREAUTH_SRR_DECISION_ONLY_NO_CANONICAL_MUTATION`.
 
@@ -56,7 +61,7 @@ Drive native `HOTELS_V2` readback is live. Exact E4 local reconstruction remains
 
 ## NEXT
 
-Compile the **47 ordinary lower49** current-public-distinctness reviews into a deterministic preauthority materialization workset, excluding the already-special `Neu-Schönstatt` and `Delta Resort Apartments` cases. Preserve exact source-key lineage, packet provenance, suggested comparators and stable batches. The compiler/workset itself must have zero authority effect, zero terminal mapping effect and zero H-ID reservation/allocation. Then execute evidence-bound batches from that workset under token6.
+Execute **`L49-P1-B01`**, the exact ten reviews from packet 01. Gather/re-read current provider or first-party identity evidence and live canonical comparator rows before any typed SRR decision. Similarity and destination co-listing alone cannot prove novelty. Preserve `RECONCILE_REQUIRED` unless exact current identity evidence independently supports a typed preauthority action. Never reserve/allocate H-0691; keep `OUTBOUND=CLOSED` and `send_allowed=0`.
 
 Recovery inputs and exact blockers are persisted in `docs/state/NEXT.json` and `docs/state/NEXT_META_EXECUTION_2026-08-30.json`.
 

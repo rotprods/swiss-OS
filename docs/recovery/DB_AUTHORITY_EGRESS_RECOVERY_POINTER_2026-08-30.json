@@ -1,0 +1,73 @@
+{
+  "schema_version": "RECOVERY-NEXT-POINTER-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "authority": "RECOVERY_ONLY_NOT_CANONICAL_STATE",
+  "verify_live_truth_before_execution": true,
+  "parent_main_sha": "78daa43661867cfcb66a379a367380eb1fe9b22b",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "authority_materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+  "next_route": "PROVIDER_EGRESS_CAPABILITY_OR_DURABLE_FILE_REFERENCE_BRIDGE_THEN_FRESH_CROSS_PLANE_AUTHORITY_TRANSACTION",
+  "exact_blockers": [
+    {
+      "id": "DB-EGRESS-BLOCKED-FILE-REFERENCE",
+      "dependency": "A durable provider-accepted file reference for the runtime-generated repaired SQLite",
+      "state": "BLOCKED_PROVIDER_RUNTIME_BOUNDARY",
+      "detail": "Drive V13 is raw-fetchable and deterministically reconstructs the exact E4 SQLite hash, but Drive upload of the generated repaired file returns BLOCKED_FILE_REFERENCE before publication."
+    },
+    {
+      "id": "DISCOVER-SWISS-INFOCENTER-KEY",
+      "dependency": "discover.swiss Infocenter subscription key plus capture-valid structured manifest",
+      "state": "BLOCKED_PROVIDER_CREDENTIAL_BOUNDARY",
+      "detail": "SSR-1.0 cannot be promoted from the HotellerieSuisse recovery snapshot; structured discover.swiss acquisition remains independently credential-blocked."
+    },
+    {
+      "id": "PIE050-SPECIAL-AUTHORITY",
+      "dependency": "Fresh live claim/authority validation for any terminal entity-resolution promotion",
+      "state": "BLOCKED_AUTHORITY_UNTIL_REVALIDATED",
+      "detail": "Neu-Schönstatt and Delta relationship evidence are PREAUTH surfaces; no terminal mapping or H-ID allocation may be inferred from them without the explicit authority transaction defined by SRR-1.1 and current live claims."
+    }
+  ],
+  "recovery_inputs": {
+    "github_recovery_artifact": "docs/state/DB_AUTHORITY_ARTIFACT_RECOVERY_PREFLIGHT_2026-08-30.json",
+    "drive_recovery_document_id": "17qlWRTTXc44jTAkuZRI5ZYWoZZEQUCb0d6uqy0fbaWs",
+    "drive_recovery_folder_id": "1JTDkU3ZD0M7lz-hrU0t8-pzTj5IwC1YN",
+    "drive_v13_file_id": "1rIL6x_bmBoCbxVSAGFvdjoKnUqSX3YnT",
+    "drive_v13_sha256": "0e605b412f29893ca1775f1e8fccd5987d0613baab4ac29b6699988cde0fdfe5",
+    "source_snapshot": "HS-MEMBER-DE-33206402141",
+    "source_actions_artifact_id": 9700376482,
+    "candidate_actions_artifact_id": 9718866661,
+    "hotels_master_id": "1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w"
+  },
+  "known_frontier": {
+    "source_records": 2061,
+    "source_pages": 172,
+    "candidate_records": 1438,
+    "exact_current_verified": 1438,
+    "terminal_source_mappings": 657,
+    "unique_canonical_targets": 656,
+    "reconcile_required": 1404,
+    "reverse_authority_gaps": 34,
+    "active_canonical": 690,
+    "next_h_id": "H-0691_UNALLOCATED",
+    "lower49_ordinary_distinctness_reviewed": 47,
+    "lower49_special_relationship_records": 2
+  },
+  "hard_invariants": {
+    "crm_universe_complete": false,
+    "outbound": "CLOSED",
+    "send_allowed": 0,
+    "authority_advanced_by_this_pointer": false,
+    "terminal_mapping_delta": 0,
+    "h_id_allocations": 0,
+    "canonical_id_reservations": 0,
+    "authority_from_canary_or_cache": false,
+    "irreversible_external_actions": 0
+  },
+  "successor_steps": [
+    "Re-read current GitHub main ancestry, active claims, open PRs, authority epoch/revision and Drive authority surfaces before relying on this recovery pointer.",
+    "If a provider-accepted durable file-reference bridge exists, publish a NEW repaired SQLite artifact without overwriting V13 and require byte-exact E4 SHA verification plus restore/replay proof.",
+    "Only then execute the existing bounded PK-keyed DB↔HOTELS_MASTER↔Intelligence↔Graph↔observability cross-plane reconciliation and promotion gauntlet.",
+    "If a discover.swiss key becomes available, independently run structured capture → capture-valid manifest → SSR-1.0 without persisting the secret.",
+    "If the blockers remain, do not manufacture authority, mappings or IDs; continue only non-overlapping reversible evidence/recovery work."
+  ]
+}

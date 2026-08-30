@@ -60,6 +60,7 @@ def main():
     if not tids: errors.append("EMPTY_TASK_PROGRAM")
     cps=load("docs/state/v2/checkpoint.json"); cids=[i.get("id") for i in cps.get("checkpoints",[]) if isinstance(i,dict)]
     if len(cids)!=len(set(cids)): errors.append("DUPLICATE_CHECKPOINT_ID")
+    print("V2_DIAGNOSTIC projection="+projection["projection_revision"]+" scope="+current_scope+" watermark="+json.dumps(projection.get("event_watermark"),sort_keys=True,separators=(",",":"))+" active="+json.dumps(projection.get("active_claim_ids"),sort_keys=True,separators=(",",":")))
     if errors:
         print("v2_contract_guard: FAIL")
         for error in sorted(set(errors)): print(f"- {error}")

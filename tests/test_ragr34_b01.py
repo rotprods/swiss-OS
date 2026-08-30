@@ -59,11 +59,15 @@ class Ragr34B01Tests(unittest.TestCase):
         self.assertIn("H-0691 UNALLOCATED", text)
         self.assertIn("OUTBOUND                        CLOSED", text)
         nxt = json.loads(NEXT.read_text(encoding="utf-8"))
-        self.assertRegex(nxt["next_route"], r"^EXECUTE_RAGR34_B0[2-4]_EVIDENCE_CLASSIFICATION$")
         ragr = nxt["review_frontier"]["ragr"]
         self.assertGreaterEqual(ragr["reviewed"], 10)
         self.assertLessEqual(ragr["remaining"], 24)
         self.assertEqual(ragr["reviewed"] + ragr["remaining"], 34)
+        if ragr["reviewed"] < 34:
+            self.assertRegex(nxt["next_route"], r"^EXECUTE_RAGR34_B0[2-4]_EVIDENCE_CLASSIFICATION$")
+        else:
+            self.assertEqual(ragr["reviewed"], 34)
+            self.assertEqual(nxt["next_route"], "MATERIALIZE_RAGR34_POST_REVIEW_DISPOSITION_WORKSET")
         self.assertFalse(nxt["authority_advance_allowed"])
         self.assertFalse(nxt["outbound_allowed"])
 

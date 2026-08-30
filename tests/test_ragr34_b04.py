@@ -4,7 +4,7 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-ART = ROOT / "docs/state/RAGR_CURRENT_EVIDENCE_B03_2026-08-30.json"
+ART = ROOT / "docs/state/RAGR_CURRENT_EVIDENCE_B04_2026-08-30.json"
 NEXT = ROOT / "docs/state/NEXT.json"
 
 
@@ -13,11 +13,11 @@ def _sha(value):
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
 
-class RAGR34B03Tests(unittest.TestCase):
+class RAGR34B04Tests(unittest.TestCase):
     def test_exact_batch_classification_and_safety(self):
         art = json.loads(ART.read_text(encoding="utf-8"))
-        expected = ["H-0663","H-0664","H-0665","H-0666","H-0667","H-0668","H-0669","H-0670","H-0671","H-0672"]
-        self.assertEqual(art["parent_git_sha"], "91e2277ddfbcedf21dc13c61893cee0111b90930")
+        expected = ["H-0673", "H-0674", "H-0675", "H-0677"]
+        self.assertEqual(art["parent_git_sha"], "f25bd38162ca0e47f68d3d9d7cd2ffcea559fdea")
         self.assertEqual(art["queue"]["hotel_ids"], expected)
         self.assertEqual(art["queue"]["review_queue_sha256"], "cf47dc91057df8653cd75729cb39320605e193e476c6828f24956b69e2848b9c")
         self.assertEqual(art["claim"]["claim_id"], "CLAIM-CRM-SRR-SPECIAL-006")
@@ -25,18 +25,19 @@ class RAGR34B03Tests(unittest.TestCase):
         decisions = art["decisions"]
         self.assertEqual([d["hotel_id"] for d in decisions], expected)
         self.assertEqual(_sha(decisions), art["decisions_sha256"])
-        self.assertEqual(art["decisions_sha256"], "4d531ebbaf059e43bd65cbb3bb1700d5c0dcae132c6b9f6a866a8949756c96f0")
-        self.assertEqual(sum(d["classification"] == "IN_SCOPE_NO_SOURCE_MATCH" for d in decisions), 9)
-        self.assertEqual(sum(d["classification"] == "SUPERSEDED/RENAMED WITH EVIDENCE" for d in decisions), 1)
-        self.assertEqual(next(d for d in decisions if d["hotel_id"] == "H-0665")["classification"], "SUPERSEDED/RENAMED WITH EVIDENCE")
+        self.assertEqual(art["decisions_sha256"], "ba51983f1460baf1c546c05c0c78f424fb4036d8835db656597f7d4b911caaf2")
+        self.assertEqual(sum(d["classification"] == "IN_SCOPE_NO_SOURCE_MATCH" for d in decisions), 2)
+        self.assertEqual(sum(d["classification"] == "SUPERSEDED/RENAMED WITH EVIDENCE" for d in decisions), 2)
+        self.assertEqual(next(d for d in decisions if d["hotel_id"] == "H-0673")["classification"], "SUPERSEDED/RENAMED WITH EVIDENCE")
+        self.assertEqual(next(d for d in decisions if d["hotel_id"] == "H-0674")["classification"], "SUPERSEDED/RENAMED WITH EVIDENCE")
         self.assertTrue(all(d["authority_action"] == "NONE_REVIEW_ONLY" for d in decisions))
         self.assertTrue(all(d["authority_mutation_allowed"] is False for d in decisions))
         self.assertTrue(all(d["terminal_source_mapping"] == "NONE" and d["source_mapping_created"] is False for d in decisions))
         self.assertTrue(all(any(e["type"] == "CANONICAL_ROW_READBACK" for e in d["evidence"]) for d in decisions))
         self.assertTrue(all(any(e["type"].startswith("CURRENT_") for e in d["evidence"]) for d in decisions))
-        self.assertEqual(art["counts"]["reviewed_before"], 20)
-        self.assertEqual(art["counts"]["reviewed_after"], 30)
-        self.assertEqual(art["counts"]["remaining_after"], 4)
+        self.assertEqual(art["counts"]["reviewed_before"], 30)
+        self.assertEqual(art["counts"]["reviewed_after"], 34)
+        self.assertEqual(art["counts"]["remaining_after"], 0)
         self.assertEqual(art["counts"]["terminal_source_mappings_created"], 0)
         self.assertEqual(art["counts"]["canonical_deactivations"], 0)
         self.assertEqual(art["counts"]["authority_mutations"], 0)
@@ -52,24 +53,26 @@ class RAGR34B03Tests(unittest.TestCase):
         self.assertEqual(safety["send_allowed"], 0)
         self.assertEqual(safety["irreversible_external_actions"], 0)
 
-    def test_canonical_next_is_monotonic_after_b03(self):
+    def test_canonical_next_closes_review_frontier_without_authority_effect(self):
         nxt = json.loads(NEXT.read_text(encoding="utf-8"))
+        self.assertEqual(nxt["next_route"], "MATERIALIZE_RAGR34_POST_REVIEW_DISPOSITION_WORKSET")
         ragr = nxt["review_frontier"]["ragr"]
-        self.assertGreaterEqual(ragr["reviewed"], 30)
-        self.assertLessEqual(ragr["remaining"], 4)
+        self.assertEqual(ragr["reviewed"], 34)
+        self.assertEqual(ragr["remaining"], 0)
+        self.assertEqual(ragr["total"], 34)
         self.assertEqual(ragr["reviewed"] + ragr["remaining"], 34)
-        self.assertGreaterEqual(ragr["classification_counts"]["IN_SCOPE_NO_SOURCE_MATCH"], 22)
-        self.assertGreaterEqual(ragr["classification_counts"]["SUPERSEDED/RENAMED WITH EVIDENCE"], 3)
-        self.assertGreaterEqual(ragr["classification_counts"]["DATA DEFECT"], 3)
-        if ragr["reviewed"] == 30:
-            self.assertEqual(nxt["next_route"], "EXECUTE_RAGR34_B04_EVIDENCE_CLASSIFICATION")
-        elif ragr["reviewed"] == 34:
-            self.assertEqual(nxt["next_route"], "MATERIALIZE_RAGR34_POST_REVIEW_DISPOSITION_WORKSET")
-        else:
-            self.fail(f"unexpected monotonic RAGR frontier {ragr['reviewed']}/34")
+        self.assertEqual(ragr["classification_counts"]["IN_SCOPE_NO_SOURCE_MATCH"], 24)
+        self.assertEqual(ragr["classification_counts"]["SUPERSEDED/RENAMED WITH EVIDENCE"], 5)
+        self.assertEqual(ragr["classification_counts"]["COMPONENT/GROUP GRANULARITY"], 2)
+        self.assertEqual(ragr["classification_counts"]["DATA DEFECT"], 3)
+        self.assertEqual(ragr["classification_counts"]["OUT_OF_SNAPSHOT_SCOPE"], 0)
+        self.assertEqual(ragr["classification_counts"]["UNRESOLVED"], 0)
         self.assertFalse(nxt["authority_advance_allowed"])
         self.assertFalse(nxt["canonical_id_allocation_allowed"])
         self.assertFalse(nxt["outbound_allowed"])
+        self.assertEqual(nxt["authority_state"]["next_physical_id"], "H-0691_UNALLOCATED")
+        self.assertFalse(nxt["authority_state"]["crm_universe_complete"])
+        self.assertEqual(nxt["authority_state"]["send_allowed"], 0)
 
 
 if __name__ == "__main__":

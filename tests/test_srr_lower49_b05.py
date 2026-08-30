@@ -56,7 +56,7 @@ class Lower49B05Tests(unittest.TestCase):
         # may supersede it in the canonical NEXT pointer after the wave closes.
         self.assertEqual(art["next"]["route"], "REBUILD_TYPED_UNTYPED_CONSERVATION_AND_COMPILE_REMAINING_RECONCILE_REQUIRED_WORKSET")
 
-    def test_state_and_canonical_next_never_regress_before_ragr(self):
+    def test_state_and_canonical_next_never_regress_before_or_after_ragr(self):
         text = STATE.read_text(encoding="utf-8")
         nxt = json.loads(NEXT.read_text(encoding="utf-8"))
         typed = re.search(r"lower49 typed SRR materialized\s+(\d+) / 47", text)
@@ -68,17 +68,21 @@ class Lower49B05Tests(unittest.TestCase):
         self.assertIn("H-0691 UNALLOCATED", text)
         self.assertIn("OUTBOUND                        CLOSED", text)
 
-        # B05 established RAGR as the canonical downstream route. Later RAGR waves
-        # must be allowed to advance B01 -> B02 -> B03 -> B04 without forcing NEXT
-        # back to B01. This regression test therefore enforces monotonic stage
-        # membership and safety rather than pinning one historical batch forever.
+        # B05 established RAGR as the downstream route. The canonical pointer may
+        # advance through B01 -> B04 and, once 34/34 is evidence-classified, into
+        # the review-only disposition compiler. Enforce monotonic frontier + safety
+        # instead of pinning a historical RAGR batch forever.
         route = nxt["next_route"]
-        self.assertRegex(route, r"^EXECUTE_RAGR34_B0[1-4]_EVIDENCE_CLASSIFICATION$")
         ragr = nxt["review_frontier"]["ragr"]
         self.assertEqual(ragr["total"], 34)
         self.assertGreaterEqual(ragr["reviewed"], 0)
         self.assertLessEqual(ragr["remaining"], 34)
         self.assertEqual(ragr["reviewed"] + ragr["remaining"], 34)
+        if ragr["reviewed"] < 34:
+            self.assertRegex(route, r"^EXECUTE_RAGR34_B0[1-4]_EVIDENCE_CLASSIFICATION$")
+        else:
+            self.assertEqual(ragr["reviewed"], 34)
+            self.assertEqual(route, "MATERIALIZE_RAGR34_POST_REVIEW_DISPOSITION_WORKSET")
         self.assertFalse(nxt["authority_advance_allowed"])
         self.assertFalse(nxt["canonical_id_allocation_allowed"])
         self.assertFalse(nxt["outbound_allowed"])

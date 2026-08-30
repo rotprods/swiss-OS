@@ -1,0 +1,204 @@
+{
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "authority_materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+  "claim_id": "CLAIM-CRM-PIE050-LOWER49-005",
+  "decision_rule": "Current public co-listing or independently distinguishable destination entries may clear a weak similarity collision only. It does not prove membership scope, does not create a terminal source mapping, does not reserve/allocate a canonical ID, and does not advance authority.",
+  "effect": {
+    "authority_advanced": false,
+    "canonical_id_reservations": 0,
+    "crm_universe_complete": false,
+    "h_id_allocations": 0,
+    "outbound": "CLOSED",
+    "reconcile_required_after": 1404,
+    "reconcile_required_before": 1404,
+    "send_allowed": 0,
+    "similarity_collision_reviews_cleared": 10,
+    "terminal_source_mappings_added": 0,
+    "terminal_source_mappings_total": 657
+  },
+  "fencing_token": 5,
+  "input_queue": "docs/state/SRET_PROVIDER_IDENTITY_LOWER49_33206402141.json",
+  "observed_on": "2026-08-30",
+  "packet_sha256": "45d76c7f17daf55cbb9c53bd4921e22b9b04fdc352e6e1608adbdde4f5b138d9",
+  "parent_git_sha": "8fcc1b188060de84a3e57d1878ec00a543e2f240",
+  "pending_lower49_after": 39,
+  "project": "SWITZERLAND_JOB_OS",
+  "reviewed_count": 10,
+  "reviewed_source_record_keys_sha256": "b1dd88eda71c842385dfa2675231724b7eeb16591a21d03f1550badf96e50486",
+  "reviews": [
+    {
+      "authority_effect": "NONE",
+      "city": "st. moritz",
+      "current_public_evidence_urls": [
+        "https://booking.stmoritz.com/de/accommodations"
+      ],
+      "evidence_note": "Current St. Moritz accommodation directory lists Hotel Restaurant Pizzeria Sonne St. Moritz and Hotel Schweizerhof St. Moritz as separate accommodation entries.",
+      "evidence_tier": "CURRENT_PUBLIC_DESTINATION_LISTING",
+      "new_identity_status": "UNALLOCATED_PREAUTH_CANDIDATE",
+      "review_outcome": "CURRENT_PUBLIC_DISTINCTNESS_SUPPORTED",
+      "similarity_candidates": [
+        "H-0472"
+      ],
+      "source_name": "hotel restaurant pizzeria sonne st. moritz",
+      "source_record_key": "MD-00447e4a1c8634a7711d",
+      "terminal_source_mapping": "NONE"
+    },
+    {
+      "authority_effect": "NONE",
+      "city": "zermatt",
+      "current_public_evidence_urls": [
+        "https://www.myswitzerland.com/de-at/erlebnisse/erlebnisfahrten/auto-motorrad-grand-tour/uebernachten-an-der-grand-tour-suche/-/zermatt/?p=2"
+      ],
+      "evidence_note": "Current Switzerland Tourism Zermatt accommodation surface lists Alpen Resort Hotel & Spa and Europe Hotel & Spa as separate entries.",
+      "evidence_tier": "CURRENT_PUBLIC_DESTINATION_LISTING",
+      "new_identity_status": "UNALLOCATED_PREAUTH_CANDIDATE",
+      "review_outcome": "CURRENT_PUBLIC_DISTINCTNESS_SUPPORTED",
+      "similarity_candidates": [
+        "H-0023"
+      ],
+      "source_name": "alpen resort hotel & spa",
+      "source_record_key": "MD-009d9c619a7da469e4cd",
+      "terminal_source_mapping": "NONE"
+    },
+    {
+      "authority_effect": "NONE",
+      "city": "rümlang",
+      "current_public_evidence_urls": [
+        "https://www.myswitzerland.com/de-ch/unterkuenfte/unterkuenfte-suche/-/ruemlang/"
+      ],
+      "evidence_note": "Current Switzerland Tourism Rümlang listing contains Hotel Holiday Inn Express Zurich Airport and Radisson Hotel Zurich Airport as separate entries.",
+      "evidence_tier": "CURRENT_PUBLIC_DESTINATION_LISTING",
+      "new_identity_status": "UNALLOCATED_PREAUTH_CANDIDATE",
+      "review_outcome": "CURRENT_PUBLIC_DISTINCTNESS_SUPPORTED",
+      "similarity_candidates": [
+        "H-0222"
+      ],
+      "source_name": "hotel holiday inn express zurich airport",
+      "source_record_key": "MD-0ccac9a0d3b6144a3783",
+      "terminal_source_mapping": "NONE"
+    },
+    {
+      "authority_effect": "NONE",
+      "city": "pontresina",
+      "current_public_evidence_urls": [
+        "https://www.myswitzerland.com/de/unterkuenfte/unterkuenfte-suche/-/pontresina/"
+      ],
+      "evidence_note": "Current Switzerland Tourism Pontresina surface lists Hotel Schloss & SPA Pontresina and Hotel Schweizerhof Pontresina as separate entries.",
+      "evidence_tier": "CURRENT_PUBLIC_DESTINATION_LISTING",
+      "new_identity_status": "UNALLOCATED_PREAUTH_CANDIDATE",
+      "review_outcome": "CURRENT_PUBLIC_DISTINCTNESS_SUPPORTED",
+      "similarity_candidates": [
+        "H-0471"
+      ],
+      "source_name": "hotel schloss & spa pontresina",
+      "source_record_key": "MD-0f8ed600f086c0fdaa04",
+      "terminal_source_mapping": "NONE"
+    },
+    {
+      "authority_effect": "NONE",
+      "city": "basel",
+      "current_public_evidence_urls": [
+        "https://www.myswitzerland.com/de-de/unterkuenfte/unterkuenfte-suche/-/basel/"
+      ],
+      "evidence_note": "Current Switzerland Tourism Basel listing presents Radisson Blu Hotel, Basel; Airport Hotel Basel; Basel Marriott Hotel; and Hotel Schweizerhof Basel as separate hotel entries.",
+      "evidence_tier": "CURRENT_PUBLIC_DESTINATION_LISTING",
+      "new_identity_status": "UNALLOCATED_PREAUTH_CANDIDATE",
+      "review_outcome": "CURRENT_PUBLIC_DISTINCTNESS_SUPPORTED",
+      "similarity_candidates": [
+        "H-0050",
+        "H-0081",
+        "H-0467"
+      ],
+      "source_name": "radisson blu hotel, basel",
+      "source_record_key": "MD-111c7f5cd4b1f3060482",
+      "terminal_source_mapping": "NONE"
+    },
+    {
+      "authority_effect": "NONE",
+      "city": "crans-montana",
+      "current_public_evidence_urls": [
+        "https://www.myswitzerland.com/de-de/unterkuenfte/unterkuenfte-suche/-/crans-montana/"
+      ],
+      "evidence_note": "Current Switzerland Tourism Crans-Montana listing presents Hôtel de la Forêt, Hôtel De l'Etrier and Hôtel La Prairie as separate entries.",
+      "evidence_tier": "CURRENT_PUBLIC_DESTINATION_LISTING",
+      "new_identity_status": "UNALLOCATED_PREAUTH_CANDIDATE",
+      "review_outcome": "CURRENT_PUBLIC_DISTINCTNESS_SUPPORTED",
+      "similarity_candidates": [
+        "H-0279",
+        "H-0562"
+      ],
+      "source_name": "hôtel de la forêt",
+      "source_record_key": "MD-21303c8f807f932b1609",
+      "terminal_source_mapping": "NONE"
+    },
+    {
+      "authority_effect": "NONE",
+      "city": "zürich",
+      "current_public_evidence_urls": [
+        "https://www.myswitzerland.com/de-ch/unterkuenfte/hotels/design-lifestyle-hotels/design-und-lifestyle-hotels-suche/-/zuerich-region/"
+      ],
+      "evidence_note": "Current Switzerland Tourism Zurich design/lifestyle listings distinguish Boutique-Hotel Seefeld from Greulich Design & Boutique Hotel.",
+      "evidence_tier": "CURRENT_PUBLIC_DESTINATION_LISTING",
+      "new_identity_status": "UNALLOCATED_PREAUTH_CANDIDATE",
+      "review_outcome": "CURRENT_PUBLIC_DISTINCTNESS_SUPPORTED",
+      "similarity_candidates": [
+        "H-0368"
+      ],
+      "source_name": "boutique-hotel seefeld",
+      "source_record_key": "MD-29671ff37e9eb4c0f842",
+      "terminal_source_mapping": "NONE"
+    },
+    {
+      "authority_effect": "NONE",
+      "city": "genève",
+      "current_public_evidence_urls": [
+        "https://www.myswitzerland.com/fr-ch/hebergement/hotels-rechercher/-/geneve/?p=2"
+      ],
+      "evidence_note": "Current Switzerland Tourism Geneva listing presents ibis Genève Centre Lac and Novotel Geneve Centre as separate entries.",
+      "evidence_tier": "CURRENT_PUBLIC_DESTINATION_LISTING",
+      "new_identity_status": "UNALLOCATED_PREAUTH_CANDIDATE",
+      "review_outcome": "CURRENT_PUBLIC_DISTINCTNESS_SUPPORTED",
+      "similarity_candidates": [
+        "H-0204"
+      ],
+      "source_name": "ibis genève centre lac",
+      "source_record_key": "MD-2f5b900fce66b8f76eef",
+      "terminal_source_mapping": "NONE"
+    },
+    {
+      "authority_effect": "NONE",
+      "city": "zürich",
+      "current_public_evidence_urls": [
+        "https://www.myswitzerland.com/en-ch/accommodations/hotels/design-lifestyle-hotels/design-and-lifestyle-hotels-search/-/zurich/"
+      ],
+      "evidence_note": "Current Switzerland Tourism Zurich design/lifestyle listing presents Boutique - Hotel Seidenhof and Greulich Design & Boutique Hotel as separate entries.",
+      "evidence_tier": "CURRENT_PUBLIC_DESTINATION_LISTING",
+      "new_identity_status": "UNALLOCATED_PREAUTH_CANDIDATE",
+      "review_outcome": "CURRENT_PUBLIC_DISTINCTNESS_SUPPORTED",
+      "similarity_candidates": [
+        "H-0368"
+      ],
+      "source_name": "boutique - hotel seidenhof",
+      "source_record_key": "MD-33afe41aa0273852418b",
+      "terminal_source_mapping": "NONE"
+    },
+    {
+      "authority_effect": "NONE",
+      "city": "zürich",
+      "current_public_evidence_urls": [
+        "https://www.myswitzerland.com/en-se/experiences/experience-tour/grand-tour-of-switzerland/grand-tour-accommodations-search/-/zurich/"
+      ],
+      "evidence_note": "Current Switzerland Tourism Zurich Grand Tour listing presents Boutique-Hotel Zürichberg and Greulich Design & Boutique Hotel as separate entries.",
+      "evidence_tier": "CURRENT_PUBLIC_DESTINATION_LISTING",
+      "new_identity_status": "UNALLOCATED_PREAUTH_CANDIDATE",
+      "review_outcome": "CURRENT_PUBLIC_DISTINCTNESS_SUPPORTED",
+      "similarity_candidates": [
+        "H-0368"
+      ],
+      "source_name": "boutique-hotel zürichberg",
+      "source_record_key": "MD-3d8dd299140519ac9269",
+      "terminal_source_mapping": "NONE"
+    }
+  ],
+  "schema_version": "PIE050-LOWER49-REVIEW-PACKET-1.0"
+}

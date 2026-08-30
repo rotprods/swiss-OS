@@ -5,6 +5,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 WAVE = ROOT / "docs/state/SRR_CURRENT_IDENTITY_EVIDENCE_GE600_WAVE1_2026-08-30.json"
 ANTI = ROOT / "docs/state/SOURCE_RESOLUTION_REVIEW_UNRESOLVED_1403_33206402141.json"
+CLAIM = ROOT / "docs/state/v2/claims/CLAIM-CRM-SRR-SPECIAL-006.json"
+ACTIVE = ROOT / "docs/state/v2/active-claims.json"
 
 
 def load(path):
@@ -76,3 +78,20 @@ def test_overlook_relationship_stays_unresolved_and_hard_locks_hold():
     assert safety["crm_universe_complete"] is False
     assert safety["outbound"] == "CLOSED"
     assert safety["send_allowed"] == 0
+
+
+def test_token6_scope_covers_ge600_durable_handoffs_without_authority_mutation():
+    claim = load(CLAIM)
+    active = load(ACTIVE)
+    assert claim["state"] == "ACTIVE"
+    assert claim["fencing_token"] == 6
+    assert claim["authority_ceiling"] == "PREAUTH_SRR_DECISION_ONLY_NO_CANONICAL_MUTATION"
+    assert "docs/handoffs/META_20260830_CRM_GE600_*" in claim["resource_scopes"]
+    assert claim["scope_amendments"][-1]["added_resource_scope"] == "docs/handoffs/META_20260830_CRM_GE600_*"
+    for forbidden in ("HOTELS_AUTHORITY_MUTATION", "H_ID_ALLOCATION", "CANONICAL_ID_RESERVATION", "OUTBOUND_EXECUTION", "DISCOVER_SWISS_SSR_AUTHORITY"):
+        assert forbidden in claim["excluded_scopes"]
+    assert active["as_of_main_sha"] == "30a1e975b72f1db30682ba93bf1b2827cda5892a"
+    assert active["fencing_high_watermark"] == 6
+    assert len(active["claims"]) == 1
+    assert active["claims"][0]["resource_scopes"] == claim["resource_scopes"]
+    assert active["claims"][0]["excluded_scopes"] == claim["excluded_scopes"]

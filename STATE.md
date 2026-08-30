@@ -1,6 +1,6 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest chained Meta Execution coordination frontier: **2026-08-30T15:46:54Z**. Current execution parent main SHA: **`aa7b9964acefc5f86548cf618c3d91e3c68edaf7`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
+Latest chained Meta Execution coordination frontier: **2026-08-30T16:05:00Z**. Current execution parent main SHA: **`95a4d4acb317e996bebeeb27d5933432c9ad9599`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
 
 ## Authority — unchanged / locked
 
@@ -42,15 +42,15 @@ Source-key conservation remains `658 + 1403 = 2061`. Terminal-pair SHA remains `
 0.50–0.599999 reviewed                   46 / 46
 relationship/granularity reviewed          2 / 2
 relationship/granularity unresolved            0
-cumulative NEW_CANONICAL preauthority         77
+cumulative NEW_CANONICAL preauthority         87
 lower49 ordinary evidence-reviewed         47 / 47
 lower49 ordinary exact workset             47 / 47
-lower49 typed SRR materialized              10 / 47
-lower49 typed SRR remaining                 37 / 47
+lower49 typed SRR materialized              20 / 47
+lower49 typed SRR remaining                 27 / 47
 terminal mapping delta from review             0
 ```
 
-`L49-P1-B01` independently re-read current source/operator surfaces for all ten packet-01 records and live canonical comparator rows from `HOTELS_V2`. All ten are typed `NEW_CANONICAL` **preauthority only** and remain `RECONCILE_REQUIRED`; historical token5 co-listing evidence is retained only as evidence provenance and carries no current write authority. No terminal mapping, canonical reservation or H-ID allocation was produced.
+`L49-P1-B02` re-read current source/operator identity evidence for the exact packet-02 ten and live `HOTELS_V2` comparator rows. All ten are typed `NEW_CANONICAL` **preauthority only** and remain `RECONCILE_REQUIRED`. Where same-brand or same-city proximity existed, current addresses/provider property codes/phones or independent property identities were used to prevent false aliasing; historical token5 co-listing remains evidence-only. No terminal mapping, canonical reservation or H-ID allocation was produced.
 
 The exact 47 ordinary lower49 evidence reviews remain compiled in deterministic token6 workset `CRM_IDENTITY_WORKSET_LOWER49_ORDINARY_47_2026-08-30.json`, five batches `10/10/10/10/7`, workset SHA `8817941127ede8f9329d81b4831b1fd6643e9ab4c19438c3fa612b78e1169050`.
 
@@ -64,7 +64,7 @@ Drive native `HOTELS_V2` readback is live. Exact E4 local reconstruction remains
 
 ## NEXT
 
-Execute **`L49-P1-B02`**, the exact ten reviews from packet 02. Re-read current source/operator identity evidence and live canonical comparator rows before typed SRR. Preserve `RECONCILE_REQUIRED`; do not infer terminal identity from similarity/co-listing. Never reserve/allocate H-0691; keep `OUTBOUND=CLOSED` and `send_allowed=0`.
+Execute **`L49-P1-B03`**, the exact ten reviews from packet 03. Re-read current source/operator identity evidence and live canonical comparator rows before typed SRR. Preserve `RECONCILE_REQUIRED`; do not infer terminal identity from similarity/co-listing. Never reserve/allocate H-0691; keep `OUTBOUND=CLOSED` and `send_allowed=0`.
 
 Recovery inputs and exact blockers are persisted in `docs/state/NEXT.json` and `docs/state/NEXT_META_EXECUTION_2026-08-30.json`.
 

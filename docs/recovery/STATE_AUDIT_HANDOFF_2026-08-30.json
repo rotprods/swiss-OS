@@ -1,0 +1,262 @@
+{
+  "schema_version": "STATE-AUDIT-HANDOFF-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "authority": "CONTINUITY_AND_RECOVERY_ONLY",
+  "wave": {
+    "wave_id": "WAVE-20260830-STATE-AUDIT-HANDOFF-01",
+    "execution_mode": "RECOVERY_RECONCILE",
+    "closure": "COMPLETE_READ_ONLY",
+    "graph_impact": "META",
+    "observed_at": "2026-08-30T08:23:03+02:00",
+    "parent_main_sha": "69fb96168479b210379d83937e8bf041944da450",
+    "reconciled_main_sha": "3afe2ef55acdc41b82f7899dec5bf9e7f7f40f6a",
+    "concurrent_main_merge": {
+      "pull_request": 342,
+      "merge_sha": "3afe2ef55acdc41b82f7899dec5bf9e7f7f40f6a",
+      "head_sha": "56f54375ce5c705a2ff7093dc2bca1a2f34569e6",
+      "effect": "GENERALIZED_EXISTING_CRM_E4_EGRESS_FALLBACK_TO_V1_1_NO_AUTHORITY_CHANGE"
+    }
+  },
+  "protocols": {
+    "meta_execution": "MEP-2.0",
+    "wave_operating": "WOP-1.1",
+    "next_pointer": "NPP-1.2",
+    "crm_universe": "CUP-1.1",
+    "provider_identity": "PIE-1.1",
+    "reverse_authority_gap": "RAGR-1.0"
+  },
+  "authority_state": {
+    "epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+    "logical_revision_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+    "physical_hotels": 690,
+    "active_canonical": 690,
+    "persisted_alias_edges": 0,
+    "next_physical_id": "H-0691_UNALLOCATED",
+    "crm_universe_complete": false,
+    "outbound": "CLOSED",
+    "send_allowed": 0,
+    "authority_advanced_by_audit": false
+  },
+  "crm_frontier": {
+    "snapshot_id": "HS-MEMBER-DE-33206402141",
+    "source_records": 2061,
+    "source_pages": 172,
+    "source_artifact_id": 9700376482,
+    "candidate_records": 1438,
+    "candidate_artifact_id": 9718866661,
+    "exact_current_verified": 1438,
+    "exact_current_total": 1438,
+    "terminal_source_mappings": 657,
+    "unique_canonical_targets": 656,
+    "reconcile_required": 1404,
+    "reverse_authority_gaps": 34,
+    "lower_similarity_tail": 49
+  },
+  "concurrency": {
+    "github_coordination_authority": true,
+    "active_claim_id": "CLAIM-CRM-PIE050-LOWER49-005",
+    "active_fencing_token": 5,
+    "active_scope": "PIE_050_LOWER_49_PROVIDER_IDENTITY",
+    "claim_state": "ACTIVE_UNTIL_EXPLICIT_RELEASE_OR_SUPERSESSION",
+    "authority_ceiling": "PREAUTH_REVIEW_ONLY_NO_CANONICAL_MUTATION",
+    "token6_branch": {
+      "name": "state/crm-pie050-close-token5-srr-token6-20260830",
+      "head_sha": "f00430437a17adec97f73b188ad341dac94a1c32",
+      "merge_base_sha": "11a528dd1584b3606fed83356c006065e9785778",
+      "ahead_by": 15,
+      "behind_by": 18,
+      "pull_request_present": false,
+      "current_authority": false,
+      "instruction": "DO_NOT_TREAT_AS_RELEASE_OR_ACQUIRED_CLAIM; RECONCILE_OR_SUPERSEDE_FROM_FRESH_MAIN"
+    },
+    "drive_claim_mirror": {
+      "agent_work_leases_match": false,
+      "claims_ledger_v2_match": false,
+      "effect": "NO_AUTHORITY_CHANGE; GITHUB ACTIVE CLAIM REMAINS BINDING"
+    }
+  },
+  "control_plane_verification": {
+    "spreadsheet_id": "1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w",
+    "hotels_v2": {
+      "highest_verified_id": "H-0690",
+      "h_0691_present": false,
+      "repaired_ids": [
+        "H-0610",
+        "H-0624",
+        "H-0629",
+        "H-0630"
+      ],
+      "repaired_ids_state": "CANONICAL_CURRENT_RECONCILED"
+    },
+    "intelligence": {
+      "repaired_ids_present": true,
+      "repaired_ids_level": "L1",
+      "repaired_ids_identity_state": "CANONICAL_INDEXED_RECONCILE_SEED"
+    },
+    "operational_graph": {
+      "aliases_to_edges": 0,
+      "repaired_hotel_and_intelligence_nodes_present": true,
+      "has_intelligence_edges_present": true
+    },
+    "checkpoint_registry": {
+      "l4_current": 105,
+      "l4_target": 690,
+      "l9_current": 0,
+      "l9_target": 690
+    },
+    "outreach_gates": {
+      "entry_send_allowed": 0,
+      "hybrid_send_allowed": 0,
+      "creative_send_allowed": 0,
+      "portal_send_allowed": 0
+    }
+  },
+  "durable_db_recovery": {
+    "drive_v13": {
+      "file_id": "1rIL6x_bmBoCbxVSAGFvdjoKnUqSX3YnT",
+      "name": "switzerland_job_os_operational_shadow_v13.sqlite",
+      "size_bytes": 3059712,
+      "sha256": "0e605b412f29893ca1775f1e8fccd5987d0613baab4ac29b6699988cde0fdfe5",
+      "sqlite_integrity_check": "ok",
+      "foreign_key_violations": 0,
+      "physical_hotel_rows": 690,
+      "hotel_alias_rows": 4,
+      "source_mutated": false
+    },
+    "deterministic_e4_reconstruction": {
+      "copy_only": true,
+      "sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+      "size_bytes": 3059712,
+      "sqlite_integrity_check": "ok",
+      "foreign_key_violations": 0,
+      "physical_hotel_rows": 690,
+      "hotel_alias_rows": 0,
+      "durably_published": false
+    },
+    "failure_family": "GENERATED_LOCAL_FILE_REFERENCE_EGRESS_UNAVAILABLE",
+    "failed_routes": [
+      "GOOGLE_DRIVE_COPY_THEN_RAW_UPDATE_LOCAL_GENERATED_SQLITE",
+      "GOOGLE_DRIVE_RAW_UPLOAD_LOCAL_GENERATED_SQLITE",
+      "GOOGLE_DRIVE_IMPORT_DOCUMENT_LOCAL_GENERATED_TEXT_CAPSULE"
+    ],
+    "failure_result": "BLOCKED_FILE_REFERENCE",
+    "same_strategy_retry_allowed": false,
+    "cross_plane_promotion_eligible": false,
+    "recovery_document_id": "17qlWRTTXc44jTAkuZRI5ZYWoZZEQUCb0d6uqy0fbaWs"
+  },
+  "structured_acquisition": {
+    "discover_swiss_subscription_key_present": false,
+    "capture_valid_manifest_present": false,
+    "ssr_1_0_state": "BLOCKED_PROVIDER_CREDENTIAL_AND_CAPTURE_VALID_MANIFEST_REQUIRED",
+    "fallback_state": "QUALIFIED_MEMBER_DIRECTORY_PLUS_EXACT_CURRENT_NOT_API_EQUIVALENT"
+  },
+  "pointer_state": {
+    "state_md_parent_sha": "c0168050e659290a0f171cc69ad6c00d5b918c4a",
+    "next_json_parent_sha": "c0168050e659290a0f171cc69ad6c00d5b918c4a",
+    "pointer_parent_is_ancestor_of_audit_parent": true,
+    "shared_pointer_paths_claimed_by_token5": true,
+    "audit_rewrote_shared_pointer_paths": false,
+    "recovery_strategy_must_read": [
+      "docs/recovery/CRM_E4_DURABLE_EGRESS_MEP_FALLBACK_2026-08-30.json",
+      "docs/state/DB_AUTHORITY_ARTIFACT_RECOVERY_PREFLIGHT_2026-08-30.json",
+      "docs/handoffs/META_20260830_STATE_AUDIT_DB_EGRESS_HANDOFF.md"
+    ],
+    "audit_start_parent_ahead_by_commits": 70,
+    "reconciled_main_ahead_by_commits": 73
+  },
+  "open_program_and_risks": {
+    "github_program_issues": [
+      240,
+      14,
+      239
+    ],
+    "github_noise_issue": 301,
+    "drive_open_quarantines": [
+      {
+        "issue_id": "ISS-043",
+        "entity": "H-0658",
+        "risk": "STALE_OR_REPURPOSED_DOMAIN"
+      },
+      {
+        "issue_id": "ISS-044",
+        "entity": "H-0039",
+        "risk": "WRONG_CANONICAL_WEBSITE_AND_CAREERS"
+      },
+      {
+        "issue_id": "ISS-045",
+        "entity": "H-0136",
+        "risk": "GEOGRAPHY_ENTITY_CONFLICT"
+      }
+    ],
+    "egress_issue_row_present_in_drive_system_issues": false
+  },
+  "pull_request_hygiene": {
+    "merged_in_audit": [
+      340,
+      342
+    ],
+    "stale_graph_v2_prs_do_not_merge_blindly": [
+      314,
+      317,
+      318,
+      319,
+      320,
+      287
+    ],
+    "stale_or_conflicting_prs_do_not_merge_blindly": [
+      275,
+      135,
+      137,
+      139
+    ],
+    "superseded_prs": [
+      {
+        "pull_request": 341,
+        "superseded_by": 342,
+        "reason": "PR #342 merged the generalized generated-local-file egress failure family into the canonical CRM E4 recovery artifact; do not retain a parallel DB-egress artifact surface."
+      }
+    ]
+  },
+  "exact_blockers": [
+    "DURABLE_EXACT_E4_SQLITE_PUBLICATION_REQUIRES_PROVIDER_ACCEPTED_FILE_REFERENCE_OR_EQUIVALENT_RECOVERABLE_BRIDGE",
+    "DISCOVER_SWISS_SSR_1_0_REQUIRES_INFOCENTER_SUBSCRIPTION_KEY_AND_CAPTURE_VALID_STRUCTURED_MANIFEST",
+    "TOKEN5_ACTIVE_ON_LOWER49_SHARED_STATE_AND_NEXT_SURFACES",
+    "RECONCILE_REQUIRED_1404_NOT_ZERO",
+    "RAGR_REVERSE_AUTHORITY_GAPS_34_NOT_ZERO"
+  ],
+  "next": {
+    "primary_route": "PROVIDER_ACCEPTED_DURABLE_FILE_REFERENCE_BRIDGE_THEN_FRESH_DB_FIRST_CROSS_PLANE_AUTHORITY_TRANSACTION",
+    "primary_dependency": "Publish a new byte-exact E4 SQLite artifact without overwriting V13; verify SHA/integrity/FK/restore before any authority transaction.",
+    "parallel_safe_routes": [
+      "Only disjoint read-only recovery, provider acquisition or QA work while token5 remains ACTIVE.",
+      "When token5 is explicitly RELEASED or SUPERSEDED on fresh main, reconcile the stale token6 branch and continue special SRR decisions from fresh authority.",
+      "When discover.swiss credentials exist, execute structured capture to capture-valid manifest to SSR-1.0 without persisting the secret.",
+      "After any qualified terminal decisions, recompute source-key conservation, terminal mappings, RAGR and promotion eligibility."
+    ],
+    "verify_live_truth_before_execution": true,
+    "recovery_inputs": [
+      "GitHub main descendant of 3afe2ef55acdc41b82f7899dec5bf9e7f7f40f6a",
+      "authority epoch HS_ENTITY_EPOCH_2026-08-25_E4",
+      "logical authority SHA 70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+      "Drive V13 file 1rIL6x_bmBoCbxVSAGFvdjoKnUqSX3YnT",
+      "Drive recovery document 17qlWRTTXc44jTAkuZRI5ZYWoZZEQUCb0d6uqy0fbaWs",
+      "Drive HOTELS_MASTER 1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w",
+      "source artifact 9700376482",
+      "candidate artifact 9718866661",
+      "active claim CLAIM-CRM-PIE050-LOWER49-005 fencing token 5"
+    ]
+  },
+  "safety": {
+    "never_reserve_canonical_id_from_staging": true,
+    "never_promote_from_canary_or_cache": true,
+    "h_0691": "UNALLOCATED",
+    "authority_advanced": false,
+    "hotels_master_mutations": 0,
+    "terminal_mapping_delta": 0,
+    "h_id_allocations": 0,
+    "canonical_id_reservations": 0,
+    "outbound": "CLOSED",
+    "send_allowed": 0,
+    "irreversible_external_actions": 0
+  }
+}

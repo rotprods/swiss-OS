@@ -6,7 +6,8 @@
 **Closure:** `COMPLETE_READ_ONLY`  
 **Graph impact:** `META`  
 **Observed at:** `2026-08-30T08:23:03+02:00`  
-**Branch parent:** `69fb96168479b210379d83937e8bf041944da450`  
+**Audit-start main:** `69fb96168479b210379d83937e8bf041944da450`  
+**Reconciled main:** `3afe2ef55acdc41b82f7899dec5bf9e7f7f40f6a`  
 **Authority epoch:** `HS_ENTITY_EPOCH_2026-08-25_E4`  
 **Logical authority revision:** `70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`
 
@@ -28,8 +29,9 @@ A successor must **VERIFY LIVE TRUTH BEFORE EXECUTION**. This document records a
 ## Verified GitHub ancestry and continuity
 
 - Audit parent `main` is `69fb96168479b210379d83937e8bf041944da450`.
-- PR #340 was adversarially reviewed and merged into that parent. It persists the copy-only V13→E4 reconstruction and fail-closed egress evidence.
-- `STATE.md` and `docs/state/NEXT.json` still carry parent `c0168050e659290a0f171cc69ad6c00d5b918c4a`. That SHA is a verified ancestor of this audit parent, which is 70 commits ahead.
+- PR #340 was adversarially reviewed and merged into the audit-start parent. It persists the copy-only V13→E4 reconstruction and fail-closed egress evidence.
+- During review, PR #342 advanced `main` to `3afe2ef55acdc41b82f7899dec5bf9e7f7f40f6a`. Its two-file delta upgrades the existing CRM E4 fallback to v1.1, adds the deterministic text-capsule failure, and makes no authority change. The handoff branch reconciled that merge before final CI.
+- `STATE.md` and `docs/state/NEXT.json` still carry parent `c0168050e659290a0f171cc69ad6c00d5b918c4a`. That SHA is a verified ancestor: the audit-start parent is 70 commits ahead and the reconciled `main` is 73 commits ahead.
 - The shared mutable pointer paths are inside the active token-5 resource claim. This audit deliberately did **not** rewrite `STATE.md`, `NEXT*`, or `docs/state/v2/**`.
 - The latest DB recovery artifacts supplement the recovery strategy only. They do not release the active claim, allocate an H-ID, or advance authority.
 
@@ -52,7 +54,7 @@ state/crm-pie050-close-token5-srr-token6-20260830
 head f00430437a17adec97f73b188ad341dac94a1c32
 ```
 
-It is 15 commits ahead and 15 behind the audit parent, has merge base `11a528dd1584b3606fed83356c006065e9785778`, and has no PR. It is **not current authority**, does not release token 5, and does not validly acquire token 6. Reconcile or supersede it from fresh `main`; never merge it blindly.
+It is 15 commits ahead and 18 behind the reconciled `main`, has merge base `11a528dd1584b3606fed83356c006065e9785778`, and has no PR. It is **not current authority**, does not release token 5, and does not validly acquire token 6. Reconcile or supersede it from fresh `main`; never merge it blindly.
 
 No matching token-5 row was found in Drive `AGENT_WORK_LEASES` or `CLAIMS_LEDGER_V2`. That absence does not weaken GitHub's active claim.
 
@@ -209,7 +211,8 @@ After any independently qualified terminal decisions, recompute source-key conse
 ## Recovery inputs
 
 ```text
-GitHub parent main       69fb96168479b210379d83937e8bf041944da450
+GitHub reconciled main   3afe2ef55acdc41b82f7899dec5bf9e7f7f40f6a
+GitHub audit-start main  69fb96168479b210379d83937e8bf041944da450
 authority epoch          HS_ENTITY_EPOCH_2026-08-25_E4
 logical authority SHA    70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6
 Drive V13                1rIL6x_bmBoCbxVSAGFvdjoKnUqSX3YnT

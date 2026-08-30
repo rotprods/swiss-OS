@@ -1,0 +1,60 @@
+name: lower49-workset-materialize
+
+on:
+  push:
+    branches:
+      - state/crm-lower49-workset-token6-20260830
+    paths:
+      - scripts/compile_lower49_preauth_workset.py
+      - tests/test_lower49_preauth_workset.py
+      - .github/workflows/lower49-workset-materialize.yml
+      - docs/state/PIE050_LOWER49_REVIEW_PACKET_*.json
+      - docs/state/SRET_PROVIDER_IDENTITY_LOWER49_33206402141.json
+      - docs/recovery/PIE050_LOWER49_COMPLETION_PRECHECK_2026-08-30.json
+
+permissions:
+  contents: write
+
+concurrency:
+  group: lower49-workset-materialize-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Verify compiler contract
+        env:
+          PYTHONPATH: src
+        run: python -m pytest -q tests/test_lower49_preauth_workset.py
+
+      - name: Materialize exact workset
+        run: |
+          set -euo pipefail
+          python scripts/compile_lower49_preauth_workset.py \
+            --parent-main-sha 317d5892b5c80f0066a16339ed2a1f10dcdae1ef \
+            --output docs/operations/CRM_LOWER49_PREAUTH_MATERIALIZATION_WORKSET_2026-08-30.json
+
+      - name: Commit workset if needed
+        shell: bash
+        run: |
+          set -euo pipefail
+          target=docs/operations/CRM_LOWER49_PREAUTH_MATERIALIZATION_WORKSET_2026-08-30.json
+          git add "$target"
+          if git diff --cached --quiet; then
+            echo "Deterministic workset already materialized."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "state(crm): materialize deterministic lower49 workset"
+          git push origin HEAD:${GITHUB_REF_NAME}

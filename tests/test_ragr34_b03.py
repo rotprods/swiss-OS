@@ -52,17 +52,21 @@ class RAGR34B03Tests(unittest.TestCase):
         self.assertEqual(safety["send_allowed"], 0)
         self.assertEqual(safety["irreversible_external_actions"], 0)
 
-    def test_canonical_next_is_monotonic_to_b04(self):
+    def test_canonical_next_is_monotonic_after_b03(self):
         nxt = json.loads(NEXT.read_text(encoding="utf-8"))
-        self.assertEqual(nxt["next_route"], "EXECUTE_RAGR34_B04_EVIDENCE_CLASSIFICATION")
         ragr = nxt["review_frontier"]["ragr"]
-        self.assertEqual(ragr["reviewed"], 30)
-        self.assertEqual(ragr["remaining"], 4)
-        self.assertEqual(ragr["total"], 34)
+        self.assertGreaterEqual(ragr["reviewed"], 30)
+        self.assertLessEqual(ragr["remaining"], 4)
         self.assertEqual(ragr["reviewed"] + ragr["remaining"], 34)
-        self.assertEqual(ragr["classification_counts"]["IN_SCOPE_NO_SOURCE_MATCH"], 22)
-        self.assertEqual(ragr["classification_counts"]["SUPERSEDED/RENAMED WITH EVIDENCE"], 3)
-        self.assertEqual(ragr["classification_counts"]["DATA DEFECT"], 3)
+        self.assertGreaterEqual(ragr["classification_counts"]["IN_SCOPE_NO_SOURCE_MATCH"], 22)
+        self.assertGreaterEqual(ragr["classification_counts"]["SUPERSEDED/RENAMED WITH EVIDENCE"], 3)
+        self.assertGreaterEqual(ragr["classification_counts"]["DATA DEFECT"], 3)
+        if ragr["reviewed"] == 30:
+            self.assertEqual(nxt["next_route"], "EXECUTE_RAGR34_B04_EVIDENCE_CLASSIFICATION")
+        elif ragr["reviewed"] == 34:
+            self.assertEqual(nxt["next_route"], "MATERIALIZE_RAGR34_POST_REVIEW_DISPOSITION_WORKSET")
+        else:
+            self.fail(f"unexpected monotonic RAGR frontier {ragr['reviewed']}/34")
         self.assertFalse(nxt["authority_advance_allowed"])
         self.assertFalse(nxt["canonical_id_allocation_allowed"])
         self.assertFalse(nxt["outbound_allowed"])

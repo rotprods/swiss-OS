@@ -6,6 +6,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 ART = ROOT / "docs/state/RAGR_CURRENT_EVIDENCE_B03_2026-08-30.json"
 NEXT = ROOT / "docs/state/NEXT.json"
+WORKSET = "docs/state/RAGR34_POST_REVIEW_DISPOSITION_WORKSET_2026-08-30.json"
 
 
 def _sha(value):
@@ -64,7 +65,8 @@ class RAGR34B03Tests(unittest.TestCase):
         if ragr["reviewed"] == 30:
             self.assertEqual(nxt["next_route"], "EXECUTE_RAGR34_B04_EVIDENCE_CLASSIFICATION")
         elif ragr["reviewed"] == 34:
-            self.assertEqual(nxt["next_route"], "MATERIALIZE_RAGR34_POST_REVIEW_DISPOSITION_WORKSET")
+            self.assertNotRegex(nxt["next_route"], r"^EXECUTE_RAGR34_B0[1-4]_EVIDENCE_CLASSIFICATION$")
+            self.assertIn(WORKSET, nxt.get("artifacts", []))
         else:
             self.fail(f"unexpected monotonic RAGR frontier {ragr['reviewed']}/34")
         self.assertFalse(nxt["authority_advance_allowed"])

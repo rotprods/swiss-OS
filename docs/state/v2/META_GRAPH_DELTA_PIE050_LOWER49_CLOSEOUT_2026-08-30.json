@@ -1,0 +1,41 @@
+{
+  "schema_version": "META-GRAPH-DELTA-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "generated_at": "2026-08-30T04:55:00Z",
+  "parent_git_sha": "11a528dd1584b3606fed83356c006065e9785778",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "nodes": [
+    {"id":"DEC-0106","type":"Decision","state":"VERIFIED","label":"Close lower49 PREAUTH token5 and route special2 to fresh authority review"},
+    {"id":"CLAIM-CRM-PIE050-LOWER49-005","type":"Claim","state":"RELEASED","label":"Fencing token5 lower49 PREAUTH claim"},
+    {"id":"PIE050-LOWER49-QUEUE","type":"Artifact","state":"PREAUTH_CLASSIFIED_49_OF_49","label":"Exact lower49 review frontier"},
+    {"id":"MD-33d867e983644585e4b2","type":"SourceRecord","state":"STRONG_SAME_PROPERTY_CANDIDATE_REQUIRES_AUTHORITY_REVIEW","label":"Jugend & Familienzentrum Neu-Schönstatt"},
+    {"id":"H-0114","type":"CanonicalHotel","state":"EXISTING_AUTHORITY_UNCHANGED","label":"Hostel Neu-Schönstatt"},
+    {"id":"MD-7976c173678dc89c9cf0","type":"SourceRecord","state":"RELATIONSHIP_SENSITIVE_REQUIRES_ENTITY_GRANULARITY_AUTHORITY_REVIEW","label":"Delta Resort Apartments"},
+    {"id":"H-0220","type":"CanonicalHotel","state":"EXISTING_AUTHORITY_UNCHANGED","label":"Parkhotel Delta Wellbeing Resort"},
+    {"id":"DELTA-PREAUTH-PR334","type":"EvidenceArtifact","state":"CANONICAL_PREAUTH_SURFACE","label":"PIE050 Delta relationship candidate from PR #334"},
+    {"id":"DELTA-PREAUTH-PR333","type":"EvidenceArtifact","state":"SUPERSEDED_REDUNDANT_EVIDENCE","label":"Compatible later Delta subproperty evidence from PR #333"},
+    {"id":"DEFECT-TOKEN5-RESOURCE-SCOPE-GLOB","type":"ContinuityDefect","state":"RESOLVED_BY_EXPLICIT_CLOSEOUT_AND_FUTURE_SCOPE_REQUIREMENT","label":"PIE050 artifacts outside original literal token5 resource glob"},
+    {"id":"SSR-DISCOVER-SWISS-KEY","type":"Blocker","state":"BLOCKED_PROVIDER_CREDENTIAL_BOUNDARY","label":"discover.swiss subscription key absent"},
+    {"id":"AUTH-E4-690","type":"Authority","state":"ACTIVE_UNCHANGED","label":"E4 canonical authority 690"}
+  ],
+  "edges": [
+    {"from":"DEC-0106","to":"CLAIM-CRM-PIE050-LOWER49-005","type":"RELEASES","authority":"COORDINATION_ONLY"},
+    {"from":"PIE050-LOWER49-QUEUE","to":"DEC-0106","type":"JUSTIFIES","evidence":"47 ordinary distinctness + 2 special relationship classifications"},
+    {"from":"MD-33d867e983644585e4b2","to":"H-0114","type":"PROPOSED_SAME_PROPERTY_WITH","authority":"PREAUTH_ONLY"},
+    {"from":"MD-7976c173678dc89c9cf0","to":"H-0220","type":"RELATIONSHIP_CANDIDATE_WITH","relation":"SAME_OPERATOR_SAME_LICENSE_ADJACENT_PREMISES_SUBINVENTORY","authority":"PREAUTH_ONLY"},
+    {"from":"DELTA-PREAUTH-PR334","to":"MD-7976c173678dc89c9cf0","type":"SOURCE_OF_TRUTH_FOR","scope":"PREAUTH_RELATIONSHIP_DECISION"},
+    {"from":"DELTA-PREAUTH-PR333","to":"DELTA-PREAUTH-PR334","type":"SUPERSEDED_BY","reason":"richer concurrent artifact; compatible fail-closed semantics"},
+    {"from":"DEFECT-TOKEN5-RESOURCE-SCOPE-GLOB","to":"DEC-0106","type":"RESOLVED_BY","authority":"CONTINUITY_METADATA_ONLY"},
+    {"from":"SSR-DISCOVER-SWISS-KEY","to":"AUTH-E4-690","type":"BLOCKS","scope":"STRUCTURED_SSR_CAPTURE_PROMOTION"},
+    {"from":"DEC-0106","to":"AUTH-E4-690","type":"DOES_NOT_ADVANCE","authority":"PREAUTH_ONLY"}
+  ],
+  "invariants": {
+    "authority_advanced": false,
+    "terminal_mapping_delta": 0,
+    "h_id_allocations": 0,
+    "canonical_id_reservations": 0,
+    "crm_universe_complete": false,
+    "outbound": "CLOSED",
+    "send_allowed": 0
+  }
+}

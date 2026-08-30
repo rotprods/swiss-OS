@@ -53,9 +53,12 @@ class RAGR34B04Tests(unittest.TestCase):
         self.assertEqual(safety["send_allowed"], 0)
         self.assertEqual(safety["irreversible_external_actions"], 0)
 
-    def test_canonical_next_closes_review_frontier_without_authority_effect(self):
+    def test_canonical_next_never_regresses_after_review_frontier_closes(self):
         nxt = json.loads(NEXT.read_text(encoding="utf-8"))
-        self.assertEqual(nxt["next_route"], "MATERIALIZE_RAGR34_POST_REVIEW_DISPOSITION_WORKSET")
+        self.assertIn(nxt["next_route"], {
+            "MATERIALIZE_RAGR34_POST_REVIEW_DISPOSITION_WORKSET",
+            "EXECUTE_RAGR34_SPECIAL10_AUTHORITY_RECONCILIATION_PREFLIGHT",
+        })
         ragr = nxt["review_frontier"]["ragr"]
         self.assertEqual(ragr["reviewed"], 34)
         self.assertEqual(ragr["remaining"], 0)

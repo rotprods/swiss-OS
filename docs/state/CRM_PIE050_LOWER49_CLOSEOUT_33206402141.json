@@ -1,0 +1,80 @@
+{
+  "schema_version": "CRM-PIE050-LOWER49-CLOSEOUT-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "snapshot_id": "HS-MEMBER-DE-33206402141",
+  "parent_git_sha": "11a528dd1584b3606fed83356c006065e9785778",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "authority_materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+  "claim_id": "CLAIM-CRM-PIE050-LOWER49-005",
+  "fencing_token": 5,
+  "lower49": {
+    "queue_count": 49,
+    "queue_keys_sha256": "66baae0a46a8e1b807855c1ba05746fcb5bdff3779687d5d382dda9859d6f43b",
+    "ordinary_distinctness_reviewed": 47,
+    "ordinary_review_packets": [
+      "docs/state/PIE050_LOWER49_REVIEW_PACKET_01_2026-08-30.json",
+      "docs/state/PIE050_LOWER49_REVIEW_PACKET_02_2026-08-30.json",
+      "docs/state/PIE050_LOWER49_REVIEW_PACKET_03_2026-08-30.json",
+      "docs/state/PIE050_LOWER49_REVIEW_PACKET_04_2026-08-30.json",
+      "docs/state/PIE050_LOWER49_REVIEW_PACKET_05_2026-08-30.json"
+    ],
+    "special_relationship_reviewed": 2,
+    "preauthority_classified_total": 49,
+    "preauthority_pending": 0
+  },
+  "special_cases": [
+    {
+      "source_record_key": "MD-33d867e983644585e4b2",
+      "canonical_candidate": "H-0114",
+      "classification": "STRONG_SAME_PROPERTY_CANDIDATE_REQUIRES_AUTHORITY_REVIEW",
+      "canonical_preauth_artifact": "docs/state/PIE050_NEUSCHOENSTATT_SAME_PROPERTY_CANDIDATE_2026-08-30.json",
+      "terminal_mapping_state": "PROPOSED_ONLY_NOT_AUTHORIZED"
+    },
+    {
+      "source_record_key": "MD-7976c173678dc89c9cf0",
+      "canonical_candidate": "H-0220",
+      "classification": "RELATIONSHIP_SENSITIVE_REQUIRES_ENTITY_GRANULARITY_AUTHORITY_REVIEW",
+      "canonical_preauth_artifact": "docs/state/PIE050_DELTA_RESORT_RELATIONSHIP_CANDIDATE_2026-08-30.json",
+      "terminal_mapping_state": "WITHHELD_PENDING_ENTITY_GRANULARITY_AUTHORITY_REVIEW",
+      "superseded_redundant_evidence_artifact": "docs/state/PIE050_DELTA_SUBPROPERTY_RELATION_2026-08-30.json",
+      "supersession_reason": "Concurrent PRs #334 and #333 both preserved fail-closed Delta relationship evidence. The richer #334 artifact records same operator/site/telephone/licence, adjacent premises and explicit granularity ambiguity; it is the canonical preauthority decision surface. The later #333 artifact remains immutable historical evidence only."
+    }
+  ],
+  "concurrency_reconciliation": {
+    "incident": "CONCURRENT_COMPATIBLE_DELTA_DECISION_ARTIFACTS",
+    "conflicting_authority_mutation": false,
+    "history_deleted": false,
+    "canonical_preauth_surface": "docs/state/PIE050_DELTA_RESORT_RELATIONSHIP_CANDIDATE_2026-08-30.json",
+    "redundant_surface_status": "SUPERSEDED_REDUNDANT_EVIDENCE"
+  },
+  "resource_scope_metadata_defect": {
+    "detected": true,
+    "severity": "P1_CONTINUITY_METADATA",
+    "description": "Token-5 semantic scope covered lower49 provider-identity review, but several durable PIE050 review artifacts were written outside the claim's original literal resource glob. No authority boundary was crossed; the defect is provenance/scope discoverability, not operational authority leakage.",
+    "historical_claim_rewritten": false,
+    "resolution": "Closeout records the exact artifact set and requires future claims to enumerate docs/state/PIE050_* or an equivalent explicit pattern before mutation."
+  },
+  "live_metrics": {
+    "source_records": 2061,
+    "source_pages": 172,
+    "candidate_records": 1438,
+    "exact_current_verified": 1438,
+    "terminal_source_mappings": 657,
+    "unique_canonical_targets": 656,
+    "reconcile_required": 1404,
+    "reverse_authority_gaps": 34,
+    "active_canonical": 690,
+    "next_h_id": "H-0691_UNALLOCATED"
+  },
+  "authority_effect": {
+    "authority_advanced": false,
+    "terminal_source_mapping_delta": 0,
+    "h_id_allocations": 0,
+    "canonical_id_reservations": 0,
+    "crm_universe_complete": false,
+    "outbound": "CLOSED",
+    "send_allowed": 0,
+    "irreversible_external_actions": 0
+  },
+  "closeout_state": "PREAUTH_SCOPE_COMPLETE_AUTHORITY_REVIEW_REQUIRED"
+}

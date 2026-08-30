@@ -1,0 +1,63 @@
+{
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "authority_materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+  "canonical_candidate": {
+    "authority_state": "EXISTING_CANONICAL_UNCHANGED",
+    "city": "Quarten",
+    "hotel_id": "H-0114",
+    "name": "Hostel Neu-Schönstatt"
+  },
+  "claim_id": "CLAIM-CRM-PIE050-LOWER49-005",
+  "current_first_party_evidence": [
+    {
+      "observation": "The current Jugend- und Familienzentrum is an accommodation at Zentrum Neu-Schönstatt in Quarten, with 79 beds and the Hotel & Zentrum Neu-Schönstatt address.",
+      "url": "https://neuschoenstatt.ch/jugend-und-familienzentrum/"
+    },
+    {
+      "observation": "The same operator currently presents Hotel Neu-Schönstatt and its Jugend- und Familienzentrum as the two overnight accommodation offers at the same Zentrum Neu-Schönstatt.",
+      "url": "https://neuschoenstatt.ch/meetings-events/"
+    },
+    {
+      "observation": "A current first-party 2025 brochure labels the offer 'Hostel im Zentrum Neu-Schönstatt' and directly describes that hostel as the Jugend- und Familienzentrum.",
+      "url": "https://neuschoenstatt.ch/wp-content/uploads/2025/07/2025-Hostel.pdf"
+    },
+    {
+      "observation": "The current overnight page presents the Jugend- & Familienzentrum as the center's budget group accommodation alongside the hotel.",
+      "url": "https://neuschoenstatt.ch/uebernachtungen/"
+    }
+  ],
+  "effect": {
+    "authority_advanced": false,
+    "canonical_id_reservations": 0,
+    "crm_universe_complete": false,
+    "h_id_allocations": 0,
+    "outbound": "CLOSED",
+    "reconcile_required_after": 1404,
+    "reconcile_required_before": 1404,
+    "send_allowed": 0,
+    "terminal_source_mappings_added": 0,
+    "terminal_source_mappings_total": 657
+  },
+  "fencing_token": 5,
+  "packet_sha256": "543bbaf94e2bc3544c4776ca841cf1a27a1722f2af7838ca12f0ddea0272314d",
+  "parent_git_sha": "8b0be38dc1dcf3aa64b0e617552962977f4b584f",
+  "project": "SWITZERLAND_JOB_OS",
+  "proposed_terminal_mapping": {
+    "candidate_hotel_id": "H-0114",
+    "source_record_key": "MD-33d867e983644585e4b2",
+    "state": "PROPOSED_ONLY",
+    "terminal_mapping_allowed": false
+  },
+  "review_outcome": "STRONG_SAME_PROPERTY_CANDIDATE_REQUIRES_AUTHORITY_REVIEW",
+  "schema_version": "PIE050-SAME-PROPERTY-CANDIDATE-1.0",
+  "similarity": {
+    "max_token_jaccard_ppm": 400000,
+    "role": "REVIEW_SPACE_REDUCTION_ONLY"
+  },
+  "source_identity": {
+    "city": "quarten",
+    "name": "jugend & familienzentrum neu-schönstatt"
+  },
+  "source_record_key": "MD-33d867e983644585e4b2",
+  "why_not_terminalized": "Token 5 authority ceiling is PREAUTH_REVIEW_ONLY_NO_CANONICAL_MUTATION. Current first-party evidence strongly links the legacy Hostel naming to the Jugend- und Familienzentrum, but promotion requires a separately authority-eligible entity-resolution/terminal-mapping wave with fresh ancestry and cross-plane reconciliation."
+}

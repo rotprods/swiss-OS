@@ -1,0 +1,28 @@
+{
+  "schema_version": "MARKET-ENRICHMENT-POINTER-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "lane": "MARKET_INTELLIGENCE_PARALLEL_ACCELERATION",
+  "parent_main_sha": "c71af36dbe303e98e25f12369793e6e24504ba4f",
+  "source_snapshot_id": "HS-MEMBER-DE-33206402141",
+  "source_records": 2061,
+  "source_records_sha256": "62e26d62d8677a5437e081302b6b4d206c0d27a0fe268c6356aef01da5428dc2",
+  "next_route": "MERGE_FACTORY_AND_EXECUTE_42_SHARD_MARKET_ENRICHMENT",
+  "exact_dependency": "System-definition PR must pass exact-head repo-guard and adversarial review. Merge to main triggers the 42-shard read-only enrichment workflow over Actions artifact 9700376482.",
+  "parallel_lane": "CRM RAGR24 source-identity sweep continues independently under token6; this market lane uses source record IDs and cannot mutate canonical authority.",
+  "recovery_inputs": [
+    "docs/state/market/MARKET_ENRICHMENT_RUN_REQUEST_2061_2026-08-30.json",
+    "docs/operations/MARKET_ENRICHMENT_FACTORY.md",
+    "src/swiss_os/market_enrichment.py",
+    ".github/workflows/market-enrichment-2061.yml",
+    "GitHub Actions source artifact 9700376482"
+  ],
+  "hard_invariants": {
+    "authority_advance_allowed": false,
+    "canonical_id_allocation_allowed": false,
+    "canonical_id_reservations": 0,
+    "crm_universe_complete": false,
+    "outbound": "CLOSED",
+    "send_allowed": 0,
+    "irreversible_external_actions": 0
+  }
+}

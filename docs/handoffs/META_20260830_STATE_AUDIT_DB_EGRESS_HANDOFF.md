@@ -23,8 +23,7 @@ A successor must **VERIFY LIVE TRUTH BEFORE EXECUTION**. This document records a
 6. current `docs/state/NEXT.json`
 7. current `docs/state/v2/active-claims.json`
 8. `docs/recovery/CRM_E4_DURABLE_EGRESS_MEP_FALLBACK_2026-08-30.json`
-9. `docs/recovery/DB_EGRESS_CAPABILITY_GAUNTLET_2026-08-30.json`
-10. `docs/recovery/STATE_AUDIT_HANDOFF_2026-08-30.json`
+9. `docs/recovery/STATE_AUDIT_HANDOFF_2026-08-30.json`
 
 ## Verified GitHub ancestry and continuity
 
@@ -166,7 +165,7 @@ No `SYSTEM_ISSUES` row yet records `BLOCKED_FILE_REFERENCE`; this handoff and it
 
 ## Pull-request hygiene
 
-- PR #341 contains a valid additive DB-egress gauntlet, but its branch diverged after #340. Its exact artifacts are carried forward by the fresh audit branch/PR and #341 should be closed as superseded after merge.
+- PR #341 is superseded by merged PR #342, which records the generalized generated-local-file egress failure in the canonical `CRM_E4_DURABLE_EGRESS_MEP` surface. Do not preserve a parallel DB-egress artifact/test pair; close #341 after this audit handoff merges.
 - Graph-V2 PRs #314, #317, #318, #319, #320 and #287 are based on older ancestry. Do not merge them solely because GitHub reports a mergeable state; perform semantic supersession/rebase review first.
 - PRs #275, #135, #137 and #139 are stale or conflicting and must not be merged blindly.
 

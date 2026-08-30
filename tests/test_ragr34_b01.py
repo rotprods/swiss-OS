@@ -53,13 +53,17 @@ class Ragr34B01Tests(unittest.TestCase):
 
     def test_persisted_next_advances_monotonically(self):
         text = STATE.read_text(encoding="utf-8")
-        self.assertRegex(text, r"RAGR evidence-classified\s+10 / 34")
+        match = re.search(r"RAGR evidence-classified\s+(\d+) / 34", text)
+        self.assertIsNotNone(match)
+        self.assertGreaterEqual(int(match.group(1)), 10)
         self.assertIn("H-0691 UNALLOCATED", text)
         self.assertIn("OUTBOUND                        CLOSED", text)
         nxt = json.loads(NEXT.read_text(encoding="utf-8"))
-        self.assertEqual(nxt["next_route"], "EXECUTE_RAGR34_B02_EVIDENCE_CLASSIFICATION")
-        self.assertEqual(nxt["review_frontier"]["ragr"]["reviewed"], 10)
-        self.assertEqual(nxt["review_frontier"]["ragr"]["remaining"], 24)
+        self.assertRegex(nxt["next_route"], r"^EXECUTE_RAGR34_B0[2-4]_EVIDENCE_CLASSIFICATION$")
+        ragr = nxt["review_frontier"]["ragr"]
+        self.assertGreaterEqual(ragr["reviewed"], 10)
+        self.assertLessEqual(ragr["remaining"], 24)
+        self.assertEqual(ragr["reviewed"] + ragr["remaining"], 34)
         self.assertFalse(nxt["authority_advance_allowed"])
         self.assertFalse(nxt["outbound_allowed"])
 

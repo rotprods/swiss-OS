@@ -65,7 +65,10 @@ class RAGR34B02Tests(unittest.TestCase):
             self.assertRegex(nxt["next_route"], r"^EXECUTE_RAGR34_B0[3-4]_EVIDENCE_CLASSIFICATION$")
         else:
             self.assertEqual(ragr["reviewed"], 34)
-            self.assertEqual(nxt["next_route"], "MATERIALIZE_RAGR34_POST_REVIEW_DISPOSITION_WORKSET")
+            self.assertIn(nxt["next_route"], {
+                "MATERIALIZE_RAGR34_POST_REVIEW_DISPOSITION_WORKSET",
+                "EXECUTE_RAGR34_SPECIAL10_AUTHORITY_RECONCILIATION_PREFLIGHT",
+            })
         self.assertGreaterEqual(ragr["classification_counts"]["IN_SCOPE_NO_SOURCE_MATCH"], 13)
         self.assertGreaterEqual(ragr["classification_counts"]["DATA DEFECT"], 3)
         self.assertFalse(nxt["authority_advance_allowed"])

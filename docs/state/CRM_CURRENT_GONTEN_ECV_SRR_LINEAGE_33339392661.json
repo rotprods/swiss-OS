@@ -1,0 +1,118 @@
+{
+  "authority": {
+    "aliases": 0,
+    "canonical_rows": 690,
+    "effect": "NONE",
+    "epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+    "materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+    "next_physical_id": "H-0691_UNALLOCATED"
+  },
+  "frontier": {
+    "canonical_id_reservations": 0,
+    "current_reviewed_decisions_reconfirmed": 2,
+    "current_source_records": 2061,
+    "h_id_allocations": 0,
+    "new_canonical_preauth_reconfirmed": 2,
+    "reconcile_required": 1403,
+    "terminal_source_mappings": 658
+  },
+  "generated_at": "2026-08-31T00:03:00Z",
+  "lineage_policy": {
+    "authority_action": "NONE",
+    "fuzzy_autobind": false,
+    "new_source_key_required": true,
+    "old_source_key_is_current": false,
+    "terminal_mapping_effect": "NONE",
+    "transfer_basis": "CURRENT_COHERENT_MEMBER_DIRECTORY_RECORD + CURRENT_FIRST_PARTY_PROPERTY_IDENTITY + PRIOR_REVIEWED_SRR_DECISION"
+  },
+  "next_route": "MIGRATE_UNCHANGED_EXACT_CURRENT_AND_REVIEW_LINEAGE_THEN_CONTINUE_1403_ENTITY_RESOLUTION",
+  "parent_git_sha": "df375cf63200ed83fdc172ae7d1274e4bb458a34",
+  "payload_sha256": "1701fcca0c0a67fa06adc75815137ff78e18a64f1cfc8754053f25d43e5fdbb7",
+  "project": "SWITZERLAND_JOB_OS",
+  "qa": {
+    "authority_advanced": false,
+    "both_changed_source_identities_accounted_for": true,
+    "coherent_source_required": true,
+    "crm_universe_complete": false,
+    "current_first_party_identity_distinct_from_h0063": true,
+    "fuzzy_autobind": false,
+    "irreversible_external_actions": 0,
+    "old_source_keys_not_reused_as_current": true,
+    "outbound": "CLOSED",
+    "send_allowed": 0
+  },
+  "schema_version": "CRM-CURRENT-GONTEN-LINEAGE-1.0",
+  "source": {
+    "artifact_id": 9740219406,
+    "coverage_complete": true,
+    "pages": 172,
+    "records": 2061,
+    "records_sha256": "b16fdb63a01149e10feb4d506f38301644b73a612f898ce72567ec4fa92da404",
+    "snapshot_id": "HS-MEMBER-DE-33339392661"
+  },
+  "transfers": [
+    {
+      "current_city": "Gonten",
+      "current_detail_url": "https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-huus-baeren-1602",
+      "current_first_party": {
+        "address": "Dorfstrasse 40, 9108 Gonten",
+        "observed_at": "2026-08-31T00:00:00Z",
+        "property": "HUUS BÄREN 1602",
+        "url": "https://appenzellerhuus.ch/de/hotels/huus-baeren-1602/kontakt/"
+      },
+      "current_review": {
+        "action": "NEW_CANONICAL_PREAUTH_RECONFIRMED",
+        "canonical_h_id_reserved": false,
+        "h_id_allocated": false,
+        "mapping_state": "RECONCILE_REQUIRED",
+        "operational_authority": false,
+        "reason_code": "CURRENT_DIRECTORY_RENAME_MATCHES_CURRENT_FIRST_PARTY_HUUS_BAEREN_1602_AND_REMAINS_DISTINCT_FROM_H0063_HUUS_QUELL"
+      },
+      "current_source_evidence_ref": "HS-MEMBER-DE-33339392661:page:0121#record-011",
+      "current_source_name": "Huus Bären 1602",
+      "new_source_record_key": "MD-a954ba352532b916caa2",
+      "old_detail_url": "https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-appenzeller-huus-huus-baeren-3",
+      "old_source_name": "Appenzeller Huus, Huus Bären",
+      "old_source_record_key": "MD-1776f584db74aa28b566",
+      "prior_review": {
+        "action": "NEW_CANONICAL",
+        "canonical_comparator_id": "H-0063",
+        "canonical_comparator_property": "HUUS QUELL",
+        "reason_code": "OFFICIAL_RESORT_IDENTIFIES_BAEREN_AND_QUELL_AS_SEPARATE_HOTELS",
+        "ref": "docs/state/SRR_CURRENT_IDENTITY_EVIDENCE_500599_P1_B01_2026-08-30.json"
+      }
+    },
+    {
+      "current_city": "Gonten",
+      "current_detail_url": "https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-huus-loewen-1878",
+      "current_first_party": {
+        "address": "Dorfstrasse 29, 9108 Gonten",
+        "observed_at": "2026-08-31T00:00:00Z",
+        "property": "HUUS LÖWEN 1878",
+        "url": "https://appenzellerhuus.ch/en/hotels/huus-loewen-1878/gastronomy/loewenstobe/"
+      },
+      "current_review": {
+        "action": "NEW_CANONICAL_PREAUTH_RECONFIRMED",
+        "canonical_h_id_reserved": false,
+        "h_id_allocated": false,
+        "mapping_state": "RECONCILE_REQUIRED",
+        "operational_authority": false,
+        "reason_code": "CURRENT_DIRECTORY_RENAME_MATCHES_CURRENT_FIRST_PARTY_HUUS_LOEWEN_1878_AND_REMAINS_DISTINCT_FROM_H0063_HUUS_QUELL"
+      },
+      "current_source_evidence_ref": "HS-MEMBER-DE-33339392661:page:0122#record-001",
+      "current_source_name": "Huus Löwen 1878",
+      "new_source_record_key": "MD-5ab40d162390a7b74c5f",
+      "old_detail_url": "https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-appenzeller-huus-huus-loewen",
+      "old_source_name": "Appenzeller Huus, Huus Löwen",
+      "old_source_record_key": "MD-602d416c1e4106d2e085",
+      "prior_review": {
+        "action": "NEW_CANONICAL",
+        "canonical_comparator_id": "H-0063",
+        "canonical_comparator_property": "HUUS QUELL",
+        "reason_code": "OFFICIAL_RESORT_IDENTIFIES_LOEWEN_AND_QUELL_AS_SEPARATE_HOTELS",
+        "ref": "docs/state/SRR_CURRENT_IDENTITY_EVIDENCE_500599_P1_B02_2026-08-30.json"
+      }
+    }
+  ],
+  "wave_id": "WAVE-20260831-CRM-CURRENT-GONTEN-LINEAGE-02"
+}

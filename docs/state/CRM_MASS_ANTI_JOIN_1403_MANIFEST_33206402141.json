@@ -1,0 +1,51 @@
+{
+  "anti_join": {
+    "algorithm": "candidate source_record_key NOT IN terminal_exceptions; preserve candidate source_record_key order",
+    "batch_size": 64,
+    "batches": [
+      {"batch_index":1,"first_source_record_key":"MD-0005179a3bc321b78711","last_source_record_key":"MD-0b95b7453ccc7f31ed8f","offset_end_exclusive":64,"offset_start":0,"records":64,"source_record_keys_sha256":"ffe4d193b8a759ba82f5395af1a48190fe2ab360ef9a687facb98d9543cccfa0","stage_path":"docs/state/CRM_UNRESOLVED_STAGE_0001_33206402141.json"},
+      {"batch_index":2,"first_source_record_key":"MD-0bc05b76e74e4bf37b9d","last_source_record_key":"MD-15319dfef73edc806dfb","offset_end_exclusive":128,"offset_start":64,"records":64,"source_record_keys_sha256":"885dbc346ec4928da78f7d4060a5d4def062af35c8da1c20525fee4053c2ea29"},
+      {"batch_index":3,"first_source_record_key":"MD-1537ec4cce2d783a63c1","last_source_record_key":"MD-2043b1dd83f7213daa24","offset_end_exclusive":192,"offset_start":128,"records":64,"source_record_keys_sha256":"a09a811bdf8dc884fba53c4840952e5299a06050e00d6f5477c5bb1595354072"},
+      {"batch_index":4,"first_source_record_key":"MD-2050ee69776fb95ea4a9","last_source_record_key":"MD-296b4b6f9126f8bdb8b9","offset_end_exclusive":256,"offset_start":192,"records":64,"source_record_keys_sha256":"8895804343a2467ab25967689addb7d653746d81f8fc198932a091e127ed02f4"},
+      {"batch_index":5,"first_source_record_key":"MD-298fc4059da5d5066528","last_source_record_key":"MD-3572f83756b4c984411f","offset_end_exclusive":320,"offset_start":256,"records":64,"source_record_keys_sha256":"441c45358784a12fed58a56ce9bd5ca34743b69ae4d883abc5e0eeae72b30909"},
+      {"batch_index":6,"first_source_record_key":"MD-360afa18b851ad2f5644","last_source_record_key":"MD-41af3e1c27939864aba6","offset_end_exclusive":384,"offset_start":320,"records":64,"source_record_keys_sha256":"ccbb9d168a8545124a07ad3d5aba8448eccbf823e49e31e24291b1cfdf9af361"},
+      {"batch_index":7,"first_source_record_key":"MD-41d28906a3d15abe8e02","last_source_record_key":"MD-4aebf12c7a71622a7a7f","offset_end_exclusive":448,"offset_start":384,"records":64,"source_record_keys_sha256":"74c3e4cc887625e1656ae45c74245e7e267196cdbe6dc11975a4eb7d347247b9"},
+      {"batch_index":8,"first_source_record_key":"MD-4b939b1d2e92e7694d13","last_source_record_key":"MD-58061c0ab54f4ae8d66c","offset_end_exclusive":512,"offset_start":448,"records":64,"source_record_keys_sha256":"ef3f4c8ec60e220021d629242a2e060ddd73d68b43251485df8abe0d7822869a"},
+      {"batch_index":9,"first_source_record_key":"MD-582a13bd0acdcb72163c","last_source_record_key":"MD-640d185a25801142d654","offset_end_exclusive":576,"offset_start":512,"records":64,"source_record_keys_sha256":"4bfac2b4e3edff24c35c0e74430d31edab58b4e6821d7a16cf5f99dce84747ea"},
+      {"batch_index":10,"first_source_record_key":"MD-640f8cf75c0e922e9c29","last_source_record_key":"MD-6f40a8b82fbb2c09cf8b","offset_end_exclusive":640,"offset_start":576,"records":64,"source_record_keys_sha256":"00e271118e1d8a83b2fe9f9eed5964e65402a6bcc56afcbf8c023adccc7a014f"},
+      {"batch_index":11,"first_source_record_key":"MD-6fe86e36ae55d29bbbd2","last_source_record_key":"MD-7c3e9de84bef8dd63225","offset_end_exclusive":704,"offset_start":640,"records":64,"source_record_keys_sha256":"9b7b068de73f73bbc2234581dcc38431fe54f9581375cdfc246cb3015ac36618"},
+      {"batch_index":12,"first_source_record_key":"MD-7c4fedc59ed53ea41ef8","last_source_record_key":"MD-897e142ca43e3c9202c6","offset_end_exclusive":768,"offset_start":704,"records":64,"source_record_keys_sha256":"acfcf9146dc4a017aebd07f86aac67ac820a725001b4ff4538d3788b2c487b1e"},
+      {"batch_index":13,"first_source_record_key":"MD-89851d371ed46efb385c","last_source_record_key":"MD-94a590a5b45b4629de6d","offset_end_exclusive":832,"offset_start":768,"records":64,"source_record_keys_sha256":"aaf950563443bf8b2aac55cf43c6978e0645335e837dc0588967accacade664d"},
+      {"batch_index":14,"first_source_record_key":"MD-94da57a79c2e3068068f","last_source_record_key":"MD-9f21810fec93290558e8","offset_end_exclusive":896,"offset_start":832,"records":64,"source_record_keys_sha256":"4b69487f2bd22ed8145b170d03e2d7b7fa7afb5cd92f41f1663c49336d98e9a9"},
+      {"batch_index":15,"first_source_record_key":"MD-9f221ff4278b02a5c2aa","last_source_record_key":"MD-aac7695eafc69de1eeb0","offset_end_exclusive":960,"offset_start":896,"records":64,"source_record_keys_sha256":"0e642cf013f4dda5017e1af3e2ee2fa07145ddb98c2fa4e8f26df8c91e80950f"},
+      {"batch_index":16,"first_source_record_key":"MD-aad757ce4c1f28148e32","last_source_record_key":"MD-b65c3191c62d91d6715a","offset_end_exclusive":1024,"offset_start":960,"records":64,"source_record_keys_sha256":"cb11cf051542d67cae4ebaa27a61e3bb1972bca344d8de60f3b13b8e49e99c93"},
+      {"batch_index":17,"first_source_record_key":"MD-b68bca15478f93e3851b","last_source_record_key":"MD-c302a97d7e9c3e890cc1","offset_end_exclusive":1088,"offset_start":1024,"records":64,"source_record_keys_sha256":"92d71e8426489b161f869af1e1dc5e37f61b2c877d796881306025ed68df013e"},
+      {"batch_index":18,"first_source_record_key":"MD-c312e040e107371d3826","last_source_record_key":"MD-d00afedb7be15f4b96aa","offset_end_exclusive":1152,"offset_start":1088,"records":64,"source_record_keys_sha256":"83945c54b6d13e679026cfa0266c8887e396d8efe9ef9780ac816472d75e4c8b"},
+      {"batch_index":19,"first_source_record_key":"MD-d0521b06d96fc8746103","last_source_record_key":"MD-dc32b551fc4e8aba5dc2","offset_end_exclusive":1216,"offset_start":1152,"records":64,"source_record_keys_sha256":"480fa78968fef90be3ba08850eddcac56b370ef040387c22afe65d943d8c0c38"},
+      {"batch_index":20,"first_source_record_key":"MD-dc50bab504629b92bfdf","last_source_record_key":"MD-e718641401a391c81d25","offset_end_exclusive":1280,"offset_start":1216,"records":64,"source_record_keys_sha256":"e1c52f49abb4f272c75bf353e43e5eb60fe78a98859322759db8dc4b60d0b73e"},
+      {"batch_index":21,"first_source_record_key":"MD-e72c2443bf8eee3fd73f","last_source_record_key":"MD-f41019d75d2e66329649","offset_end_exclusive":1344,"offset_start":1280,"records":64,"source_record_keys_sha256":"1b8dda435c43ef18147f95887b2bde484768f48c5b8166c8a18923dda2fbd37a"},
+      {"batch_index":22,"first_source_record_key":"MD-f4588e4c5148b0387040","last_source_record_key":"MD-ffd8b0d0c8a1c956a988","offset_end_exclusive":1403,"offset_start":1344,"records":59,"source_record_keys_sha256":"e9fe29867d54942eb99d520de4f17b257fa6a54f4a8e787873387b181b8212f1"}
+    ],
+    "excluded_terminal_exceptions": 35,
+    "input_candidates": 1438,
+    "matches_full_658_unresolved_digest": true,
+    "unresolved_records": 1403,
+    "unresolved_source_record_keys_sha256": "910cfd92974025a836430612387d380be0f15d173d41f20fda6fea2bcca48581"
+  },
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "authority_parent_materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+  "candidate": {"artifact_id":9718866661,"candidate_export_is_preauthority":true,"order":"source_record_key","records":1438,"records_sha256":"34d9aa9cfa4fe896bf1db8fba4dedfded9a1dbf2e135b847101904644d16bba0"},
+  "generated_at": "2026-08-30T09:13:35Z",
+  "parent_git_sha": "ca72ff9edd8b7da89a8289ee723a090ac86e0a69",
+  "project": "SWITZERLAND_JOB_OS",
+  "safety": {"authority_advanced":false,"canonical_id_reservations":0,"h_id_allocations":0,"irreversible_external_actions":0,"outbound":"CLOSED","review_only":true,"send_allowed":0,"terminal_mapping_allowed":false},
+  "schema_version": "CRM-MASS-ANTI-JOIN-MANIFEST-1.0",
+  "snapshot_id": "HS-MEMBER-DE-33206402141",
+  "stage_0001": {"path":"docs/state/CRM_UNRESOLVED_STAGE_0001_33206402141.json","records":64,"source_record_keys_sha256":"ffe4d193b8a759ba82f5395af1a48190fe2ab360ef9a687facb98d9543cccfa0"},
+  "terminal_exceptions": {
+    "count": 35,
+    "origin": "FULL_SOURCE_MAPPING_REBUILD_658 recovery_recipe.exceptional_mappings",
+    "source_record_keys": ["MD-025e7888dfc33e19723a","MD-0672b5697de8a818d65b","MD-11d7b5eca200ae61af52","MD-16f3296ed9616c0ef6ec","MD-1e66aa8d213855517131","MD-33d867e983644585e4b2","MD-418c10f59064a67a4ffb","MD-43c002a5f800a7d92f5d","MD-466d0a46fe05df051926","MD-5c6730731bcb89467b0f","MD-615a31fb4402ea4abf2e","MD-6e4b884c5f566102a50d","MD-70fee4f734bf530fb6fd","MD-734757058decadaa6453","MD-7465735aa7cebbfc840c","MD-74d083ce2753ccb59292","MD-75b604323027a973bc4d","MD-75cfec87fdff918b9c59","MD-7c70baeb19408c2e971b","MD-7db3357bbcfbad01a7ec","MD-915b0a6a07df97b87dae","MD-9e3233153af5ab2e8c01","MD-aabf05311b7763fe5929","MD-b1eb8f0ce9f3a4733c71","MD-bfd71f032baf20b34f5a","MD-c1bad65dc4e10ee53703","MD-cd2a27fb3d4cb88a5bfd","MD-d09653a62d86bff5e672","MD-d64716f571bf23669451","MD-dbab170cb19a81df4f10","MD-dd14bef2251b12ecd017","MD-ef64d8388959eb063e74","MD-faa64ef9d3f987496065","MD-fed86d7933175b3cb112","MD-ff70cabc95a4a2ea61a1"],
+    "source_record_keys_sha256": "16b082076fc5efe8e4147f9ff5927ea72edc9575e47784572c6c6a78e7eec36a"
+  }
+}

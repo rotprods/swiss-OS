@@ -1,0 +1,67 @@
+{
+  "schema_version": "PIE050-LOWER49-COMPLETION-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "parent_git_sha": "11a528dd1584b3606fed83356c006065e9785778",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "authority_materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+  "completed_claim_id": "CLAIM-CRM-PIE050-LOWER49-005",
+  "completed_fencing_token": 5,
+  "queue_path": "docs/state/SRET_PROVIDER_IDENTITY_LOWER49_33206402141.json",
+  "queue_records": 49,
+  "ordinary_reviews": {
+    "reviewed": 47,
+    "packets": [
+      "docs/state/PIE050_LOWER49_REVIEW_PACKET_01_2026-08-30.json",
+      "docs/state/PIE050_LOWER49_REVIEW_PACKET_02_2026-08-30.json",
+      "docs/state/PIE050_LOWER49_REVIEW_PACKET_03_2026-08-30.json",
+      "docs/state/PIE050_LOWER49_REVIEW_PACKET_04_2026-08-30.json",
+      "docs/state/PIE050_LOWER49_REVIEW_PACKET_05_2026-08-30.json"
+    ],
+    "outcome": "DISTINCTNESS_REVIEW_COMPLETE_NONTERMINAL"
+  },
+  "special_relationship_reviews": [
+    {
+      "source_record_key": "MD-33d867e983644585e4b2",
+      "canonical_candidate": "H-0114",
+      "artifact": "docs/state/PIE050_NEUSCHOENSTATT_SAME_PROPERTY_CANDIDATE_2026-08-30.json",
+      "outcome": "STRONG_SAME_PROPERTY_CANDIDATE_REQUIRES_AUTHORITY_REVIEW",
+      "next_srr_action": "ALIAS_EXISTING_CANDIDATE_REQUIRES_EXACT_SRR_VALIDATION"
+    },
+    {
+      "source_record_key": "MD-7976c173678dc89c9cf0",
+      "canonical_candidate": "H-0220_PARENT_RELATION_ONLY",
+      "canonical_decision_artifact": "docs/state/PIE050_DELTA_SUBPROPERTY_RELATION_2026-08-30.json",
+      "supporting_evidence_artifact": "docs/state/PIE050_DELTA_RESORT_RELATIONSHIP_CANDIDATE_2026-08-30.json",
+      "outcome": "COLOCATED_SUBPROPERTY_RELATION_REQUIRES_AUTHORITY_REVIEW",
+      "relation": "OPERATED_AS_SUBPROPERTY_OF",
+      "next_srr_action": "UNRESOLVED_UNTIL_ENTITY_GRANULARITY_POLICY_REVIEW",
+      "precedence": "SUBPROPERTY_RELATION_ARTIFACT_IS_CANONICAL_DECISION_SURFACE; RELATIONSHIP_CANDIDATE_IS_SUPPORTING_EVIDENCE_ONLY"
+    }
+  ],
+  "classification_coverage": {
+    "reviewed": 49,
+    "total": 49,
+    "complete": true,
+    "terminalized_from_similarity": 0
+  },
+  "claim_transition": {
+    "released_claim": "CLAIM-CRM-PIE050-LOWER49-005",
+    "released_token": 5,
+    "next_claim": "CLAIM-CRM-SRR-SPECIAL-006",
+    "next_fencing_token": 6,
+    "next_scope": "SRR_SPECIAL_RELATIONSHIP_MATERIALIZATION_PREAUTH"
+  },
+  "effect": {
+    "terminal_source_mappings_before": 657,
+    "terminal_source_mappings_after": 657,
+    "reconcile_required_before": 1404,
+    "reconcile_required_after": 1404,
+    "h_id_allocations": 0,
+    "canonical_id_reservations": 0,
+    "authority_advanced": false,
+    "crm_universe_complete": false,
+    "outbound": "CLOSED",
+    "send_allowed": 0
+  },
+  "packet_sha256": "074a804b8d76965541b60298e0aed8430f71eee06d9f18a4e47dd6f565473ff2"
+}

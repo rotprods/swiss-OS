@@ -1,0 +1,18 @@
+{
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "generated_at": "2026-08-30T09:13:35Z",
+  "offset_end_exclusive": 64,
+  "offset_start": 0,
+  "parent_git_sha": "ca72ff9edd8b7da89a8289ee723a090ac86e0a69",
+  "project": "SWITZERLAND_JOB_OS",
+  "records": 64,
+  "safety": {"authority_advanced":false,"canonical_id_reservations":0,"h_id_allocations":0,"outbound":"CLOSED","send_allowed":0},
+  "schema_version": "CRM-UNRESOLVED-REVIEW-STAGE-1.0",
+  "snapshot_id": "HS-MEMBER-DE-33206402141",
+  "source_manifest_path": "docs/state/CRM_MASS_ANTI_JOIN_1403_MANIFEST_33206402141.json",
+  "source_record_keys": ["MD-0005179a3bc321b78711","MD-001ae4545d90ac79e780","MD-002578b9bdd2324bd80b","MD-003772e74f4ea33133be","MD-00447e4a1c8634a7711d","MD-0087b486ad1319d0eda5","MD-00888031ce966688da46","MD-009d9c619a7da469e4cd","MD-00a2f1431bb381b3cf73","MD-00c4d62bbabccdf3d4c7","MD-012457cc0664b503a895","MD-01377635bb6213379172","MD-014284567e82420fb792","MD-014d5755cb0d08045ca5","MD-014d9cd6ad6131769507","MD-0167b9e5abf802061c37","MD-0171df4abfe5a734adae","MD-01c199cd032ce22f5cef","MD-021637bae5e982b81b8f","MD-021cf0579ecda76931e7","MD-024da491efa48c3284b3","MD-0289d08a8e6569b9b14f","MD-028ca09128a483c449af","MD-0299c73468dc72795c3c","MD-02c95bbc7a3311c12d28","MD-02f4088e327be8092246","MD-02f546a40f7db86d32b3","MD-030a49513115b3564b24","MD-034c1c3b0f7ba9d69c80","MD-038a1f697979e5a47078","MD-03a8233e31c10e40d6cb","MD-03e0daccc88e592271eb","MD-03ea278d303da99fbd8c","MD-040e2cc9296784685f95","MD-041b35ccad3d62006d19","MD-0453feb9c49342eed8aa","MD-046918be3d96c929de32","MD-04782b91076b9b972f29","MD-04a984198f3c5c6f94d1","MD-04b50ab56e7b92991f02","MD-05999f944d1d91331bc8","MD-059ff690151c61e879ae","MD-05c03c64ad03baeeb21b","MD-05df3e85033dcc1e12fe","MD-060ab8b94f4941af5f1c","MD-067a31d2a83a1713487b","MD-06818944455b06d43ca2","MD-06ae8b03cc17cc078738","MD-0712662bc0e5c0a94c28","MD-074a46f0f6d897826816","MD-07c67de3aa23c3580015","MD-0808d76e5e1cc83f42d2","MD-0920aacb4b025b6bf7e6","MD-0926de9e9ff278cec934","MD-093c5e021e75eb14fc74","MD-0977f80246e0ec5bd184","MD-09c4fd9bb12fe4d861a8","MD-0a0fb9cc01d7f26ce603","MD-0a192598ea29ea5d1331","MD-0a40882230267aea8999","MD-0b0a619ecda463788e42","MD-0b48544244cfde58dd39","MD-0b4b95d8300bb752008e","MD-0b95b7453ccc7f31ed8f"],
+  "source_record_keys_sha256": "ffe4d193b8a759ba82f5395af1a48190fe2ab360ef9a687facb98d9543cccfa0",
+  "stage_id": "UNRESOLVED:0001",
+  "stage_index": 1,
+  "work_contract": {"action":"EVIDENCE_QUALIFIED_ENTITY_RESOLUTION_REVIEW","allowed_terminal_decision":false,"on_no_conclusive_evidence":"RETAIN_RECONCILE_REQUIRED","review_evidence_requirement":"one-to-one current first-party evidence; similarity/distinctness alone nonterminal"}
+}

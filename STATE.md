@@ -1,6 +1,6 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest chained Meta Execution coordination frontier: **2026-08-30T18:36:00Z**. Current execution parent main SHA: **`91e2277ddfbcedf21dc13c61893cee0111b90930`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
+Latest chained Meta Execution coordination frontier: **2026-08-30T19:22:00Z**. Current execution parent main SHA: **`f25bd38162ca0e47f68d3d9d7cd2ffcea559fdea`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
 
 ## Authority — unchanged / locked
 
@@ -28,14 +28,14 @@ pre-authority terminal source mappings       658
 unique canonical targets                    656
 RECONCILE_REQUIRED                         1403
 RAGR reverse authority gaps                  34
-RAGR evidence-classified                 30 / 34
-RAGR evidence-classified remaining        4 / 34
+RAGR evidence-classified                 34 / 34
+RAGR evidence-classified remaining         0 / 34
 terminal coverage rebuild                  658/658 ATTESTED
 unresolved candidate anti-join            1403/1403 ATTESTED
 review staging batches                          29
 ```
 
-Source-key conservation remains `658 + 1403 = 2061`. Terminal-pair SHA remains `cdcecdf445395fe36c6318c2f0103757b0a14ec08d33e229c138df2ec36ad56e`; unresolved source-key SHA remains `910cfd92974025a836430612387d380be0f15d173d41f20fda6fea2bcca48581`; RAGR review queue remains 34 with SHA `cf47dc91057df8653cd75729cb39320605e193e476c6828f24956b69e2848b9c`.
+Source-key conservation remains `658 + 1403 = 2061`. Terminal-pair SHA remains `cdcecdf445395fe36c6318c2f0103757b0a14ec08d33e229c138df2ec36ad56e`; unresolved source-key SHA remains `910cfd92974025a836430612387d380be0f15d173d41f20fda6fea2bcca48581`; RAGR review queue remains 34 with SHA `cf47dc91057df8653cd75729cb39320605e193e476c6828f24956b69e2848b9c`. Evidence classification is complete, but the raw reverse-gap count remains 34 until an authority-eligible reconciliation has durable source receipts.
 
 ## Identity / granularity frontier
 
@@ -52,9 +52,9 @@ lower49 typed SRR remaining                  0 / 47
 terminal mapping delta from review             0
 ```
 
-`RAGR34-B03` classified the third deterministic ten reverse authority gaps using live E4 `HOTELS_V2` readbacks plus independent current evidence. Batch result: `IN_SCOPE_NO_SOURCE_MATCH=9`, `SUPERSEDED/RENAMED WITH EVIDENCE=1`, all other RAGR classes zero. Cumulative RAGR evidence classification is now `IN_SCOPE_NO_SOURCE_MATCH=22`, `SUPERSEDED/RENAMED WITH EVIDENCE=3`, `COMPONENT/GROUP GRANULARITY=2`, `DATA DEFECT=3`, `OUT_OF_SNAPSHOT_SCOPE=0`, `UNRESOLVED=0`.
+`RAGR34-B04` classified the final four reverse authority gaps using live E4 `HOTELS_V2` readbacks plus independent current evidence. Batch result: `IN_SCOPE_NO_SOURCE_MATCH=2`, `SUPERSEDED/RENAMED WITH EVIDENCE=2`, all other RAGR classes zero. Cumulative RAGR evidence classification is now complete at `IN_SCOPE_NO_SOURCE_MATCH=24`, `SUPERSEDED/RENAMED WITH EVIDENCE=5`, `COMPONENT/GROUP GRANULARITY=2`, `DATA DEFECT=3`, `OUT_OF_SNAPSHOT_SCOPE=0`, `UNRESOLVED=0`.
 
-H-0665 Berghotel Sparenmoos is the new renamed/superseded review candidate: current first-party identity is `DAO Sparenmoos` and presents the operation as a seminar house, while the live canonical/member label remains `Berghotel Sparenmoos`. The conflict is evidence for authority/name/entity-type review only; it did **not** create a terminal source mapping or mutate/deactivate the canonical. H-0668 Seehotel Belvédère remains an in-scope review gap because current HotellerieSuisse lodging evidence exists despite a destination surface emphasizing the lakeside restaurant; that conflict is insufficient deletion evidence. The other eight B03 records have current accommodation evidence but no terminal frozen-source coverage.
+`H-0673` Hotel Löwen Wattwil is a review-only renamed/superseded candidate because the current first-party operation at the canonical address is `Motelina`. `H-0674` Hotel Löwen Waldenburg is also review-only renamed/superseded: current first-party history explicitly records the name evolution to `Leue Waldenburg`, while present surfaces retain mixed restaurant/hotel-room signals. Neither finding creates a terminal source mapping or permits automatic rename/deactivation. `H-0675` Hotel Lyssach and `H-0677` Hotel Drei Könige retain current active accommodation evidence and remain in-scope source-match gaps.
 
 The exact 47 ordinary lower49 reviews remain fully typed under token6 from deterministic workset `CRM_IDENTITY_WORKSET_LOWER49_ORDINARY_47_2026-08-30.json`, workset SHA `8817941127ede8f9329d81b4831b1fd6643e9ab4c19438c3fa612b78e1169050`.
 
@@ -66,7 +66,7 @@ Drive native `HOTELS_V2` readback is live. Exact E4 local reconstruction remains
 
 ## NEXT
 
-Execute final **`RAGR34-B04`** on `H-0673,H-0674,H-0675,H-0677`. Re-read live `HOTELS_V2` canonical rows and obtain independent current evidence for every gap. Classify exactly one RAGR-1.0 state per H-ID. Absence from the member directory is never deletion evidence; queue suggestions cannot create source mappings or mutate authority. Never reserve/allocate H-0691; keep `OUTBOUND=CLOSED` and `send_allowed=0`.
+Execute **`MATERIALIZE_RAGR34_POST_REVIEW_DISPOSITION_WORKSET`**. Concatenate B01–B04 in exact RAGR queue order into one deterministic 34-row review-only workset, preserve every evidence-backed classification/reason/follow-up, and partition the next safe routes by class. Do not convert queue suggestions or current-evidence findings into source mappings, canonical status changes or authority effects. Raw reverse gaps remain 34 pending authority-eligible reconciliation. Never reserve/allocate H-0691; keep `OUTBOUND=CLOSED` and `send_allowed=0`.
 
 Recovery inputs and exact blockers are persisted in `docs/state/NEXT.json` and `docs/state/NEXT_META_EXECUTION_2026-08-30.json`.
 

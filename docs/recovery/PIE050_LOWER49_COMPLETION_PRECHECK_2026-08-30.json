@@ -1,0 +1,39 @@
+{
+  "schema_version": "PIE050-LOWER49-COMPLETION-PRECHECK-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "authority": "PREAUTH_COMPLETION_EVIDENCE_ONLY",
+  "parent_main_sha": "d2aaf1c35c1b746294434879fc7543d2a2e93c5d",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "authority_revision_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+  "claim_id": "CLAIM-CRM-PIE050-LOWER49-005",
+  "fencing_token": 5,
+  "queue": "docs/state/SRET_PROVIDER_IDENTITY_LOWER49_33206402141.json",
+  "review_packets": [
+    "docs/state/PIE050_LOWER49_REVIEW_PACKET_01_2026-08-30.json",
+    "docs/state/PIE050_LOWER49_REVIEW_PACKET_02_2026-08-30.json",
+    "docs/state/PIE050_LOWER49_REVIEW_PACKET_03_2026-08-30.json",
+    "docs/state/PIE050_LOWER49_REVIEW_PACKET_04_2026-08-30.json",
+    "docs/state/PIE050_LOWER49_REVIEW_PACKET_05_2026-08-30.json"
+  ],
+  "special_review_artifacts": [
+    "docs/state/PIE050_NEUSCHOENSTATT_SAME_PROPERTY_CANDIDATE_2026-08-30.json",
+    "docs/state/PIE050_DELTA_SUBPROPERTY_RELATION_2026-08-30.json"
+  ],
+  "expected": {
+    "queue_records": 49,
+    "ordinary_reviewed": 47,
+    "special_reviewed": 2,
+    "classification_coverage": "49/49",
+    "terminal_source_mapping_delta": 0,
+    "authority_advanced": false,
+    "h_id_allocations": 0,
+    "canonical_id_reservations": 0,
+    "crm_universe_complete": false,
+    "outbound": "CLOSED",
+    "send_allowed": 0
+  },
+  "qualification": "CI_MUST_PROVE_EXACT_SET_COVERAGE_AND_FAIL_CLOSED_INVARIANTS",
+  "claim_transition_authorized_by_this_artifact": false,
+  "next_if_ci_and_adversarial_review_pass": "Fresh-main claim-transition PR may release token 5 and acquire a higher fencing token for SRR special relationship preauthority; it must not terminalize, allocate, reserve, advance authority, or open outbound.",
+  "verify_live_truth_before_execution": true
+}

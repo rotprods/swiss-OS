@@ -1,0 +1,191 @@
+{
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "authority_materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+  "claim_id": "CLAIM-CRM-PIE050-LOWER49-005",
+  "decision_rule": "Current public co-listing, official property pairs, or independently distinguishable destination entries may clear a weak similarity collision only. They do not prove complete membership scope, do not create a terminal source mapping, do not reserve/allocate a canonical ID, and do not advance authority.",
+  "effect": {
+    "authority_advanced": false,
+    "canonical_id_reservations": 0,
+    "crm_universe_complete": false,
+    "h_id_allocations": 0,
+    "outbound": "CLOSED",
+    "reconcile_required_after": 1404,
+    "reconcile_required_before": 1404,
+    "send_allowed": 0,
+    "similarity_collision_reviews_cleared": 10,
+    "terminal_source_mappings_added": 0,
+    "terminal_source_mappings_total": 657
+  },
+  "fencing_token": 5,
+  "input_queue": "docs/state/SRET_PROVIDER_IDENTITY_LOWER49_33206402141.json",
+  "observed_on": "2026-08-30",
+  "packet_sha256": "7e79d8f6f47f5a0f9d02970f5f559c8023f90ae595b9e53afed3a6e45abdbe69",
+  "parent_git_sha": "6586b64d38c99ae9ad2719175b2cbed1cfd7ecb3",
+  "pending_lower49_after": 29,
+  "project": "SWITZERLAND_JOB_OS",
+  "reviewed_count": 10,
+  "reviewed_source_record_keys_sha256": "d5a7718f73368d6b33eea48ac33914dd6f8180275bd7d510a2ea8cf291c63d21",
+  "reviews": [
+    {
+      "authority_effect": "NONE",
+      "city": "crans-montana",
+      "current_public_evidence_urls": [
+        "https://www.myswitzerland.com/de-de/unterkuenfte/six-senses-crans-montana/",
+        "https://www.myswitzerland.com/de-de/unterkuenfte/crans-montana-suites/"
+      ],
+      "evidence_note": "Current Switzerland Tourism maintains Six Senses Crans-Montana and Crans Montana Suites as separate accommodation identities; the candidate is at Route des Téléphériques 60 while Crans Montana Suites is independently listed as a different 24-room property.",
+      "evidence_tier": "CURRENT_PUBLIC_DESTINATION_CROSS_LISTING",
+      "new_identity_status": "UNALLOCATED_PREAUTH_CANDIDATE",
+      "review_outcome": "CURRENT_PUBLIC_DISTINCTNESS_SUPPORTED",
+      "similarity_candidates": ["H-0337"],
+      "source_name": "six senses crans-montana",
+      "source_record_key": "MD-21cacf00a1166143f8ec",
+      "terminal_source_mapping": "NONE"
+    },
+    {
+      "authority_effect": "NONE",
+      "city": "zürich",
+      "current_public_evidence_urls": [
+        "https://www.lareserve-zurich.com/",
+        "https://www.ameroncollection.com/de/zuerich-bellerive-au-lac"
+      ],
+      "evidence_note": "Current official property pages identify La Réserve Eden au Lac Zurich at Utoquai 45 and AMERON Zürich Bellerive au Lac at Utoquai 47 as neighboring but separate hotels.",
+      "evidence_tier": "CURRENT_PUBLIC_OFFICIAL_PROPERTY_PAIR",
+      "new_identity_status": "UNALLOCATED_PREAUTH_CANDIDATE",
+      "review_outcome": "CURRENT_PUBLIC_DISTINCTNESS_SUPPORTED",
+      "similarity_candidates": ["H-0054"],
+      "source_name": "la réserve eden au lac zurich",
+      "source_record_key": "MD-52ceb75baa65fb5de17c",
+      "terminal_source_mapping": "NONE"
+    },
+    {
+      "authority_effect": "NONE",
+      "city": "zürich",
+      "current_public_evidence_urls": [
+        "https://fredhotels.ch/en/fred-hotel-zurich-hauptbahnhof/",
+        "https://www.hotelschweizerhof.com/en"
+      ],
+      "evidence_note": "Current official pages place Fred Hotel Hauptbahnhof at Limmatstrasse 5 and Hotel Schweizerhof Zürich at Bahnhofplatz 7, proving separate hotel identities near Zürich HB.",
+      "evidence_tier": "CURRENT_PUBLIC_OFFICIAL_PROPERTY_PAIR",
+      "new_identity_status": "UNALLOCATED_PREAUTH_CANDIDATE",
+      "review_outcome": "CURRENT_PUBLIC_DISTINCTNESS_SUPPORTED",
+      "similarity_candidates": ["H-0473"],
+      "source_name": "fred hotel zürich hauptbahnhof",
+      "source_record_key": "MD-582a13bd0acdcb72163c",
+      "terminal_source_mapping": "NONE"
+    },
+    {
+      "authority_effect": "NONE",
+      "city": "zug",
+      "current_public_evidence_urls": [
+        "https://www.myswitzerland.com/fr-fr/hebergement/city-hotel-ochsen-zug/",
+        "https://www.myswitzerland.com/de/unterkuenfte/parkhotel-zug/"
+      ],
+      "evidence_note": "Current Switzerland Tourism entries list City-Hotel Ochsen Zug at Kolinplatz 11 and Park Hotel Zug at Industriestrasse 14 as separate Zug properties.",
+      "evidence_tier": "CURRENT_PUBLIC_DESTINATION_CROSS_LISTING",
+      "new_identity_status": "UNALLOCATED_PREAUTH_CANDIDATE",
+      "review_outcome": "CURRENT_PUBLIC_DISTINCTNESS_SUPPORTED",
+      "similarity_candidates": ["H-0213"],
+      "source_name": "city-hotel ochsen zug",
+      "source_record_key": "MD-59baf980dc6eace0c82d",
+      "terminal_source_mapping": "NONE"
+    },
+    {
+      "authority_effect": "NONE",
+      "city": "basel",
+      "current_public_evidence_urls": [
+        "https://www.basel.com/Basel/ukv/house/TDS00020011150061788",
+        "https://www.myswitzerland.com/de-ch/unterkuenfte/novotel-basel-city/"
+      ],
+      "evidence_note": "Current Basel/Switzerland Tourism listings identify ibis Styles Basel City at Grosspeterstrasse 44 and Novotel Basel City at Grosspeterstrasse 12 as separate properties.",
+      "evidence_tier": "CURRENT_PUBLIC_DESTINATION_CROSS_LISTING",
+      "new_identity_status": "UNALLOCATED_PREAUTH_CANDIDATE",
+      "review_outcome": "CURRENT_PUBLIC_DISTINCTNESS_SUPPORTED",
+      "similarity_candidates": ["H-0202"],
+      "source_name": "ibis styles basel city",
+      "source_record_key": "MD-5b615884374622a092d0",
+      "terminal_source_mapping": "NONE"
+    },
+    {
+      "authority_effect": "NONE",
+      "city": "bern",
+      "current_public_evidence_urls": [
+        "https://bern.com/en/inform/accommodations/hotels/hotel-ibis-budget-bern-expo",
+        "https://bern.com/en/inform/accommodations/hotels/hotel-novotel-bern-expo"
+      ],
+      "evidence_note": "Bern Welcome currently lists ibis budget Bern Expo and Novotel Bern Expo as separate hotel entries with different categories and room inventories.",
+      "evidence_tier": "CURRENT_PUBLIC_DESTINATION_CROSS_LISTING",
+      "new_identity_status": "UNALLOCATED_PREAUTH_CANDIDATE",
+      "review_outcome": "CURRENT_PUBLIC_DISTINCTNESS_SUPPORTED",
+      "similarity_candidates": ["H-0203"],
+      "source_name": "ibis budget bern expo",
+      "source_record_key": "MD-62c2d857f1a02b87e6a7",
+      "terminal_source_mapping": "NONE"
+    },
+    {
+      "authority_effect": "NONE",
+      "city": "davos platz",
+      "current_public_evidence_urls": [
+        "https://hotel.hardrock.com/davos/",
+        "https://www.myswitzerland.com/de/unterkuenfte/hotel-waldhuus-davos/"
+      ],
+      "evidence_note": "Current official/destination pages identify Hard Rock Hotel Davos at Tobelmühlestrasse 2 and Hotel Waldhuus Davos at Mattastrasse 58 as separate Davos properties.",
+      "evidence_tier": "CURRENT_PUBLIC_OFFICIAL_DESTINATION_PAIR",
+      "new_identity_status": "UNALLOCATED_PREAUTH_CANDIDATE",
+      "review_outcome": "CURRENT_PUBLIC_DISTINCTNESS_SUPPORTED",
+      "similarity_candidates": ["H-0165"],
+      "source_name": "hard rock hotel davos",
+      "source_record_key": "MD-6541e4f795368814de02",
+      "terminal_source_mapping": "NONE"
+    },
+    {
+      "authority_effect": "NONE",
+      "city": "zermatt",
+      "current_public_evidence_urls": [
+        "https://www.myswitzerland.com/de-at/erlebnisse/erlebnisfahrten/auto-motorrad-grand-tour/uebernachten-an-der-grand-tour-suche/-/zermatt/?p=2",
+        "https://www.metropol-zermatt.ch/"
+      ],
+      "evidence_note": "Current Switzerland Tourism's Zermatt accommodation surface lists Hotel Metropol & Spa Zermatt separately from multiple similarity candidates including Europe Hotel & Spa and Hotel Elite Zermatt; the official Metropol page confirms the distinct Matterstrasse 9 property.",
+      "evidence_tier": "CURRENT_PUBLIC_DESTINATION_CROSS_LISTING",
+      "new_identity_status": "UNALLOCATED_PREAUTH_CANDIDATE",
+      "review_outcome": "CURRENT_PUBLIC_DISTINCTNESS_SUPPORTED",
+      "similarity_candidates": ["H-0285","H-0025","H-0023","H-0021"],
+      "source_name": "hotel metropol & spa zermatt",
+      "source_record_key": "MD-68a026173cd82d358ecd",
+      "terminal_source_mapping": "NONE"
+    },
+    {
+      "authority_effect": "NONE",
+      "city": "genève",
+      "current_public_evidence_urls": [
+        "https://www.geneve.com/fr/hotels/ibis-geneve-centre-gare",
+        "https://www.geneve.com/fr/hotels/novotel-geneve-centre"
+      ],
+      "evidence_note": "Geneva Tourism currently identifies ibis Genève Centre-Gare at Rue Voltaire 10 and Novotel Genève Centre at Rue de Zürich 19 as separate hotel identities.",
+      "evidence_tier": "CURRENT_PUBLIC_DESTINATION_CROSS_LISTING",
+      "new_identity_status": "UNALLOCATED_PREAUTH_CANDIDATE",
+      "review_outcome": "CURRENT_PUBLIC_DISTINCTNESS_SUPPORTED",
+      "similarity_candidates": ["H-0204"],
+      "source_name": "ibis geneve centre gare",
+      "source_record_key": "MD-68dfe05e742b42831a4e",
+      "terminal_source_mapping": "NONE"
+    },
+    {
+      "authority_effect": "NONE",
+      "city": "paradiso",
+      "current_public_evidence_urls": [
+        "https://www.ticino.ch/en/hotels/details/Ibis-Budget-Lugano-Paradiso/122456.html",
+        "https://all.accor.com/hotel/6775/index.it.shtml"
+      ],
+      "evidence_note": "Current Ticino/Accor pages identify ibis budget Lugano Paradiso at Via Geretta 10 and Novotel Lugano Paradiso at Viale San Salvatore 11 as separate properties.",
+      "evidence_tier": "CURRENT_PUBLIC_OFFICIAL_DESTINATION_PAIR",
+      "new_identity_status": "UNALLOCATED_PREAUTH_CANDIDATE",
+      "review_outcome": "CURRENT_PUBLIC_DISTINCTNESS_SUPPORTED",
+      "similarity_candidates": ["H-0206"],
+      "source_name": "ibis budget lugano paradiso",
+      "source_record_key": "MD-6caa40a9d84392fffeac",
+      "terminal_source_mapping": "NONE"
+    }
+  ],
+  "schema_version": "PIE050-LOWER49-REVIEW-PACKET-1.0"
+}

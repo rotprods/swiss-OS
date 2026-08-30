@@ -1,0 +1,30 @@
+{
+  "schema_version": "META-DECISION-1.0",
+  "decision_id": "DEC-0106",
+  "project": "SWITZERLAND_JOB_OS",
+  "parent_main_sha": "11a528dd1584b3606fed83356c006065e9785778",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "scope": "CRM_ENTITY_RESOLUTION_COORDINATION",
+  "decision": "Close fencing token 5 after complete lower49 preauthority classification, preserve two relationship-sensitive cases for a fresh authority-eligible review, and declare PR #334's Delta relationship artifact the canonical preauthority decision surface while retaining PR #333 as superseded historical evidence.",
+  "rationale": "The exact lower49 queue is fully classified at preauthority level: 47 records have current public distinctness evidence, Neu-Schönstatt has a strong same-property candidate requiring authority review, and Delta Resort Apartments has a same-operator/same-license adjacent-subinventory relationship whose canonical granularity cannot be chosen under token 5. Continuing token 5 would exceed its bounded PREAUTH authority ceiling. Concurrent compatible Delta artifacts would become a hidden dual source of truth unless precedence were made explicit.",
+  "alternatives_rejected": [
+    "Keep token 5 active indefinitely after its bounded preauthority scope is complete",
+    "Promote Neu-Schönstatt to H-0114 from preauthority evidence",
+    "Collapse Delta Resort Apartments into H-0220 from relationship evidence",
+    "Allocate or reserve H-0691 for any staged/new entity",
+    "Delete either concurrent Delta artifact and lose historical provenance",
+    "Treat the richer PR #334 and later PR #333 artifacts as co-authoritative preauthority surfaces"
+  ],
+  "effects": {
+    "claim_token5_release_eligible": true,
+    "authority_advanced": false,
+    "terminal_mapping_delta": 0,
+    "h_id_allocations": 0,
+    "canonical_id_reservations": 0,
+    "crm_universe_complete": false,
+    "outbound": "CLOSED",
+    "send_allowed": 0
+  },
+  "confidence": "HIGH_CONFIDENCE",
+  "revisit_condition": "Revisit only with a fresh authority-eligible claim that can adjudicate existing-target identity/granularity and then run the required source-mapping rebuild plus cross-plane reconciliation."
+}

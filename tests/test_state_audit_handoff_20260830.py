@@ -3,6 +3,7 @@ from pathlib import Path
 
 ART = Path("docs/recovery/STATE_AUDIT_HANDOFF_2026-08-30.json")
 HANDOFF = Path("docs/handoffs/META_20260830_STATE_AUDIT_DB_EGRESS_HANDOFF.md")
+SUPERSESSION = Path("docs/recovery/DB_EGRESS_CAPABILITY_GAUNTLET_2026-08-30.json")
 
 
 def test_state_audit_handoff_is_exact_scoped_and_fail_closed():
@@ -111,6 +112,28 @@ def test_state_audit_handoff_is_exact_scoped_and_fail_closed():
     assert safety["outbound"] == "CLOSED"
     assert safety["send_allowed"] == 0
     assert safety["irreversible_external_actions"] == 0
+
+    supersession = json.loads(SUPERSESSION.read_text(encoding="utf-8"))
+    assert supersession["schema_version"] == "RECOVERY-SUPERSESSION-POINTER-1.0"
+    assert supersession["authority"] == "SUPERSEDED_POINTER_ONLY"
+    assert supersession["superseded_by"] == "docs/recovery/CRM_E4_DURABLE_EGRESS_MEP_FALLBACK_2026-08-30.json"
+    assert supersession["canonical_surface_schema_version"] == "CRM-E4-DURABLE-EGRESS-MEP-1.1"
+    assert supersession["canonical_merge_pr"] == 342
+    assert supersession["canonical_merge_sha"] == wave["reconciled_main_sha"]
+    assert supersession["failure_family"] == recovery["failure_family"]
+    assert supersession["retry_same_file_reference_strategy_allowed"] is False
+    assert supersession["verify_live_truth_before_execution"] is True
+    assert supersession["authority_effect"] == {
+        "authority_advanced": False,
+        "hotels_master_mutations": 0,
+        "terminal_mapping_delta": 0,
+        "h_id_allocations": 0,
+        "canonical_id_reservations": 0,
+        "crm_universe_complete": False,
+        "outbound": "CLOSED",
+        "send_allowed": 0,
+        "irreversible_external_actions": 0,
+    }
 
     text = HANDOFF.read_text(encoding="utf-8")
     for required in (

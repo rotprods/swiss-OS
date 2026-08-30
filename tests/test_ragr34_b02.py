@@ -6,6 +6,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 ART = ROOT / "docs/state/RAGR_CURRENT_EVIDENCE_B02_2026-08-30.json"
 NEXT = ROOT / "docs/state/NEXT.json"
+WORKSET = "docs/state/RAGR34_POST_REVIEW_DISPOSITION_WORKSET_2026-08-30.json"
 
 
 def _sha(value):
@@ -65,7 +66,8 @@ class RAGR34B02Tests(unittest.TestCase):
             self.assertRegex(nxt["next_route"], r"^EXECUTE_RAGR34_B0[3-4]_EVIDENCE_CLASSIFICATION$")
         else:
             self.assertEqual(ragr["reviewed"], 34)
-            self.assertEqual(nxt["next_route"], "MATERIALIZE_RAGR34_POST_REVIEW_DISPOSITION_WORKSET")
+            self.assertNotRegex(nxt["next_route"], r"^EXECUTE_RAGR34_B0[1-4]_EVIDENCE_CLASSIFICATION$")
+            self.assertIn(WORKSET, nxt.get("artifacts", []))
         self.assertGreaterEqual(ragr["classification_counts"]["IN_SCOPE_NO_SOURCE_MATCH"], 13)
         self.assertGreaterEqual(ragr["classification_counts"]["DATA DEFECT"], 3)
         self.assertFalse(nxt["authority_advance_allowed"])

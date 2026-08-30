@@ -6,6 +6,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 ART = ROOT / "docs/state/RAGR_CURRENT_EVIDENCE_B04_2026-08-30.json"
 NEXT = ROOT / "docs/state/NEXT.json"
+WORKSET = "docs/state/RAGR34_POST_REVIEW_DISPOSITION_WORKSET_2026-08-30.json"
 
 
 def _sha(value):
@@ -55,7 +56,8 @@ class RAGR34B04Tests(unittest.TestCase):
 
     def test_canonical_next_closes_review_frontier_without_authority_effect(self):
         nxt = json.loads(NEXT.read_text(encoding="utf-8"))
-        self.assertEqual(nxt["next_route"], "MATERIALIZE_RAGR34_POST_REVIEW_DISPOSITION_WORKSET")
+        self.assertNotRegex(nxt["next_route"], r"^EXECUTE_RAGR34_B0[1-4]_EVIDENCE_CLASSIFICATION$")
+        self.assertIn(WORKSET, nxt.get("artifacts", []))
         ragr = nxt["review_frontier"]["ragr"]
         self.assertEqual(ragr["reviewed"], 34)
         self.assertEqual(ragr["remaining"], 0)

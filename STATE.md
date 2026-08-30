@@ -1,6 +1,6 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest chained Meta Execution coordination frontier: **2026-08-30T12:40:05Z**. Current execution parent main SHA: **`0e7b47dd5e16a3cd1f99a17617610d66283a8b9d`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
+Latest chained Meta Execution coordination frontier: **2026-08-30T14:55:00Z**. Current execution parent main SHA: **`2371679d6c9eafdf334217a253e86fdfda13e37b`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
 
 ## Authority — unchanged / locked
 
@@ -40,29 +40,29 @@ Source-key conservation remains `658 + 1403 = 2061`. Terminal-pair SHA remains `
 ```text
 >=0.60 band reviewed                     20 / 20
 0.50–0.599999 effective band             46
-0.50–0.599999 reviewed                   40 / 46
-0.50–0.599999 remaining                      6
-NEW_CANONICAL preauthority in 0.50 band     40
-total NEW_CANONICAL preauthority             59
+0.50–0.599999 reviewed                   46 / 46
+0.50–0.599999 remaining                      0
+NEW_CANONICAL preauthority in 0.50 band     46
+total NEW_CANONICAL preauthority             65
 relationship/granularity unresolved           2
 terminal mapping delta from review             0
 ```
 
-Wave `P1-B03` used the exact third ten-key slice from `CRM_IDENTITY_REVIEW_WORKSET_500599_REMAINING36_2026-08-30.json`. All ten are independently distinct from every suggested canonical comparator under current provider/first-party evidence and live `HOTELS_V2` readback. They are typed `NEW_CANONICAL` **preauthority only**, remain `RECONCILE_REQUIRED`, reserve no H-ID and create no terminal mapping.
+Wave `P1-B04` consumed the exact final six-key slice from `CRM_IDENTITY_REVIEW_WORKSET_500599_REMAINING36_2026-08-30.json`. All six are independently distinguishable from every suggested canonical comparator using captured provider identity evidence, fresh first-party/qualified-current evidence, and live `HOTELS_V2` comparator readback. The co-located Palexpo pair is distinguished by Accor property code, brand and phone. All six are typed `NEW_CANONICAL` **preauthority only**, remain `RECONCILE_REQUIRED`, reserve no H-ID and create no terminal mapping.
 
 Fencing token **6** (`CLAIM-CRM-SRR-SPECIAL-006`) remains **ACTIVE** with authority ceiling `PREAUTH_SRR_DECISION_ONLY_NO_CANONICAL_MUTATION`.
 
 ## Capability / provider boundaries
 
-Drive native `HOTELS_V2` readback is live. Exact E4 local reconstruction remains byte-exact and non-authoritative. Generated-local-file Drive upload/update/import routes remain `BLOCKED_FILE_REFERENCE` and must not be retried. A materially different provider-accepted DB-first durable receipt path is required before any authority transaction. Sheets-first promotion is forbidden.
+Drive native `HOTELS_V2` readback is live. Exact E4 local reconstruction remains byte-exact and non-authoritative. Generated-local-file Drive upload/update/import routes remain `BLOCKED_FILE_REFERENCE_DO_NOT_REPEAT` and must not be retried. A materially different provider-accepted DB-first durable receipt path is required before any authority transaction. Sheets-first promotion is forbidden.
 
 Structured discover.swiss SSR-1.0 remains blocked because no runtime subscription key and capture-valid structured manifest are available. The coherent HotellerieSuisse snapshot plus exact-current evidence remains a qualified fallback, not SSR-equivalent.
 
-ChatGPT File Library is readable in this runtime as a **stale cold-recovery plane only**; Library write is unavailable and no new Library receipt is claimed.
+ChatGPT File Library is readable as a **stale cold-recovery plane only**; Library write is unavailable and no new Library receipt is claimed.
 
 ## NEXT
 
-Execute bounded current identity-evidence review for final workset batch **`P1-B04`** (6 records). Reuse current captured PIE evidence and live canonical comparator readbacks. Type `NEW_CANONICAL` only where independent evidence proves distinct property identity; otherwise preserve explicit relationship/granularity or unresolved state. Similarity never binds identity. Keep terminal mappings at 658, `RECONCILE_REQUIRED=1403`, H-0691 unallocated, `OUTBOUND=CLOSED`, and `send_allowed=0`.
+The deterministic >=0.60 and 0.50–0.599999 identity-risk queues are fully typed. Execute a bounded **relationship/granularity resolution wave** for the only two carried unresolved cases: `Delta Resort Apartments` and `Overlook Lodge`. Use current provider/first-party evidence and explicit entity-granularity semantics; do not autobind a component/subproperty to a parent hotel merely because they share operator/location. Keep terminal mappings at 658, `RECONCILE_REQUIRED=1403`, H-0691 unallocated, `OUTBOUND=CLOSED`, and `send_allowed=0` unless a later authority-eligible transaction separately proves all commit preconditions.
 
 Recovery inputs and exact blockers are persisted in `docs/state/NEXT.json` and `docs/state/NEXT_META_EXECUTION_2026-08-30.json`.
 

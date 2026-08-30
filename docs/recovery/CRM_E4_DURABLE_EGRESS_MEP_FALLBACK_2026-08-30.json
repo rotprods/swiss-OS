@@ -1,0 +1,58 @@
+{
+  "schema_version": "CRM-E4-DURABLE-EGRESS-MEP-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "parent_git_sha": "78daa43661867cfcb66a379a367380eb1fe9b22b",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "authority_materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+  "source_v13": {
+    "drive_file_id": "1rIL6x_bmBoCbxVSAGFvdjoKnUqSX3YnT",
+    "sha256": "0e605b412f29893ca1775f1e8fccd5987d0613baab4ac29b6699988cde0fdfe5",
+    "size_bytes": 3059712,
+    "raw_fetch": "PASS"
+  },
+  "reconstruction": {
+    "copy_only": true,
+    "result_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+    "sqlite_integrity_check": "ok",
+    "foreign_key_violations": 0,
+    "physical_hotel_rows": 690,
+    "hotel_alias_rows": 0
+  },
+  "egress_mep": {
+    "strategy_1": {
+      "route": "Drive copy V13 then raw update from reconstructed local artifact",
+      "probe_copy_file_id": "16QxLLDBoaNASOcevcC8aPT0tKrM7Crwe",
+      "result": "BLOCKED_FILE_REFERENCE"
+    },
+    "strategy_2": {
+      "route": "Drive direct upload of reconstructed local artifact",
+      "result": "BLOCKED_FILE_REFERENCE"
+    },
+    "probe_copy_postcondition": "RENAMED_EXPLICITLY_AS_SOURCE_V13_COPY_NOT_E4",
+    "probe_copy_title": "EGRESS_PROBE_SOURCE_V13_COPY_NOT_E4_2026-08-30.sqlite",
+    "durable_e4_binary_published": false
+  },
+  "authority_effect": {
+    "authority_advanced": false,
+    "terminal_source_mapping_delta": 0,
+    "hotels_master_mutations": 0,
+    "h_id_allocations": 0,
+    "canonical_id_reservations": 0,
+    "crm_universe_complete": false,
+    "outbound": "CLOSED",
+    "send_allowed": 0,
+    "irreversible_external_actions": 0
+  },
+  "blocker": "RUNTIME_CONNECTOR_FILE_REFERENCE_EGRESS_BLOCKS_DURABLE_REPAIRED_SQLITE_PUBLICATION",
+  "next_routes": [
+    "Use a provider/runtime path that can durably publish the byte-exact reconstructed E4 SQLite, then rerun fresh DB-first cross-plane Neu-Schonstatt authority transaction.",
+    "Until egress exists, continue only disjoint reversible PREAUTH/entity-resolution or provider-acquisition work; never mutate Sheets first.",
+    "If discover.swiss Infocenter credentials become available, execute structured capture to capture-valid manifest to SSR-1.0 without persisting secrets."
+  ],
+  "safety": {
+    "h_0691": "UNALLOCATED",
+    "never_reserve_from_staging": true,
+    "never_promote_from_canary_or_cache": true,
+    "verify_live_truth_before_execution": true
+  }
+}

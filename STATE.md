@@ -1,6 +1,6 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest chained Meta Execution coordination frontier: **2026-08-30T20:20:00Z**. Verified branch parent main SHA: **`40dc91a7ba68b1d8547eef3e46f63786c543ea54`** (merge of PR #377; descendant of prior `f25bd38162ca0e47f68d3d9d7cd2ffcea559fdea`). Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
+Latest chained Meta Execution coordination frontier: **2026-08-30T21:08:00Z**. Verified parent main SHA: **`c71af36dbe303e98e25f12369793e6e24504ba4f`** (merge of PR #378). Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
 
 ## Authority — unchanged / locked
 
@@ -14,7 +14,7 @@ OUTBOUND                        CLOSED
 send_allowed                      0
 ```
 
-Authority SHA remains `70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`. Live Drive `HOTELS_V2` re-read confirms the current physical frontier ends at `H-0690`; `H-0691` is absent/unallocated. Staging, ECV, SRR, SMO, RAGR, SRET, PIE, cache and canary remain non-authoritative.
+Authority SHA remains `70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`. A fresh native Drive XLSX export of `HOTELS_MASTER` / `HOTELS_V2` reproduced the live 690-row authority frontier; `H-0691` remains absent/unallocated. Staging, ECV, SRR, SMO, RAGR, SRET, PIE, cache and canary remain non-authoritative.
 
 ## Source / mapping frontier
 
@@ -31,41 +31,46 @@ unique canonical targets                    656
 RECONCILE_REQUIRED                         1403
 RAGR reverse authority gaps                  34
 RAGR evidence-classified                 34 / 34
+RAGR in-scope source identity swept      24 / 24
+RAGR exact frozen-source-key hits         0 / 24
 terminal coverage rebuild                  658/658 ATTESTED
 unresolved candidate anti-join            1403/1403 ATTESTED
 ```
 
 Source-key conservation remains `658 + 1403 = 2061`. Terminal-pair SHA remains `cdcecdf445395fe36c6318c2f0103757b0a14ec08d33e229c138df2ec36ad56e`; unresolved source-key SHA remains `910cfd92974025a836430612387d380be0f15d173d41f20fda6fea2bcca48581`; RAGR queue SHA remains `cf47dc91057df8653cd75729cb39320605e193e476c6828f24956b69e2848b9c`.
 
-## RAGR34 post-review disposition
+## RAGR34 source-identity sweep
 
-The four evidence batches have now been concatenated deterministically in exact queue order into `docs/state/RAGR34_POST_REVIEW_DISPOSITION_WORKSET_2026-08-30.json`.
+The source and candidate GitHub Actions artifacts were recovered directly and checked against a fresh Drive authority export. Exact immutable inputs:
 
 ```text
-rows                                      34
-rows SHA-256  c856954186f45c149cd7547852d86b87c54b24e19a7aa31859d971b77cf9c975
-IN_SCOPE_NO_SOURCE_MATCH                  24
-SUPERSEDED/RENAMED WITH EVIDENCE           5
-DATA DEFECT                                3
-COMPONENT/GROUP GRANULARITY                2
-terminal mapping delta                     0
-authority mutation                         0
+source artifact                  9700376482
+source artifact ZIP SHA          721f9ff9f84e2d5d9df62c6b22f12e7354cef3a298cb8990be66a202e1e769ce
+source records SHA               62e26d62d8677a5437e081302b6b4d206c0d27a0fe268c6356aef01da5428dc2
+candidate artifact               9718866661
+candidate artifact ZIP SHA       d58c57c5a83cd2ff740f0ec900163f5c7aa795b032045cf9d30ffd194733465e
+candidate records SHA            34d9aa9cfa4fe896bf1dbf2e135b847101904644d16bba0
+fresh HOTELS_MASTER XLSX SHA     d4e1d136958a62bab703fdf0ecdc37521d07005222ad902ec23b826c512825c9
 ```
 
-The workset preserves each evidence-backed source decision by immutable batch/decision reference and partitions only safe follow-up routes. It does **not** convert current evidence, RAGR suggestions, renamed findings, data defects or granularity findings into terminal source mappings or authority effects.
+All **24/24** `IN_SCOPE_NO_SOURCE_MATCH` hotels have zero exact normalized `(canonical_name, city)` hits in both the frozen 2061-record source manifest and 1438-record unresolved candidate export, and zero exact current stored HotellerieSuisse detail-slug hits. Therefore none can be terminalized against this snapshot. `H-0677` has same-name source records in Einsiedeln and Luzern, not Chur; these are explicit negative identity evidence and must not bind.
+
+Durable sweep: `docs/state/RAGR34_SOURCE_IDENTITY_SWEEP_2026-08-30.json`.
 
 Fencing token **6** (`CLAIM-CRM-SRR-SPECIAL-006`) remains **ACTIVE** with authority ceiling `PREAUTH_SRR_DECISION_ONLY_NO_CANONICAL_MUTATION`.
 
 ## Capability / provider boundaries
 
-GitHub read/write + CI are available. Drive native Sheets/Docs read paths are available; `HOTELS_V2` readback is live. Exact E4 local reconstruction remains byte-exact and non-authoritative. Generated-local-file Drive upload/update/import remains `BLOCKED_FILE_REFERENCE_DO_NOT_REPEAT`; Sheets-first promotion is forbidden. Structured discover.swiss SSR-1.0 remains blocked because no runtime subscription key/capture-valid structured manifest is available. File Library is stale cold-recovery read only; no write receipt is claimed.
+GitHub read/write + CI and Actions artifact download are available. Drive native Sheets/Docs read and native XLSX export are available. Generated-local-file Drive promotion remains `BLOCKED_FILE_REFERENCE_DO_NOT_REPEAT`; Sheets-first authority promotion is forbidden. Structured discover.swiss SSR-1.0 remains blocked because no runtime subscription key/capture-valid structured manifest is available. File Library is stale cold-recovery read only; no write receipt is claimed.
 
 ## NEXT
 
-Execute **`RAGR34_IN_SCOPE_NO_SOURCE_MATCH_SOURCE_IDENTITY_SWEEP`** over the 24 rows classified `IN_SCOPE_NO_SOURCE_MATCH`. Search for current source identity/membership evidence, but treat every hit as review-only evidence until it is tied to an exact frozen-source key and durable receipt under an authority-eligible reconciliation contract. Preserve raw reverse-gap count 34 and terminal mappings 658 unless that later contract is satisfied.
+Execute **`RAGR34_AUTHORITY_REPAIR_PROPOSALS_10_REVIEW_ONLY`** over the remaining 10 non-`IN_SCOPE_NO_SOURCE_MATCH` findings: 5 rename/supersession findings, 3 data defects and 2 component/group-granularity findings. Materialize typed authority-repair proposals only; do **not** mutate or deactivate canonical authority. Any later authority effect requires provider-accepted durable DB-first receipt plus authoritative cross-plane reconciliation.
 
-Never reserve or allocate `H-0691`; never mutate/deactivate authority from review state; keep `OUTBOUND=CLOSED` and `send_allowed=0`.
+The 24 no-source-match rows are snapshot-terminally closed as `NO_EXACT_FROZEN_SOURCE_KEY`; revisit them only with a newer capture-valid source snapshot or explicit scope/rename evidence tied to a frozen source key.
 
-Recovery inputs and exact blockers are persisted in `docs/state/NEXT.json`, `docs/state/NEXT_META_EXECUTION_2026-08-30.json`, and the RAGR34 disposition workset.
+Never reserve or allocate `H-0691`; keep `OUTBOUND=CLOSED` and `send_allowed=0`.
+
+Recovery inputs and exact blockers are persisted in `docs/state/NEXT.json`, `docs/state/NEXT_META_EXECUTION_2026-08-30.json`, the RAGR34 disposition workset and the source-identity sweep artifact.
 
 **VERIFY LIVE TRUTH BEFORE EXECUTION.**

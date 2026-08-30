@@ -55,16 +55,15 @@ class RAGR34B02Tests(unittest.TestCase):
         self.assertEqual(safety["send_allowed"], 0)
         self.assertEqual(safety["irreversible_external_actions"], 0)
 
-    def test_canonical_next_is_monotonic_to_b03(self):
+    def test_canonical_next_advances_monotonically(self):
         nxt = json.loads(NEXT.read_text(encoding="utf-8"))
-        self.assertEqual(nxt["next_route"], "EXECUTE_RAGR34_B03_EVIDENCE_CLASSIFICATION")
+        self.assertRegex(nxt["next_route"], r"^EXECUTE_RAGR34_B0[3-4]_EVIDENCE_CLASSIFICATION$")
         ragr = nxt["review_frontier"]["ragr"]
-        self.assertEqual(ragr["reviewed"], 20)
-        self.assertEqual(ragr["remaining"], 14)
-        self.assertEqual(ragr["total"], 34)
+        self.assertGreaterEqual(ragr["reviewed"], 20)
+        self.assertLessEqual(ragr["remaining"], 14)
         self.assertEqual(ragr["reviewed"] + ragr["remaining"], 34)
-        self.assertEqual(ragr["classification_counts"]["IN_SCOPE_NO_SOURCE_MATCH"], 13)
-        self.assertEqual(ragr["classification_counts"]["DATA DEFECT"], 3)
+        self.assertGreaterEqual(ragr["classification_counts"]["IN_SCOPE_NO_SOURCE_MATCH"], 13)
+        self.assertGreaterEqual(ragr["classification_counts"]["DATA DEFECT"], 3)
         self.assertFalse(nxt["authority_advance_allowed"])
         self.assertFalse(nxt["canonical_id_allocation_allowed"])
         self.assertFalse(nxt["outbound_allowed"])

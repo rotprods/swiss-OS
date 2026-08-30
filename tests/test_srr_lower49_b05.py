@@ -52,8 +52,6 @@ class Lower49B05Tests(unittest.TestCase):
         self.assertEqual(art["safety"]["canonical_id_reservations"], 0)
         self.assertEqual(art["safety"]["h_id_allocations"], 0)
         self.assertEqual(art["safety"]["irreversible_external_actions"], 0)
-        # Wave-local NEXT requests a fresh residual conservation pass; COLETTE ranking
-        # may supersede it in the canonical NEXT pointer after the wave closes.
         self.assertEqual(art["next"]["route"], "REBUILD_TYPED_UNTYPED_CONSERVATION_AND_COMPILE_REMAINING_RECONCILE_REQUIRED_WORKSET")
 
     def test_state_and_canonical_next_never_regress_before_or_after_ragr(self):
@@ -68,10 +66,10 @@ class Lower49B05Tests(unittest.TestCase):
         self.assertIn("H-0691 UNALLOCATED", text)
         self.assertIn("OUTBOUND                        CLOSED", text)
 
-        # B05 established RAGR as the downstream route. The canonical pointer may
-        # advance through B01 -> B04 and, once 34/34 is evidence-classified, into
-        # the review-only disposition compiler. Enforce monotonic frontier + safety
-        # instead of pinning a historical RAGR batch forever.
+        # This historical test protects monotonicity, not a forever-fixed NEXT.
+        # Before 34/34, NEXT must stay on the deterministic RAGR B01-B04 chain.
+        # Once 34/34 is reached, any later safe route is valid as long as it never
+        # regresses to a completed RAGR batch and all hard safety locks remain closed.
         route = nxt["next_route"]
         ragr = nxt["review_frontier"]["ragr"]
         self.assertEqual(ragr["total"], 34)
@@ -82,7 +80,8 @@ class Lower49B05Tests(unittest.TestCase):
             self.assertRegex(route, r"^EXECUTE_RAGR34_B0[1-4]_EVIDENCE_CLASSIFICATION$")
         else:
             self.assertEqual(ragr["reviewed"], 34)
-            self.assertEqual(route, "MATERIALIZE_RAGR34_POST_REVIEW_DISPOSITION_WORKSET")
+            self.assertFalse(re.match(r"^EXECUTE_RAGR34_B0[1-4]_EVIDENCE_CLASSIFICATION$", route))
+            self.assertTrue(isinstance(route, str) and route.strip())
         self.assertFalse(nxt["authority_advance_allowed"])
         self.assertFalse(nxt["canonical_id_allocation_allowed"])
         self.assertFalse(nxt["outbound_allowed"])

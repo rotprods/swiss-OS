@@ -63,6 +63,8 @@ def test_batch0008_preserves_authority_and_outbound_locks_and_leaves_delta_unres
     for artifact in (review, overlay):
         assert artifact["authority_advanced"] is False
         assert artifact["h_id_allocations"] == 0
+        assert artifact["canonical_id_reservations"] == 0
+        assert artifact["irreversible_external_actions"] == 0
         assert artifact["crm_universe_complete"] is False
         assert artifact["outbound"] == "CLOSED"
         assert artifact["send_allowed"] == 0

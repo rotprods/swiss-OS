@@ -1,0 +1,76 @@
+{
+  "schema_version": "PIE050-TOKEN6-STALE-BRANCH-QUARANTINE-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "authority": "RECOVERY_AND_MIGRATION_GUIDANCE_ONLY",
+  "observed_main_sha": "0a303cb0e399fed4af127eecc8079720588dff03",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "authority_revision_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+  "active_claim_on_main": {
+    "claim_id": "CLAIM-CRM-PIE050-LOWER49-005",
+    "fencing_token": 5,
+    "state": "ACTIVE_UNTIL_EXPLICIT_RELEASE_OR_SUPERSESSION"
+  },
+  "stale_branch": {
+    "name": "state/crm-pie050-close-token5-srr-token6-20260830",
+    "last_observed_head_sha": "f00430437a17adec97f73b188ad341dac94a1c32",
+    "merge_base_sha": "11a528dd1584b3606fed83356c006065e9785778",
+    "ahead_by": 15,
+    "behind_by": 38,
+    "status": "DIVERGED_NONAUTHORITATIVE",
+    "merge_allowed": false,
+    "blind_cherry_pick_allowed": false
+  },
+  "superseded_or_reproved_content": {
+    "lower49_exact_classification": {
+      "state": "REPROVED_ON_FRESH_MAIN",
+      "canonical_surface": "docs/recovery/PIE050_LOWER49_COMPLETION_PRECHECK_2026-08-30.json",
+      "merge_pr": 344,
+      "coverage": "49/49",
+      "terminalized_from_similarity": 0
+    },
+    "special_relationship_evidence": [
+      "docs/state/PIE050_NEUSCHOENSTATT_SAME_PROPERTY_CANDIDATE_2026-08-30.json",
+      "docs/state/PIE050_DELTA_SUBPROPERTY_RELATION_2026-08-30.json"
+    ]
+  },
+  "stale_transition_surfaces_do_not_import": [
+    "STATE.md",
+    "docs/state/NEXT.json",
+    "docs/state/NEXT_META_EXECUTION_2026-08-30.json",
+    "docs/state/v2/active-claims.json",
+    "docs/state/v2/claims/CLAIM-CRM-PIE050-LOWER49-005.json",
+    "docs/state/v2/claims/CLAIM-CRM-SRR-SPECIAL-006.json",
+    "docs/state/v2/context-pack.json",
+    "docs/state/v2/project-state.json",
+    "docs/state/v2/events/EVT-20260830T045016Z-CRM006-CLAIM-RELEASED.json",
+    "docs/state/v2/events/EVT-20260830T045017Z-CRM006-CLAIM-ACQUIRED.json",
+    "docs/state/v2/events/EVT-20260830T045018Z-CRM006-WORK-STARTED.json"
+  ],
+  "reason": "The branch was authored from merge base 11a528d and is now 38 commits behind fresh main. Its 49/49 completion assertion has been independently re-proved on fresh main by PR #344. Its coordination transition is not authority because token 5 remains ACTIVE on main, and importing stale STATE/NEXT/v2 surfaces would overwrite newer recovery truth and bypass current projection/claim fencing semantics.",
+  "safe_successor_transition": {
+    "precondition": "Fresh main still shows token 5 ACTIVE and PR #344 completion precheck remains valid against unchanged lower49 evidence.",
+    "required_strategy": "Compile a new coordination transition from fresh main; do not merge or cherry-pick the stale branch wholesale.",
+    "required_effect": "Release or explicitly supersede token 5, then acquire a higher fencing token only for bounded SRR special preauthority, with fresh event/session IDs and regenerated coordination projections/context pack.",
+    "forbidden_effects": [
+      "CANONICAL_AUTHORITY_ADVANCE",
+      "H_ID_ALLOCATION",
+      "CANONICAL_ID_RESERVATION",
+      "TERMINAL_MAPPING_FROM_SIMILARITY_OR_DISTINCTNESS",
+      "OUTBOUND_OPEN",
+      "SEND_ALLOWED_1"
+    ]
+  },
+  "safety": {
+    "h_0691": "UNALLOCATED",
+    "terminal_source_mappings": 657,
+    "reconcile_required": 1404,
+    "crm_universe_complete": false,
+    "authority_advanced": false,
+    "h_id_allocations": 0,
+    "canonical_id_reservations": 0,
+    "outbound": "CLOSED",
+    "send_allowed": 0,
+    "irreversible_external_actions": 0
+  },
+  "verify_live_truth_before_execution": true
+}

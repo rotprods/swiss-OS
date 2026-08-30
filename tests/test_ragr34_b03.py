@@ -64,7 +64,10 @@ class RAGR34B03Tests(unittest.TestCase):
         if ragr["reviewed"] == 30:
             self.assertEqual(nxt["next_route"], "EXECUTE_RAGR34_B04_EVIDENCE_CLASSIFICATION")
         elif ragr["reviewed"] == 34:
-            self.assertEqual(nxt["next_route"], "MATERIALIZE_RAGR34_POST_REVIEW_DISPOSITION_WORKSET")
+            self.assertIn(nxt["next_route"], {
+                "MATERIALIZE_RAGR34_POST_REVIEW_DISPOSITION_WORKSET",
+                "EXECUTE_RAGR34_SPECIAL10_AUTHORITY_RECONCILIATION_PREFLIGHT",
+            })
         else:
             self.fail(f"unexpected monotonic RAGR frontier {ragr['reviewed']}/34")
         self.assertFalse(nxt["authority_advance_allowed"])

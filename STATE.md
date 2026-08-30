@@ -1,6 +1,6 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest chained Meta Execution coordination frontier: **2026-08-30T11:50:00Z**. Current execution parent main SHA: **`3b2945d2f2df855b048d7d80ddd8e843fecb78e8`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
+Latest chained Meta Execution coordination frontier: **2026-08-30T12:10:32Z**. Current execution parent main SHA: **`4b474fb17b11c7dd587737554c5c0d8d7763c787`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
 
 ## Authority — unchanged / locked
 
@@ -40,15 +40,15 @@ Source-key conservation remains `658 + 1403 = 2061`. Terminal-pair SHA remains `
 ```text
 >=0.60 band reviewed                     20 / 20
 0.50–0.599999 effective band             46
-0.50–0.599999 reviewed                   20 / 46
-0.50–0.599999 remaining                     26
-NEW_CANONICAL preauthority in 0.50 band     20
-total NEW_CANONICAL preauthority             39
+0.50–0.599999 reviewed                   30 / 46
+0.50–0.599999 remaining                     16
+NEW_CANONICAL preauthority in 0.50 band     30
+total NEW_CANONICAL preauthority             49
 relationship/granularity unresolved           2
 terminal mapping delta from review             0
 ```
 
-Wave `P1-B01` used the exact first ten keys from `CRM_IDENTITY_REVIEW_WORKSET_500599_REMAINING36_2026-08-30.json`. All ten have current provider identity evidence and are independently distinct from every suggested canonical comparator. They are typed `NEW_CANONICAL` **preauthority only**, remain `RECONCILE_REQUIRED`, reserve no H-ID and create no terminal mapping.
+Wave `P1-B02` used the exact second ten-key slice from `CRM_IDENTITY_REVIEW_WORKSET_500599_REMAINING36_2026-08-30.json`. All ten have current identity evidence and are independently distinct from every suggested canonical comparator. They are typed `NEW_CANONICAL` **preauthority only**, remain `RECONCILE_REQUIRED`, reserve no H-ID and create no terminal mapping.
 
 Fencing token **6** (`CLAIM-CRM-SRR-SPECIAL-006`) remains **ACTIVE** with authority ceiling `PREAUTH_SRR_DECISION_ONLY_NO_CANONICAL_MUTATION`.
 
@@ -62,7 +62,7 @@ ChatGPT Library capability is unavailable in this runtime; no Library receipt is
 
 ## NEXT
 
-Execute bounded current identity-evidence review for workset batch **`P1-B02`** (10 records). Reuse current captured PIE evidence and current canonical comparator readbacks. Type `NEW_CANONICAL` only where independent evidence proves distinct property identity; otherwise preserve an explicit relationship/granularity or unresolved state. Similarity never binds identity. Keep terminal mappings at 658, `RECONCILE_REQUIRED=1403`, H-0691 unallocated, `OUTBOUND=CLOSED`, and `send_allowed=0`.
+Execute bounded current identity-evidence review for workset batch **`P1-B03`** (10 records). Reuse current captured PIE evidence and current canonical comparator readbacks. Type `NEW_CANONICAL` only where independent evidence proves distinct property identity; otherwise preserve an explicit relationship/granularity or unresolved state. Similarity never binds identity. Keep terminal mappings at 658, `RECONCILE_REQUIRED=1403`, H-0691 unallocated, `OUTBOUND=CLOSED`, and `send_allowed=0`.
 
 Recovery inputs and exact blockers are persisted in `docs/state/NEXT.json` and `docs/state/NEXT_META_EXECUTION_2026-08-30.json`.
 

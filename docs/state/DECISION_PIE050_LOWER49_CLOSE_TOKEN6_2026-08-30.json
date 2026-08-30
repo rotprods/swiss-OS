@@ -1,0 +1,18 @@
+{
+  "schema_version": "DECISION-1.0",
+  "decision_id": "DEC-0106",
+  "project": "SWITZERLAND_JOB_OS",
+  "parent_git_sha": "11a528dd1584b3606fed83356c006065e9785778",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "problem": "PIE050 lower49 review reached 47 ordinary classifications plus two relationship-sensitive records while concurrent Delta waves produced two compatible but potentially competing durable artifacts.",
+  "decision": "Close the token5 preauthority review scope at exact 49/49 classification; make PIE050_DELTA_SUBPROPERTY_RELATION_2026-08-30.json the canonical Delta decision surface and retain PIE050_DELTA_RESORT_RELATIONSHIP_CANDIDATE_2026-08-30.json only as supporting evidence; release token5 and acquire fenced token6 for exact SRR-1.1 special-record materialization.",
+  "alternatives_rejected": [
+    "Collapse Delta into H-0220 from relationship/similarity evidence — rejected because parent/subproperty relationship is not identity.",
+    "Reserve a new H-ID for Delta — rejected because staging/preauth cannot reserve or allocate canonical IDs.",
+    "Delete either concurrent artifact — rejected because historical truth and provenance must be preserved.",
+    "Keep token5 active after bounded scope completion — rejected because stale claims create coordination ambiguity."
+  ],
+  "effects": {"authority_advanced":false,"terminal_mapping_delta":0,"h_id_allocations":0,"canonical_id_reservations":0,"crm_universe_complete":false,"outbound":"CLOSED","send_allowed":0},
+  "confidence": "HIGH_CONFIDENCE",
+  "reconsideration_trigger": "New authority-approved entity-granularity policy or exact evidence changes the Delta identity model."
+}

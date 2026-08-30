@@ -1,75 +1,128 @@
 {
-  "schema_version": "NPP-1.2",
-  "project": "SWITZERLAND_JOB_OS",
-  "generated_at": "2026-08-30T08:29:00Z",
-  "cycle_id": "META-20260830-CRM-SRR-NEUSCHOENSTATT-BATCH0008",
-  "parent_git_sha": "804a3ee8ea29e567cb93bc48a46b5cc5f2d8a33f",
+  "active_claim": {
+    "claim_id": "CLAIM-CRM-SRR-SPECIAL-006",
+    "fencing_token": 6,
+    "scope": "SRR_SPECIAL_RELATIONSHIP_MATERIALIZATION_PREAUTH"
+  },
+  "authority_advance_allowed": false,
   "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
   "authority_parent_materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
-  "checkpoint_id": "CRM_UNIVERSE_COMPLETE",
-  "active_claim": {"claim_id":"CLAIM-CRM-SRR-SPECIAL-006","fencing_token":6,"scope":"SRR_SPECIAL_RELATIONSHIP_MATERIALIZATION_PREAUTH"},
-  "authority_state": {"physical_rows":690,"active_canonical":690,"persisted_hid_alias_edges":0,"next_physical_id":"H-0691_UNALLOCATED","crm_universe_complete":false,"outbound":"CLOSED","send_allowed":0},
-  "source_universe": {
-    "snapshot_id":"HS-MEMBER-DE-33206402141",
-    "records":2061,
-    "pages":172,
-    "source_artifact_id":9700376482,
-    "qualified_fallback_artifact_id":9700376482,
-    "records_sha256":"62e26d62d8677a5437e081302b6b4d206c0d27a0fe268c6356aef01da5428dc2",
-    "candidate_records":1438,
-    "candidate_artifact_id":9718866661,
-    "candidate_export_artifact_id":9718866661,
-    "candidate_export_artifact_digest_sha256":"d58c57c5a83cd2ff740f0ec900163f5c7aa795b032045cf9d30ffd194733465e",
-    "candidate_export_gzip_sha256":"071e2cf1b895b63457c56066de7d8653b3182a12d1260ff9be7709a684fcf194",
-    "candidate_export_records_sha256":"34d9aa9cfa4fe896bf1db8fba4dedfded9a1dbf2e135b847101904644d16bba0",
-    "candidate_records_sha256":"34d9aa9cfa4fe896bf1db8fba4dedfded9a1dbf2e135b847101904644d16bba0",
-    "candidate_export_manifest_path":"docs/state/CRM_CANDIDATE_EXPORT_33206402141.manifest.json",
-    "scope_state":"QUALIFIED_MEMBER_DIRECTORY_FALLBACK_NOT_SSR_EQUIVALENT"
+  "authority_state": {
+    "active_canonical": 690,
+    "crm_universe_complete": false,
+    "next_physical_id": "H-0691_UNALLOCATED",
+    "outbound": "CLOSED",
+    "persisted_hid_alias_edges": 0,
+    "physical_rows": 690,
+    "send_allowed": 0
   },
-  "ecv_frontier": {
-    "candidate_records_total":1438,
-    "current_detail_verified":1438,
-    "remaining_never_verified":0,
-    "remaining_unverified":0,
-    "pending_requeue":0,
-    "latest_artifact_id":9718233409,
-    "latest_github_actions_job_id":99132088946,
-    "latest_github_actions_run_id":33264513065,
-    "latest_subbatch_id":"HS-MEMBER-DE-33206402141:WORK:0001:SUB:0073",
-    "latest_subbatch_packet_sha256":"6844012f0c52fff07720b70e3a5cb9a0947a81d8463878c23a61cbb0d7eacfa3",
-    "next_staged_batch":"HS-MEMBER-DE-33206402141:WORK:0005:SUB:0001",
-    "next_staged_batch_path":"docs/state/CMI_WORK_BATCH_0005_SUB0001_33206402141.json",
-    "next_staged_items":3,
-    "next_staged_items_sha256":"9c07c1fe200f27a79a1c10550f39ad9fd94f5ba2d3a996791d6061ddd600a4c2",
-    "next_staged_original_candidate_offsets":[733,913,981],
-    "next_staged_state":"ECV_TERMINAL_VERIFIED"
-  },
-  "mapping_frontier": {
-    "exact_name_city":623,
-    "pinned_exact_correction":1,
-    "explicit_srr_deltas":34,
-    "terminal_source_mappings":658,
-    "unique_canonical_targets":656,
-    "reconcile_required":1403,
-    "reverse_authority_source_gaps":34,
-    "previous_full_terminal_pairs_sha256":"5698591ab5c89bc8651dda6f7e2cfeba8c80312e3c19c78736adf1d0e521727e",
-    "previous_full_unresolved_source_keys_sha256":"7285cbcd5936cfabd33ea6f1769cfbf99acd3639562306c0e1bf0632d5400323",
-    "incremental_overlay_sha256":"7168463977156e97caa40222dbfcea10e8df94d18a20a3ee66cdc2cbff4a94c5",
-    "previous_rebuild_attestation_path":"docs/state/FULL_SOURCE_MAPPING_REBUILD_657_ATTESTATION_33206402141.json",
-    "terminal_coverage_rebuild_pending":true,
-    "operational_authority":false
-  },
-  "ragr_frontier": {"protocol":"RAGR-1.0","reverse_authority_source_gaps":34,"gap_hotel_ids_sha256":"bca692c105efac8c8929c1639e1ebe643dd03f0a6ecab4bb42d86e0acccba568","state":"LAST_FULLY_RECOMPUTED_FROM_657_TERMINAL_SOURCE_MAPPINGS_PENDING_658_REATTEST","review_only":true,"terminal_decision_allowed_from_queue":false},
-  "provider_identity_frontier": {"protocol":"PIE-1.1","mid_risk_050_059_queue_path":"docs/state/SRET_SIMILARITY_RISK_QUEUE_050_059_33206402141.json","mid_risk_050_059_queue_sha256":"eed5f949c55da71b7a69d3dd481778992f316bfdd35e4655f85070dc46a14429","provider_evidence_050_059":47,"provider_review_completed":47,"provider_review_pending":0,"lower_similarity_tail_remaining":49,"lower49_classification":"49/49_REPROVED_ON_FRESH_MAIN_PR344","ordinary_nonterminal_distinctness":47,"special_relationship_cases":2,"review27_path":"docs/state/SRET_PROVIDER_IDENTITY_050_REVIEW27_33206402141.json","terminal_delta_from_lower49_classification":0},
-  "srr_special_frontier": {"protocol":"SRR-1.1","neu_schoenstatt":{"source_key":"MD-33d867e983644585e4b2","action":"ALIAS_EXISTING","canonical_hotel_id":"H-0114","state":"PREAUTH_SOURCE_MAPPING_OVERLAY_ACCEPTED"},"delta_resort":{"source_key":"MD-7976c173678dc89c9cf0","relation":"OPERATED_AS_SUBPROPERTY_OF:H-0220","state":"RELATIONSHIP_ONLY_ENTITY_GRANULARITY_UNRESOLVED"}},
-  "selected_route": "NEUSCHOENSTATT_EXPLICIT_SRR_BATCH0008",
-  "next_route": "REBUILD_EXACT_658_TERMINAL_COVERAGE_THEN_CONTINUE_UNRESOLVED_SOURCE_REVIEW",
-  "exact_dependency": "The 658th mapping exists only in the pre-authority SRR overlay until deterministic full terminal coverage is rebuilt and source-key conservation/RAGR are re-attested. Authority materialization remains separately blocked until exact E4 DB-first durable egress and cross-plane receipts exist. discover.swiss SSR requires a capture-valid structured manifest produced with a runtime subscription key.",
-  "hard_blockers": ["DISCOVER_SWISS_RUNTIME_SUBSCRIPTION_KEY_ABSENT","SSR_1_0_REQUIRES_CAPTURE_VALID_DISCOVER_SWISS_MANIFEST","GENERATED_LOCAL_FILE_REFERENCE_EGRESS_UNAVAILABLE","RECONCILE_REQUIRED_1403_NOT_ZERO"],
-  "required_inputs": ["GitHub main 804a3ee8ea29e567cb93bc48a46b5cc5f2d8a33f or descendant","authority E4 / SHA 70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6","source artifact 9700376482 / 2061 records / SHA 62e26d62d8677a5437e081302b6b4d206c0d27a0fe268c6356aef01da5428dc2","candidate artifact 9718866661 / 1438 records / SHA 34d9aa9cfa4fe896bf1db8fba4dedfded9a1dbf2e135b847101904644d16bba0","candidate export manifest docs/state/CRM_CANDIDATE_EXPORT_33206402141.manifest.json","docs/state/FULL_SOURCE_MAPPING_REBUILD_657_ATTESTATION_33206402141.json","docs/state/SOURCE_RESOLUTION_REVIEW_BATCH_0008_33206402141.json","docs/state/SOURCE_MAPPING_OVERLAY_SRR_BATCH_0008_ATTESTATION_33206402141.json","docs/state/PIE050_NEUSCHOENSTATT_SAME_PROPERTY_CANDIDATE_2026-08-30.json","docs/state/PIE050_DELTA_SUBPROPERTY_RELATION_2026-08-30.json","Drive HOTELS_MASTER 1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w / HOTELS_V2","docs/recovery/CRM_E4_DURABLE_EGRESS_MEP_FALLBACK_2026-08-30.json"],
-  "recovery_route": ["verify current main is 804a3ee8ea29e567cb93bc48a46b5cc5f2d8a33f or descendant and authority E4 hash unchanged","require token6 ACTIVE and authority ceiling PREAUTH_SRR_DECISION_ONLY_NO_CANONICAL_MUTATION","validate candidate export multipart lineage through docs/state/CRM_CANDIDATE_EXPORT_33206402141.manifest.json","load full 657 rebuild and batch0008 overlay","rebuild deterministic 658 terminal pairs from 2061 immutable source keys and 34 explicit deltas","require source-key conservation and unique terminal keys","re-attest RAGR; H-0114 is already covered so reverse gaps should remain 34 unless fresh evidence proves otherwise","keep Delta unresolved until entity-granularity policy/evidence yields a typed SRR action","continue unresolved-source review/staging","do not repeat failed generated-local-file-reference egress variants","never reserve or allocate H-0691 from preauthority work","keep OUTBOUND=CLOSED and send_allowed=0"],
-  "structured_acquisition":{"runtime_subscription_key_present":false,"ssr_1_0_state":"BLOCKED_REQUIRES_CAPTURE_VALID_DISCOVER_SWISS_MANIFEST","fallback":"QUALIFIED_MEMBER_DIRECTORY_PLUS_EXACT_CURRENT"},
-  "authority_advance_allowed": false,
   "canonical_id_allocation_allowed": false,
-  "outbound_allowed": false
+  "checkpoint_id": "CRM_UNIVERSE_COMPLETE",
+  "cycle_id": "META-20260830-FULL-658-REBUILD-RAGR-REATTEST",
+  "ecv_frontier": {
+    "candidate_records_total": 1438,
+    "current_detail_verified": 1438,
+    "latest_artifact_id": 9718233409,
+    "pending_requeue": 0,
+    "remaining_never_verified": 0,
+    "remaining_unverified": 0
+  },
+  "exact_dependency": "Full 658-row preauthority source coverage is now deterministically materialized and RAGR re-attested. The next productive route is evidence-qualified entity resolution over the 1403 unresolved source keys using the complete exact-current corpus, accepting only one-to-one first-party evidence into bounded SRR review. Authority materialization remains blocked until exact E4 DB-first durable egress and cross-plane receipts exist. discover.swiss SSR remains blocked until a runtime subscription key produces a capture-valid structured manifest.",
+  "generated_at": "2026-08-30T09:01:56Z",
+  "hard_blockers": [
+    "DISCOVER_SWISS_RUNTIME_SUBSCRIPTION_KEY_ABSENT",
+    "SSR_1_0_REQUIRES_CAPTURE_VALID_DISCOVER_SWISS_MANIFEST",
+    "GENERATED_LOCAL_FILE_REFERENCE_EGRESS_UNAVAILABLE",
+    "RECONCILE_REQUIRED_1403_NOT_ZERO",
+    "E4_DB_FIRST_DURABLE_EGRESS_UNAVAILABLE"
+  ],
+  "mapping_frontier": {
+    "exact_name_city": 623,
+    "explicit_srr_deltas": 34,
+    "full_rebuild_attestation_path": "docs/state/FULL_SOURCE_MAPPING_REBUILD_658_ATTESTATION_33206402141.json",
+    "operational_authority": false,
+    "pinned_exact_correction": 1,
+    "reconcile_required": 1403,
+    "reverse_authority_source_gaps": 34,
+    "terminal_coverage_rebuild_pending": false,
+    "terminal_pairs_sha256": "cdcecdf445395fe36c6318c2f0103757b0a14ec08d33e229c138df2ec36ad56e",
+    "terminal_source_mappings": 658,
+    "unique_canonical_targets": 656,
+    "unresolved_source_keys_sha256": "910cfd92974025a836430612387d380be0f15d173d41f20fda6fea2bcca48581"
+  },
+  "next_route": "ECV1438_EVIDENCE_QUALIFIED_ENTITY_RESOLUTION_TRIAGE_THEN_SRR_BATCH0009_IF_SAFE",
+  "outbound_allowed": false,
+  "parent_git_sha": "db0bd9bb6eab966230e6a9cb42688be3a952867c",
+  "project": "SWITZERLAND_JOB_OS",
+  "provider_identity_frontier": {
+    "lower49_classification": "49/49_REPROVED_ON_FRESH_MAIN_PR344",
+    "lower_similarity_tail_remaining": 49,
+    "ordinary_nonterminal_distinctness": 47,
+    "protocol": "PIE-1.1",
+    "provider_review_completed": 47,
+    "provider_review_pending": 0,
+    "special_relationship_cases": 2
+  },
+  "ragr_frontier": {
+    "gap_hotel_ids_sha256": "bca692c105efac8c8929c1639e1ebe643dd03f0a6ecab4bb42d86e0acccba568",
+    "protocol": "RAGR-1.0",
+    "reverse_authority_source_gaps": 34,
+    "review_only": true,
+    "state": "FULLY_RECOMPUTED_FROM_658_TERMINAL_SOURCE_MAPPINGS",
+    "terminal_decision_allowed_from_queue": false
+  },
+  "recovery_route": [
+    "verify current main is descendant of db0bd9bb6eab966230e6a9cb42688be3a952867c and authority E4 hash unchanged",
+    "require token6 ACTIVE and authority ceiling PREAUTH_SRR_DECISION_ONLY_NO_CANONICAL_MUTATION",
+    "load source artifact 9700376482, candidate artifact 9718866661 and exact-current artifact 9718233409",
+    "verify terminal_pairs_sha256 cdcecdf445395fe36c6318c2f0103757b0a14ec08d33e229c138df2ec36ad56e and unresolved_source_keys_sha256 910cfd92974025a836430612387d380be0f15d173d41f20fda6fea2bcca48581",
+    "triage 1403 unresolved against exact-current evidence; require one-to-one first-party evidence before any MATCH_EXISTING review",
+    "emit bounded SRR batch only for evidence-qualified cases; otherwise retain RECONCILE_REQUIRED",
+    "do not collapse Delta Resort until entity-granularity evidence/policy is conclusive",
+    "do not repeat failed local file-reference egress variants",
+    "never reserve or allocate H-0691 from preauthority work",
+    "keep OUTBOUND=CLOSED and send_allowed=0"
+  ],
+  "required_inputs": [
+    "GitHub main current descendant of db0bd9bb6eab966230e6a9cb42688be3a952867c",
+    "authority E4 / SHA 70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+    "source artifact 9700376482 / 2061 records / SHA 62e26d62d8677a5437e081302b6b4d206c0d27a0fe268c6356aef01da5428dc2",
+    "candidate artifact 9718866661 / 1438 records / SHA 34d9aa9cfa4fe896bf1db8fba4dedfded9a1dbf2e135b847101904644d16bba0",
+    "exact-current latest artifact 9718233409",
+    "docs/state/FULL_SOURCE_MAPPING_REBUILD_658_ATTESTATION_33206402141.json",
+    "Drive HOTELS_MASTER 1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w / HOTELS_V2",
+    "docs/recovery/CRM_E4_DURABLE_EGRESS_MEP_FALLBACK_2026-08-30.json"
+  ],
+  "schema_version": "NPP-1.2",
+  "selected_route": "FULL_SOURCE_MAPPING_REBUILD_658_RAGR_REATTEST",
+  "source_universe": {
+    "candidate_artifact_id": 9718866661,
+    "candidate_records": 1438,
+    "candidate_records_sha256": "34d9aa9cfa4fe896bf1db8fba4dedfded9a1dbf2e135b847101904644d16bba0",
+    "pages": 172,
+    "records": 2061,
+    "records_sha256": "62e26d62d8677a5437e081302b6b4d206c0d27a0fe268c6356aef01da5428dc2",
+    "scope_state": "QUALIFIED_MEMBER_DIRECTORY_FALLBACK_NOT_SSR_EQUIVALENT",
+    "snapshot_id": "HS-MEMBER-DE-33206402141",
+    "source_artifact_id": 9700376482
+  },
+  "srr_special_frontier": {
+    "delta_resort": {
+      "relation": "OPERATED_AS_SUBPROPERTY_OF:H-0220",
+      "source_key": "MD-7976c173678dc89c9cf0",
+      "state": "RELATIONSHIP_ONLY_ENTITY_GRANULARITY_UNRESOLVED"
+    },
+    "neu_schoenstatt": {
+      "action": "ALIAS_EXISTING",
+      "canonical_hotel_id": "H-0114",
+      "source_key": "MD-33d867e983644585e4b2",
+      "state": "FULL_658_COVERAGE_MATERIALIZED_PREAUTH"
+    },
+    "protocol": "SRR-1.1"
+  },
+  "structured_acquisition": {
+    "fallback": "QUALIFIED_MEMBER_DIRECTORY_PLUS_EXACT_CURRENT",
+    "runtime_subscription_key_present": false,
+    "ssr_1_0_state": "BLOCKED_REQUIRES_CAPTURE_VALID_DISCOVER_SWISS_MANIFEST"
+  }
 }

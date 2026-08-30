@@ -24,6 +24,8 @@ candidate records                         1438
 ECV exact-current                    1438 / 1438
 ECV verified frontier                1438 / 1438
 ECV remaining never verified         0
+lower49 typed SRR materialized       47 / 47
+cumulative NEW_CANONICAL preauthority 114
 pre-authority terminal source mappings       658
 unique canonical targets                    656
 RECONCILE_REQUIRED                         1403

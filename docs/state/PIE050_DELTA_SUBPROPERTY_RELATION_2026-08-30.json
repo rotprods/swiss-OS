@@ -1,0 +1,24 @@
+{
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "authority_materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+  "canonical_candidate": {"authority_state":"EXISTING_CANONICAL_UNCHANGED","hotel_id":"H-0220","name":"Parkhotel Delta Wellbeing Resort"},
+  "claim_id": "CLAIM-CRM-PIE050-LOWER49-005",
+  "current_public_evidence": [
+    {"observation":"Parkhotel Delta's current resort page presents Delta Resort Apartments as four apartment villas and enumerates hotel services supplied through Parkhotel Delta.","url":"https://www.parkhoteldelta.ch/en/resort"},
+    {"observation":"Switzerland Tourism describes Delta Resort Apartments as independent apartments nestled in Parkhotel Delta's park and explicitly calls the Delta Resort part of Parkhotel Delta.","url":"https://www.myswitzerland.com/de-ch/unterkuenfte/delta-resort-apartments/"},
+    {"observation":"The operator's current hotel portfolio presents Parkhotel Delta main house and Delta Resort Apartments as separate accommodation products under the same resort/operator.","url":"https://www.parkhoteldelta.ch/en/hotel-ascona"}
+  ],
+  "effect": {"authority_advanced":false,"canonical_id_reservations":0,"crm_universe_complete":false,"h_id_allocations":0,"outbound":"CLOSED","reconcile_required_after":1404,"reconcile_required_before":1404,"send_allowed":0,"terminal_source_mappings_added":0,"terminal_source_mappings_total":657},
+  "fencing_token": 5,
+  "new_identity_status": "UNALLOCATED_PREAUTH_CANDIDATE",
+  "packet_sha256": "4e10407d5ceb18dbd7e1ce4ff3803220d8b77465af9762e0b2d6338dcb77de76",
+  "parent_git_sha": "3fefe3725205563e8cb363cafbe07dd95b4015ed",
+  "project": "SWITZERLAND_JOB_OS",
+  "relationship_hypothesis": {"authority":"PROPOSED_ONLY","candidate_parent_hotel_id":"H-0220","confidence":"HIGH","relation":"OPERATED_AS_SUBPROPERTY_OF"},
+  "review_outcome": "COLOCATED_SUBPROPERTY_RELATION_REQUIRES_AUTHORITY_REVIEW",
+  "schema_version": "PIE050-RELATED-SUBPROPERTY-CANDIDATE-1.0",
+  "source_identity": {"city":"ascona","name":"delta resort apartments"},
+  "source_record_key": "MD-7976c173678dc89c9cf0",
+  "terminal_mapping": {"allowed":false,"reason":"Evidence supports parent/subproperty relationship, not identity collapse. Token 5 is PREAUTH-only.","state":"NOT_PROPOSED"},
+  "why_not_terminalized": "The source is a distinct accommodation product operated within the Parkhotel Delta resort. Collapsing it into H-0220 would erase a current product-level entity; allocating a new H-ID is forbidden from staging/preauth evidence. Requires authority-eligible ontology/entity-resolution review."
+}

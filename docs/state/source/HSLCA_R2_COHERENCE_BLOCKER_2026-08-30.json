@@ -1,0 +1,126 @@
+{
+  "schema_version": "HSLCA-R2-BLOCKER-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "generated_at": "2026-08-30T22:00:00Z",
+  "parent_git_sha": "b0ec94f4a13fb7c24d39454439d9792d90bb7e46",
+  "checkpoint_id": "CRM_UNIVERSE_COMPLETE",
+  "route": "R2_HSLCA_COHERENT_MEMBER_DIRECTORY_RECAPTURE",
+  "execution_mode": "READ_ONLY_RESEARCH",
+  "closure_state": "COMPLETE_READ_ONLY",
+  "authority": {
+    "advanced": false,
+    "epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+    "materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+    "physical_rows": 690,
+    "active_canonical": 690,
+    "next_physical_id": "H-0691_UNALLOCATED"
+  },
+  "source_evidence": {
+    "github_actions_run_id": 33206402141,
+    "github_actions_job_id": 98968446260,
+    "artifact_id": 9700376482,
+    "artifact_zip_sha256": "721f9ff9f84e2d5d9df62c6b22f12e7354cef3a298cb8990be66a202e1e769ce",
+    "snapshot_id": "HS-MEMBER-DE-33206402141",
+    "records_sha256": "62e26d62d8677a5437e081302b6b4d206c0d27a0fe268c6356aef01da5428dc2",
+    "materialized_records": 2061,
+    "observed_pages": 172,
+    "capture_mode": "LIVE_PARTIAL",
+    "coverage_claim": "PARTIAL",
+    "coverage_complete": false,
+    "capture_violations": [
+      "REPORTED_RECORDS_UNRESOLVED",
+      "PAGE_COUNT_DRIFT:171,172"
+    ],
+    "pcf_result": "FAIL_CLOSED",
+    "pcf_error": "capture has non-count violations: PAGE_COUNT_DRIFT:171,172"
+  },
+  "interpretation": {
+    "records_2061_are_safe_as_historical_partial_substrate": true,
+    "records_2061_are_coherent_member_directory_manifest": false,
+    "records_2061_are_ssr_directory_coverage_eligible": false,
+    "count_equality_or_materialization_is_scope_proof": false,
+    "root_cause": "The sequential live member-directory crawl crossed a page-count epoch while the provider surface moved from 171 to 172 pages. PCF correctly refused to convert the partial capture into a coherent complete manifest."
+  },
+  "ragr24_exact_partial_snapshot_scan": {
+    "input_count": 24,
+    "exact_name_city_matches": 0,
+    "hotel_ids": [
+      "H-0100",
+      "H-0144",
+      "H-0337",
+      "H-0352",
+      "H-0464",
+      "H-0501",
+      "H-0521",
+      "H-0524",
+      "H-0623",
+      "H-0659",
+      "H-0660",
+      "H-0661",
+      "H-0662",
+      "H-0663",
+      "H-0664",
+      "H-0666",
+      "H-0667",
+      "H-0668",
+      "H-0669",
+      "H-0670",
+      "H-0671",
+      "H-0672",
+      "H-0675",
+      "H-0677"
+    ],
+    "terminal_mapping_effect": 0,
+    "note": "Zero exact name+city hits in the partial 2061 substrate is evidence about that capture only. It is not proof of non-membership or authority for exclusion."
+  },
+  "current_source_identity_examples": [
+    {
+      "hotel_id": "H-0524",
+      "name": "Hotel Work Life Residence",
+      "current_hotelleriesuisse_detail": "https://www.hotelleriesuisse.ch/de/verband-und-geschaeftsstelle/mitglieder/mitgliederverzeichnis/hotel-hotel-work-life-residence"
+    },
+    {
+      "hotel_id": "H-0521",
+      "name": "Hotel Eggishorn",
+      "current_hotelleriesuisse_detail": "https://www.hotelleriesuisse.ch/de/verband-und-geschaeftsstelle/mitglieder/mitgliederverzeichnis/hotel-hotel-eggishorn"
+    },
+    {
+      "hotel_id": "H-0337",
+      "name": "Crans Montana Suites",
+      "current_hotelleriesuisse_detail": "https://www.hotelleriesuisse.ch/de/verband-und-geschaeftsstelle/mitglieder/mitgliederverzeichnis/hotel-crans-montana-suites"
+    },
+    {
+      "hotel_id": "H-0352",
+      "name": "Drei Berge Hotel",
+      "current_hotelleriesuisse_detail": "https://www.hotelleriesuisse.ch/de/verband-und-geschaeftsstelle/mitglieder/mitgliederverzeichnis/hotel-drei-berge-hotel"
+    },
+    {
+      "hotel_id": "H-0501",
+      "name": "Hotel Du Commerce",
+      "current_hotelleriesuisse_detail": "https://www.hotelleriesuisse.ch/de/verband-und-geschaeftsstelle/mitglieder/mitgliederverzeichnis/hotel-hotel-du-commerce"
+    }
+  ],
+  "decision": {
+    "decision_id": "DEC-CRM-R2-HSLCA-COHERENCE-001",
+    "graph_impact": "META",
+    "selected_bottleneck": "COHERENT_MEMBER_DIRECTORY_MANIFEST",
+    "reason": "R2 coherence is upstream of SSR/candidate refresh and is a safer, higher-leverage bottleneck than attempting terminal mappings against a known partial capture.",
+    "next_route": "R2_HSLCA_COHERENT_MEMBER_DIRECTORY_RECAPTURE",
+    "next_exact_dependency": "Run a fresh bounded single-locale HotellerieSuisse member-directory capture whose page/count observations remain coherent for one epoch and whose final manifest has coverage_complete=true."
+  },
+  "provider_boundaries": {
+    "discover_swiss_subscription_key_available": false,
+    "discover_swiss_capture_valid_manifest_available": false,
+    "durable_db_first_e4_egress": "BLOCKED_FILE_REFERENCE_DO_NOT_REPEAT"
+  },
+  "safety": {
+    "authority_advanced": false,
+    "canonical_id_allocation_allowed": false,
+    "canonical_id_reservations": 0,
+    "h_id_allocations": 0,
+    "crm_universe_complete": false,
+    "outbound": "CLOSED",
+    "send_allowed": 0,
+    "irreversible_external_actions": 0
+  }
+}

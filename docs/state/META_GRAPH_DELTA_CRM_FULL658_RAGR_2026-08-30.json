@@ -1,0 +1,22 @@
+{
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "decision_id": "MGD-CRM-FULL658-RAGR-20260830",
+  "edges": [
+    {"from":"crm:source:HS-MEMBER-DE-33206402141","relation":"DETERMINISTIC_REBUILD","to":"crm:mapping:full658"},
+    {"from":"crm:mapping:full658","relation":"REATTESTS","to":"crm:ragr:34"},
+    {"from":"crm:mapping:full658","relation":"DOES_NOT_ADVANCE","to":"crm:authority:E4"},
+    {"from":"crm:mapping:full658","relation":"UNLOCKS","to":"crm:next:ecv-entity-resolution"}
+  ],
+  "generated_at": "2026-08-30T09:01:56Z",
+  "invariants": {"authority_advanced":false,"canonical_id_reservations":0,"irreversible_external_actions":0,"outbound":"CLOSED","send_allowed":0},
+  "nodes": [
+    {"id":"crm:source:HS-MEMBER-DE-33206402141","records":2061,"state":"FROZEN","type":"SOURCE_SNAPSHOT"},
+    {"id":"crm:mapping:full658","reconcile_required":1403,"state":"MATERIALIZED","terminal":658,"type":"PREAUTH_MAPPING_FRONTIER"},
+    {"gaps":34,"id":"crm:ragr:34","state":"REATTESTED","type":"REVERSE_AUTHORITY_GAP_FRONTIER"},
+    {"id":"crm:authority:E4","sha256":"70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6","state":"LOCKED","type":"AUTHORITY_EPOCH"},
+    {"id":"crm:next:ecv-entity-resolution","state":"READY_SAFE_READ_ONLY_TRIAGE","type":"NEXT_ROUTE"}
+  ],
+  "parent_git_sha": "db0bd9bb6eab966230e6a9cb42688be3a952867c",
+  "project": "SWITZERLAND_JOB_OS",
+  "schema_version": "META-GRAPH-DELTA-1.0"
+}

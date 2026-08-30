@@ -23,6 +23,7 @@ source records / pages               2061 / 172
 candidate records                         1438
 ECV exact-current                    1438 / 1438
 ECV verified frontier                1438 / 1438
+ECV remaining never verified                   0
 pre-authority terminal source mappings       658
 unique canonical targets                    656
 RECONCILE_REQUIRED                         1403

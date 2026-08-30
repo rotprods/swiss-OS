@@ -1,0 +1,24 @@
+{
+  "schema_version": "META-GRAPH-DELTA-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "parent_git_sha": "11a528dd1584b3606fed83356c006065e9785778",
+  "nodes": [
+    {"id":"CLAIM-CRM-PIE050-LOWER49-005","type":"Claim","state":"RELEASED"},
+    {"id":"CLAIM-CRM-SRR-SPECIAL-006","type":"Claim","state":"ACTIVE","fencing_token":6},
+    {"id":"PIE050-LOWER49","type":"WorkstreamFrontier","state":"PREAUTH_CLASSIFICATION_COMPLETE","reviewed":49,"total":49},
+    {"id":"MD-33d867e983644585e4b2","type":"SourceRecord","state":"STRONG_SAME_PROPERTY_CANDIDATE_REQUIRES_AUTHORITY_REVIEW"},
+    {"id":"MD-7976c173678dc89c9cf0","type":"SourceRecord","state":"COLOCATED_SUBPROPERTY_RELATION_REQUIRES_AUTHORITY_REVIEW"},
+    {"id":"H-0114","type":"CanonicalHotel","authority":"E4_UNCHANGED"},
+    {"id":"H-0220","type":"CanonicalHotel","authority":"E4_UNCHANGED"},
+    {"id":"DEC-0106","type":"Decision"}
+  ],
+  "edges": [
+    {"from":"CLAIM-CRM-PIE050-LOWER49-005","type":"COMPLETED","to":"PIE050-LOWER49"},
+    {"from":"CLAIM-CRM-SRR-SPECIAL-006","type":"RESUMES_FROM","to":"CLAIM-CRM-PIE050-LOWER49-005"},
+    {"from":"MD-33d867e983644585e4b2","type":"ALIAS_EXISTING_CANDIDATE","to":"H-0114","authority":"PROPOSED_ONLY"},
+    {"from":"MD-7976c173678dc89c9cf0","type":"OPERATED_AS_SUBPROPERTY_OF","to":"H-0220","authority":"PROPOSED_ONLY"},
+    {"from":"DEC-0106","type":"SOURCE_OF_TRUTH_FOR","to":"PIE050_DELTA_SUBPROPERTY_RELATION_2026-08-30"},
+    {"from":"PIE050_DELTA_RESORT_RELATIONSHIP_CANDIDATE_2026-08-30","type":"SUPPORTED_BY","to":"PIE050_DELTA_SUBPROPERTY_RELATION_2026-08-30","authority":"EVIDENCE_ONLY"}
+  ],
+  "invariants": {"authority_advanced":false,"terminal_mapping_delta":0,"h_id_reservations":0,"outbound":"CLOSED","send_allowed":0}
+}

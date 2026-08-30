@@ -1,5 +1,6 @@
 import hashlib
 import json
+import re
 import unittest
 from pathlib import Path
 
@@ -55,11 +56,14 @@ class Lower49B02Tests(unittest.TestCase):
         self.assertEqual(art["safety"]["irreversible_external_actions"], 0)
         self.assertEqual(art["next"]["batch_id"], "L49-P1-B03")
 
-    def test_state_points_to_next_lower49_batch(self):
+    def test_state_has_not_regressed_below_b02_frontier(self):
         text = STATE.read_text(encoding="utf-8")
-        self.assertIn("lower49 typed SRR materialized              20 / 47", text)
-        self.assertIn("cumulative NEW_CANONICAL preauthority         87", text)
-        self.assertIn("L49-P1-B03", text)
+        typed = re.search(r"lower49 typed SRR materialized\s+(\d+) / 47", text)
+        cumulative = re.search(r"cumulative NEW_CANONICAL preauthority\s+(\d+)", text)
+        self.assertIsNotNone(typed)
+        self.assertIsNotNone(cumulative)
+        self.assertGreaterEqual(int(typed.group(1)), 20)
+        self.assertGreaterEqual(int(cumulative.group(1)), 87)
         self.assertIn("H-0691 UNALLOCATED", text)
         self.assertIn("OUTBOUND                        CLOSED", text)
 

@@ -1,0 +1,45 @@
+{
+  "graph_type": "PROJECT_MEMORY_META_GRAPH_DELTA",
+  "schema_version": "1.3",
+  "project": "SWITZERLAND_JOB_OS",
+  "cycle_id": "META-20260830-CRM-REVIEW-COVERAGE114",
+  "parent_git_sha": "30a1e975b72f1db30682ba93bf1b2827cda5892a",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "authority_revision": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+  "graph_impact": "META",
+  "authority_mutation": false,
+  "nodes": [
+    {"id":"META-20260830-CRM-REVIEW-COVERAGE114","type":"META_CYCLE","route":"HISTORICAL_IDENTITY_REVIEW_RECONCILIATION_114"},
+    {"id":"SNAPSHOT-HS-MEMBER-DE-33206402141","type":"SOURCE_SNAPSHOT","records":2061,"pages":172},
+    {"id":"ANTI-JOIN-UNRESOLVED-1403","type":"REVIEW_UNIVERSE","records":1403,"state":"ATTESTED"},
+    {"id":"REVIEW-COVERAGE-114","type":"IDENTITY_REVIEW_COVERAGE","records":114,"distinctness":113,"relationship_only":1,"terminal_delta":0},
+    {"id":"FRONTIER-LT350-1289","type":"RESEARCH_FRONTIER","records":1289,"state":"NEXT"},
+    {"id":"AUTHORITY-E4","type":"AUTHORITY_STATE","active":690,"sha256":"70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6","advanced":false},
+    {"id":"BLOCK-DISCOVER-SSR","type":"PROVIDER_BOUNDARY","state":"SUBSCRIPTION_KEY_OR_CAPTURE_VALID_MANIFEST_REQUIRED"},
+    {"id":"BLOCK-E4-EGRESS","type":"CAPABILITY_BOUNDARY","state":"BLOCKED_FILE_REFERENCE"},
+    {"id":"NEXT-LOW-SIM-BATCH-0001","type":"CONTINUATION_POINTER","route":"LOW_SIMILARITY_LT350_REVIEW_BATCH_0001"},
+    {"id":"OUTBOUND","type":"GATE","state":"CLOSED","send_allowed":0}
+  ],
+  "edges": [
+    ["META-20260830-CRM-REVIEW-COVERAGE114","CONSUMES","ANTI-JOIN-UNRESOLVED-1403"],
+    ["META-20260830-CRM-REVIEW-COVERAGE114","RECONCILES_WITH_PRIOR_CURRENT_EVIDENCE","REVIEW-COVERAGE-114"],
+    ["REVIEW-COVERAGE-114","PARTITIONS_WITH","FRONTIER-LT350-1289"],
+    ["REVIEW-COVERAGE-114","DOES_NOT_MUTATE","AUTHORITY-E4"],
+    ["REVIEW-COVERAGE-114","DOES_NOT_AUTHORIZE","OUTBOUND"],
+    ["META-20260830-CRM-REVIEW-COVERAGE114","EMITS","NEXT-LOW-SIM-BATCH-0001"],
+    ["BLOCK-DISCOVER-SSR","BLOCKS","DISCOVER_SWISS_SSR_1_0"],
+    ["BLOCK-E4-EGRESS","BLOCKS","DB_FIRST_AUTHORITY_PROMOTION"]
+  ],
+  "invariants": {
+    "classification_conservation": "114 + 1289 = 1403",
+    "terminal_mapping_delta": 0,
+    "authority_advanced": false,
+    "h_id_allocations": 0,
+    "canonical_id_reservations": 0,
+    "h_0691": "UNALLOCATED",
+    "crm_universe_complete": false,
+    "outbound": "CLOSED",
+    "send_allowed": 0,
+    "irreversible_external_actions": 0
+  }
+}

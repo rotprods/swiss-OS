@@ -112,6 +112,48 @@
     "Do not allocate/reserve canonical IDs from staging or canary state.",
     "Do not advance authority from source acquisition, cache or CI evidence."
   ],
+  "review_frontier": {
+    "band500599": {
+      "effective_total": 46,
+      "new_canonical_preauth_after": 46,
+      "remaining": 0,
+      "reviewed_after": 46
+    },
+    "cumulative_new_canonical_preauth": 114,
+    "ge600": {
+      "new_canonical_preauth": 20,
+      "relationship_unresolved": 0,
+      "reviewed": 20,
+      "total": 20
+    },
+    "lower49": {
+      "ordinary_evidence_reviewed": 47,
+      "ordinary_exact_workset": 47,
+      "ordinary_typed_srr": 47,
+      "ordinary_typed_srr_remaining": 0,
+      "special_reviewed": 2,
+      "total": 49,
+      "workset_batch_sizes": [10, 10, 10, 10, 7],
+      "workset_sha256": "8817941127ede8f9329d81b4831b1fd6643e9ab4c19438c3fa612b78e1169050"
+    },
+    "overall_relationship_granularity_unresolved": 0,
+    "ragr": {
+      "batch_hotel_ids": [],
+      "batch_id": "RAGR34-COMPLETE",
+      "classification_counts": {
+        "COMPONENT/GROUP GRANULARITY": 2,
+        "DATA DEFECT": 3,
+        "IN_SCOPE_NO_SOURCE_MATCH": 24,
+        "OUT_OF_SNAPSHOT_SCOPE": 0,
+        "SUPERSEDED/RENAMED WITH EVIDENCE": 5,
+        "UNRESOLVED": 0
+      },
+      "remaining": 0,
+      "review_queue_sha256": "cf47dc91057df8653cd75729cb39320605e193e476c6828f24956b69e2848b9c",
+      "reviewed": 34,
+      "total": 34
+    }
+  },
   "runtime_capability_frontier": {
     "discover_swiss_capture_valid_manifest": false,
     "discover_swiss_subscription": false,

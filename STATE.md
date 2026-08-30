@@ -1,6 +1,6 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest chained Meta Execution coordination frontier: **2026-08-30T17:28:00Z**. Current execution parent main SHA: **`e3c597b4007527e1cdb6b8895eddbb1100956200`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
+Latest chained Meta Execution coordination frontier: **2026-08-30T17:56:00Z**. Current execution parent main SHA: **`30e15e4adaca971fe75b474f1bdf386359367aa5`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
 
 ## Authority — unchanged / locked
 
@@ -28,8 +28,8 @@ pre-authority terminal source mappings       658
 unique canonical targets                    656
 RECONCILE_REQUIRED                         1403
 RAGR reverse authority gaps                  34
-RAGR evidence-classified                 10 / 34
-RAGR evidence-classified remaining       24 / 34
+RAGR evidence-classified                 20 / 34
+RAGR evidence-classified remaining       14 / 34
 terminal coverage rebuild                  658/658 ATTESTED
 unresolved candidate anti-join            1403/1403 ATTESTED
 review staging batches                          29
@@ -54,6 +54,8 @@ terminal mapping delta from review             0
 
 `RAGR34-B01` classified the first deterministic ten reverse authority gaps using live E4 `HOTELS_V2` canonical readbacks plus independent current evidence under RAGR-1.0. Result: `IN_SCOPE_NO_SOURCE_MATCH=4`, `SUPERSEDED/RENAMED WITH EVIDENCE=2`, `COMPONENT/GROUP GRANULARITY=2`, `DATA DEFECT=2`, `OUT_OF_SNAPSHOT_SCOPE=0`, `UNRESOLVED=0`. Evidence-backed data defects identify permanent closure for H-0161 Hotel Sonnenberg and H-0192 Landgasthof Sommerfeld; review alone produced no deactivation. H-0218 is evidence-backed as the same property now operating as Beatenberg Resort & Spa; H-0291 is evidence-backed as renamed Hotel Concordia. H-0003 and H-0016 require group/component granularity handling. The four live standalone properties remain `IN_SCOPE_NO_SOURCE_MATCH` without any invented terminal source mapping.
 
+`RAGR34-B02` classified the next deterministic ten gaps `H-0464,H-0501,H-0521,H-0524,H-0623,H-0657,H-0659,H-0660,H-0661,H-0662` from fresh live E4 readbacks plus independent current evidence. Result: `IN_SCOPE_NO_SOURCE_MATCH=8`, `DATA DEFECT=1`, `UNRESOLVED=1`, all other states `0`. An official 2026 municipal notice describes the Gsteig property at Gsteigstrasse 35 as the former Hotel Viktoria, so H-0464 is evidence-backed `DATA DEFECT` but remains active pending a separate eligible authority transaction. H-0661 Berghotel Sassal Masone remains `UNRESOLVED` because current member/local-directory evidence conflicts with recent closure evidence. The other eight are evidence-backed current hospitality entities with no frozen-source terminal match. B02 created no terminal mapping, deactivation, reservation, allocation or authority mutation.
+
 The exact 47 ordinary lower49 reviews remain fully typed under token6 from deterministic workset `CRM_IDENTITY_WORKSET_LOWER49_ORDINARY_47_2026-08-30.json`, workset SHA `8817941127ede8f9329d81b4831b1fd6643e9ab4c19438c3fa612b78e1169050`.
 
 Fencing token **6** (`CLAIM-CRM-SRR-SPECIAL-006`) remains **ACTIVE** with authority ceiling `PREAUTH_SRR_DECISION_ONLY_NO_CANONICAL_MUTATION`.
@@ -64,8 +66,8 @@ Drive native `HOTELS_V2` readback is live. Exact E4 local reconstruction remains
 
 ## NEXT
 
-Execute **`RAGR34-B02`** on `H-0464,H-0501,H-0521,H-0524,H-0623,H-0657,H-0659,H-0660,H-0661,H-0662`. Re-read live `HOTELS_V2` canonical rows and obtain independent current evidence for every gap. Classify exactly one RAGR-1.0 state per H-ID. Absence from the member directory is never deletion evidence; queue suggestions cannot create source mappings or mutate authority. Never reserve/allocate H-0691; keep `OUTBOUND=CLOSED` and `send_allowed=0`.
+Execute **`RAGR34-B03`** on `H-0663,H-0664,H-0665,H-0666,H-0667,H-0668,H-0669,H-0670,H-0671,H-0672`. Re-read live `HOTELS_V2` canonical rows and obtain independent current evidence for every gap. Classify exactly one RAGR-1.0 state per H-ID. Absence from the member directory is never deletion evidence; queue suggestions cannot create source mappings or mutate authority. Never reserve/allocate H-0691; keep `OUTBOUND=CLOSED` and `send_allowed=0`.
 
-Recovery inputs and exact blockers are persisted in `docs/state/NEXT.json` and `docs/state/NEXT_META_EXECUTION_2026-08-30.json`.
+Recovery inputs and exact blockers are persisted in `docs/state/NEXT.json`, `docs/state/RAGR_CURRENT_EVIDENCE_B02_2026-08-30.json`, and the B02 handoff/meta-cycle artifacts.
 
 **VERIFY LIVE TRUTH BEFORE EXECUTION.**

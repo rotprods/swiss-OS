@@ -1,58 +1,41 @@
 {
-  "schema_version": "NEXT-META-EXECUTION-1.0",
+  "schema_version": "NEXT-META-EXECUTION-1.1",
   "project": "SWITZERLAND_JOB_OS",
-  "session_id": "SES-20260829T223900Z-SSR-CAPABILITY-A71C5E",
-  "generated_at": "2026-08-29T22:56:00Z",
+  "session_id": "SES-20260830T004230Z-CRM-META-005",
+  "generated_at": "2026-08-30T00:42:33Z",
   "verify_live_truth_before_execution": true,
-  "parent_sha": "2209eb04451b0b625d37491f679bb57e637badae",
+  "parent_sha": "c0168050e659290a0f171cc69ad6c00d5b918c4a",
   "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
   "authority_parent_materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
-  "next_route": "RECONSTRUCT_MAIN_AND_ACTIVE_CLAIMS_THEN_RESUME_HIGHEST_VALUE_UNBLOCKED_CRM_LANE",
-  "routes": [
-    {
-      "priority": 1,
-      "route": "PIE050_CAPTURED27_THEN_LOWER49_ENTITY_RESOLUTION",
-      "blocker": "CLAIM-CRM-PIE050-CAPTURED27-D42F9A fencing token 3 is ACTIVE over CRM_ENTITY_RESOLUTION_REVIEW",
-      "resume_condition": "Claim is explicitly RELEASED or SUPERSEDED and current provider-review artifacts are reconstructed from live main",
-      "authority_ceiling": "PREAUTH_REVIEW_ONLY_NO_CANONICAL_MUTATION"
-    },
-    {
-      "priority": 2,
-      "route": "DISCOVER_SWISS_STRUCTURED_CAPTURE_AND_SSR_1_0",
-      "blocker": "No runtime discover.swiss Infocenter subscription key is present",
-      "resume_condition": "Runtime key is available without persisting the secret; execute capture-valid manifest against production Infocenter v2 project=dsod-hs",
-      "authority_ceiling": "PREAUTH_SOURCE_RECONCILIATION_ONLY"
-    },
-    {
-      "priority": 3,
-      "route": "TERMINAL_MAPPING_AND_CROSS_PLANE_AUTHORITY_RECONCILIATION",
-      "blocker": "Depends on entity-resolution terminal decisions and/or structured SSR evidence; current terminal mappings remain 657 and CRM_UNIVERSE_COMPLETE=false",
-      "resume_condition": "New terminal decisions are evidence-qualified; then re-run exact source-key conservation, RAGR and authority eligibility gates",
-      "authority_ceiling": "NO_H_ID_RESERVATION_FROM_STAGING"
-    }
-  ],
+  "active_claim_id": "CLAIM-CRM-PIE050-LOWER49-005",
+  "fencing_token": 5,
+  "next_route": "PIE_050_LOWER_49_QUEUE_RECONSTRUCTION_AND_PROVIDER_IDENTITY",
+  "exact_blocker_dependency": "Exact lower49 membership must be derived from pinned source/candidate evidence and current canonical HOTELS_V2; discover.swiss SSR route separately remains credential-blocked.",
   "recovery_inputs": [
     "STATE.md",
+    "docs/state/NEXT.json",
     "docs/state/v2/active-claims.json",
+    "docs/state/SRET_PROVIDER_IDENTITY_050_REVIEW27_33206402141.json",
     "docs/state/FULL_SOURCE_MAPPING_REBUILD_657_ATTESTATION_33206402141.json",
-    "docs/state/SRET_FULL_2061_SUMMARY_33206402141.json",
-    "docs/state/SOURCE_SNAPSHOT_DRIVE_RECOVERY_ATTESTATION_2026-08-30.json",
-    "docs/state/CHECKPOINT_DENOMINATOR_RECONCILIATION_ATTESTATION_2026-08-30.json",
-    "Drive SOURCE_SNAPSHOTS HS-MEMBER-DE-33206402141",
-    "Drive DECISION_LEDGER DEC-0103 and DEC-0104",
-    "Drive CHECKPOINT_REGISTRY",
-    "Drive HOTELS_V2/HOTEL_INTELLIGENCE_V1/GRAPH_NODES_V2/GRAPH_EDGES_V2 tail H-0690"
+    "Actions artifact 9700376482",
+    "Actions artifact 9718866661",
+    "Drive HOTELS_MASTER/HOTELS_V2",
+    "Drive SOURCE_SNAPSHOTS HS-MEMBER-DE-33206402141"
   ],
   "known_live_metrics": {
     "source_records": 2061,
     "source_pages": 172,
     "candidate_records": 1438,
     "exact_current_verified": 1438,
-    "terminal_source_mappings": 657,
+    "terminal_mappings": 657,
     "unique_canonical_targets": 656,
     "reconcile_required": 1404,
-    "reverse_authority_source_gaps": 34,
+    "reverse_authority_gaps": 34,
     "active_canonical": 690,
+    "provider_evidence_050_059": "47/47",
+    "provider_identity_review_completed": 47,
+    "provider_identity_review_pending": 0,
+    "lower_similarity_tail": 49,
     "next_h_id": "H-0691_UNALLOCATED"
   },
   "hard_invariants": {
@@ -62,6 +45,5 @@
     "canonical_id_reservations_from_staging": 0,
     "authority_from_canary_or_cache": false,
     "irreversible_external_actions": 0
-  },
-  "stop_reason_for_this_activation_if_blocks_persist": "P0_PROVIDER_AND_FENCED_CONCURRENCY_BOUNDARIES_BLOCK_ALL_HIGH_VALUE_CRM_FRONTIERS; REMAINING DISJOINT WORK IS OPTIONAL POLISH"
+  }
 }

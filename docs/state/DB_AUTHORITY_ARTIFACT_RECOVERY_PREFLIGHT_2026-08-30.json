@@ -1,0 +1,61 @@
+{
+  "schema_version": "DB-AUTHORITY-ARTIFACT-RECOVERY-PREFLIGHT-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "parent_git_sha": "41e4721d7b47779aac32f9998da7ac27b25de6d5",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "authority_materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+  "observed_on": "2026-08-30",
+  "drive_v13": {
+    "file_id": "1rIL6x_bmBoCbxVSAGFvdjoKnUqSX3YnT",
+    "name": "switzerland_job_os_operational_shadow_v13.sqlite",
+    "size_bytes": 3059712,
+    "expected_sha256": "0e605b412f29893ca1775f1e8fccd5987d0613baab4ac29b6699988cde0fdfe5",
+    "reverified_sha256": "0e605b412f29893ca1775f1e8fccd5987d0613baab4ac29b6699988cde0fdfe5",
+    "raw_fetch_result": "PASS"
+  },
+  "deterministic_repair": {
+    "source_copy_only": true,
+    "sql": [
+      "UPDATE hotels SET state='CANONICAL_CURRENT_RECONCILED' WHERE hotel_id IN ('H-0610','H-0624','H-0629','H-0630');",
+      "DELETE FROM hotel_aliases WHERE alias_hotel_id IN ('H-0610','H-0624','H-0629','H-0630');"
+    ],
+    "result_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+    "expected_result_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+    "byte_exact_expected_result": true,
+    "sqlite_integrity_check": "ok",
+    "foreign_key_violations": 0,
+    "physical_hotel_rows": 690,
+    "hotel_alias_rows_after_repair": 0,
+    "source_file_mutated": false
+  },
+  "durable_egress_probe": {
+    "target": "Google Drive new raw SQLite artifact in V13 parent folder",
+    "result": "BLOCKED_FILE_REFERENCE",
+    "durable_repaired_db_created": false,
+    "existing_v13_overwritten": false
+  },
+  "blocker_refinement": {
+    "previous": "Exact repaired constrained DB not discoverable as a verifiably mutable runtime input.",
+    "current": "Exact V13 parent is durably discoverable/readable and the E4 repaired SQLite is deterministically reproducible byte-for-byte in the runtime, but connector egress of the generated SQLite is blocked by BLOCKED_FILE_REFERENCE. Therefore the repaired authority artifact cannot yet be durably published/recovered in the same bounded transaction.",
+    "authority_promotion_eligible": false
+  },
+  "authority_effect": {
+    "authority_advanced": false,
+    "hotels_master_mutations": 0,
+    "terminal_source_mapping_delta": 0,
+    "h_id_allocations": 0,
+    "canonical_id_reservations": 0,
+    "crm_universe_complete": false,
+    "outbound": "CLOSED",
+    "send_allowed": 0,
+    "irreversible_external_actions": 0
+  },
+  "next_safe_route": "PROVIDER_EGRESS_CAPABILITY_OR_DURABLE_FILE_REFERENCE_BRIDGE_THEN_FRESH_CROSS_PLANE_AUTHORITY_TRANSACTION",
+  "recovery_inputs": [
+    "Drive file 1rIL6x_bmBoCbxVSAGFvdjoKnUqSX3YnT",
+    "Drive ASR_ATOMIC_RECOVERY_PREFLIGHT_2026-08-28_V2",
+    "Drive ASR_REPAIR_CANARY_2026-08-28_V1",
+    "GitHub PR #92 ARR-1.0 ancestry",
+    "authority epoch HS_ENTITY_EPOCH_2026-08-25_E4"
+  ]
+}

@@ -14,6 +14,9 @@ def test_state_audit_handoff_is_exact_scoped_and_fail_closed():
 
     wave = data["wave"]
     assert wave["parent_main_sha"] == "69fb96168479b210379d83937e8bf041944da450"
+    assert wave["reconciled_main_sha"] == "3afe2ef55acdc41b82f7899dec5bf9e7f7f40f6a"
+    assert wave["concurrent_main_merge"]["pull_request"] == 342
+    assert wave["concurrent_main_merge"]["effect"].endswith("NO_AUTHORITY_CHANGE")
     assert wave["execution_mode"] == "RECOVERY_RECONCILE"
     assert wave["closure"] == "COMPLETE_READ_ONLY"
     assert wave["graph_impact"] == "META"
@@ -44,6 +47,8 @@ def test_state_audit_handoff_is_exact_scoped_and_fail_closed():
     assert concurrency["claim_state"] == "ACTIVE_UNTIL_EXPLICIT_RELEASE_OR_SUPERSESSION"
     assert concurrency["token6_branch"]["current_authority"] is False
     assert concurrency["token6_branch"]["pull_request_present"] is False
+    assert concurrency["token6_branch"]["ahead_by"] == 15
+    assert concurrency["token6_branch"]["behind_by"] == 18
     assert concurrency["drive_claim_mirror"]["effect"] == "NO_AUTHORITY_CHANGE; GITHUB ACTIVE CLAIM REMAINS BINDING"
 
     control = data["control_plane_verification"]
@@ -85,6 +90,8 @@ def test_state_audit_handoff_is_exact_scoped_and_fail_closed():
     pointers = data["pointer_state"]
     assert pointers["pointer_parent_is_ancestor_of_audit_parent"] is True
     assert pointers["shared_pointer_paths_claimed_by_token5"] is True
+    assert pointers["audit_start_parent_ahead_by_commits"] == 70
+    assert pointers["reconciled_main_ahead_by_commits"] == 73
     assert pointers["audit_rewrote_shared_pointer_paths"] is False
 
     structured = data["structured_acquisition"]
@@ -113,6 +120,7 @@ def test_state_audit_handoff_is_exact_scoped_and_fail_closed():
         "BLOCKED_FILE_REFERENCE",
         "CLAIM-CRM-PIE050-LOWER49-005",
         "state/crm-pie050-close-token5-srr-token6-20260830",
+        "PR #342",
         "Never reserve canonical IDs from staging",
         "Never perform a Sheets-first authority mutation",
     ):

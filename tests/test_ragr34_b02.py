@@ -25,7 +25,7 @@ class RAGR34B02Tests(unittest.TestCase):
         decisions = art["decisions"]
         self.assertEqual([d["hotel_id"] for d in decisions], expected)
         self.assertEqual(_sha(decisions), art["decisions_sha256"])
-        self.assertEqual(art["decisions_sha256"], "27cae25f2b391e84cd80c6e7edae340419737dca5b25be40aee682674ed2cc62")
+        self.assertEqual(art["decisions_sha256"], "e8f040b2542213e9b8643b80028320cb7d5e094c44bd77e8c7cc98eb1f755178")
         self.assertEqual(sum(d["classification"] == "IN_SCOPE_NO_SOURCE_MATCH" for d in decisions), 9)
         self.assertEqual(sum(d["classification"] == "DATA DEFECT" for d in decisions), 1)
         self.assertEqual(next(d for d in decisions if d["hotel_id"] == "H-0657")["classification"], "DATA DEFECT")

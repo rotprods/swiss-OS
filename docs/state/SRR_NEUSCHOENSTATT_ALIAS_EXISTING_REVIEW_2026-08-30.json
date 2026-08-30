@@ -1,0 +1,66 @@
+{
+  "schema_version": "SRR-1.1-EXPLICIT-REVIEW-PACKET-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "parent_git_sha": "11a528dd1584b3606fed83356c006065e9785778",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "authority_materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+  "claim_id": "CLAIM-CRM-PIE050-LOWER49-005",
+  "fencing_token": 5,
+  "source_record_key": "MD-33d867e983644585e4b2",
+  "source_identity": {
+    "name": "jugend & familienzentrum neu-schönstatt",
+    "city": "quarten",
+    "snapshot_id": "HS-MEMBER-DE-33206402141"
+  },
+  "canonical_target": {
+    "hotel_id": "H-0114",
+    "canonical_name": "Hostel Neu-Schönstatt",
+    "city": "Quarten",
+    "current_drive_row_observed": 115,
+    "state": "MIGRATED_LEGACY",
+    "membership_state": "SEEDED_LEGACY"
+  },
+  "resolution_review": {
+    "action": "ALIAS_EXISTING",
+    "reason_code": "VERIFIED_NAMING_VARIANT_SAME_PROPERTY",
+    "evidence_ref": "docs/state/PIE050_NEUSCHOENSTATT_SAME_PROPERTY_CANDIDATE_2026-08-30.json",
+    "evidence_tier": "CURRENT_FIRST_PARTY_IDENTITY",
+    "terminal_mapping_candidate": true,
+    "terminal_mapping_allowed_in_this_wave": false
+  },
+  "identity_evidence": {
+    "first_party_urls": [
+      "https://neuschoenstatt.ch/jugend-und-familienzentrum/",
+      "https://neuschoenstatt.ch/meetings-events/",
+      "https://neuschoenstatt.ch/wp-content/uploads/2025/07/2025-Hostel.pdf",
+      "https://neuschoenstatt.ch/uebernachtungen/"
+    ],
+    "finding": "Current first-party material explicitly identifies the Hostel im Zentrum Neu-Schönstatt with the Jugend- und Familienzentrum accommodation, supporting an alias/source naming variant to existing H-0114."
+  },
+  "cross_check": {
+    "existing_source_already_targets_h0114": "MD-b1eb8f0ce9f3a4733c71",
+    "existing_source_target_from_rebuild": "H-0114",
+    "h0114_is_reverse_gap": false,
+    "drive_readback": "H-0114 | Hostel Neu-Schönstatt | Quarten | MIGRATED_LEGACY"
+  },
+  "projected_effect_if_later_authority_commit_succeeds": {
+    "terminal_source_mappings": 658,
+    "unique_canonical_targets": 656,
+    "reconcile_required": 1403,
+    "reverse_authority_source_gaps": 34,
+    "new_h_ids": 0
+  },
+  "effect_this_wave": {
+    "terminal_source_mappings": 657,
+    "reconcile_required": 1404,
+    "h_id_allocations": 0,
+    "canonical_id_reservations": 0,
+    "authority_advanced": false,
+    "crm_universe_complete": false,
+    "outbound": "CLOSED",
+    "send_allowed": 0,
+    "irreversible_external_actions": 0
+  },
+  "next_route": "BOUNDED_AUTHORITY_ELIGIBILITY_GATE_FOR_NEUSCHOENSTATT_ALIAS_AFTER_FRESH_ANCESTRY_AND_CROSS_PLANE_PRECHECK",
+  "packet_sha256": "7734e5386ab5cd382fad15d9b3d3cb9377ade59c7706bb201fb1b85dc11a6590"
+}

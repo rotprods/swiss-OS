@@ -1,0 +1,87 @@
+{
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "authority_revision": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+  "bands": {
+    "350000_499999": {
+      "already_terminalized_source_keys": [
+        "MD-33d867e983644585e4b2"
+      ],
+      "current_distinctness_reviewed": 47,
+      "current_relationship_only": 1,
+      "current_unresolved": 48,
+      "historical_classification": "49/49_REPROVED_ON_FRESH_MAIN_PR344",
+      "historical_queue": 49,
+      "historical_special_relationship_cases": 2,
+      "ordinary_nonterminal_distinctness": 47,
+      "relationship_only_source_keys": [
+        "MD-7976c173678dc89c9cf0"
+      ],
+      "terminal_delta": 0
+    },
+    "500000_599999": {
+      "already_terminalized_source_keys": [
+        "MD-7c70baeb19408c2e971b"
+      ],
+      "classification": "NOVELTY_REVIEW_DISTINCTNESS_CORROBORATED",
+      "current_unresolved": 46,
+      "evidence_paths": [
+        "docs/state/SRET_PROVIDER_IDENTITY_050_SUB01_33206402141.json",
+        "docs/state/SRET_PROVIDER_IDENTITY_050_SUB02_33206402141.json"
+      ],
+      "historical_queue": 47,
+      "historical_review_completed": 47,
+      "queue_path": "docs/state/SRET_SIMILARITY_RISK_QUEUE_050_059_33206402141.json",
+      "terminal_delta": 0
+    },
+    "ge600000": {
+      "classification": "NOVELTY_REVIEW_DISTINCTNESS_CORROBORATED",
+      "current_unresolved": 20,
+      "evidence_path": "docs/state/SRET_HIGH_RISK20_PROVIDER_IDENTITY_33206402141.json",
+      "handoff_path": "docs/handoffs/META_20260829_SRET_HIGHRISK20_WAVE12.md",
+      "reviewed": 20,
+      "terminal_delta": 0
+    },
+    "lt350000": {
+      "current_unresolved": 1289,
+      "reviewed_by_this_reconciliation": 0,
+      "state": "NEXT_RESEARCH_FRONTIER"
+    }
+  },
+  "classification_conservation": "114 + 1289 = 1403",
+  "current_distinctness_reviewed_records": 113,
+  "current_low_similarity_unreviewed_records": 1289,
+  "current_relationship_only_records": 1,
+  "current_review_classified_records": 114,
+  "current_unresolved_records": 1403,
+  "decision_guards": {
+    "distinctness_is_new_canonical_authority": false,
+    "relationship_is_identity_collapse": false,
+    "similarity_is_authority": false,
+    "terminal_decision_allowed_from_this_coverage_artifact": false
+  },
+  "generated_at": "2026-08-30T09:50:00Z",
+  "input_unresolved_antijoin": "docs/state/SOURCE_RESOLUTION_REVIEW_UNRESOLVED_1403_33206402141.json",
+  "mapping_frontier": {
+    "authority_effect": "NONE",
+    "reconcile_required": 1403,
+    "reverse_authority_source_gaps": 34,
+    "terminal_source_mappings": 658,
+    "unique_canonical_targets": 656
+  },
+  "next": "LOW_SIMILARITY_LT350_REVIEW_BATCH_0001",
+  "parent_git_sha": "30a1e975b72f1db30682ba93bf1b2827cda5892a",
+  "project": "SWITZERLAND_JOB_OS",
+  "reconciliation_semantics": "REUSE_PREVIOUS_CURRENT_IDENTITY_EVIDENCE_WITHOUT_RETERMINALIZATION",
+  "safety": {
+    "authority_advanced": false,
+    "canonical_id_reservations": 0,
+    "crm_universe_complete": false,
+    "h_0691": "UNALLOCATED",
+    "h_id_allocations": 0,
+    "irreversible_external_actions": 0,
+    "outbound": "CLOSED",
+    "send_allowed": 0
+  },
+  "schema_version": "CRM-REVIEW-COVERAGE-RECONCILIATION-1.0",
+  "source_snapshot_id": "HS-MEMBER-DE-33206402141"
+}

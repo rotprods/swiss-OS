@@ -158,7 +158,6 @@
     "audit_rewrote_shared_pointer_paths": false,
     "recovery_strategy_must_read": [
       "docs/recovery/CRM_E4_DURABLE_EGRESS_MEP_FALLBACK_2026-08-30.json",
-      "docs/recovery/DB_EGRESS_CAPABILITY_GAUNTLET_2026-08-30.json",
       "docs/state/DB_AUTHORITY_ARTIFACT_RECOVERY_PREFLIGHT_2026-08-30.json",
       "docs/handoffs/META_20260830_STATE_AUDIT_DB_EGRESS_HANDOFF.md"
     ],
@@ -196,7 +195,6 @@
       340,
       342
     ],
-    "superseded_candidate_pr": 341,
     "stale_graph_v2_prs_do_not_merge_blindly": [
       314,
       317,
@@ -210,6 +208,13 @@
       135,
       137,
       139
+    ],
+    "superseded_prs": [
+      {
+        "pull_request": 341,
+        "superseded_by": 342,
+        "reason": "PR #342 merged the generalized generated-local-file egress failure family into the canonical CRM E4 recovery artifact; do not retain a parallel DB-egress artifact surface."
+      }
     ]
   },
   "exact_blockers": [

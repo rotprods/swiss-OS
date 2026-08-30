@@ -1,0 +1,58 @@
+{
+  "schema_version": "META-EXECUTION-CYCLE-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "cycle_id": "META-20260830-CRM-R2-HSLCA-COHERENCE",
+  "generated_at": "2026-08-30T22:00:00Z",
+  "parent_git_sha": "b0ec94f4a13fb7c24d39454439d9792d90bb7e46",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "authority_parent_materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+  "goal_id": "G-0500",
+  "checkpoint_id": "CRM_UNIVERSE_COMPLETE",
+  "graph_impact": "META",
+  "colette": {
+    "context": "Recovered exact HSLCA source artifact and reconstructed live authority/capability state.",
+    "observe": "The 2061-record member-directory artifact is LIVE_PARTIAL, coverage_complete=false, with REPORTED_RECORDS_UNRESOLVED and PAGE_COUNT_DRIFT:171,172. PCF failed closed. RAGR24 has zero exact name+city hits in the partial substrate while current HotellerieSuisse identity evidence exists for multiple rows.",
+    "locate": "R2 coherent member-directory acquisition is the upstream bottleneck for source-scope proof and safe mass reconciliation.",
+    "execute": "Persist exact blocker, stage fail-closed recapture request, and enable a single-lane main-triggered HSLCA recapture through the required Git branch/PR/CI path.",
+    "test": "Contract tests must prove request safety, one-lane workflow semantics, stale-before-SHA rejection and the impossibility of misreading the historical capture as coverage-complete.",
+    "evaluate": "Only a fresh coverage_complete=true manifest may close R2. Any repeated page/count drift remains a typed blocker and must not be normalized away."
+  },
+  "decisions": [
+    {
+      "decision_id": "DEC-CRM-R2-HSLCA-COHERENCE-001",
+      "type": "SOURCE_ACQUISITION_ROUTE",
+      "from": "RAGR34_IN_SCOPE_NO_SOURCE_MATCH_SOURCE_IDENTITY_SWEEP",
+      "to": "R2_HSLCA_COHERENT_MEMBER_DIRECTORY_RECAPTURE",
+      "reason": "The historical 2061 source capture is provably partial, so additional absence-based mapping work against it has lower value and higher epistemic risk than repairing source coherence first."
+    },
+    {
+      "decision_id": "DEC-CRM-R2-HSLCA-COHERENCE-002",
+      "type": "CAPABILITY_FALLBACK",
+      "from": "MANUAL_WORKFLOW_DISPATCH_UNAVAILABLE_IN_CURRENT_CONNECTOR",
+      "to": "FAIL_CLOSED_MAIN_PUSH_REQUEST_TRIGGER",
+      "reason": "MEP no-idle fallback: use GitHub main push on a reviewed request artifact to invoke the already-bounded public source acquisition workflow without weakening safety gates."
+    },
+    {
+      "decision_id": "DEC-CRM-R2-HSLCA-COHERENCE-003",
+      "type": "CAPTURE_WINDOW",
+      "from": "SEQUENTIAL_DELAY_6_SECONDS",
+      "to": "SEQUENTIAL_DELAY_1_SECOND",
+      "reason": "The prior 172-page crawl took about 20 minutes and crossed a provider pagination epoch. One-second sequential delay remains more conservative than the protocol default 0.5 seconds while reducing epoch-crossing exposure; no parallel crawl is introduced."
+    }
+  ],
+  "safety": {
+    "authority_advanced": false,
+    "canonical_id_allocation_allowed": false,
+    "canonical_id_reservations": 0,
+    "h_id_allocations": 0,
+    "crm_universe_complete": false,
+    "outbound": "CLOSED",
+    "send_allowed": 0,
+    "irreversible_external_actions": 0
+  },
+  "next": {
+    "route": "R2_HSLCA_COHERENT_MEMBER_DIRECTORY_RECAPTURE",
+    "exact_dependency": "Merge the reviewed request-trigger workflow on unchanged main, then validate the resulting fresh HSLCA artifact for coherent complete coverage before any downstream source mapping.",
+    "verify_live_truth_before_execution": true
+  }
+}

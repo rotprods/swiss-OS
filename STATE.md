@@ -1,6 +1,6 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest chained Meta Execution coordination frontier: **2026-08-30T16:56:00Z**. Current execution parent main SHA: **`61d1f30f7931c4c68b59edf2cd9a11a7a122eded`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
+Latest chained Meta Execution coordination frontier: **2026-08-30T17:10:00Z**. Current execution parent main SHA: **`72b7fed673f53eaf31df797051b7fe09f7cd1a7c`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
 
 ## Authority — unchanged / locked
 
@@ -33,7 +33,7 @@ unresolved candidate anti-join            1403/1403 ATTESTED
 review staging batches                          29
 ```
 
-Source-key conservation remains `658 + 1403 = 2061`. Terminal-pair SHA remains `cdcecdf445395fe36c6318c2f0103757b0a14ec08d33e229c138df2ec36ad56e`; unresolved source-key SHA remains `910cfd92974025a836430612387d380be0f15d173d41f20fda6fea2bcca48581`; RAGR remains 34 / `bca692c105efac8c8929c1639e1ebe643dd03f0a6ecab4bb42d86e0acccba568`.
+Source-key conservation remains `658 + 1403 = 2061`. Terminal-pair SHA remains `cdcecdf445395fe36c6318c2f0103757b0a14ec08d33e229c138df2ec36ad56e`; unresolved source-key SHA remains `910cfd92974025a836430612387d380be0f15d173d41f20fda6fea2bcca48581`; RAGR review queue remains 34 with SHA `cf47dc91057df8653cd75729cb39320605e193e476c6828f24956b69e2848b9c`.
 
 ## Identity / granularity frontier
 
@@ -42,19 +42,19 @@ Source-key conservation remains `658 + 1403 = 2061`. Terminal-pair SHA remains `
 0.50–0.599999 reviewed                   46 / 46
 relationship/granularity reviewed          2 / 2
 relationship/granularity unresolved            0
-cumulative NEW_CANONICAL preauthority        107
+cumulative NEW_CANONICAL preauthority        114
 lower49 ordinary evidence-reviewed         47 / 47
 lower49 ordinary exact workset             47 / 47
-lower49 typed SRR materialized              40 / 47
-lower49 typed SRR remaining                  7 / 47
+lower49 typed SRR materialized              47 / 47
+lower49 typed SRR remaining                  0 / 47
 terminal mapping delta from review             0
 ```
 
-`L49-P1-B04` re-read current source/operator identity evidence for the exact packet-04 ten and live `HOTELS_V2` comparator rows. All ten are typed `NEW_CANONICAL` **preauthority only** and remain `RECONCILE_REQUIRED`. Current first-party, destination and operator address identity was used to reject weak same-city/name-token collisions; historical token5 evidence remains provenance only. No terminal mapping, canonical reservation or H-ID allocation was produced.
+`L49-P1-B05` re-read current source/operator identity evidence for the exact final seven ordinary lower49 records and live `HOTELS_V2` comparator rows. All seven are typed `NEW_CANONICAL` **preauthority only** and remain `RECONCILE_REQUIRED`. The Accor Basel shared-address collision was distinguished by current property codes and phone numbers; all other weak collisions were rejected with current property/address identity plus live comparator readback. Historical token5 evidence remains provenance only. No terminal mapping, canonical reservation or H-ID allocation was produced.
 
-The exact 47 ordinary lower49 evidence reviews remain compiled in deterministic token6 workset `CRM_IDENTITY_WORKSET_LOWER49_ORDINARY_47_2026-08-30.json`, five batches `10/10/10/10/7`, workset SHA `8817941127ede8f9329d81b4831b1fd6643e9ab4c19438c3fa612b78e1169050`.
+The exact 47 ordinary lower49 reviews are now fully typed under token6 from deterministic workset `CRM_IDENTITY_WORKSET_LOWER49_ORDINARY_47_2026-08-30.json`, workset SHA `8817941127ede8f9329d81b4831b1fd6643e9ab4c19438c3fa612b78e1169050`.
 
-EGR-1.0 remains active for entity-granularity semantics. Delta Resort Apartments and Overlook Lodge are separate preauthority canonical candidates with explicit parent/component relationships; both remain `RECONCILE_REQUIRED`.
+EGR-1.0 relationship/granularity review remains complete at 2/2. The next critical-path gate is RAGR-1.0 evidence-backed classification of the 34 active canonical rows without terminal source coverage. RAGR queue suggestions remain review-space reduction only; they cannot create source mappings or mutate authority.
 
 Fencing token **6** (`CLAIM-CRM-SRR-SPECIAL-006`) remains **ACTIVE** with authority ceiling `PREAUTH_SRR_DECISION_ONLY_NO_CANONICAL_MUTATION`.
 
@@ -64,7 +64,7 @@ Drive native `HOTELS_V2` readback is live. Exact E4 local reconstruction remains
 
 ## NEXT
 
-Execute **`L49-P1-B05`**, the exact final seven ordinary lower49 reviews from packet 05. Re-read current source/operator identity evidence and live canonical comparator rows before typed SRR. Preserve `RECONCILE_REQUIRED`; do not infer terminal identity from similarity/co-listing. Never reserve/allocate H-0691; keep `OUTBOUND=CLOSED` and `send_allowed=0`.
+Execute **RAGR-34 evidence-backed reverse-gap classification**, beginning with a deterministic bounded batch from `docs/state/RAGR_REVIEW_QUEUE_34_33206402141.json`. For each gap classify only with independent current evidence under RAGR-1.0; absence from the member directory is never deletion evidence. No terminal source mapping or authority mutation may be inferred from queue suggestions. Never reserve/allocate H-0691; keep `OUTBOUND=CLOSED` and `send_allowed=0`.
 
 Recovery inputs and exact blockers are persisted in `docs/state/NEXT.json` and `docs/state/NEXT_META_EXECUTION_2026-08-30.json`.
 

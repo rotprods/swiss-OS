@@ -9,8 +9,7 @@ on:
 
 permissions:
   actions: read
-  contents: write
-  pull-requests: write
+  contents: read
 
 concurrency:
   group: market-enrichment-2061-${{ github.ref }}
@@ -90,6 +89,10 @@ jobs:
     needs: shard
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    permissions:
+      actions: read
+      contents: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@v7
         with:

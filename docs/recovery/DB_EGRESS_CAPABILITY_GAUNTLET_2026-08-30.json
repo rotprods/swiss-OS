@@ -1,0 +1,62 @@
+{
+  "schema_version": "DB-EGRESS-CAPABILITY-GAUNTLET-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "authority": "RECOVERY_EVIDENCE_ONLY",
+  "parent_main_sha": "f21a69ec240727167cb7aba87a138f93cc0b9d74",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "authority_materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+  "reconstructed_db": {
+    "source_v13_sha256": "0e605b412f29893ca1775f1e8fccd5987d0613baab4ac29b6699988cde0fdfe5",
+    "exact_e4_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+    "size_bytes": 3059712,
+    "sqlite_integrity_check": "ok",
+    "foreign_key_violations": 0
+  },
+  "fallback_probes": [
+    {
+      "route": "GOOGLE_DRIVE_RAW_UPLOAD_LOCAL_GENERATED_SQLITE",
+      "input": "runtime-generated exact-E4 SQLite copy",
+      "result": "BLOCKED_FILE_REFERENCE",
+      "publication_occurred": false
+    },
+    {
+      "route": "GOOGLE_DRIVE_IMPORT_DOCUMENT_LOCAL_GENERATED_TEXT_CAPSULE",
+      "input": {
+        "format": "deterministic gzip-9 mtime=0 + base64 text capsule",
+        "gzip_size_bytes": 290689,
+        "gzip_sha256": "97c6e617cde0d98967afec8633a4bba3d63df49787985199ca93d8bd0816483a",
+        "base64_length": 387588,
+        "text_capsule_sha256": "e8e0484e907b1ef826e400bfdbd207924cb887a69786caf21d778f37934dd34a"
+      },
+      "result": "BLOCKED_FILE_REFERENCE",
+      "publication_occurred": false
+    }
+  ],
+  "failure_family": {
+    "classification": "GENERATED_LOCAL_FILE_REFERENCE_EGRESS_UNAVAILABLE",
+    "sqlite_mime_specific": false,
+    "retry_same_strategy_allowed": false,
+    "required_strategy_change": "Use a provider/runtime capability that returns a durable provider-accepted file reference, or another explicitly approved recoverable authority-artifact bridge; do not retry local-path upload/import variants."
+  },
+  "drive_recovery_document": {
+    "file_id": "17qlWRTTXc44jTAkuZRI5ZYWoZZEQUCb0d6uqy0fbaWs",
+    "folder_id": "1JTDkU3ZD0M7lz-hrU0t8-pzTj5IwC1YN",
+    "state": "UPDATED_WITH_GAUNTLET_RESULT"
+  },
+  "authority_effect": {
+    "authority_advanced": false,
+    "hotels_master_mutations": 0,
+    "terminal_mapping_delta": 0,
+    "h_id_allocations": 0,
+    "canonical_id_reservations": 0,
+    "crm_universe_complete": false,
+    "outbound": "CLOSED",
+    "send_allowed": 0,
+    "irreversible_external_actions": 0
+  },
+  "next": {
+    "route": "PROVIDER_ACCEPTED_DURABLE_FILE_REFERENCE_BRIDGE_THEN_FRESH_CROSS_PLANE_AUTHORITY_TRANSACTION",
+    "blocker": "The exact E4 SQLite is reconstructible, but both raw binary upload and generated text-capsule import fail at the same connector egress boundary before publication.",
+    "verify_live_truth_before_execution": true
+  }
+}

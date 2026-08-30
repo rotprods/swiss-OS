@@ -1,6 +1,8 @@
 import json
 from pathlib import Path
 
+from swiss_os.v2_coordination import reduce_coordination, validate_context_pack, validate_project_state
+
 ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -31,6 +33,27 @@ def test_crm_takeover_fences_stale_claim_without_authority_advance():
     assert graph["h_id_allocations"] == 0
     assert graph["outbound"] == "CLOSED"
     assert graph["send_allowed"] == 0
+
+
+def test_takeover_reduces_from_durable_ledgers_without_collision():
+    events = [json.loads(p.read_text(encoding="utf-8")) for p in sorted((ROOT / "docs/state/v2/events").glob("*.json"))]
+    claims = [json.loads(p.read_text(encoding="utf-8")) for p in sorted((ROOT / "docs/state/v2/claims").glob("*.json"))]
+    projection = reduce_coordination(events, claims)
+    state = load("docs/state/v2/project-state.json")
+    pack = load("docs/state/v2/context-pack.json")
+    assert projection["violations"] == []
+    assert projection["claim_collisions"] == []
+    assert projection["active_claim_ids"] == ["CLAIM-CRM-PIE050-CAPTURED27-TAKEOVER-004"]
+    assert projection["projection_revision"] == "2e2d1fc65476260fd475ff815e1347fbf480177dfae1d592ac32537b26e5851f"
+    assert state["projection_revision"] == projection["projection_revision"]
+    assert validate_project_state(state) == ()
+    assert validate_context_pack(
+        pack,
+        base_is_ancestor=True,
+        current_projection_revision=projection["projection_revision"],
+        current_relevant_scope_revision=pack["relevant_scope_revision"],
+        current_authority_revision=state["authority_revision"],
+    ) == ()
 
 
 def test_takeover_context_and_projection_are_current_and_fail_closed():

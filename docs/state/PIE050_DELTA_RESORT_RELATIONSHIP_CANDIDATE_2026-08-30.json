@@ -1,0 +1,74 @@
+{
+  "schema_version": "PIE050-SPECIAL-RELATIONSHIP-CANDIDATE-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "parent_git_sha": "3fefe3725205563e8cb363cafbe07dd95b4015ed",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "authority_materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+  "claim_id": "CLAIM-CRM-PIE050-LOWER49-005",
+  "fencing_token": 5,
+  "source_record_key": "MD-7976c173678dc89c9cf0",
+  "source_identity": {
+    "name": "delta resort apartments",
+    "city": "ascona",
+    "snapshot_id": "HS-MEMBER-DE-33206402141",
+    "detail_url": "https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-delta-resort-apartments"
+  },
+  "canonical_candidate": {
+    "hotel_id": "H-0220",
+    "name": "Parkhotel Delta Wellbeing Resort",
+    "city": "Ascona",
+    "authority_state": "EXISTING_CANONICAL_UNCHANGED"
+  },
+  "similarity": {
+    "max_token_jaccard_ppm": 400000,
+    "role": "REVIEW_SPACE_REDUCTION_ONLY"
+  },
+  "current_relationship_evidence": [
+    {
+      "url": "https://www.parkhoteldelta.ch/en/resort",
+      "observation": "First-party Parkhotel Delta presents Delta Resort Apartments as four villas/apartments in the resort complex and explicitly supplies Parkhotel hotel services."
+    },
+    {
+      "url": "https://www.parkhoteldelta.ch/de/zimmer/delta-resort-apartments",
+      "observation": "First-party Parkhotel Delta sells Delta Resort Apartments within its own accommodation inventory and booking surface."
+    },
+    {
+      "url": "https://www.ascona-locarno.com/it/hotels/details/Delta-Resort-Apartments/10005581",
+      "observation": "Destination authority lists Delta Resort Apartments separately at Delta 143-149, 6612 Ascona, with the same parkhoteldelta.ch website, telephone +41 91 785 77 85 and licence 1920."
+    },
+    {
+      "url": "https://www.ascona-locarno.com/de/hotels/details/Parkhotel-Delta-Wellbeing-Resort/13682",
+      "observation": "Destination authority lists Parkhotel Delta Wellbeing Resort separately at Delta 137-141, 6612 Ascona, with the same parkhoteldelta.ch website, telephone +41 91 785 77 85 and licence 1920."
+    },
+    {
+      "url": "https://www.hotelleriesuisse.ch/de/verband-und-geschaeftsstelle/mitglieder/mitgliederverzeichnis/hotel-parkhotel-delta-wellbeing-resort",
+      "observation": "Current HotellerieSuisse Parkhotel Delta entry reports 63 rooms/apartments, corroborating that apartment inventory may be accounted within the Parkhotel membership scope."
+    }
+  ],
+  "relationship_class": "SAME_OPERATOR_SAME_LICENSE_ADJACENT_PREMISES_SUBINVENTORY",
+  "review_outcome": "RELATIONSHIP_SENSITIVE_REQUIRES_ENTITY_GRANULARITY_AUTHORITY_REVIEW",
+  "authority_question": "Does the canonical CRM model treat a separately listed serviced-apartment subinventory under the same operator/licence but adjacent address range as the existing Parkhotel entity or as a distinct accommodation entity? Current evidence proves relationship but does not itself choose canonical granularity.",
+  "terminal_mapping_proposal": {
+    "source_record_key": "MD-7976c173678dc89c9cf0",
+    "candidate_hotel_id": "H-0220",
+    "state": "WITHHELD_PENDING_ENTITY_GRANULARITY_AUTHORITY_REVIEW",
+    "terminal_mapping_allowed": false
+  },
+  "new_canonical_proposal": {
+    "state": "WITHHELD_PENDING_ENTITY_GRANULARITY_AUTHORITY_REVIEW",
+    "canonical_id_reservation_allowed": false
+  },
+  "effect": {
+    "terminal_source_mappings_added": 0,
+    "terminal_source_mappings_total": 657,
+    "reconcile_required_before": 1404,
+    "reconcile_required_after": 1404,
+    "h_id_allocations": 0,
+    "canonical_id_reservations": 0,
+    "authority_advanced": false,
+    "crm_universe_complete": false,
+    "outbound": "CLOSED",
+    "send_allowed": 0
+  },
+  "packet_sha256": "8cefad2393952289b08c0075c2652b17664180e42a1fe6ff0b218dc537e9a3dd"
+}

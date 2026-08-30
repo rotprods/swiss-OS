@@ -1,6 +1,6 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest chained Meta Execution coordination frontier: **2026-08-30T20:20:00Z**. Verified branch parent main SHA: **`40dc91a7ba68b1d8547eef3e46f63786c543ea54`** (merge of PR #377; descendant of prior `f25bd38162ca0e47f68d3d9d7cd2ffcea559fdea`). Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
+Latest reconstructed frontier: **2026-08-30T22:25:00Z**. Verified main parent: **`b0ec94f4a13fb7c24d39454439d9792d90bb7e46`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Authority materialized SHA: **`70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`**.
 
 ## Authority — unchanged / locked
 
@@ -14,58 +14,112 @@ OUTBOUND                        CLOSED
 send_allowed                      0
 ```
 
-Authority SHA remains `70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`. Live Drive `HOTELS_V2` re-read confirms the current physical frontier ends at `H-0690`; `H-0691` is absent/unallocated. Staging, ECV, SRR, SMO, RAGR, SRET, PIE, cache and canary remain non-authoritative.
+Live Drive `HOTELS_V2` re-read confirms `H-0690` is the physical frontier and `H-0691` is absent/unallocated. No staging, cache, canary, RAGR, SRR, ECV, HSLCA or GitHub artifact is authoritative merely because it is structurally valid or current-looking.
 
-## Source / mapping frontier
+## CRM source / mapping frontier
 
 ```text
-source records / pages               2061 / 172
+partial HSLCA substrate records/pages    2061 / 172
+partial substrate records SHA             62e26d62d8677a5437e081302b6b4d206c0d27a0fe268c6356aef01da5428dc2
 candidate records                         1438
-ECV exact-current                    1438 / 1438
-ECV verified frontier                1438 / 1438
-ECV remaining never verified         0
-lower49 typed SRR materialized       47 / 47
-cumulative NEW_CANONICAL preauthority 114
-pre-authority terminal source mappings       658
-unique canonical targets                    656
-RECONCILE_REQUIRED                         1403
-RAGR reverse authority gaps                  34
-RAGR evidence-classified                 34 / 34
-terminal coverage rebuild                  658/658 ATTESTED
-unresolved candidate anti-join            1403/1403 ATTESTED
+ECV exact-current                         1438 / 1438
+ECV verified frontier                     1438 / 1438
+ECV remaining never verified                 0
+lower49 typed SRR materialized              47 / 47
+cumulative NEW_CANONICAL preauthority      114
+pre-authority terminal source mappings     658
+unique canonical targets                   656
+RECONCILE_REQUIRED                        1403
+reverse authority source gaps               34
+RAGR evidence-classified                   34 / 34
+RAGR IN_SCOPE_NO_SOURCE_MATCH              24
 ```
 
-Source-key conservation remains `658 + 1403 = 2061`. Terminal-pair SHA remains `cdcecdf445395fe36c6318c2f0103757b0a14ec08d33e229c138df2ec36ad56e`; unresolved source-key SHA remains `910cfd92974025a836430612387d380be0f15d173d41f20fda6fea2bcca48581`; RAGR queue SHA remains `cf47dc91057df8653cd75729cb39320605e193e476c6828f24956b69e2848b9c`.
+Source-key conservation for the historical partial substrate remains `658 + 1403 = 2061`. Those counts are preserved for lineage; they are **not** a claim that the 2061-record member-directory capture is coherent or complete.
 
-## RAGR34 post-review disposition
+The 1438-row candidate export and completed 1438/1438 ECV frontier remain deterministic historical lineage from that partial substrate. The completed lower49 and RAGR review frontiers are also preserved monotonically. These are valid pre-authority work products, but must not be reinterpreted as proof that the current member-directory universe is complete.
 
-The four evidence batches have now been concatenated deterministically in exact queue order into `docs/state/RAGR34_POST_REVIEW_DISPOSITION_WORKSET_2026-08-30.json`.
+## Critical R2 correction — 2061 capture is partial, not coverage-complete
+
+The exact source artifact from GitHub Actions run `33206402141`, artifact `9700376482`, was recovered and inspected. Its own manifest states:
 
 ```text
-rows                                      34
-rows SHA-256  c856954186f45c149cd7547852d86b87c54b24e19a7aa31859d971b77cf9c975
-IN_SCOPE_NO_SOURCE_MATCH                  24
-SUPERSEDED/RENAMED WITH EVIDENCE           5
-DATA DEFECT                                3
-COMPONENT/GROUP GRANULARITY                2
-terminal mapping delta                     0
-authority mutation                         0
+capture_mode        LIVE_PARTIAL
+coverage_claim      PARTIAL
+coverage_complete   FALSE
+materialized        2061 records
+observed pages      172
+capture violation   REPORTED_RECORDS_UNRESOLVED
+capture violation   PAGE_COUNT_DRIFT:171,172
+PCF result           FAIL_CLOSED
 ```
 
-The workset preserves each evidence-backed source decision by immutable batch/decision reference and partitions only safe follow-up routes. It does **not** convert current evidence, RAGR suggestions, renamed findings, data defects or granularity findings into terminal source mappings or authority effects.
+The prior live crawl crossed a pagination epoch. The partition-count finalizer correctly rejected the capture with `capture has non-count violations: PAGE_COUNT_DRIFT:171,172`.
 
-Fencing token **6** (`CLAIM-CRM-SRR-SPECIAL-006`) remains **ACTIVE** with authority ceiling `PREAUTH_SRR_DECISION_ONLY_NO_CANONICAL_MUTATION`.
+Therefore:
+
+- the 2061 rows remain usable as historical/read-only anti-join and review substrate;
+- they are not a coherent complete member-directory manifest;
+- they are not independently SSR-1.0 directory-coverage eligible;
+- absence from that substrate is not authority for exclusion, deactivation or terminal mapping.
+
+A deterministic exact name+city scan of all 24 RAGR `IN_SCOPE_NO_SOURCE_MATCH` rows against the recovered 2061 records returned **0 exact matches**. Current HotellerieSuisse identity evidence exists for multiple such rows, strengthening the decision to repair source acquisition before terminal reconciliation.
+
+Public-safe evidence is persisted in `docs/state/source/HSLCA_R2_COHERENCE_BLOCKER_2026-08-30.json`.
 
 ## Capability / provider boundaries
 
-GitHub read/write + CI are available. Drive native Sheets/Docs read paths are available; `HOTELS_V2` readback is live. Exact E4 local reconstruction remains byte-exact and non-authoritative. Generated-local-file Drive upload/update/import remains `BLOCKED_FILE_REFERENCE_DO_NOT_REPEAT`; Sheets-first promotion is forbidden. Structured discover.swiss SSR-1.0 remains blocked because no runtime subscription key/capture-valid structured manifest is available. File Library is stale cold-recovery read only; no write receipt is claimed.
+Available now:
+
+```text
+GitHub read/write/branch/PR/CI       YES
+GitHub Actions artifacts/logs        YES
+Drive native Sheets read/write       YES
+web current-source research          YES
+File Library read                    YES
+File Library write                   NO
+```
+
+Hard provider/authority boundaries remain:
+
+```text
+discover.swiss runtime key                 ABSENT
+discover.swiss capture-valid dsod-hs       ABSENT
+SSR-1.0 structured side                    BLOCKED ON ABOVE
+durable DB-first E4 provider egress        BLOCKED_FILE_REFERENCE_DO_NOT_REPEAT
+```
+
+Native Sheets capability does not permit a Sheets-first authority promotion. Exact constrained DB → Sheets → Graph/Intelligence → observability reconciliation is still mandatory for any later authoritative write.
+
+## Current bounded execution wave
+
+A fail-closed live capture request is staged at:
+
+`docs/state/source/HSLCA_LIVE_CAPTURE_REQUEST.json`
+
+The HSLCA workflow is being updated through the required branch → tests → PR → CI → adversarial review → merge path so that a change to that request on `main` launches a **single-lane, sequential, bounded** German member-directory recapture. It uses a 1-second page delay, one concurrent capture lane and existing bounded retry/backoff semantics. This is source acquisition only; it cannot allocate/reserve H-IDs, mutate authority or open outbound.
 
 ## NEXT
 
-Execute **`RAGR34_IN_SCOPE_NO_SOURCE_MATCH_SOURCE_IDENTITY_SWEEP`** over the 24 rows classified `IN_SCOPE_NO_SOURCE_MATCH`. Search for current source identity/membership evidence, but treat every hit as review-only evidence until it is tied to an exact frozen-source key and durable receipt under an authority-eligible reconciliation contract. Preserve raw reverse-gap count 34 and terminal mappings 658 unless that later contract is satisfied.
+Execute **`R2_HSLCA_COHERENT_MEMBER_DIRECTORY_RECAPTURE`**.
 
-Never reserve or allocate `H-0691`; never mutate/deactivate authority from review state; keep `OUTBOUND=CLOSED` and `send_allowed=0`.
+Acceptance:
 
-Recovery inputs and exact blockers are persisted in `docs/state/NEXT.json`, `docs/state/NEXT_META_EXECUTION_2026-08-30.json`, and the RAGR34 disposition workset.
+```text
+one coherent locale/surface epoch
+coverage_complete = TRUE
+missing pages = 0
+record/detail identity validation = PASS
+AUTHORITY_ADVANCED = FALSE
+H-ID allocations/reservations = 0
+OUTBOUND = CLOSED
+send_allowed = 0
+```
+
+On success, immediately validate/download the fresh artifact, recompute current source identity/anti-join (including the RAGR24 set), then continue into SSR-1.0 only if a capture-valid discover.swiss manifest exists; otherwise continue the provider-neutral member-directory fallback staging route without authority promotion.
+
+On repeated provider page/count drift, persist the exact diagnostics and choose the next provider-safe acquisition route. Never normalize drift away to manufacture `coverage_complete=true`.
+
+Recovery inputs and the exact blocker are in `docs/state/NEXT.json`, `docs/state/source/HSLCA_R2_COHERENCE_BLOCKER_2026-08-30.json` and `docs/handoffs/META_20260830_CRM_R2_HSLCA_COHERENCE.md`.
 
 **VERIFY LIVE TRUTH BEFORE EXECUTION.**

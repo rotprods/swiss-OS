@@ -1,0 +1,44 @@
+{
+  "schema_version": "HSLCA-LIVE-CAPTURE-REQUEST-1.0",
+  "request_id": "HSLCA-R2-20260830-01",
+  "active": true,
+  "route": "R2_HSLCA_COHERENT_MEMBER_DIRECTORY_RECAPTURE",
+  "expected_before_sha": "b0ec94f4a13fb7c24d39454439d9792d90bb7e46",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "authority_parent_materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+  "source": {
+    "provider": "HotellerieSuisse",
+    "surface": "member-directory",
+    "locale": "de",
+    "root_url": "https://www.hotelleriesuisse.ch/de/verband-und-geschaeftsstelle/mitglieder/mitgliederverzeichnis"
+  },
+  "capture": {
+    "sequential": true,
+    "max_parallel": 1,
+    "delay_seconds": 1.0,
+    "timeout_seconds": 45,
+    "attempts": 6,
+    "base_backoff_seconds": 15,
+    "max_backoff_seconds": 120,
+    "resume": true
+  },
+  "acceptance": {
+    "coverage_complete": true,
+    "capture_violations": 0,
+    "missing_pages": 0,
+    "non_empty_records": true,
+    "authority_advanced": false,
+    "h_id_allocations": 0,
+    "outbound_opened": false,
+    "send_allowed": 0
+  },
+  "safety": {
+    "authority_advance_allowed": false,
+    "canonical_id_allocation_allowed": false,
+    "canonical_id_reservations": 0,
+    "crm_universe_complete": false,
+    "outbound": "CLOSED",
+    "send_allowed": 0,
+    "irreversible_external_actions": 0
+  }
+}

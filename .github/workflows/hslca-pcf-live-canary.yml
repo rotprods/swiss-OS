@@ -2,9 +2,18 @@ name: hslca-pcf-live-canary
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - docs/state/source/HSLCA_LIVE_CAPTURE_REQUEST.json
 
 permissions:
   contents: read
+
+concurrency:
+  group: hslca-pcf-live-canary-main
+  cancel-in-progress: false
 
 jobs:
   capture:
@@ -15,6 +24,71 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Validate bounded fail-closed capture request
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          EVENT_BEFORE: ${{ github.event.before }}
+        run: |
+          set -euo pipefail
+          PYTHONPATH=src python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          path = Path('docs/state/source/HSLCA_LIVE_CAPTURE_REQUEST.json')
+          req = json.loads(path.read_text(encoding='utf-8'))
+          assert req['schema_version'] == 'HSLCA-LIVE-CAPTURE-REQUEST-1.0'
+          assert req['active'] is True
+          assert req['route'] == 'R2_HSLCA_COHERENT_MEMBER_DIRECTORY_RECAPTURE'
+          assert req['authority_epoch'] == 'HS_ENTITY_EPOCH_2026-08-25_E4'
+          assert req['authority_parent_materialized_sha256'] == '70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6'
+
+          source = req['source']
+          assert source['provider'] == 'HotellerieSuisse'
+          assert source['surface'] == 'member-directory'
+          assert source['locale'] == 'de'
+          assert source['root_url'] == 'https://www.hotelleriesuisse.ch/de/verband-und-geschaeftsstelle/mitglieder/mitgliederverzeichnis'
+
+          capture = req['capture']
+          assert capture['sequential'] is True
+          assert capture['max_parallel'] == 1 and not isinstance(capture['max_parallel'], bool)
+          assert capture['delay_seconds'] == 1.0
+          assert capture['timeout_seconds'] == 45
+          assert capture['attempts'] == 6
+          assert capture['base_backoff_seconds'] == 15
+          assert capture['max_backoff_seconds'] == 120
+          assert capture['resume'] is True
+
+          safety = req['safety']
+          assert safety['authority_advance_allowed'] is False
+          assert safety['canonical_id_allocation_allowed'] is False
+          assert safety['canonical_id_reservations'] == 0 and not isinstance(safety['canonical_id_reservations'], bool)
+          assert safety['crm_universe_complete'] is False
+          assert safety['outbound'] == 'CLOSED'
+          assert safety['send_allowed'] == 0 and not isinstance(safety['send_allowed'], bool)
+          assert safety['irreversible_external_actions'] == 0 and not isinstance(safety['irreversible_external_actions'], bool)
+
+          if os.environ.get('EVENT_NAME') == 'push':
+              before = os.environ.get('EVENT_BEFORE', '')
+              assert before, 'push event must expose before SHA'
+              assert req['expected_before_sha'] == before, (
+                  f"stale capture request: expected before {req['expected_before_sha']} but event before is {before}"
+              )
+
+          print(json.dumps({
+              'valid': True,
+              'request_id': req['request_id'],
+              'route': req['route'],
+              'sequential': True,
+              'max_parallel': 1,
+              'delay_seconds': 1.0,
+              'authority_advanced': False,
+              'h_id_allocations': 0,
+              'outbound': 'CLOSED',
+              'send_allowed': 0,
+          }, sort_keys=True))
+          PY
       - name: Run polite resumable HSLCA-R1.0 capture with MDC-1.1 identity semantics
         id: hslca
         shell: bash
@@ -27,7 +101,7 @@ jobs:
             --root-url "https://www.hotelleriesuisse.ch/de/verband-und-geschaeftsstelle/mitglieder/mitgliederverzeichnis" \
             --locale de \
             --out-dir .artifacts/hslca \
-            --delay 6 \
+            --delay 1 \
             --timeout 45 \
             --attempts 6 \
             --base-backoff 15 \
@@ -93,10 +167,13 @@ jobs:
           assert manifest.get('send_allowed') == 0 and not isinstance(manifest.get('send_allowed'), bool)
           records = manifest.get('records')
           assert isinstance(records, list) and records
+          detail_urls = set()
           for row in records:
               assert isinstance(row.get('name'), str) and row['name'].strip()
               assert isinstance(row.get('city'), str) and row['city'].strip()
               assert isinstance(row.get('detail_url'), str) and row['detail_url'].strip()
+              assert row['detail_url'] not in detail_urls, row['detail_url']
+              detail_urls.add(row['detail_url'])
           Path('.artifacts/SELECTED_MANIFEST_PATH.txt').write_text(str(selected) + '\n')
           print(json.dumps({
               'selected_manifest': str(selected),

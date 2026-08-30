@@ -1,0 +1,44 @@
+{
+  "graph_type": "PROJECT_MEMORY_META_GRAPH_DELTA",
+  "schema_version": "1.3",
+  "project": "SWITZERLAND_JOB_OS",
+  "cycle_id": "META-20260830-CRM-REVIEW-COVERAGE114-CURRENT",
+  "parent_git_sha": "8f36cca8f187f4633521be98095bf3256299b383",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "authority_revision": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+  "graph_impact": "META",
+  "authority_mutation": false,
+  "nodes": [
+    {"id":"META-20260830-CRM-REVIEW-COVERAGE114-CURRENT","type":"META_CYCLE","route":"CURRENT_REVIEW_COVERAGE_RECONCILIATION_114"},
+    {"id":"ANTI-JOIN-UNRESOLVED-1403","type":"REVIEW_UNIVERSE","records":1403,"state":"ATTESTED"},
+    {"id":"REVIEW-CLASSIFIED-114","type":"IDENTITY_REVIEW_COVERAGE","records":114,"new_canonical_preauth":19,"distinctness_review_only":93,"relationship_unresolved":2,"terminal_delta":0},
+    {"id":"FRONTIER-LT350-1289","type":"RESEARCH_FRONTIER","records":1289,"state":"NEXT"},
+    {"id":"AUTHORITY-E4","type":"AUTHORITY_STATE","active":690,"sha256":"70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6","advanced":false},
+    {"id":"STALE-PR-353","type":"SUPERSEDED_PROPOSAL","reason":"old base and ge600 semantics superseded by merged PR354"},
+    {"id":"BLOCK-DISCOVER-SSR","type":"PROVIDER_BOUNDARY","state":"SUBSCRIPTION_KEY_OR_CAPTURE_VALID_MANIFEST_REQUIRED"},
+    {"id":"BLOCK-E4-EGRESS","type":"CAPABILITY_BOUNDARY","state":"BLOCKED_FILE_REFERENCE"},
+    {"id":"NEXT-LOW-SIM-BATCH-0001","type":"CONTINUATION_POINTER","route":"LOW_SIMILARITY_LT350_REVIEW_BATCH_0001"},
+    {"id":"OUTBOUND","type":"GATE","state":"CLOSED","send_allowed":0}
+  ],
+  "edges": [
+    ["META-20260830-CRM-REVIEW-COVERAGE114-CURRENT","CONSUMES","ANTI-JOIN-UNRESOLVED-1403"],
+    ["META-20260830-CRM-REVIEW-COVERAGE114-CURRENT","RECONCILES_CURRENT_EVIDENCE","REVIEW-CLASSIFIED-114"],
+    ["REVIEW-CLASSIFIED-114","PARTITIONS_WITH","FRONTIER-LT350-1289"],
+    ["REVIEW-CLASSIFIED-114","DOES_NOT_MUTATE","AUTHORITY-E4"],
+    ["META-20260830-CRM-REVIEW-COVERAGE114-CURRENT","SUPERSEDES","STALE-PR-353"],
+    ["BLOCK-DISCOVER-SSR","BLOCKS","DISCOVER_SWISS_SSR_AUTHORITY"],
+    ["BLOCK-E4-EGRESS","BLOCKS","DB_FIRST_AUTHORITY_PROMOTION"],
+    ["FRONTIER-LT350-1289","NEXT","NEXT-LOW-SIM-BATCH-0001"],
+    ["AUTHORITY-E4","KEEPS","OUTBOUND"]
+  ],
+  "safety": {
+    "authority_advanced": false,
+    "canonical_id_reservations": 0,
+    "h_id_allocations": 0,
+    "h_0691": "UNALLOCATED",
+    "crm_universe_complete": false,
+    "outbound": "CLOSED",
+    "send_allowed": 0,
+    "irreversible_external_actions": 0
+  }
+}

@@ -1,0 +1,170 @@
+{
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "authority_parent_materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+  "candidate": {
+    "artifact_id": 9718866661,
+    "records": 1438,
+    "records_sha256": "34d9aa9cfa4fe896bf1db8fba4dedfded9a1dbf2e135b847101904644d16bba0"
+  },
+  "canonical_projection": {
+    "drive_spreadsheet_id": "1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w",
+    "read_only_projection": true,
+    "rows": 690,
+    "sheet": "HOTELS_V2"
+  },
+  "coverage_path": "SELF_CONTAINED_DIGEST_AND_RECOVERY_RECIPE",
+  "generated_at": "2026-08-30T09:01:56Z",
+  "many_to_one_source_aliases": [
+    {
+      "canonical_hotel_id": "H-0452",
+      "note": "provider component alias",
+      "source_record_keys": [
+        "MD-319d62613a484d48f48a",
+        "MD-7c70baeb19408c2e971b"
+      ]
+    },
+    {
+      "canonical_hotel_id": "H-0114",
+      "note": "current first-party legacy/current hostel name same property",
+      "source_record_keys": [
+        "MD-b1eb8f0ce9f3a4733c71",
+        "MD-33d867e983644585e4b2"
+      ]
+    }
+  ],
+  "overlay_path": "docs/state/SOURCE_MAPPING_OVERLAY_SRR_BATCH_0008_ATTESTATION_33206402141.json",
+  "parent_git_sha": "db0bd9bb6eab966230e6a9cb42688be3a952867c",
+  "previous_full_rebuild_path": "docs/state/FULL_SOURCE_MAPPING_REBUILD_657_ATTESTATION_33206402141.json",
+  "project": "SWITZERLAND_JOB_OS",
+  "qa": {
+    "all_source_keys_sha256_reproduced": "950cc95f56c9f70a36b79ef6adb301925f30660527430ae799c2cb5ff30e9497",
+    "authority_advanced": false,
+    "canonical_id_reservations": 0,
+    "h_id_allocations": 0,
+    "irreversible_external_actions": 0,
+    "outbound": "CLOSED",
+    "previous_657_hash_recipe_reproduced": true,
+    "previous_terminal_pairs_sha256_reproduced": "5698591ab5c89bc8651dda6f7e2cfeba8c80312e3c19c78736adf1d0e521727e",
+    "previous_unresolved_source_keys_sha256_reproduced": "7285cbcd5936cfabd33ea6f1769cfbf99acd3639562306c0e1bf0632d5400323",
+    "send_allowed": 0,
+    "source_key_conservation": true,
+    "terminal_key_duplicates": 0,
+    "terminal_unresolved_disjoint": true
+  },
+  "ragr": {
+    "gap_hotel_ids": [
+      "H-0003",
+      "H-0016",
+      "H-0100",
+      "H-0144",
+      "H-0161",
+      "H-0192",
+      "H-0218",
+      "H-0291",
+      "H-0337",
+      "H-0352",
+      "H-0464",
+      "H-0501",
+      "H-0521",
+      "H-0524",
+      "H-0623",
+      "H-0657",
+      "H-0659",
+      "H-0660",
+      "H-0661",
+      "H-0662",
+      "H-0663",
+      "H-0664",
+      "H-0665",
+      "H-0666",
+      "H-0667",
+      "H-0668",
+      "H-0669",
+      "H-0670",
+      "H-0671",
+      "H-0672",
+      "H-0673",
+      "H-0674",
+      "H-0675",
+      "H-0677"
+    ],
+    "gap_hotel_ids_sha256": "bca692c105efac8c8929c1639e1ebe643dd03f0a6ecab4bb42d86e0acccba568",
+    "h0114_effect": "ALREADY_COVERED_NO_RAGR_GAP_CHANGE",
+    "protocol": "RAGR-1.0",
+    "reverse_authority_source_gaps": 34,
+    "state": "REATTESTED_FROM_658"
+  },
+  "rebuild": {
+    "delta_reconcile_required": -1,
+    "delta_terminal_mappings": 1,
+    "exact_name_city": 623,
+    "explicit_srr_deltas": 34,
+    "pinned_exact_correction": 1,
+    "previous_terminal_pairs_sha256": "5698591ab5c89bc8651dda6f7e2cfeba8c80312e3c19c78736adf1d0e521727e",
+    "previous_unresolved_source_keys_sha256": "7285cbcd5936cfabd33ea6f1769cfbf99acd3639562306c0e1bf0632d5400323",
+    "reconcile_required": 1403,
+    "terminal_pairs_sha256": "cdcecdf445395fe36c6318c2f0103757b0a14ec08d33e229c138df2ec36ad56e",
+    "terminal_source_mappings": 658,
+    "unique_canonical_targets": 656,
+    "unresolved_source_keys_sha256": "910cfd92974025a836430612387d380be0f15d173d41f20fda6fea2bcca48581"
+  },
+  "recovery_recipe": {
+    "exact_key": [
+      "name",
+      "city"
+    ],
+    "exact_match_rule": "unique canonical projection match only",
+    "exceptional_count": 35,
+    "exceptional_mappings": {
+      "MD-025e7888dfc33e19723a": "H-0686",
+      "MD-0672b5697de8a818d65b": "H-0022",
+      "MD-11d7b5eca200ae61af52": "H-0554",
+      "MD-16f3296ed9616c0ef6ec": "H-0020",
+      "MD-1e66aa8d213855517131": "H-0478",
+      "MD-33d867e983644585e4b2": "H-0114",
+      "MD-418c10f59064a67a4ffb": "H-0063",
+      "MD-43c002a5f800a7d92f5d": "H-0010",
+      "MD-466d0a46fe05df051926": "H-0060",
+      "MD-5c6730731bcb89467b0f": "H-0001",
+      "MD-615a31fb4402ea4abf2e": "H-0474",
+      "MD-6e4b884c5f566102a50d": "H-0685",
+      "MD-70fee4f734bf530fb6fd": "H-0681",
+      "MD-734757058decadaa6453": "H-0021",
+      "MD-7465735aa7cebbfc840c": "H-0678",
+      "MD-74d083ce2753ccb59292": "H-0453",
+      "MD-75b604323027a973bc4d": "H-0684",
+      "MD-75cfec87fdff918b9c59": "H-0006",
+      "MD-7c70baeb19408c2e971b": "H-0452",
+      "MD-7db3357bbcfbad01a7ec": "H-0019",
+      "MD-915b0a6a07df97b87dae": "H-0679",
+      "MD-9e3233153af5ab2e8c01": "H-0121",
+      "MD-aabf05311b7763fe5929": "H-0242",
+      "MD-b1eb8f0ce9f3a4733c71": "H-0114",
+      "MD-bfd71f032baf20b34f5a": "H-0176",
+      "MD-c1bad65dc4e10ee53703": "H-0687",
+      "MD-cd2a27fb3d4cb88a5bfd": "H-0025",
+      "MD-d09653a62d86bff5e672": "H-0652",
+      "MD-d64716f571bf23669451": "H-0688",
+      "MD-dbab170cb19a81df4f10": "H-0542",
+      "MD-dd14bef2251b12ecd017": "H-0088",
+      "MD-ef64d8388959eb063e74": "H-0004",
+      "MD-faa64ef9d3f987496065": "H-0445",
+      "MD-fed86d7933175b3cb112": "H-0002",
+      "MD-ff70cabc95a4a2ea61a1": "H-0024"
+    },
+    "normalization": [
+      "strip",
+      "collapse_whitespace",
+      "casefold"
+    ],
+    "source_key_conservation_required": true
+  },
+  "schema_version": "FULL-SOURCE-MAPPING-REBUILD-ATTESTATION-2.1",
+  "snapshot_id": "HS-MEMBER-DE-33206402141",
+  "source": {
+    "all_source_keys_sha256": "950cc95f56c9f70a36b79ef6adb301925f30660527430ae799c2cb5ff30e9497",
+    "artifact_id": 9700376482,
+    "records": 2061,
+    "records_sha256": "62e26d62d8677a5437e081302b6b4d206c0d27a0fe268c6356aef01da5428dc2"
+  }
+}

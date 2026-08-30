@@ -40,7 +40,6 @@ def main():
     paths=context.get("relevant_paths") if isinstance(context.get("relevant_paths"),list) else []
     try: current_scope=scope_revision(paths)
     except (ValueError,subprocess.SubprocessError) as exc: errors.append(f"context:{exc}"); current_scope=""
-    print(f"v2_contract_guard: DIAG projection={projection['projection_revision']} scope={current_scope} watermark={projection.get('event_watermark')}")
     errors.extend(f"context:{x}" for x in validate_context_pack(context,base_is_ancestor=is_ancestor(context.get("base_main_sha")),current_projection_revision=projection["projection_revision"],current_relevant_scope_revision=current_scope,current_authority_revision=str(state.get("authority_revision",""))))
     if context.get("event_watermark")!=projection.get("event_watermark"): errors.append("CONTEXT_EVENT_WATERMARK_MISMATCH")
     active=load("docs/state/v2/active-claims.json")

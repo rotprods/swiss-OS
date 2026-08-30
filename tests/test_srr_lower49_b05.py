@@ -7,6 +7,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 ART = ROOT / "docs/state/SRR_CURRENT_IDENTITY_EVIDENCE_LOWER49_P1_B05_2026-08-30.json"
 STATE = ROOT / "STATE.md"
+NEXT = ROOT / "docs/state/NEXT.json"
 
 
 def _sha(value):
@@ -51,10 +52,13 @@ class Lower49B05Tests(unittest.TestCase):
         self.assertEqual(art["safety"]["canonical_id_reservations"], 0)
         self.assertEqual(art["safety"]["h_id_allocations"], 0)
         self.assertEqual(art["safety"]["irreversible_external_actions"], 0)
-        self.assertEqual(art["next"]["route"], "SELECT_NEXT_CRM_ENTITY_RESOLUTION_FRONTIER_AFTER_LOWER49_COMPLETE")
+        # Wave-local NEXT requests a fresh residual conservation pass; COLETTE ranking
+        # may supersede it in the canonical NEXT pointer after the wave closes.
+        self.assertEqual(art["next"]["route"], "REBUILD_TYPED_UNTYPED_CONSERVATION_AND_COMPILE_REMAINING_RECONCILE_REQUIRED_WORKSET")
 
-    def test_state_has_completed_lower49_without_authority_effect(self):
+    def test_state_and_canonical_next_close_lower49_then_select_ragr(self):
         text = STATE.read_text(encoding="utf-8")
+        nxt = json.loads(NEXT.read_text(encoding="utf-8"))
         typed = re.search(r"lower49 typed SRR materialized\s+(\d+) / 47", text)
         cumulative = re.search(r"cumulative NEW_CANONICAL preauthority\s+(\d+)", text)
         self.assertIsNotNone(typed)
@@ -63,7 +67,11 @@ class Lower49B05Tests(unittest.TestCase):
         self.assertGreaterEqual(int(cumulative.group(1)), 114)
         self.assertIn("H-0691 UNALLOCATED", text)
         self.assertIn("OUTBOUND                        CLOSED", text)
-        self.assertIn("RAGR", text)
+        self.assertEqual(nxt["next_route"], "EXECUTE_RAGR34_B01_EVIDENCE_CLASSIFICATION")
+        self.assertEqual(nxt["review_frontier"]["ragr"]["remaining"], 34)
+        self.assertFalse(nxt["authority_advance_allowed"])
+        self.assertFalse(nxt["canonical_id_allocation_allowed"])
+        self.assertFalse(nxt["outbound_allowed"])
 
 
 if __name__ == "__main__":

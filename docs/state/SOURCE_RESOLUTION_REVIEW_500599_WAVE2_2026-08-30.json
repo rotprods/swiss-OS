@@ -1,0 +1,195 @@
+{
+  "schema_version": "SRR-CURRENT-IDENTITY-EVIDENCE-500599-WAVE-2.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "source_snapshot_id": "HS-MEMBER-DE-33206402141",
+  "generated_at": "2026-08-30T11:02:00Z",
+  "parent_git_sha": "5fb3e30bbbfa496126769fa57ac378c48e4b0fb9",
+  "authority": {
+    "epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+    "materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+    "advanced": false
+  },
+  "inputs": {
+    "provider_identity_path": "docs/state/SRET_PROVIDER_IDENTITY_050_SUB01_33206402141.json",
+    "terminal_exception_source_key": "MD-7c70baeb19408c2e971b",
+    "prior_wave_path": "docs/state/SRR_CURRENT_IDENTITY_EVIDENCE_500599_WAVE1_2026-08-30.json",
+    "effective_unresolved_band_count": 46
+  },
+  "decision_semantics": {
+    "NEW_CANONICAL": {
+      "mapping_state": "RECONCILE_REQUIRED",
+      "authority_action": "ALLOCATE_NEW_CANONICAL_ON_AUTHORITY_COMMIT",
+      "canonical_h_id_reserved": false,
+      "operational_authority": false
+    }
+  },
+  "decisions": [
+    {
+      "action": "NEW_CANONICAL",
+      "source_record_key": "MD-13722db1919442c8b5f6",
+      "name": "ibis budget Winterthur",
+      "city": "Winterthur",
+      "original_candidate_offset": 118,
+      "suggested_hotel_ids": ["H-0179"],
+      "candidate_detail_url": "https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-ibis-budget-winterthur",
+      "reason_code": "SAME_PROVIDER_DISTINCT_PROPERTY_CODE_ADDRESS_AND_PHONE",
+      "evidence": [
+        {"fact":"ibis budget Winterthur is current Accor property code 6783 at Brühlbergstrasse 7A with distinct phone.","url":"https://all.accor.com/hotel/6783/index.en.shtml"},
+        {"fact":"H-0179 ibis Winterthur City is separate Accor property code 3561 at Brühlbergstrasse 7 with distinct phone.","url":"https://all.accor.com/hotel/3561/index.en.shtml"}
+      ]
+    },
+    {
+      "action": "NEW_CANONICAL",
+      "source_record_key": "MD-1776f584db74aa28b566",
+      "name": "Appenzeller Huus, Huus Bären",
+      "city": "Gonten",
+      "original_candidate_offset": 145,
+      "suggested_hotel_ids": ["H-0063"],
+      "candidate_detail_url": "https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-appenzeller-huus-huus-baeren-3",
+      "reason_code": "OFFICIAL_RESORT_SEPARATE_HOTEL_IDENTITY",
+      "evidence": [
+        {"fact":"Official Appenzeller Huus material identifies HUUS BÄREN 1602 as a separate hotel from HUUS QUELL.","url":"https://appenzellerhuus.ch/de/hotels/huus-baeren-1602/"},
+        {"fact":"Official factsheet distinguishes Bären, Löwen and Quell as separate hotel products.","url":"https://appenzellerhuus.ch/media/pttpe5r4/factsheet-appenzeller-huus-en.pdf"}
+      ]
+    },
+    {
+      "action": "NEW_CANONICAL",
+      "source_record_key": "MD-602d416c1e4106d2e085",
+      "name": "Appenzeller Huus, Huus Löwen",
+      "city": "Gonten",
+      "original_candidate_offset": 563,
+      "suggested_hotel_ids": ["H-0063"],
+      "candidate_detail_url": "https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-appenzeller-huus-huus-loewen",
+      "reason_code": "OFFICIAL_RESORT_SEPARATE_HOTEL_IDENTITY",
+      "evidence": [
+        {"fact":"Official Appenzeller Huus material identifies HUUS LÖWEN 1878 as a separate hotel from HUUS QUELL.","url":"https://appenzellerhuus.ch/de/hotels/huus-loewen-1878/"},
+        {"fact":"Official factsheet distinguishes Bären, Löwen and Quell as separate hotel products.","url":"https://appenzellerhuus.ch/media/pttpe5r4/factsheet-appenzeller-huus-en.pdf"}
+      ]
+    },
+    {
+      "action": "NEW_CANONICAL",
+      "source_record_key": "MD-d71b02bc712af2543eae",
+      "name": "ibis budget Geneve Palexpo Aeroport",
+      "city": "Le Grand-Saconnex",
+      "original_candidate_offset": 1215,
+      "suggested_hotel_ids": ["H-0176"],
+      "candidate_detail_url": "https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-ibis-budget-geneve-palexpo-aeroport",
+      "reason_code": "SAME_ADDRESS_PROVIDER_DISTINCT_PROPERTY_CODE_PHONE_AND_BRAND",
+      "evidence": [
+        {"fact":"ibis budget Genève Palexpo Aéroport is Accor property A8F3 with its own current identity and phone.","url":"https://all.accor.com/hotel/A8F3/index.en.shtml"},
+        {"fact":"H-0176 ibis Styles Genève Palexpo is separate Accor property A8F2 with a distinct phone despite the same address.","url":"https://all.accor.com/hotel/A8F2/index.en.shtml"}
+      ]
+    },
+    {
+      "action": "NEW_CANONICAL",
+      "source_record_key": "MD-840b71a3658fb11eeaed",
+      "name": "Monte Rosa Hütte",
+      "city": "Zermatt",
+      "original_candidate_offset": 764,
+      "suggested_hotel_ids": ["H-0018"],
+      "candidate_detail_url": "https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-monte-rosa-huette",
+      "reason_code": "MOUNTAIN_HUT_DISTINCT_FROM_VILLAGE_HOTEL",
+      "evidence": [
+        {"fact":"Monte Rosa Hütte is a SAC mountain hut in the Monte Rosa massif above Zermatt.","url":"https://www.sac-cas.ch/en/huts-and-tours/sac-route-portal/monte-rosa-huette-sac-2147000177/"},
+        {"fact":"H-0018 Hotel Monte Rosa is a village hotel at Bahnhofstrasse 80, Zermatt.","url":"https://www.monterosazermatt.ch/en/location/"}
+      ]
+    },
+    {
+      "action": "NEW_CANONICAL",
+      "source_record_key": "MD-d41be1b8afc4f76da733",
+      "name": "Hotel Plateau-Rosa",
+      "city": "Zermatt",
+      "original_candidate_offset": 1200,
+      "suggested_hotel_ids": ["H-0018"],
+      "candidate_detail_url": "https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-hotel-plateau-rosa",
+      "reason_code": "CURRENT_ADDRESS_AND_DOMAIN_DISTINCT_FROM_COMPARATOR",
+      "evidence": [
+        {"fact":"Hotel Plateau-Rosa is a current property with its own domain and identity at Schluhmattstrasse 76.","url":"https://www.plateau-rosa.ch/"},
+        {"fact":"H-0018 Hotel Monte Rosa is a separate property at Bahnhofstrasse 80.","url":"https://www.monterosazermatt.ch/en/location/"}
+      ]
+    },
+    {
+      "action": "NEW_CANONICAL",
+      "source_record_key": "MD-cb01bf8880ce6c4e3d7c",
+      "name": "Hotel Pilatus-Kulm",
+      "city": "Kriens",
+      "original_candidate_offset": 1158,
+      "suggested_hotel_ids": ["H-0438"],
+      "candidate_detail_url": "https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-hotel-pilatus-kulm",
+      "reason_code": "OFFICIAL_PROVIDER_LISTS_SEPARATE_HOTELS",
+      "evidence": [
+        {"fact":"Pilatus lists Hotel Pilatus-Kulm and Hotel Bellevue as separate hotels within Pilatus Kulm Hotels.","url":"https://pilatus.ch/en/hotels"},
+        {"fact":"H-0438 Hotel Bellevue has its own official property page.","url":"https://pilatus.ch/en/hotels/hotel-bellevue"}
+      ]
+    },
+    {
+      "action": "NEW_CANONICAL",
+      "source_record_key": "MD-fe293753a2a9af0ca839",
+      "name": "Hotel City Zürich",
+      "city": "Zürich",
+      "original_candidate_offset": 1427,
+      "suggested_hotel_ids": ["H-0473", "H-0682"],
+      "candidate_detail_url": "https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-hotel-city-zuerich",
+      "reason_code": "CURRENT_ADDRESS_DOMAIN_DISTINCT_FROM_ALL_COMPARATORS",
+      "evidence": [
+        {"fact":"Hotel City Zürich is a current property at Löwenstrasse 34 with domain hotelcity.ch.","url":"https://www.hotelcity.ch/en/"},
+        {"fact":"H-0473 Hotel Schweizerhof Zürich is at Bahnhofplatz 7.","url":"https://www.hotelschweizerhof.com/en/contact/arrival"},
+        {"fact":"H-0682 Mercure Zürich City is at Vulkanstrasse 108b.","url":"https://all.accor.com/hotel/B5B6/index.en.shtml"}
+      ]
+    },
+    {
+      "action": "NEW_CANONICAL",
+      "source_record_key": "MD-92655bbac05436c7e861",
+      "name": "Hotel Alpina Rigi Kaltbad",
+      "city": "Rigi Kaltbad",
+      "original_candidate_offset": 831,
+      "suggested_hotel_ids": ["H-0243"],
+      "candidate_detail_url": "https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-hotel-alpina-rigi-kaltbad",
+      "reason_code": "CURRENT_DISTINCT_PROPERTY_NAME_DOMAIN_AND_IDENTITY",
+      "evidence": [
+        {"fact":"Hotel Alpina Rigi Kaltbad has its own current property identity and domain.","url":"https://www.alpina-rigi.ch/"},
+        {"fact":"H-0243 Rigi Kaltbad Swiss Quality Hotel is a separate current property/domain.","url":"https://hotelrigikaltbad.ch/"}
+      ]
+    }
+  ],
+  "counts": {
+    "reviewed": 9,
+    "new_canonical_preauth": 9,
+    "relationship_unresolved": 0,
+    "terminal_existing_or_alias": 0,
+    "canonical_id_reservations": 0,
+    "h_id_allocations": 0,
+    "irreversible_external_actions": 0
+  },
+  "band_frontier": {
+    "effective_unresolved_records": 46,
+    "reviewed_before": 10,
+    "reviewed_this_wave": 9,
+    "reviewed_cumulative": 19,
+    "remaining": 27,
+    "terminal_delta_from_wave": 0
+  },
+  "cumulative_preauthority_frontier": {
+    "ge600_new_canonical_preauth": 19,
+    "band500599_new_canonical_preauth": 19,
+    "total_new_canonical_preauth": 38,
+    "overall_relationship_granularity_unresolved": 2
+  },
+  "safety": {
+    "authority_advanced": false,
+    "canonical_id_reservations": 0,
+    "h_id_allocations": 0,
+    "h_0691": "UNALLOCATED",
+    "crm_universe_complete": false,
+    "outbound": "CLOSED",
+    "send_allowed": 0,
+    "irreversible_external_actions": 0
+  },
+  "next": {
+    "route": "BOUND_CURRENT_IDENTITY_EVIDENCE_REVIEW_500_599_WAVE3_WITHOUT_AUTOBIND",
+    "band_total": 46,
+    "reviewed": 19,
+    "remaining": 27
+  },
+  "decisions_sha256": "2598bd8f332ecc283ee8e7a3550ce03ed51dfe219634092fe1d0ed25d499f1d5"
+}

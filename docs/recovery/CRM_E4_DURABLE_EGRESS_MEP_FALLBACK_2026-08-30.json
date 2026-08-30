@@ -1,5 +1,5 @@
 {
-  "schema_version": "CRM-E4-DURABLE-EGRESS-MEP-1.0",
+  "schema_version": "CRM-E4-DURABLE-EGRESS-MEP-1.1",
   "project": "SWITZERLAND_JOB_OS",
   "parent_git_sha": "78daa43661867cfcb66a379a367380eb1fe9b22b",
   "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
@@ -28,9 +28,24 @@
       "route": "Drive direct upload of reconstructed local artifact",
       "result": "BLOCKED_FILE_REFERENCE"
     },
+    "strategy_3": {
+      "route": "Drive import_document of deterministic gzip+base64 text capsule generated from reconstructed local artifact",
+      "capsule": {
+        "compression": "gzip-9-mtime0",
+        "gzip_size_bytes": 290689,
+        "gzip_sha256": "97c6e617cde0d98967afec8633a4bba3d63df49787985199ca93d8bd0816483a",
+        "base64_length": 387588,
+        "text_capsule_sha256": "e8e0484e907b1ef826e400bfdbd207924cb887a69786caf21d778f37934dd34a"
+      },
+      "result": "BLOCKED_FILE_REFERENCE"
+    },
+    "failure_family": "GENERATED_LOCAL_FILE_REFERENCE_EGRESS_UNAVAILABLE",
+    "sqlite_mime_specific": false,
+    "retry_same_file_reference_strategy_allowed": false,
     "probe_copy_postcondition": "RENAMED_EXPLICITLY_AS_SOURCE_V13_COPY_NOT_E4",
     "probe_copy_title": "EGRESS_PROBE_SOURCE_V13_COPY_NOT_E4_2026-08-30.sqlite",
-    "durable_e4_binary_published": false
+    "durable_e4_binary_published": false,
+    "drive_recovery_document_id": "17qlWRTTXc44jTAkuZRI5ZYWoZZEQUCb0d6uqy0fbaWs"
   },
   "authority_effect": {
     "authority_advanced": false,
@@ -45,8 +60,9 @@
   },
   "blocker": "RUNTIME_CONNECTOR_FILE_REFERENCE_EGRESS_BLOCKS_DURABLE_REPAIRED_SQLITE_PUBLICATION",
   "next_routes": [
-    "Use a provider/runtime path that can durably publish the byte-exact reconstructed E4 SQLite, then rerun fresh DB-first cross-plane Neu-Schonstatt authority transaction.",
-    "Until egress exists, continue only disjoint reversible PREAUTH/entity-resolution or provider-acquisition work; never mutate Sheets first.",
+    "Use a provider/runtime path that returns a provider-accepted durable file reference for the byte-exact reconstructed E4 SQLite, then rerun a fresh DB-first cross-plane authority transaction.",
+    "Do not retry local generated-file upload, replace, or import-document variants: all three converge on BLOCKED_FILE_REFERENCE and are now a generalized stuck failure family.",
+    "Until a different egress capability exists, continue only disjoint reversible PREAUTH/entity-resolution or provider-acquisition work; never mutate Sheets first.",
     "If discover.swiss Infocenter credentials become available, execute structured capture to capture-valid manifest to SSR-1.0 without persisting secrets."
   ],
   "safety": {

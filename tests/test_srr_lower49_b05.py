@@ -56,7 +56,7 @@ class Lower49B05Tests(unittest.TestCase):
         # may supersede it in the canonical NEXT pointer after the wave closes.
         self.assertEqual(art["next"]["route"], "REBUILD_TYPED_UNTYPED_CONSERVATION_AND_COMPILE_REMAINING_RECONCILE_REQUIRED_WORKSET")
 
-    def test_state_and_canonical_next_close_lower49_then_select_ragr(self):
+    def test_state_and_canonical_next_never_regress_before_ragr(self):
         text = STATE.read_text(encoding="utf-8")
         nxt = json.loads(NEXT.read_text(encoding="utf-8"))
         typed = re.search(r"lower49 typed SRR materialized\s+(\d+) / 47", text)
@@ -67,8 +67,18 @@ class Lower49B05Tests(unittest.TestCase):
         self.assertGreaterEqual(int(cumulative.group(1)), 114)
         self.assertIn("H-0691 UNALLOCATED", text)
         self.assertIn("OUTBOUND                        CLOSED", text)
-        self.assertEqual(nxt["next_route"], "EXECUTE_RAGR34_B01_EVIDENCE_CLASSIFICATION")
-        self.assertEqual(nxt["review_frontier"]["ragr"]["remaining"], 34)
+
+        # B05 established RAGR as the canonical downstream route. Later RAGR waves
+        # must be allowed to advance B01 -> B02 -> B03 -> B04 without forcing NEXT
+        # back to B01. This regression test therefore enforces monotonic stage
+        # membership and safety rather than pinning one historical batch forever.
+        route = nxt["next_route"]
+        self.assertRegex(route, r"^EXECUTE_RAGR34_B0[1-4]_EVIDENCE_CLASSIFICATION$")
+        ragr = nxt["review_frontier"]["ragr"]
+        self.assertEqual(ragr["total"], 34)
+        self.assertGreaterEqual(ragr["reviewed"], 0)
+        self.assertLessEqual(ragr["remaining"], 34)
+        self.assertEqual(ragr["reviewed"] + ragr["remaining"], 34)
         self.assertFalse(nxt["authority_advance_allowed"])
         self.assertFalse(nxt["canonical_id_allocation_allowed"])
         self.assertFalse(nxt["outbound_allowed"])

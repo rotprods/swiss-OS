@@ -1,0 +1,22 @@
+{
+  "schema_version": "META-GRAPH-DELTA-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "decision_id": "MGD-CRM-ANTI-JOIN-1403-20260830",
+  "generated_at": "2026-08-30T09:13:35Z",
+  "parent_git_sha": "ca72ff9edd8b7da89a8289ee723a090ac86e0a69",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "nodes": [
+    {"id":"crm:candidates:1438","type":"PREAUTH_CANDIDATE_UNIVERSE","state":"FROZEN"},
+    {"id":"crm:terminal-exceptions:35","type":"TERMINAL_SOURCE_KEY_SET","state":"ATTESTED"},
+    {"id":"crm:unresolved:1403","type":"PREAUTH_UNRESOLVED_UNIVERSE","state":"MATERIALIZED","sha256":"910cfd92974025a836430612387d380be0f15d173d41f20fda6fea2bcca48581"},
+    {"id":"crm:unresolved-stage:0001","type":"BOUNDED_REVIEW_STAGE","state":"READY_REVIEW","records":64,"sha256":"ffe4d193b8a759ba82f5395af1a48190fe2ab360ef9a687facb98d9543cccfa0"},
+    {"id":"crm:authority:E4","type":"AUTHORITY_EPOCH","state":"LOCKED","sha256":"70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6"}
+  ],
+  "edges": [
+    {"from":"crm:candidates:1438","relation":"ANTI_JOIN_EXCLUDING","to":"crm:terminal-exceptions:35"},
+    {"from":"crm:candidates:1438","relation":"YIELDS","to":"crm:unresolved:1403"},
+    {"from":"crm:unresolved:1403","relation":"PARTITIONS_TO_FIRST_STAGE","to":"crm:unresolved-stage:0001"},
+    {"from":"crm:unresolved-stage:0001","relation":"DOES_NOT_ADVANCE","to":"crm:authority:E4"}
+  ],
+  "invariants": {"authority_advanced":false,"canonical_id_reservations":0,"h_id_allocations":0,"irreversible_external_actions":0,"outbound":"CLOSED","send_allowed":0}
+}

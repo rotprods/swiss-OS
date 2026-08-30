@@ -1,6 +1,6 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest chained Meta Execution coordination frontier: **2026-08-30T15:35:00Z**. Current execution parent main SHA: **`317d5892b5c80f0066a16339ed2a1f10dcdae1ef`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
+Latest chained Meta Execution coordination frontier: **2026-08-30T15:55:00Z**. Current execution parent main SHA: **`aa7b9964acefc5f86548cf618c3d91e3c68edaf7`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Frozen CRM snapshot: **`HS-MEMBER-DE-33206402141`**.
 
 ## Authority — unchanged / locked
 
@@ -42,16 +42,19 @@ Source-key conservation remains `658 + 1403 = 2061`. Terminal-pair SHA remains `
 0.50–0.599999 reviewed                   46 / 46
 relationship/granularity reviewed          2 / 2
 relationship/granularity unresolved            0
-cumulative NEW_CANONICAL preauthority         67
+cumulative NEW_CANONICAL preauthority         77
 lower49 ordinary evidence-reviewed         47 / 47
 lower49 ordinary exact workset             47 / 47
-lower49 typed SRR materialized               0 / 47
+lower49 typed SRR materialized             10 / 47
+lower49 typed SRR remaining                   37
 terminal mapping delta from review             0
 ```
 
-The exact 47 ordinary lower49 evidence reviews are compiled into deterministic token6 workset `CRM_IDENTITY_WORKSET_LOWER49_ORDINARY_47_2026-08-30.json`, five batches `10/10/10/10/7`, workset SHA `8817941127ede8f9329d81b4831b1fd6643e9ab4c19438c3fa612b78e1169050`. Historical token5 packet results are evidence-only: `CURRENT_PUBLIC_DISTINCTNESS_SUPPORTED` clears weak similarity collisions but does not itself prove `NEW_CANONICAL`, reserve an ID, or create a typed SRR decision.
+`L49-P1-B01` re-read the exact packet01 ten against current provider/first-party identity evidence and live `HOTELS_V2` canonical comparator rows. Every source is independently distinct from every suggested comparator; all ten are typed `NEW_CANONICAL` **preauthority only** and remain `RECONCILE_REQUIRED`. Historical token5 `CURRENT_PUBLIC_DISTINCTNESS_SUPPORTED` is preserved only as evidence provenance, never as current write authority or sole novelty proof.
 
-EGR-1.0 remains active for entity-granularity semantics. Delta Resort Apartments and Overlook Lodge are separate preauthority canonical candidates with explicit parent/component relationships; both remain `RECONCILE_REQUIRED`.
+High-confusion checks include separate current addresses/brands for Holiday Inn Express Zürich Airport vs Radisson Zürich Airport, separate Accor property identities `9577` vs `3133` for ibis Genève Centre Lac vs Novotel Genève Centre, Radisson Blu Basel vs all three suggested Basel comparators, and independent current identities for Seefeld/Seidenhof/Zürichberg vs Greulich.
+
+EGR-1.0 remains active for entity-granularity semantics. Delta Resort Apartments and Overlook Lodge remain separate preauthority canonical candidates with explicit parent/component relationships and `RECONCILE_REQUIRED` state.
 
 Fencing token **6** (`CLAIM-CRM-SRR-SPECIAL-006`) remains **ACTIVE** with authority ceiling `PREAUTH_SRR_DECISION_ONLY_NO_CANONICAL_MUTATION`.
 
@@ -61,7 +64,7 @@ Drive native `HOTELS_V2` readback is live. Exact E4 local reconstruction remains
 
 ## NEXT
 
-Execute **`L49-P1-B01`**, the exact ten reviews from packet 01. Gather/re-read current provider or first-party identity evidence and live canonical comparator rows before any typed SRR decision. Similarity and destination co-listing alone cannot prove novelty. Preserve `RECONCILE_REQUIRED` unless exact current identity evidence independently supports a typed preauthority action. Never reserve/allocate H-0691; keep `OUTBOUND=CLOSED` and `send_allowed=0`.
+Execute **`L49-P1-B02`**, the exact ten reviews from packet 02. Re-read current provider/first-party identity evidence and every live suggested canonical comparator before a typed SRR action. Historical token5 distinctness evidence remains provenance only. Preserve `RECONCILE_REQUIRED` unless exact current evidence independently supports a typed preauthority action. Never reserve/allocate H-0691; keep `OUTBOUND=CLOSED`, `send_allowed=0`, terminal mappings 658 and authority E4 unchanged.
 
 Recovery inputs and exact blockers are persisted in `docs/state/NEXT.json` and `docs/state/NEXT_META_EXECUTION_2026-08-30.json`.
 

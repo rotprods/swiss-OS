@@ -1,0 +1,25 @@
+{
+  "schema_version": "RECOVERY-SUPERSESSION-POINTER-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "authority": "SUPERSEDED_POINTER_ONLY",
+  "superseded_surface": "DB_EGRESS_CAPABILITY_GAUNTLET_2026-08-30",
+  "superseded_by": "docs/recovery/CRM_E4_DURABLE_EGRESS_MEP_FALLBACK_2026-08-30.json",
+  "canonical_surface_schema_version": "CRM-E4-DURABLE-EGRESS-MEP-1.1",
+  "canonical_merge_pr": 342,
+  "canonical_merge_sha": "3afe2ef55acdc41b82f7899dec5bf9e7f7f40f6a",
+  "reason": "PR #342 merged the third text-capsule fallback directly into the existing CRM E4 durable-egress recovery surface. This historical path is retained only as a deterministic redirect so handoffs cannot create a second recovery source of truth.",
+  "failure_family": "GENERATED_LOCAL_FILE_REFERENCE_EGRESS_UNAVAILABLE",
+  "retry_same_file_reference_strategy_allowed": false,
+  "verify_live_truth_before_execution": true,
+  "authority_effect": {
+    "authority_advanced": false,
+    "hotels_master_mutations": 0,
+    "terminal_mapping_delta": 0,
+    "h_id_allocations": 0,
+    "canonical_id_reservations": 0,
+    "crm_universe_complete": false,
+    "outbound": "CLOSED",
+    "send_allowed": 0,
+    "irreversible_external_actions": 0
+  }
+}

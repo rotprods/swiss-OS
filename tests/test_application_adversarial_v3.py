@@ -10,7 +10,6 @@ from swiss_os.application_adversarial import (
     STAKEHOLDERS,
     evaluate_application,
     evaluate_hard_gates,
-    evaluate_questionnaire,
     question_bank_public_contract,
 )
 
@@ -126,7 +125,6 @@ class ApplicationAdversarialGateV3Tests(unittest.TestCase):
         dims["portfolio_proof"] = None
         result = self.evaluate(dimension_scores=dims)
         self.assertFalse(result["quality_complete"])
-        self.assertIn("portfolio_proof", result["hard_gates"].get("unknown", []) if False else result["blockers"][0:])
         self.assertIn("UNKNOWN_DIMENSION:portfolio_proof", result["blockers"])
         self.assertEqual(result["decision"], Decision.LIMBO.value)
 

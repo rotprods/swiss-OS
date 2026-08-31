@@ -56,7 +56,10 @@ jobs:
           from swiss_os.vacancy_detail import opening_route_workset, sha256_value
           request=json.loads(Path('docs/state/market/VACANCY_DETAIL_RUN_REQUEST_436_2026-08-31.json').read_text())
           market=json.loads(Path('market-source/market-enrichment-2061.json').read_text())
-          assert sha256_value(market) == request['source_market_aggregate_sha256']
+          declared=market.get('aggregate_sha256')
+          recomputed=sha256_value({k:v for k,v in market.items() if k!='aggregate_sha256'})
+          assert declared == request['source_market_aggregate_sha256']
+          assert recomputed == declared
           workset=opening_route_workset(market)
           assert len(workset) == request['expected_opening_route_hotels'] == 436
           assert request['shard_count'] == 44

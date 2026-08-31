@@ -62,6 +62,7 @@ jobs:
           assert request['shard_count'] == 44
           assert request['missing_shard_indexes'] == [14]
           assert request['reused_successful_shards'] == 43
+          assert request['recovery_observed_at_semantics'] == 'STAMP_AT_ACTUAL_ACTIONS_EXECUTION_NOT_AT_REQUEST_CREATION'
           assert request['safety']['outbound'] == 'CLOSED'
           assert request['safety']['send_allowed'] == 0
           PY
@@ -136,7 +137,8 @@ jobs:
       - name: Re-run only missing shard 14 with route fault isolation
         run: |
           set -euo pipefail
-          RECOVERY_OBSERVED_AT="$(python -c "import json;print(json.load(open('docs/state/market/VACANCY_DETAIL_RECOVERY_REQUEST_SHARD14_2026-08-31.json'))['recovery_observed_at'])")"
+          RECOVERY_OBSERVED_AT="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          printf '%s\n' "$RECOVERY_OBSERVED_AT" > recovery-observed-at.txt
           python -m swiss_os.vacancy_detail_fault_isolation \
             --aggregate market-source/market-enrichment-2061.json \
             --shard-index 14 \
@@ -150,14 +152,14 @@ jobs:
           python - <<'PY'
           import json
           from pathlib import Path
-          request=json.loads(Path('docs/state/market/VACANCY_DETAIL_RECOVERY_REQUEST_SHARD14_2026-08-31.json').read_text())
           files=sorted(Path('recovered-shards').glob('vacancy-detail-shard-*.json'))
           packets=[json.loads(path.read_text()) for path in files]
           indexes=sorted(int(packet['shard_index']) for packet in packets)
           assert len(files) == 44
           assert indexes == list(range(44))
           recovered=next(packet for packet in packets if int(packet['shard_index']) == 14)
-          assert recovered['observed_at'] == request['recovery_observed_at']
+          actual_observed_at=Path('recovery-observed-at.txt').read_text().strip()
+          assert recovered['observed_at'] == actual_observed_at
           assert recovered['execution_adapter'] == 'VACANCY-DETAIL-FAULT-ISOLATION-1.0'
           assert recovered['authority_advanced'] is False
           assert recovered['outbound'] == 'CLOSED'
@@ -191,6 +193,7 @@ jobs:
           detail=json.loads(Path('vacancy-detail-436-recovered.json').read_text())
           wave=json.loads(Path('application-wave2-public-seeds.json').read_text())
           recovered=json.loads(Path('recovered-shards/vacancy-detail-shard-14.json').read_text())
+          actual_observed_at=Path('recovery-observed-at.txt').read_text().strip()
           summary={
             'schema_version':'VACANCY-DETAIL-RECOVERY-SUMMARY-1.0',
             'project':'SWITZERLAND_JOB_OS',
@@ -204,7 +207,8 @@ jobs:
             'workset_total':detail['workset_total'],
             'workset_sha256':detail['workset_sha256'],
             'original_observed_at':request['original_observed_at'],
-            'recovery_observed_at':request['recovery_observed_at'],
+            'recovery_observed_at':actual_observed_at,
+            'recovery_observed_at_semantics':request['recovery_observed_at_semantics'],
             'mixed_observation_epochs':True,
             'recovered_shard_route_rejections':recovered.get('route_rejections',0),
             'role_signal_hotels':detail['role_signal_hotels'],
@@ -235,6 +239,7 @@ jobs:
             'recovered_shards':1,
             'exact_shard_coverage':44,
             'exact_hotel_workset_coverage':detail['workset_total'],
+            'recovery_observed_at':actual_observed_at,
             'vacancy_detail_payload_sha256':detail['payload_sha256'],
             'wave2_selected_count':wave['selected_count'],
             'authority_advanced':False,

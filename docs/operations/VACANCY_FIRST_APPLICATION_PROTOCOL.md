@@ -1,8 +1,10 @@
-# Vacancy-First Application Protocol — VFA-2.0
+# Vacancy-First Application Protocol — VFA-2.0 + AAG-3.0
 
 Status: **CURRENT PROPOSED SYSTEM DEFINITION / NO-SEND**
 
 Purpose: convert current hotel-market evidence plus private Candidate Truth into truthful, role-specific Swiss job application packets while learning from employer responses. This protocol never authorizes sending.
+
+AAG-3.0 (`docs/operations/APPLICATION_ADVERSARIAL_GATE_V3.md`) is now a mandatory downstream readiness gate. The recruiter 10-second gate remains necessary but is no longer sufficient by itself.
 
 ## Why V2 exists
 
@@ -23,6 +25,8 @@ current market evidence
 → Candidate Truth join (private)
 → lane-specific CV/assets
 → role-specific application packet
+→ AAG-3.0: hard gates + 19D score + 100 questions + risk + 6 stakeholders
+→ AAG READY/ELITE receipt
 → recruiter 10-second gate
 → factual/legal/deliverability QA
 → APPLICATION_READY_NO_SEND
@@ -53,7 +57,8 @@ Before a packet can be `APPLICATION_READY_NO_SEND`, private Candidate Truth must
 - current Swiss work-eligibility wording;
 - contact identity;
 - approved real headshot if a headshot is rendered;
-- verified real links if links are rendered.
+- verified real links if links are rendered;
+- an AAG-3.0 receipt in `APPLICATION_READY_NO_SEND` or `ELITE_MATCH` state.
 
 Founder/CEO/operator claims require evidence before external use. For operational applications, verified founder/operator history remains secondary to exact role fit.
 
@@ -70,6 +75,8 @@ Forbidden as persuasion tactics:
 - manipulative pressure.
 
 The application should communicate long-term commitment, responsibility, contribution and motivation without requiring the recruiter to agree with a political narrative.
+
+Permanent/indefinite relocation intent does **not** require an immediately permanent contract. A compatible seasonal role may be a valid first step toward a long-term Swiss career.
 
 ## Creative-value pilot
 
@@ -111,9 +118,24 @@ Rules:
 - `REJECTION_NO_MATCHING_VACANCY` penalizes an immediate spontaneous retry, not future exact roles;
 - competitive/internal-fit feedback raises role-specificity pressure without inventing which requirement failed.
 
+## AAG-3.0 adversarial gate
+
+AAG evaluates the packet as ATS/recruiter, department head, HR, GM/CEO, Brand/PR and candidate long-term fit. It separates:
+
+- `APPLICATION_QUALITY_SCORE`;
+- `EVIDENCE_CONFIDENCE_SCORE`;
+- `EMPLOYER_RISK_SCORE`;
+- `HUMAN_RESONANCE_SCORE`;
+- `DESPERATION_SCORE`;
+- explicitly heuristic `CONFIDENCE_ADJUSTED_SCORE`.
+
+Mandatory job requirements are non-compensable. A perfect creative portfolio or email cannot offset an unmet mandatory language, work-eligibility, experience, vacancy-freshness, duplicate/suppression or other hard gate.
+
+AAG's full 100-question bank and readiness thresholds are defined only in the executable module `src/swiss_os/application_adversarial.py` and the AAG protocol; VFA does not maintain a duplicate question list.
+
 ## Recruiter 10-second gate
 
-A packet fails unless a recruiter can identify immediately:
+After AAG has passed, a packet still fails unless a recruiter can identify immediately:
 
 - exact role;
 - role-relevant evidence;
@@ -125,6 +147,8 @@ A packet fails unless a recruiter can identify immediately:
 - absence of known hard-requirement failure.
 
 Unverified headshots, links or founder/CEO claims are hard failures when included.
+
+The implementation also validates the AAG receipt. Missing AAG, LIMBO/WEAK/REJECT decisions, threshold mismatches, blockers, or outbound-safety drift fail closed.
 
 ## Email presentation
 
@@ -140,17 +164,26 @@ Forbidden:
 - fake interaction;
 - unverified links/images.
 
-Visual polish is downstream of role fit and deliverability.
+Visual polish is downstream of role fit and deliverability. Any genuinely interactive experience belongs on an external verified recruiter landing/portfolio.
 
 ## Integration with the 2061 market factory
 
-`src/swiss_os/market_enrichment.py` remains the canonical public-web research crawler. VFA-2.0 consumes its aggregate through `src/swiss_os/application_wave.py` and does not create a second market crawler.
+`src/swiss_os/market_enrichment.py` remains the canonical public-web research crawler. VFA consumes its aggregate through `src/swiss_os/application_wave.py` and does not create a second market crawler.
 
 Public phase:
 
 ```text
 market aggregate
 → compile_top_exact_vacancy_seeds(limit=25)
+```
+
+Current vacancy-detail phase:
+
+```text
+436 current opening-route hotels
+→ Vacancy Detail Resolver
+→ current role evidence / requirements / housing / channels
+→ compile_top_resolved_vacancy_seeds(limit=25)
 ```
 
 Private phase:
@@ -160,6 +193,8 @@ selected seed
 + private Candidate Truth
 + role-relevant evidence
 + approved asset refs
+→ AAG-3.0 evaluate_application()
+→ persist private AAG receipt
 → compile_private_packet()
 → recruiter_10_second_gate()
 ```
@@ -177,4 +212,4 @@ canonical ID reservations = 0
 authority advance = FALSE
 ```
 
-No operation in VFA-2.0 sends an email or submits an application.
+No operation in VFA-2.0 or AAG-3.0 sends an email or submits an application.

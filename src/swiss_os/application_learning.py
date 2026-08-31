@@ -6,6 +6,9 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Any, Mapping, Sequence
 
+from .application_adversarial import Decision as AAGDecision
+from .application_adversarial import SCHEMA_VERSION as AAG_SCHEMA_VERSION
+
 
 class ApplicationLearningError(ValueError):
     pass
@@ -110,8 +113,6 @@ def feedback_effect(event: FeedbackEvent) -> dict[str, Any]:
     elif event.outcome in {Outcome.REJECTION_COMPETITIVE_FIT, Outcome.REJECTION_INTERNAL_NEEDS}:
         base["increase_role_specificity_weight"] = True
     elif event.outcome == Outcome.REJECTION_REQUIREMENT:
-        # The exact failed requirement must be separately supplied as evidence; this generic
-        # event intentionally does not guess which requirement failed.
         base["increase_role_specificity_weight"] = True
     elif event.outcome in {Outcome.REJECTION_GENERIC, Outcome.NO_REPLY}:
         base["causal_inference_allowed"] = False
@@ -147,7 +148,7 @@ def build_vacancy_first_seed(
 
     portfolio_default = lane == Lane.HYBRID_DIGITAL
     return {
-        "strategy_version": "VACANCY-FIRST-APPLICATION-2.0",
+        "strategy_version": "VACANCY-FIRST-APPLICATION-2.0+AAG-3.0",
         "application_mode": mode,
         "hotel_specific_hook": hook,
         "subject_seed": f"Application — {exact_role} | {name}" if exact_role else f"Future vacancy research — {name}",
@@ -192,11 +193,70 @@ def build_vacancy_first_seed(
             "forms_allowed": False,
             "hidden_tracking_allowed": False,
         },
+        "application_adversarial_gate": {
+            "required": True,
+            "schema_version": AAG_SCHEMA_VERSION,
+            "ready_decisions": [AAGDecision.APPLICATION_READY_NO_SEND.value, AAGDecision.ELITE_MATCH.value],
+            "hard_fail_compensation_allowed": False,
+            "final_send_ready": False,
+        },
         "recruiter_10_second_gate_required": True,
         "final_send_ready": False,
         "outbound": "CLOSED",
         "send_allowed": 0,
     }
+
+
+def _strict_receipt_score(receipt: Mapping[str, Any], key: str) -> int | None:
+    raw = receipt.get(key)
+    if raw is None or isinstance(raw, bool) or not isinstance(raw, (int, float)):
+        return None
+    value = int(round(float(raw)))
+    if value < 0 or value > 100:
+        return None
+    return value
+
+
+def _aag_receipt_state(candidate_truth: Mapping[str, Any]) -> tuple[bool, str | None, str | None]:
+    receipt = candidate_truth.get("application_adversarial_gate")
+    if not isinstance(receipt, Mapping):
+        return False, None, "AAG_REQUIRED"
+    if receipt.get("schema_version") != AAG_SCHEMA_VERSION:
+        return False, str(receipt.get("decision") or "") or None, "AAG_SCHEMA_MISMATCH"
+    decision = str(receipt.get("decision") or "")
+    ready_decisions = {AAGDecision.APPLICATION_READY_NO_SEND.value, AAGDecision.ELITE_MATCH.value}
+    if decision not in ready_decisions:
+        return False, decision or None, "AAG_NOT_READY"
+    if receipt.get("application_ready_no_send") is not True:
+        return False, decision, "AAG_READY_FLAG_MISMATCH"
+    if receipt.get("final_send_ready") is not False:
+        return False, decision, "AAG_SEND_SAFETY_MISMATCH"
+    if receipt.get("outbound") != "CLOSED" or receipt.get("send_allowed") != 0:
+        return False, decision, "AAG_OUTBOUND_SAFETY_MISMATCH"
+    if receipt.get("blockers"):
+        return False, decision, "AAG_BLOCKERS_PRESENT"
+
+    scores = {
+        "application_quality_score": _strict_receipt_score(receipt, "application_quality_score"),
+        "evidence_confidence_score": _strict_receipt_score(receipt, "evidence_confidence_score"),
+        "employer_risk_score": _strict_receipt_score(receipt, "employer_risk_score"),
+        "desperation_score": _strict_receipt_score(receipt, "desperation_score"),
+        "human_resonance_score": _strict_receipt_score(receipt, "human_resonance_score"),
+    }
+    invalid = [key for key, value in scores.items() if value is None]
+    if invalid:
+        return False, decision, f"AAG_SCORE_INVALID:{invalid[0]}"
+    if scores["application_quality_score"] < 92:
+        return False, decision, "AAG_QUALITY_BELOW_READY"
+    if scores["evidence_confidence_score"] < 95:
+        return False, decision, "AAG_EVIDENCE_BELOW_READY"
+    if scores["employer_risk_score"] > 20:
+        return False, decision, "AAG_EMPLOYER_RISK_TOO_HIGH"
+    if scores["desperation_score"] > 15:
+        return False, decision, "AAG_DESPERATION_TOO_HIGH"
+    if scores["human_resonance_score"] < 85:
+        return False, decision, "AAG_RESONANCE_BELOW_READY"
+    return True, decision, None
 
 
 def recruiter_10_second_gate(
@@ -218,6 +278,9 @@ def recruiter_10_second_gate(
         failures.append("HEADSHOT_UNVERIFIED")
     if candidate_truth.get("links") and not candidate_truth.get("links_verified"):
         failures.append("LINKS_UNVERIFIED")
+    aag_pass, aag_decision, aag_failure = _aag_receipt_state(candidate_truth)
+    if not aag_pass and aag_failure:
+        failures.append(aag_failure)
     return {
         "pass": not failures,
         "failures": failures,
@@ -225,6 +288,9 @@ def recruiter_10_second_gate(
         "exact_role": exact_role,
         "lane": seed.get("lane"),
         "portfolio_default_attachment": bool((seed.get("asset_policy") or {}).get("portfolio_default_attachment")),
+        "aag_schema_version": AAG_SCHEMA_VERSION,
+        "aag_decision": aag_decision,
+        "aag_pass": aag_pass,
         "final_send_ready": False,
         "outbound": "CLOSED",
         "send_allowed": 0,

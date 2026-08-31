@@ -53,6 +53,16 @@ The two Gonten renames (`Huus Bären 1602`, `Huus Löwen 1878`) were explicitly 
 
 Source conservation remains `658 + 1403 = 2061`.
 
+## Historical ECV lineage guard frontier
+
+The completed 1438-row ECV candidate lineage from `HS-MEMBER-DE-33206402141` remains preserved only for deterministic historical lineage and CI guards. It is not the current source-coverage authority.
+
+```text
+ECV verified frontier                     1438 / 1438
+ECV remaining never verified                 0
+ECV pending requeue                          0
+```
+
 ## Open P0 execution program
 
 - **#240** — close the 2061-source CRM universe and reach authority parity.

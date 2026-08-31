@@ -2,67 +2,33 @@
   "schema_version": "COS-V2-CONTEXT-SURVIVAL-1.0",
   "project_id": "SWITZERLAND_JOB_OS",
   "repo": "rotprods/swiss-OS",
-  "generated_at": "2026-08-31T10:30:00Z",
-  "ancestry_floor_sha": "1bbabe457d8ec561249b2bb52b862096df900d42",
+  "generated_at": "2026-08-31T22:20:40Z",
+  "ancestry_floor_sha": "d56593efff5a5947ae736026578176cb315d0535",
   "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
   "authority_revision": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
-  "projection_revision": "c7d278ce1fb3189b426dcfb9bc7ad2348b94cca08a31b37cf751620d9cea525f",
-  "context_pack_revision": "53abd1e893702fd7c6573081a8f4174cf704e2f81e1fc5a5887c7b6430aa79da",
-  "event_watermark": {
-    "event_id": "EVT-20260830T074504Z-CRM006-WORK-STARTED",
-    "occurred_at": "2026-08-30T07:45:04Z"
-  },
-  "active_claim_ids": ["CLAIM-CRM-SRR-SPECIAL-006"],
+  "projection_revision": "fb9d9b7a931958cbf8abee46f49cfc68ad63102374979ef8f7d3978e243427dc",
+  "context_pack_revision": "cd6ec3fe669fdf88539878778ef99ca25541df796e491bb8a28c6a4155ed9f07",
+  "event_watermark": {"event_id":"EVT-20260831T222005Z-CRM007-B07-WORK-STARTED","occurred_at":"2026-08-31T22:20:05Z"},
+  "active_claim_ids": ["CLAIM-CRM-CURRENT-B07-007"],
   "primary_program": "REPO_ARCHAEOLOGY_GRAPHIFY_V1",
-  "production_route": "CURRENT_UNRESOLVED_LT350000_ZERO_CANONICAL_CITY_B07",
-  "latest_domain_next": "docs/state/NEXT_CURRENT_UNRESOLVED_LT350_B06.json",
-  "survival_paths": [
-    "GOAL.md",
-    "STATE.md",
-    "HANDOFF.md",
-    "TASKS.md",
-    "docs/state/NEXT.json",
-    "docs/state/v2/project-state.json",
-    "docs/state/v2/context-pack.json",
-    "docs/state/v2/active-claims.json",
-    "docs/operations/CONTEXT_SURVIVAL_PROTOCOL.md",
-    "docs/handoffs/NEXT_ITERATION_METAPROMPT_V3.md",
-    "docs/state/NEXT_CURRENT_UNRESOLVED_LT350_B06.json"
-  ],
+  "production_route": "COMPUTE_CURRENT_UNRESOLVED_LT350000_ZERO_CANONICAL_CITY_B08_FROM_PINNED_LINEAGE",
+  "latest_domain_next": "docs/state/NEXT_CURRENT_UNRESOLVED_LT350_B07.json",
+  "survival_paths": ["GOAL.md","STATE.md","HANDOFF.md","TASKS.md","docs/state/NEXT.json","docs/state/v2/project-state.json","docs/state/v2/context-pack.json","docs/state/v2/active-claims.json","docs/operations/CONTEXT_SURVIVAL_PROTOCOL.md","docs/handoffs/NEXT_ITERATION_METAPROMPT_V3.md","docs/state/NEXT_CURRENT_UNRESOLVED_LT350_B07.json"],
   "git_blob_oid": {
     "GOAL.md": "6fbecfb43794bd1a8393a4760efeb61b363576bb",
-    "STATE.md": "32fc502f89494028c44a843c1c1e3c9007de8e72",
+    "STATE.md": "aae4a30f4a7095648eadb9a892cc7373fd86e555",
     "HANDOFF.md": "d47f81887157ac5e473d02967dab79646f3e9a3a",
     "TASKS.md": "a9fec93c4d9a80dfda8c7526475ae2b593932c69",
-    "docs/state/NEXT.json": "7e06df551572b236fc526bc6a13b4bc6035c0bc9",
-    "docs/state/v2/project-state.json": "d61b1778b05132557e47ea045d6413f459087830",
-    "docs/state/v2/context-pack.json": "9701d31bbfafb54fd24c5d4fa682516684a81c5a",
-    "docs/state/v2/active-claims.json": "190e650fab0b6146efa08aa8ef93d6a672774d24",
+    "docs/state/NEXT.json": "0a6d5894dd7c351518805cd5c41f57d51e36b8cf",
+    "docs/state/v2/project-state.json": "973b00e311bce224d274601207411af4113ae797",
+    "docs/state/v2/context-pack.json": "afa6adf70e4654a9ad8681509511cf79f97df040",
+    "docs/state/v2/active-claims.json": "01bdf302180e02e474d2c1f3efb8e2e0a4706236",
     "docs/operations/CONTEXT_SURVIVAL_PROTOCOL.md": "18c2c518f333cc60e77fece92fc8fa3d6771ed6a",
     "docs/handoffs/NEXT_ITERATION_METAPROMPT_V3.md": "0aa09088597578a984bef9c4e101abf33f3f79eb",
-    "docs/state/NEXT_CURRENT_UNRESOLVED_LT350_B06.json": "9a99cfac357ca13bf7829208c39aa5937575a8c7"
+    "docs/state/NEXT_CURRENT_UNRESOLVED_LT350_B07.json": "50835c062b69664e86d8f0fc9909ce2d3b03e6a1"
   },
-  "liveness_findings": [
-    "CSP sidecar is authoritative only for recovery integrity, never hotel authority.",
-    "The COS event watermark may lag live main; zero-context bootstrap MUST verify live ancestry and pinned files rather than infer freshness from event time alone."
-  ],
-  "resume_contract": [
-    "verify live main and ancestry",
-    "verify every pinned survival-file Git blob OID",
-    "re-read active claims/fencing",
-    "re-read external authority before material mutation",
-    "rebuild checkpoint on any survival-file drift",
-    "resume highest-value safe route; never resume from chat memory alone"
-  ],
-  "safety": {
-    "authority_advance_allowed": false,
-    "canonical_id_allocation_allowed": false,
-    "canonical_id_reservations_from_staging": 0,
-    "authority_from_canary_or_cache": false,
-    "crm_universe_complete": false,
-    "outbound": "CLOSED",
-    "send_allowed": 0,
-    "irreversible_external_actions": 0
-  },
-  "payload_sha256": "0eb01add092895d455c5a43269d548e4702861ed40fe920c007e73e960e16d81"
+  "liveness_findings": ["CSP sidecar is authoritative only for recovery integrity, never hotel authority.","Token6 is superseded; token7 is the only active coordination claim for current-source entity-resolution review.","The native Drive connector degraded during B07; mount recovery remained readable and no authority write was attempted."],
+  "resume_contract": ["verify live main and ancestry","verify every pinned survival-file Git blob OID","re-read active claims/fencing and require token7 or an explicit higher-token supersession","re-read external authority before material mutation","rebuild checkpoint on any survival-file drift","resume highest-value safe route; never resume from chat memory alone"],
+  "safety": {"authority_advance_allowed":false,"canonical_id_allocation_allowed":false,"canonical_id_reservations_from_staging":0,"authority_from_canary_or_cache":false,"crm_universe_complete":false,"outbound":"CLOSED","send_allowed":0,"irreversible_external_actions":0},
+  "payload_sha256": "d65cce6f55d072c1c89d939b4dd57ca1f38640c71474c58ee0fd97d881be53b1"
 }

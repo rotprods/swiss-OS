@@ -14,7 +14,16 @@ JOB_URL_RE = re.compile(
 )
 GENERIC_ROLE_RE = re.compile(
     r"^(?:opening crew position(?:en|s)?|open positions?|offene stellen|stellenangebote|"
-    r"jobs?|careers?|career opportunities|join (?:our )?team|bewerben|apply now)$",
+    r"jobs?|careers?|career opportunities|join (?:our )?team|bewerben|apply now|"
+    r"initiativbewerbung|spontanbewerbung|unsolicited application|"
+    r"lernende\s*/?\s*praktikanten|interns?\s*&\s*trainees?|"
+    r"graduate trainee programs?|apprenticeships?\s*&\s*trainee programs?|"
+    r"ausbildung\s*&\s*praktikum.*)$",
+    re.I,
+)
+GENERIC_DEPARTMENT_RE = re.compile(
+    r"^(?:housekeeping|service|küche|kueche|kitchen|front office|reception|réception|"
+    r"sales|marketing|spa|wellness|food\s*&\s*beverage|f&b|restaurant|restaurants)$",
     re.I,
 )
 NAVIGATION_TITLE_RE = re.compile(
@@ -134,8 +143,12 @@ def semantic_quality(signal: Mapping[str, Any], route: Mapping[str, Any]) -> dic
         reasons.append("UNSUPPORTED_ROLE_EVIDENCE_TYPE")
     if GENERIC_ROLE_RE.match(title):
         reasons.append("GENERIC_VACANCY_BUCKET_NOT_EXACT_ROLE")
+    if GENERIC_DEPARTMENT_RE.match(title):
+        reasons.append("GENERIC_DEPARTMENT_NOT_EXACT_ROLE")
     if NAVIGATION_TITLE_RE.match(title):
         reasons.append("NAVIGATION_OR_VENUE_LABEL_NOT_ROLE")
+    if evidence_type in NON_STRUCTURED_EVIDENCE and len(title) > 180:
+        reasons.append("NON_STRUCTURED_TEXT_TOO_LONG_FOR_ROLE_TITLE")
     if evidence_type in NON_STRUCTURED_EVIDENCE and title and not ROLE_TITLE_RE.search(title):
         reasons.append("NON_STRUCTURED_TEXT_NOT_ROLE_LIKE")
 

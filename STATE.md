@@ -1,6 +1,6 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest reconstructed frontier: **2026-08-31T02:30:00Z**. Verified main parent: **`02dad1a5bd82219b34430b5fd1cee3ee088642b6`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Authority materialized SHA: **`70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`**.
+Latest reconstructed frontier: **2026-08-31 current-source entity-resolution B01**. Verified bootstrap main parent: **`cbd3a98c8c0f7c1e35a086fe110f7bdab8032652`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Authority materialized SHA: **`70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`**.
 
 ## Authority — unchanged / locked
 
@@ -14,7 +14,7 @@ OUTBOUND                        CLOSED
 send_allowed                      0
 ```
 
-Live Drive `HOTELS_V2` was re-read through row 691: `H-0690` is the physical frontier and `H-0691` is absent/unallocated. No staging, cache, canary, CI artifact, candidate export, SRR/ECV result or source crawl can become authoritative or advance this authority.
+Live Drive `HOTELS_V2` was re-read through row 691 during this activation: `H-0690` is the physical frontier and `H-0691` is absent/unallocated. No staging, cache, canary, CI artifact, candidate export, SRR/ECV result or source crawl can become authoritative or advance this authority.
 
 ## Current coherent source universe
 
@@ -31,25 +31,30 @@ RECONCILE_REQUIRED              1403
 reverse authority source gaps     34
 ```
 
-The earlier `HS-MEMBER-DE-33206402141` capture remains historical partial lineage only. The coherent current source differs by exactly two renamed Gonten identities; PR #382 re-anchored those reviewed preauthority decisions without a terminal mapping delta.
+The earlier `HS-MEMBER-DE-33206402141` capture remains historical lineage only. Current coherent-source candidate continuity is fully accounted: 1436 exact unchanged identities plus two changed Gonten identities. Historical completed prioritized SRR/RAGR work remains monotonic and non-authoritative.
 
-## Candidate / ECV continuity
+## Entity-resolution frontier
 
 ```text
-historical candidate records    1438
-exact unchanged current lineage 1436
-changed Gonten lineage              2
-candidate lineage accounted     1438 / 1438
-ECV verified frontier            1438 / 1438
-ECV remaining never verified        0
-lower49 typed SRR materialized     47 / 47
-RAGR evidence-classified           34 / 34
-cumulative NEW_CANONICAL preauthority 114
-H-ID allocations                    0
-canonical ID reservations           0
+historical candidate records                    1438
+exact unchanged current lineage                 1436
+changed Gonten lineage                             2
+candidate lineage accounted                     1438 / 1438
+ECV verified frontier                           1438 / 1438
+prior >=0.60 review                              20 / 20
+prior 0.50–0.599999 review                       46 / 46
+prior lower49 ordinary review                    47 / 47
+RAGR evidence-classified                         34 / 34
+historical <0.35 previously unreviewed tail     1289
+zero-same-city conservative sub-lane             485
+current <0.35 B01 reviewed                        10
+current <0.35 B01 NEW_CANONICAL preauthority      10
+historical <0.35 tail remaining                 1279
+H-ID allocations                                   0
+canonical ID reservations                          0
 ```
 
-`docs/state/CRM_EXACT_CURRENT_CANDIDATE_LINEAGE_33339392661.json` deterministically transfers 1436 unchanged historical candidate identities onto the current coherent source by exact detail URL + normalized exact name/city. The two changed Gonten identities are handled by `CRM_CURRENT_GONTEN_ECV_SRR_LINEAGE_33339392661.json`. These are lineage and preauthority review products only. Historical completed SRR/RAGR frontiers above are preserved monotonically; they do not grant authority and are not reopened by the current-source re-anchor.
+`docs/state/CRM_CURRENT_UNRESOLVED_LT350_B01_2026-08-31.json` records the first bounded current-source continuation into the previously unreviewed `<0.35` tail. Ten records with zero canonical rows in the normalized source city were independently verified and cross-city collision reviewed. All ten are `NEW_CANONICAL_PREAUTH`, remain `RECONCILE_REQUIRED`, and create no terminal mapping or authority effect.
 
 ## Capability / provider frontier
 
@@ -65,25 +70,18 @@ capture-valid discover manifest      ABSENT
 durable DB-first E4 egress           BLOCKED_FILE_REFERENCE_DO_NOT_REPEAT
 ```
 
-The coherent HotellerieSuisse source repaired the acquisition P0. Structured discover.swiss SSR-1.0 remains unavailable until a subscription/capture-valid manifest exists, but it is no longer a global blocker: provider-neutral current-source entity resolution can continue safely.
+The coherent HotellerieSuisse source keeps provider-neutral entity resolution productive. Structured discover.swiss SSR-1.0 is an optional accelerator only when a runtime subscription credential and capture-valid manifest become available. Do not retry the blocked generated-file egress family.
 
 ## Open P0 / highest-value safe bottleneck
 
-`CRM_UNIVERSE_COMPLETE` remains **FALSE** because **1403 current coherent source records remain `RECONCILE_REQUIRED`**. Issue #89 / ASR-1.0 recovery is closed and the cross-plane E4 authority remains exact at 690; it must not be reopened as a current blocker.
+`CRM_UNIVERSE_COMPLETE` remains **FALSE** because **1403 current coherent source records remain `RECONCILE_REQUIRED`**. Preacthority `NEW_CANONICAL` dispositions deliberately do not reduce that terminal mapping count or reserve IDs. The highest-value safe route is to keep typing the exact-current unresolved tail in bounded evidence-backed waves while authority remains locked.
 
 ## NEXT
 
-Execute **`CURRENT_UNRESOLVED_1403_ENTITY_RESOLUTION`** in bounded evidence-backed batches.
+Execute **`CURRENT_UNRESOLVED_LT350000_ZERO_CANONICAL_CITY_B02`**.
 
-Rules:
+Continue exact current-source identities from the previously unreviewed `<0.35` lineage tail, prioritizing the conservative zero-same-city lane. Require current independent evidence and cross-city collision review. Similarity may rank review order only; fuzzy autobind is forbidden. Never reserve/allocate H-IDs from staging, never create authority from review/cache/canary state, and keep `OUTBOUND=CLOSED` / `send_allowed=0`.
 
-- rank-only similarity is allowed for triage; fuzzy auto-bind is forbidden;
-- current first-party / current HotellerieSuisse evidence can support preauthority SRR decisions;
-- never reserve or allocate H-IDs from staging;
-- never advance authority from CI/cache/canary/source artifacts;
-- any later authority promotion must use exact-current DB-first cross-plane reconciliation;
-- keep `OUTBOUND=CLOSED` and `send_allowed=0`.
-
-Recovery inputs and exact blockers are persisted in `docs/state/NEXT.json` and `docs/handoffs/META_20260831_CRM_CURRENT_SOURCE_CONTINUITY.md`.
+Recovery inputs and exact blockers are persisted in `docs/state/NEXT_CURRENT_UNRESOLVED_LT350_B01.json` and `docs/handoffs/META_20260831_CRM_CURRENT_LT350_B01.md`.
 
 **VERIFY LIVE TRUTH BEFORE EXECUTION.**

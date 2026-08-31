@@ -31,6 +31,13 @@ RECONCILE_REQUIRED               1403
 reverse authority/source gaps      34
 ```
 
+## Exact-current durable frontier
+
+ECV verified frontier 1438 / 1438
+ECV remaining never verified 0
+
+The legacy machine-readable ECV markers above are retained for handoff-guard compatibility. ECV is complete and is evidence state only; it does not change hotel authority.
+
 ## Coordination / fencing
 
 Historical regression found that the old token6 lease had outlived its bounded SRR-special scope and still carried stale 657/1404 preconditions. It was explicitly superseded rather than silently reused.

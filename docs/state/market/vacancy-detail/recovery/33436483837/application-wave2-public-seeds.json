@@ -1,0 +1,2531 @@
+{
+  "schema_version": "APPLICATION-WAVE-2.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "source_snapshot_id": "HS-MEMBER-DE-33206402141",
+  "market_observed_at": "2026-08-30T21:05:00Z",
+  "vacancy_detail_payload_sha256": "eb20d702d1ed232f6bba00c667b4295eda572dd9938297e2bdfaef060d2c3450",
+  "requested_limit": 25,
+  "resolved_vacancy_signal_count": 4305,
+  "selected_count": 25,
+  "selected": [
+    {
+      "record_id": "MD-3c753f0278ccfc745ef1",
+      "hotel_name": "Villa Florhof",
+      "city": "Zürich",
+      "market_observed_at": "2026-08-30T21:05:00Z",
+      "vacancy_observed_at": "2026-08-31T18:17:45Z",
+      "target_role": "Opening Crew Positionen",
+      "vacancy_source_url": "https://www.villaflorhof.com/en/career",
+      "vacancy_evidence_type": "CURRENT_STRUCTURED_JOBPOSTING",
+      "vacancy_priority": 1710,
+      "requirement_evidence": {
+        "language_signal_snippets": [
+          "osphäre, Kultur und Standards in der Welt der Lalique Hospitality.\", \"url\": \"/career\", \"inLanguage\": \"de\", \"about\": { \"@type\": \"Organization\", \"@id\": \"https://schema.org/Organization\", \"name\": \"Villa Florhof\", \"description\": \"Erstes Laliq"
+        ],
+        "experience_signal_snippets": [
+          "Rewarded Permanent employment within an internationally renowned group with long-standing experience in top-level gastronomy and hospitality. Competitive compensation and participation in gratuities. Meals Free meals for employees. Lalique Hospitality Perspect"
+        ],
+        "start_signal_snippets": [],
+        "housing_signal": false,
+        "contact_emails": [
+          "career@villaflorhof.com",
+          "info@villaflorhof.com"
+        ],
+        "requires_requirement_detail": false
+      },
+      "strategy": {
+        "strategy_version": "VACANCY-FIRST-APPLICATION-2.0+AAG-3.0",
+        "application_mode": "PRIMARY_EXACT_VACANCY",
+        "hotel_specific_hook": "He revisado la vacante actual de Opening Crew Positionen en Villa Florhof, Zürich.",
+        "subject_seed": "Application — Opening Crew Positionen | Villa Florhof",
+        "target_role": "Opening Crew Positionen",
+        "current_roles_observed": [
+          "Opening Crew Positionen"
+        ],
+        "lane": "OPERATIONS_GENERAL",
+        "exact_live_vacancy_required_for_primary": true,
+        "candidate_truth_block_required": true,
+        "candidate_truth_required_fields": [
+          "role_relevant_evidence",
+          "languages",
+          "availability",
+          "permanent_relocation",
+          "swiss_work_eligibility",
+          "contact_identity"
+        ],
+        "asset_policy": {
+          "role_lane_cv_required": true,
+          "portfolio_default_attachment": false,
+          "verified_real_links_only": true,
+          "approved_real_headshot_only": true,
+          "founder_ceo_claim_requires_evidence": true,
+          "founder_ceo_primary_signal_for_operations": false
+        },
+        "motivation_policy": {
+          "positive_switzerland_pull": true,
+          "employer_specific_appreciation_requires_evidence": true,
+          "political_grievance_allowed": false,
+          "fake_flattery_allowed": false
+        },
+        "creative_value_policy": {
+          "allowed_as_secondary_differentiator": true,
+          "employer_approval_required": true,
+          "lawful_agreed_scope_or_working_time_required": true,
+          "unconditional_free_off_clock_labor_allowed": false
+        },
+        "presentation_policy": {
+          "static_html_allowed": true,
+          "plain_text_fallback_required": true,
+          "javascript_allowed": false,
+          "iframe_allowed": false,
+          "forms_allowed": false,
+          "hidden_tracking_allowed": false
+        },
+        "application_adversarial_gate": {
+          "required": true,
+          "schema_version": "APPLICATION-ADVERSARIAL-GATE-3.0",
+          "ready_decisions": [
+            "APPLICATION_READY_NO_SEND",
+            "ELITE_MATCH"
+          ],
+          "hard_fail_compensation_allowed": false,
+          "final_send_ready": false
+        },
+        "recruiter_10_second_gate_required": true,
+        "final_send_ready": false,
+        "outbound": "CLOSED",
+        "send_allowed": 0
+      },
+      "candidate_private_truth_embedded": false,
+      "requires_private_fit_validation": true,
+      "application_ready_no_send": false,
+      "final_send_ready": false,
+      "outbound": "CLOSED",
+      "send_allowed": 0
+    },
+    {
+      "record_id": "MD-3c753f0278ccfc745ef1",
+      "hotel_name": "Villa Florhof",
+      "city": "Zürich",
+      "market_observed_at": "2026-08-30T21:05:00Z",
+      "vacancy_observed_at": "2026-08-31T18:17:45Z",
+      "target_role": "Florhof Bar & Brasserie",
+      "vacancy_source_url": "https://www.villaflorhof.com/en/enjoy/bar-brasserie",
+      "vacancy_evidence_type": "CURRENT_PAGE_ROLE_LINK",
+      "vacancy_priority": 1440,
+      "requirement_evidence": {
+        "language_signal_snippets": [
+          "osphäre, Kultur und Standards in der Welt der Lalique Hospitality.\", \"url\": \"/career\", \"inLanguage\": \"de\", \"about\": { \"@type\": \"Organization\", \"@id\": \"https://schema.org/Organization\", \"name\": \"Villa Florhof\", \"description\": \"Erstes Laliq"
+        ],
+        "experience_signal_snippets": [
+          "Rewarded Permanent employment within an internationally renowned group with long-standing experience in top-level gastronomy and hospitality. Competitive compensation and participation in gratuities. Meals Free meals for employees. Lalique Hospitality Perspect"
+        ],
+        "start_signal_snippets": [],
+        "housing_signal": false,
+        "contact_emails": [
+          "career@villaflorhof.com",
+          "info@villaflorhof.com"
+        ],
+        "requires_requirement_detail": true
+      },
+      "strategy": {
+        "strategy_version": "VACANCY-FIRST-APPLICATION-2.0+AAG-3.0",
+        "application_mode": "PRIMARY_EXACT_VACANCY",
+        "hotel_specific_hook": "He revisado la vacante actual de Florhof Bar & Brasserie en Villa Florhof, Zürich.",
+        "subject_seed": "Application — Florhof Bar & Brasserie | Villa Florhof",
+        "target_role": "Florhof Bar & Brasserie",
+        "current_roles_observed": [
+          "Florhof Bar & Brasserie"
+        ],
+        "lane": "SERVICE_FNB",
+        "exact_live_vacancy_required_for_primary": true,
+        "candidate_truth_block_required": true,
+        "candidate_truth_required_fields": [
+          "role_relevant_evidence",
+          "languages",
+          "availability",
+          "permanent_relocation",
+          "swiss_work_eligibility",
+          "contact_identity"
+        ],
+        "asset_policy": {
+          "role_lane_cv_required": true,
+          "portfolio_default_attachment": false,
+          "verified_real_links_only": true,
+          "approved_real_headshot_only": true,
+          "founder_ceo_claim_requires_evidence": true,
+          "founder_ceo_primary_signal_for_operations": false
+        },
+        "motivation_policy": {
+          "positive_switzerland_pull": true,
+          "employer_specific_appreciation_requires_evidence": true,
+          "political_grievance_allowed": false,
+          "fake_flattery_allowed": false
+        },
+        "creative_value_policy": {
+          "allowed_as_secondary_differentiator": true,
+          "employer_approval_required": true,
+          "lawful_agreed_scope_or_working_time_required": true,
+          "unconditional_free_off_clock_labor_allowed": false
+        },
+        "presentation_policy": {
+          "static_html_allowed": true,
+          "plain_text_fallback_required": true,
+          "javascript_allowed": false,
+          "iframe_allowed": false,
+          "forms_allowed": false,
+          "hidden_tracking_allowed": false
+        },
+        "application_adversarial_gate": {
+          "required": true,
+          "schema_version": "APPLICATION-ADVERSARIAL-GATE-3.0",
+          "ready_decisions": [
+            "APPLICATION_READY_NO_SEND",
+            "ELITE_MATCH"
+          ],
+          "hard_fail_compensation_allowed": false,
+          "final_send_ready": false
+        },
+        "recruiter_10_second_gate_required": true,
+        "final_send_ready": false,
+        "outbound": "CLOSED",
+        "send_allowed": 0
+      },
+      "candidate_private_truth_embedded": false,
+      "requires_private_fit_validation": true,
+      "application_ready_no_send": false,
+      "final_send_ready": false,
+      "outbound": "CLOSED",
+      "send_allowed": 0
+    },
+    {
+      "record_id": "MD-3c753f0278ccfc745ef1",
+      "hotel_name": "Villa Florhof",
+      "city": "Zürich",
+      "market_observed_at": "2026-08-30T21:05:00Z",
+      "vacancy_observed_at": "2026-08-31T18:17:45Z",
+      "target_role": "Signature Restaurant",
+      "vacancy_source_url": "https://www.villaflorhof.com/en/enjoy/signature-restaurant",
+      "vacancy_evidence_type": "CURRENT_PAGE_ROLE_LINK",
+      "vacancy_priority": 1440,
+      "requirement_evidence": {
+        "language_signal_snippets": [
+          "osphäre, Kultur und Standards in der Welt der Lalique Hospitality.\", \"url\": \"/career\", \"inLanguage\": \"de\", \"about\": { \"@type\": \"Organization\", \"@id\": \"https://schema.org/Organization\", \"name\": \"Villa Florhof\", \"description\": \"Erstes Laliq"
+        ],
+        "experience_signal_snippets": [
+          "Rewarded Permanent employment within an internationally renowned group with long-standing experience in top-level gastronomy and hospitality. Competitive compensation and participation in gratuities. Meals Free meals for employees. Lalique Hospitality Perspect"
+        ],
+        "start_signal_snippets": [],
+        "housing_signal": false,
+        "contact_emails": [
+          "career@villaflorhof.com",
+          "info@villaflorhof.com"
+        ],
+        "requires_requirement_detail": true
+      },
+      "strategy": {
+        "strategy_version": "VACANCY-FIRST-APPLICATION-2.0+AAG-3.0",
+        "application_mode": "PRIMARY_EXACT_VACANCY",
+        "hotel_specific_hook": "He revisado la vacante actual de Signature Restaurant en Villa Florhof, Zürich.",
+        "subject_seed": "Application — Signature Restaurant | Villa Florhof",
+        "target_role": "Signature Restaurant",
+        "current_roles_observed": [
+          "Signature Restaurant"
+        ],
+        "lane": "SERVICE_FNB",
+        "exact_live_vacancy_required_for_primary": true,
+        "candidate_truth_block_required": true,
+        "candidate_truth_required_fields": [
+          "role_relevant_evidence",
+          "languages",
+          "availability",
+          "permanent_relocation",
+          "swiss_work_eligibility",
+          "contact_identity"
+        ],
+        "asset_policy": {
+          "role_lane_cv_required": true,
+          "portfolio_default_attachment": false,
+          "verified_real_links_only": true,
+          "approved_real_headshot_only": true,
+          "founder_ceo_claim_requires_evidence": true,
+          "founder_ceo_primary_signal_for_operations": false
+        },
+        "motivation_policy": {
+          "positive_switzerland_pull": true,
+          "employer_specific_appreciation_requires_evidence": true,
+          "political_grievance_allowed": false,
+          "fake_flattery_allowed": false
+        },
+        "creative_value_policy": {
+          "allowed_as_secondary_differentiator": true,
+          "employer_approval_required": true,
+          "lawful_agreed_scope_or_working_time_required": true,
+          "unconditional_free_off_clock_labor_allowed": false
+        },
+        "presentation_policy": {
+          "static_html_allowed": true,
+          "plain_text_fallback_required": true,
+          "javascript_allowed": false,
+          "iframe_allowed": false,
+          "forms_allowed": false,
+          "hidden_tracking_allowed": false
+        },
+        "application_adversarial_gate": {
+          "required": true,
+          "schema_version": "APPLICATION-ADVERSARIAL-GATE-3.0",
+          "ready_decisions": [
+            "APPLICATION_READY_NO_SEND",
+            "ELITE_MATCH"
+          ],
+          "hard_fail_compensation_allowed": false,
+          "final_send_ready": false
+        },
+        "recruiter_10_second_gate_required": true,
+        "final_send_ready": false,
+        "outbound": "CLOSED",
+        "send_allowed": 0
+      },
+      "candidate_private_truth_embedded": false,
+      "requires_private_fit_validation": true,
+      "application_ready_no_send": false,
+      "final_send_ready": false,
+      "outbound": "CLOSED",
+      "send_allowed": 0
+    },
+    {
+      "record_id": "MD-60fbb999374511c19db1",
+      "hotel_name": "Appenberg - Hoteldorf, Seminare & Events",
+      "city": "Zäziwil",
+      "market_observed_at": "2026-08-30T21:05:00Z",
+      "vacancy_observed_at": "2026-08-31T18:17:45Z",
+      "target_role": "Mitarbeiter/in Hauswirtschaft",
+      "vacancy_source_url": "https://www.appenberg.ch/jobs/mitarbeiter-hauswirtschaft",
+      "vacancy_evidence_type": "CURRENT_STRUCTURED_JOBPOSTING",
+      "vacancy_priority": 945,
+      "requirement_evidence": {
+        "language_signal_snippets": [
+          "uns wichtig ist</p><p>Erfahrung in der Hauswirtschaft oder Reinigung von Vorteil\\n\\nGute Deutschkenntnisse, weitere Sprachen von Vorteil\\n\\nZuverlässige, sorgfältige und selbständige Arbeitsweise\\n\\nSinn für Ordnung, Sauberkeit und Qual",
+          "uelles Menschen Karriere Geschichte Anfahrt const q=()=>{document.querySelectorAll(\"[data-language-switch]\").forEach(s=>{if(s.dataset.languageSwitchReady===\"true\")return;const o=s.querySelector(\"[data-language-switch-trigger]\"),t=s.queryS",
+          "elector(\"[data-language-switch-menu]\"),a=s.querySelector(\"[data-language-switch-dropdown]\"),r=t?Array.from(t.querySelectorAll('[role=\"menuitem\"]')):[];if(!o||!t||!a||r.length===0)return;s.dataset.languageSwitchRe",
+          "nd (hover: hover) and (pointer: fine)\").matches,h=()=>{if(!i()){a.style.removeProperty(\"--language-switch-menu-left\"),a.style.removeProperty(\"--language-switch-menu-width\"),a.style.removeProperty(\"--language-switch-menu-content-offset\");r",
+          "??0,I=E?.width??window.innerWidth,M=L-e.left,T=(F?.left??e.left)-L;a.style.setProperty(\"--language-switch-menu-left\",`${M}px`),a.style.setProperty(\"--language-switch-menu-width\",`${I}px`),a.style.setProperty(\"--language-switch-menu-conten"
+        ],
+        "experience_signal_snippets": [
+          "zung im Abwasch bei Interesse und nach Absprache</p></li><li><p>Was uns wichtig ist</p><p>Erfahrung in der Hauswirtschaft oder Reinigung von Vorteil\\n\\nGute Deutschkenntnisse, weitere Sprachen von Vorteil\\n\\nZuverlässige, sorgfältige und selbständige Arbeitsw",
+          "k und Küche Unterstützung im Abwasch bei Interesse und nach Absprache Was uns wichtig ist Erfahrung in der Hauswirtschaft oder Reinigung von Vorteil Gute Deutschkenntnisse, weitere Sprachen von Vorteil Zuverlässige, sorgfältige und selbständige Arbeitsweise S"
+        ],
+        "start_signal_snippets": [],
+        "housing_signal": false,
+        "contact_emails": [
+          "info@appenberg.ch"
+        ],
+        "requires_requirement_detail": false
+      },
+      "strategy": {
+        "strategy_version": "VACANCY-FIRST-APPLICATION-2.0+AAG-3.0",
+        "application_mode": "PRIMARY_EXACT_VACANCY",
+        "hotel_specific_hook": "He revisado la vacante actual de Mitarbeiter/in Hauswirtschaft en Appenberg - Hoteldorf, Seminare & Events, Zäziwil.",
+        "subject_seed": "Application — Mitarbeiter/in Hauswirtschaft | Appenberg - Hoteldorf, Seminare & Events",
+        "target_role": "Mitarbeiter/in Hauswirtschaft",
+        "current_roles_observed": [
+          "Mitarbeiter/in Hauswirtschaft"
+        ],
+        "lane": "OPERATIONS_GENERAL",
+        "exact_live_vacancy_required_for_primary": true,
+        "candidate_truth_block_required": true,
+        "candidate_truth_required_fields": [
+          "role_relevant_evidence",
+          "languages",
+          "availability",
+          "permanent_relocation",
+          "swiss_work_eligibility",
+          "contact_identity"
+        ],
+        "asset_policy": {
+          "role_lane_cv_required": true,
+          "portfolio_default_attachment": false,
+          "verified_real_links_only": true,
+          "approved_real_headshot_only": true,
+          "founder_ceo_claim_requires_evidence": true,
+          "founder_ceo_primary_signal_for_operations": false
+        },
+        "motivation_policy": {
+          "positive_switzerland_pull": true,
+          "employer_specific_appreciation_requires_evidence": true,
+          "political_grievance_allowed": false,
+          "fake_flattery_allowed": false
+        },
+        "creative_value_policy": {
+          "allowed_as_secondary_differentiator": true,
+          "employer_approval_required": true,
+          "lawful_agreed_scope_or_working_time_required": true,
+          "unconditional_free_off_clock_labor_allowed": false
+        },
+        "presentation_policy": {
+          "static_html_allowed": true,
+          "plain_text_fallback_required": true,
+          "javascript_allowed": false,
+          "iframe_allowed": false,
+          "forms_allowed": false,
+          "hidden_tracking_allowed": false
+        },
+        "application_adversarial_gate": {
+          "required": true,
+          "schema_version": "APPLICATION-ADVERSARIAL-GATE-3.0",
+          "ready_decisions": [
+            "APPLICATION_READY_NO_SEND",
+            "ELITE_MATCH"
+          ],
+          "hard_fail_compensation_allowed": false,
+          "final_send_ready": false
+        },
+        "recruiter_10_second_gate_required": true,
+        "final_send_ready": false,
+        "outbound": "CLOSED",
+        "send_allowed": 0
+      },
+      "candidate_private_truth_embedded": false,
+      "requires_private_fit_validation": true,
+      "application_ready_no_send": false,
+      "final_send_ready": false,
+      "outbound": "CLOSED",
+      "send_allowed": 0
+    },
+    {
+      "record_id": "MD-60fbb999374511c19db1",
+      "hotel_name": "Appenberg - Hoteldorf, Seminare & Events",
+      "city": "Zäziwil",
+      "market_observed_at": "2026-08-30T21:05:00Z",
+      "vacancy_observed_at": "2026-08-31T18:17:45Z",
+      "target_role": "Mitarbeiter/in Raumbereitstellung und Hauswirtschaft",
+      "vacancy_source_url": "https://www.appenberg.ch/jobs/mitarbeiterin-raumbereitstellung-und-hauswirtschaft",
+      "vacancy_evidence_type": "CURRENT_STRUCTURED_JOBPOSTING",
+      "vacancy_priority": 945,
+      "requirement_evidence": {
+        "language_signal_snippets": [
+          "in Hauswirtschaft, Reinigung, Hotellerie oder Veranstaltungslogistik von Vorteil\\n\\nGute Deutschkenntnisse\\n\\nTeamgeist und respektvoller Umgang\\n\\nBereitschaft für Einsätze am Nachmittag, Abend und Wochenende</p></li></ul><br><p>Was be",
+          "uelles Menschen Karriere Geschichte Anfahrt const q=()=>{document.querySelectorAll(\"[data-language-switch]\").forEach(s=>{if(s.dataset.languageSwitchReady===\"true\")return;const o=s.querySelector(\"[data-language-switch-trigger]\"),t=s.queryS",
+          "elector(\"[data-language-switch-menu]\"),a=s.querySelector(\"[data-language-switch-dropdown]\"),r=t?Array.from(t.querySelectorAll('[role=\"menuitem\"]')):[];if(!o||!t||!a||r.length===0)return;s.dataset.languageSwitchRe",
+          "nd (hover: hover) and (pointer: fine)\").matches,h=()=>{if(!i()){a.style.removeProperty(\"--language-switch-menu-left\"),a.style.removeProperty(\"--language-switch-menu-width\"),a.style.removeProperty(\"--language-switch-menu-content-offset\");r",
+          "??0,I=E?.width??window.innerWidth,M=L-e.left,T=(F?.left??e.left)-L;a.style.setProperty(\"--language-switch-menu-left\",`${M}px`),a.style.setProperty(\"--language-switch-menu-width\",`${I}px`),a.style.setProperty(\"--language-switch-menu-conten"
+        ],
+        "experience_signal_snippets": [
+          "iches Vorstellungsvermögen und Auge fürs Detail\\n\\nBereitschaft für körperliche Arbeit\\n\\nErfahrung in Hauswirtschaft, Reinigung, Hotellerie oder Veranstaltungslogistik von Vorteil\\n\\nGute Deutschkenntnisse\\n\\nTeamgeist und respektvoller Umgang\\n\\nBereitschaf",
+          "Räumliches Vorstellungsvermögen und Auge fürs Detail Bereitschaft für körperliche Arbeit Erfahrung in Hauswirtschaft, Reinigung, Hotellerie oder Veranstaltungslogistik von Vorteil Gute Deutschkenntnisse Teamgeist und respektvoller Umgang Bereitschaft für Ein"
+        ],
+        "start_signal_snippets": [],
+        "housing_signal": false,
+        "contact_emails": [
+          "info@appenberg.ch"
+        ],
+        "requires_requirement_detail": false
+      },
+      "strategy": {
+        "strategy_version": "VACANCY-FIRST-APPLICATION-2.0+AAG-3.0",
+        "application_mode": "PRIMARY_EXACT_VACANCY",
+        "hotel_specific_hook": "He revisado la vacante actual de Mitarbeiter/in Raumbereitstellung und Hauswirtschaft en Appenberg - Hoteldorf, Seminare & Events, Zäziwil.",
+        "subject_seed": "Application — Mitarbeiter/in Raumbereitstellung und Hauswirtschaft | Appenberg - Hoteldorf, Seminare & Events",
+        "target_role": "Mitarbeiter/in Raumbereitstellung und Hauswirtschaft",
+        "current_roles_observed": [
+          "Mitarbeiter/in Raumbereitstellung und Hauswirtschaft"
+        ],
+        "lane": "OPERATIONS_GENERAL",
+        "exact_live_vacancy_required_for_primary": true,
+        "candidate_truth_block_required": true,
+        "candidate_truth_required_fields": [
+          "role_relevant_evidence",
+          "languages",
+          "availability",
+          "permanent_relocation",
+          "swiss_work_eligibility",
+          "contact_identity"
+        ],
+        "asset_policy": {
+          "role_lane_cv_required": true,
+          "portfolio_default_attachment": false,
+          "verified_real_links_only": true,
+          "approved_real_headshot_only": true,
+          "founder_ceo_claim_requires_evidence": true,
+          "founder_ceo_primary_signal_for_operations": false
+        },
+        "motivation_policy": {
+          "positive_switzerland_pull": true,
+          "employer_specific_appreciation_requires_evidence": true,
+          "political_grievance_allowed": false,
+          "fake_flattery_allowed": false
+        },
+        "creative_value_policy": {
+          "allowed_as_secondary_differentiator": true,
+          "employer_approval_required": true,
+          "lawful_agreed_scope_or_working_time_required": true,
+          "unconditional_free_off_clock_labor_allowed": false
+        },
+        "presentation_policy": {
+          "static_html_allowed": true,
+          "plain_text_fallback_required": true,
+          "javascript_allowed": false,
+          "iframe_allowed": false,
+          "forms_allowed": false,
+          "hidden_tracking_allowed": false
+        },
+        "application_adversarial_gate": {
+          "required": true,
+          "schema_version": "APPLICATION-ADVERSARIAL-GATE-3.0",
+          "ready_decisions": [
+            "APPLICATION_READY_NO_SEND",
+            "ELITE_MATCH"
+          ],
+          "hard_fail_compensation_allowed": false,
+          "final_send_ready": false
+        },
+        "recruiter_10_second_gate_required": true,
+        "final_send_ready": false,
+        "outbound": "CLOSED",
+        "send_allowed": 0
+      },
+      "candidate_private_truth_embedded": false,
+      "requires_private_fit_validation": true,
+      "application_ready_no_send": false,
+      "final_send_ready": false,
+      "outbound": "CLOSED",
+      "send_allowed": 0
+    },
+    {
+      "record_id": "MD-60fbb999374511c19db1",
+      "hotel_name": "Appenberg - Hoteldorf, Seminare & Events",
+      "city": "Zäziwil",
+      "market_observed_at": "2026-08-30T21:05:00Z",
+      "vacancy_observed_at": "2026-08-31T18:17:45Z",
+      "target_role": "Servicemitarbeiter/in",
+      "vacancy_source_url": "https://www.appenberg.ch/jobs/servicemitarbeiter",
+      "vacancy_evidence_type": "CURRENT_STRUCTURED_JOBPOSTING",
+      "vacancy_priority": 945,
+      "requirement_evidence": {
+        "language_signal_snippets": [
+          "uelles Menschen Karriere Geschichte Anfahrt const q=()=>{document.querySelectorAll(\"[data-language-switch]\").forEach(s=>{if(s.dataset.languageSwitchReady===\"true\")return;const o=s.querySelector(\"[data-language-switch-trigger]\"),t=s.queryS",
+          "elector(\"[data-language-switch-menu]\"),a=s.querySelector(\"[data-language-switch-dropdown]\"),r=t?Array.from(t.querySelectorAll('[role=\"menuitem\"]')):[];if(!o||!t||!a||r.length===0)return;s.dataset.languageSwitchRe",
+          "nd (hover: hover) and (pointer: fine)\").matches,h=()=>{if(!i()){a.style.removeProperty(\"--language-switch-menu-left\"),a.style.removeProperty(\"--language-switch-menu-width\"),a.style.removeProperty(\"--language-switch-menu-content-offset\");r",
+          "??0,I=E?.width??window.innerWidth,M=L-e.left,T=(F?.left??e.left)-L;a.style.setProperty(\"--language-switch-menu-left\",`${M}px`),a.style.setProperty(\"--language-switch-menu-width\",`${I}px`),a.style.setProperty(\"--language-switch-menu-conten",
+          "openElements:l},function(n){const r={de:\"de-CH\",de_CH:\"de-CH\",fr:\"fr-FR\",en:\"en-GB\"};n.setLanguageCode(r[t.locale]||String(t.locale).replace(\"_\",\"-\"));const i=document.querySelector(\".mews-distributor\");if(i&&(i.setAttribute(\"title\",\"Mews"
+        ],
+        "experience_signal_snippets": [
+          "und Sauberkeit im Servicebereich</p></li><li><p>Was uns wichtig ist</p><p>Abgeschlossene Ausbildung im Service oder in der Gastronomie von Vorteil\\n\\nErfahrung im à la carte von Vorteil\\n\\nFreude am Gastgebersein und am Kontakt mit Menschen\\n\\nSelbständige, s",
+          "und Feedback Ordnung und Sauberkeit im Servicebereich Was uns wichtig ist Abgeschlossene Ausbildung im Service oder in der Gastronomie von Vorteil Erfahrung im à la carte von Vorteil Freude am Gastgebersein und am Kontakt mit Menschen Selbständige, strukturie"
+        ],
+        "start_signal_snippets": [],
+        "housing_signal": false,
+        "contact_emails": [
+          "info@appenberg.ch"
+        ],
+        "requires_requirement_detail": false
+      },
+      "strategy": {
+        "strategy_version": "VACANCY-FIRST-APPLICATION-2.0+AAG-3.0",
+        "application_mode": "PRIMARY_EXACT_VACANCY",
+        "hotel_specific_hook": "He revisado la vacante actual de Servicemitarbeiter/in en Appenberg - Hoteldorf, Seminare & Events, Zäziwil.",
+        "subject_seed": "Application — Servicemitarbeiter/in | Appenberg - Hoteldorf, Seminare & Events",
+        "target_role": "Servicemitarbeiter/in",
+        "current_roles_observed": [
+          "Servicemitarbeiter/in"
+        ],
+        "lane": "SERVICE_FNB",
+        "exact_live_vacancy_required_for_primary": true,
+        "candidate_truth_block_required": true,
+        "candidate_truth_required_fields": [
+          "role_relevant_evidence",
+          "languages",
+          "availability",
+          "permanent_relocation",
+          "swiss_work_eligibility",
+          "contact_identity"
+        ],
+        "asset_policy": {
+          "role_lane_cv_required": true,
+          "portfolio_default_attachment": false,
+          "verified_real_links_only": true,
+          "approved_real_headshot_only": true,
+          "founder_ceo_claim_requires_evidence": true,
+          "founder_ceo_primary_signal_for_operations": false
+        },
+        "motivation_policy": {
+          "positive_switzerland_pull": true,
+          "employer_specific_appreciation_requires_evidence": true,
+          "political_grievance_allowed": false,
+          "fake_flattery_allowed": false
+        },
+        "creative_value_policy": {
+          "allowed_as_secondary_differentiator": true,
+          "employer_approval_required": true,
+          "lawful_agreed_scope_or_working_time_required": true,
+          "unconditional_free_off_clock_labor_allowed": false
+        },
+        "presentation_policy": {
+          "static_html_allowed": true,
+          "plain_text_fallback_required": true,
+          "javascript_allowed": false,
+          "iframe_allowed": false,
+          "forms_allowed": false,
+          "hidden_tracking_allowed": false
+        },
+        "application_adversarial_gate": {
+          "required": true,
+          "schema_version": "APPLICATION-ADVERSARIAL-GATE-3.0",
+          "ready_decisions": [
+            "APPLICATION_READY_NO_SEND",
+            "ELITE_MATCH"
+          ],
+          "hard_fail_compensation_allowed": false,
+          "final_send_ready": false
+        },
+        "recruiter_10_second_gate_required": true,
+        "final_send_ready": false,
+        "outbound": "CLOSED",
+        "send_allowed": 0
+      },
+      "candidate_private_truth_embedded": false,
+      "requires_private_fit_validation": true,
+      "application_ready_no_send": false,
+      "final_send_ready": false,
+      "outbound": "CLOSED",
+      "send_allowed": 0
+    },
+    {
+      "record_id": "MD-95b1534f6a0196c63917",
+      "hotel_name": "Hotel Rössli Gourmet & Spa",
+      "city": "Weggis",
+      "market_observed_at": "2026-08-30T21:05:00Z",
+      "vacancy_observed_at": "2026-08-31T18:17:45Z",
+      "target_role": "MitarbeiterIN Beauty & Spa in Jahresanstellung 80-100% Per sofort oder nach Vereinbarung.",
+      "vacancy_source_url": "https://www.roessli.ch/de/job/mitarbeiterin-beauty-spa-m-w-in-jahresanstellung-80-100",
+      "vacancy_evidence_type": "CURRENT_STRUCTURED_JOBPOSTING",
+      "vacancy_priority": 945,
+      "requirement_evidence": {
+        "language_signal_snippets": [
+          "nsfähigkeiten</li><li>Gute Computer-Kenntnisse</li><li>Fliessende Deutschkenntnisse, gute Englisch- und/oder Französischkenntnisse</li></ul><p><strong>Sie sind</strong></p><u",
+          "stungsbereitschaft und gute Kommunikationsfähigkeiten Gute Computer-Kenntnisse Fliessende Deutschkenntnisse, gute Englisch- und/oder Französischkenntnisse ‍ Sie sind Eine belastbare, flexible und fröhliche Persönlichkeit Qualitätsbewusst"
+        ],
+        "experience_signal_snippets": [
+          "Mithilfe bei der Qualitätssicherung und Weiterentwicklung im Spa</li></ul>\", \"qualifications\": \"<p><strong>Ihr Profil</strong></p><ul role=\"list\"><li>Abgeschlossene Berufsausbildung als Kosmetiker/in oder",
+          "Masseur/in</li><li>Zusatzausbildung resp. fundierte Kenntnisse der klassischen Massagen sowie Zusatzausbildungen für Treatments wie Hot Stone, Lomi Lomi, Pantai Luar und so weiter</li><l",
+          "stebetreuung und lieben den persönlichen Kontakt zum Gast</li><li>Von Vorteil Erfahrung in der 4- und/oder 5-Sterne-Kategorie</li><li>Ein hohes Mass an Dienstleistungsbereitschaft und gute Kommunikationsfähigkeiten</li><li>",
+          "i>Ganzjahresanstellung</li><li>Förderung Ihrer fachlichen und persönlichen Qualifikationen durch interne und externe Weiterbildungen</li><li>Viel Raum für Ihre eigenen Ideen</li><li>Ein freundliches, aufgeschlossenes und mot",
+          "Nutzen Sie die Chance für das Hotel Rössli Gourmet & Spa in Weggis tätig zu werden. Ihre Qualifikation / Erfahrung Ihr Profil Abgeschlossene Berufsausbildung als Kosmetiker/in oder Masseur/in Zusatzausbildung resp. fundierte Kenntnisse der klassischen Massagen s"
+        ],
+        "start_signal_snippets": [
+          "ty { font-size:12px; } } MitarbeiterIN Beauty & Spa in Jahresanstellung 80-100% Per sofort oder nach Vereinbarung. Jobangebot zur Zeit leider nicht verfügbar. { \"@context\": \"http://schema.org\", \"@type\": \"JobPos",
+          "ting\", \"title\": \"MitarbeiterIN Beauty & Spa in Jahresanstellung 80-100% Per sofort oder nach Vereinbarung.\", \"datePosted\": \"2026-08-01T00:00:00+00:00\", \"description\": \"Nutzen Sie die Chance für das Hote",
+          "41 392 27 27 mail@roessli.ch www.roessli.ch ‍ Arbeitgeber ‍ ‍ Start Anstellung per sofort ‍ Dauer der Anstellung unbefristet ‍ Industrie / Gewerbe Hotelbranche ‍ Arbeitsort Seestrasse 52 Weggis 6353 Luzern Swi"
+        ],
+        "housing_signal": false,
+        "contact_emails": [
+          "mail@roessli.ch"
+        ],
+        "requires_requirement_detail": false
+      },
+      "strategy": {
+        "strategy_version": "VACANCY-FIRST-APPLICATION-2.0+AAG-3.0",
+        "application_mode": "PRIMARY_EXACT_VACANCY",
+        "hotel_specific_hook": "He revisado la vacante actual de MitarbeiterIN Beauty & Spa in Jahresanstellung 80-100% Per sofort oder nach Vereinbarung. en Hotel Rössli Gourmet & Spa, Weggis.",
+        "subject_seed": "Application — MitarbeiterIN Beauty & Spa in Jahresanstellung 80-100% Per sofort oder nach Vereinbarung. | Hotel Rössli Gourmet & Spa",
+        "target_role": "MitarbeiterIN Beauty & Spa in Jahresanstellung 80-100% Per sofort oder nach Vereinbarung.",
+        "current_roles_observed": [
+          "MitarbeiterIN Beauty & Spa in Jahresanstellung 80-100% Per sofort oder nach Vereinbarung."
+        ],
+        "lane": "SERVICE_FNB",
+        "exact_live_vacancy_required_for_primary": true,
+        "candidate_truth_block_required": true,
+        "candidate_truth_required_fields": [
+          "role_relevant_evidence",
+          "languages",
+          "availability",
+          "permanent_relocation",
+          "swiss_work_eligibility",
+          "contact_identity"
+        ],
+        "asset_policy": {
+          "role_lane_cv_required": true,
+          "portfolio_default_attachment": false,
+          "verified_real_links_only": true,
+          "approved_real_headshot_only": true,
+          "founder_ceo_claim_requires_evidence": true,
+          "founder_ceo_primary_signal_for_operations": false
+        },
+        "motivation_policy": {
+          "positive_switzerland_pull": true,
+          "employer_specific_appreciation_requires_evidence": true,
+          "political_grievance_allowed": false,
+          "fake_flattery_allowed": false
+        },
+        "creative_value_policy": {
+          "allowed_as_secondary_differentiator": true,
+          "employer_approval_required": true,
+          "lawful_agreed_scope_or_working_time_required": true,
+          "unconditional_free_off_clock_labor_allowed": false
+        },
+        "presentation_policy": {
+          "static_html_allowed": true,
+          "plain_text_fallback_required": true,
+          "javascript_allowed": false,
+          "iframe_allowed": false,
+          "forms_allowed": false,
+          "hidden_tracking_allowed": false
+        },
+        "application_adversarial_gate": {
+          "required": true,
+          "schema_version": "APPLICATION-ADVERSARIAL-GATE-3.0",
+          "ready_decisions": [
+            "APPLICATION_READY_NO_SEND",
+            "ELITE_MATCH"
+          ],
+          "hard_fail_compensation_allowed": false,
+          "final_send_ready": false
+        },
+        "recruiter_10_second_gate_required": true,
+        "final_send_ready": false,
+        "outbound": "CLOSED",
+        "send_allowed": 0
+      },
+      "candidate_private_truth_embedded": false,
+      "requires_private_fit_validation": true,
+      "application_ready_no_send": false,
+      "final_send_ready": false,
+      "outbound": "CLOSED",
+      "send_allowed": 0
+    },
+    {
+      "record_id": "MD-c6243acf1367eac688fa",
+      "hotel_name": "Hotel Heiden - Wellness am Bodensee",
+      "city": "Heiden",
+      "market_observed_at": "2026-08-30T21:05:00Z",
+      "vacancy_observed_at": "2026-08-31T18:17:45Z",
+      "target_role": "Mitarbeiter:in Réception & Reservation (m/w/d) (60-100%)",
+      "vacancy_source_url": "https://www.hotelheiden.ch/de/ueber-uns/karriere/job/mitarbeiter-in-reception-reservation-40-60-100-41",
+      "vacancy_evidence_type": "CURRENT_STRUCTURED_JOBPOSTING",
+      "vacancy_priority": 945,
+      "requirement_evidence": {
+        "language_signal_snippets": [
+          "Office; Erfahrung mit StayNTouch oder einem vergleichbaren PMS ist von Vorteil Sehr gute Deutschkenntnisse sowie gute Englischkenntnisse; weitere Fremdsprachen sind willkommen Bereitschaft für Einsätze an Wochenenden und Feiertagen Team"
+        ],
+        "experience_signal_snippets": [
+          "lebnisse und trägst zu einem erstklassigen Service bei. Das bringst Du mit Abgeschlossene Ausbildung in der Hotellerie oder vergleichbare Berufserfahrung Erfahrung an der Réception, in der Reservation oder im Front Office Ausgeprägte Gäste- und Dienstleistungs",
+          "ändige, zuverlässige und strukturierte Arbeitsweise Sicherer Umgang mit Microsoft Office; Erfahrung mit StayNTouch oder einem vergleichbaren PMS ist von Vorteil Sehr gute Deutschkenntnisse sowie gute Englischkenntnisse; weitere Fremdsprachen sind willkommen B"
+        ],
+        "start_signal_snippets": [],
+        "housing_signal": false,
+        "contact_emails": [
+          "info@hotelheiden.ch",
+          "personal@hotelheiden.ch"
+        ],
+        "requires_requirement_detail": false
+      },
+      "strategy": {
+        "strategy_version": "VACANCY-FIRST-APPLICATION-2.0+AAG-3.0",
+        "application_mode": "PRIMARY_EXACT_VACANCY",
+        "hotel_specific_hook": "He revisado la vacante actual de Mitarbeiter:in Réception & Reservation (m/w/d) (60-100%) en Hotel Heiden - Wellness am Bodensee, Heiden.",
+        "subject_seed": "Application — Mitarbeiter:in Réception & Reservation (m/w/d) (60-100%) | Hotel Heiden - Wellness am Bodensee",
+        "target_role": "Mitarbeiter:in Réception & Reservation (m/w/d) (60-100%)",
+        "current_roles_observed": [
+          "Mitarbeiter:in Réception & Reservation (m/w/d) (60-100%)"
+        ],
+        "lane": "GUEST_SUPPORT",
+        "exact_live_vacancy_required_for_primary": true,
+        "candidate_truth_block_required": true,
+        "candidate_truth_required_fields": [
+          "role_relevant_evidence",
+          "languages",
+          "availability",
+          "permanent_relocation",
+          "swiss_work_eligibility",
+          "contact_identity"
+        ],
+        "asset_policy": {
+          "role_lane_cv_required": true,
+          "portfolio_default_attachment": false,
+          "verified_real_links_only": true,
+          "approved_real_headshot_only": true,
+          "founder_ceo_claim_requires_evidence": true,
+          "founder_ceo_primary_signal_for_operations": false
+        },
+        "motivation_policy": {
+          "positive_switzerland_pull": true,
+          "employer_specific_appreciation_requires_evidence": true,
+          "political_grievance_allowed": false,
+          "fake_flattery_allowed": false
+        },
+        "creative_value_policy": {
+          "allowed_as_secondary_differentiator": true,
+          "employer_approval_required": true,
+          "lawful_agreed_scope_or_working_time_required": true,
+          "unconditional_free_off_clock_labor_allowed": false
+        },
+        "presentation_policy": {
+          "static_html_allowed": true,
+          "plain_text_fallback_required": true,
+          "javascript_allowed": false,
+          "iframe_allowed": false,
+          "forms_allowed": false,
+          "hidden_tracking_allowed": false
+        },
+        "application_adversarial_gate": {
+          "required": true,
+          "schema_version": "APPLICATION-ADVERSARIAL-GATE-3.0",
+          "ready_decisions": [
+            "APPLICATION_READY_NO_SEND",
+            "ELITE_MATCH"
+          ],
+          "hard_fail_compensation_allowed": false,
+          "final_send_ready": false
+        },
+        "recruiter_10_second_gate_required": true,
+        "final_send_ready": false,
+        "outbound": "CLOSED",
+        "send_allowed": 0
+      },
+      "candidate_private_truth_embedded": false,
+      "requires_private_fit_validation": true,
+      "application_ready_no_send": false,
+      "final_send_ready": false,
+      "outbound": "CLOSED",
+      "send_allowed": 0
+    },
+    {
+      "record_id": "MD-126dbea83968b918d331",
+      "hotel_name": "Hotel Joseph's House",
+      "city": "Davos Platz",
+      "market_observed_at": "2026-08-30T21:05:00Z",
+      "vacancy_observed_at": "2026-08-31T18:17:45Z",
+      "target_role": "Housekeeping/ Allrounder:in Rinerhorn",
+      "vacancy_source_url": "https://www.davosklostersmountains.ch/de/mountains/stellenangebote/Housekeeping-Allrounder-in-Rinerhorn_j_3922189",
+      "vacancy_evidence_type": "CURRENT_STRUCTURED_JOBPOSTING",
+      "vacancy_priority": 940,
+      "requirement_evidence": {
+        "language_signal_snippets": [
+          ":\"\\EA39\"}.icon-laenge:before{content:\"\\EA3A\"}.icon-landscape:before{content:\"\\EA3B\"}.icon-language:before{content:\"\\EA3C\"}.icon-last-minute:before{content:\"\\EA3D\"}.icon-lawinen:before{content:\"\\EA3E\"}.icon-like:before{content:\"\\EA3F\"}.ico",
+          "ark:\"\\EA38\";--icon-king-bed:\"\\EA39\";--icon-laenge:\"\\EA3A\";--icon-landscape:\"\\EA3B\";--icon-language:\"\\EA3C\";--icon-last-minute:\"\\EA3D\";--icon-lawinen:\"\\EA3E\";--icon-like:\"\\EA3F\";--icon-linkedin:\"\\EA40\";--icon-mail:\"\\EA41\";--icon-map:\"\\EA42",
+          "werbungsformular Position/Titel Vorname * Nachname * Strasse * PLZ * Ort * Land * Schweiz Deutschland Frankreich Italien Niederlande Österreich Vereinigtes Königreich Vereinigte Staaten Afghanistan Albanien Algerien Amerikanisch-Samoa Am",
+          "uti Dänemark Ecuador El Salvador Eritrea Estland Eswatini Falklandinseln Fidschi Finnland Französisch-Guayana Französisch-Polynesien Französische Süd- und Antarktisgebiete Färöer Gabun Gambia Georgien Ghana Gibraltar Grenada Griechenland Grö"
+        ],
+        "experience_signal_snippets": [],
+        "start_signal_snippets": [
+          "zum gehobenen Vier-Sterne-<br />Superior Hotel.</p><p>Für die kommende <strong>Wintersaison 2026/27</strong> suchen wir für unsere <strong>Unterkünfte Rinerlodge /</strong><br /><strong>Maxon / Camping in Davos Glari",
+          "eeping/ Allrounder:in Rinerhorn Hotels Housekeeping/ Allrounder:in Rinerhorn ab Wintersaison 2026 100% Infos downloaden Die Davos Klosters Mountains sind fünf Berg- und Skigebiete in den Bündner Alpen. Neben den Bergb",
+          "hen Gruppenhaus bis zum gehobenen Vier-Sterne- Superior Hotel. Für die kommende Wintersaison 2026/27 suchen wir für unsere Unterkünfte Rinerlodge / Maxon / Camping in Davos Glaris noch eine Person als: Housekeeping/Al"
+        ],
+        "housing_signal": false,
+        "contact_emails": [
+          "alice.begesova@mountainhotels.ch",
+          "mountains@davosklosters.ch"
+        ],
+        "requires_requirement_detail": false
+      },
+      "strategy": {
+        "strategy_version": "VACANCY-FIRST-APPLICATION-2.0+AAG-3.0",
+        "application_mode": "PRIMARY_EXACT_VACANCY",
+        "hotel_specific_hook": "He revisado la vacante actual de Housekeeping/ Allrounder:in Rinerhorn en Hotel Joseph's House, Davos Platz.",
+        "subject_seed": "Application — Housekeeping/ Allrounder:in Rinerhorn | Hotel Joseph's House",
+        "target_role": "Housekeeping/ Allrounder:in Rinerhorn",
+        "current_roles_observed": [
+          "Housekeeping/ Allrounder:in Rinerhorn"
+        ],
+        "lane": "HOUSEKEEPING",
+        "exact_live_vacancy_required_for_primary": true,
+        "candidate_truth_block_required": true,
+        "candidate_truth_required_fields": [
+          "role_relevant_evidence",
+          "languages",
+          "availability",
+          "permanent_relocation",
+          "swiss_work_eligibility",
+          "contact_identity"
+        ],
+        "asset_policy": {
+          "role_lane_cv_required": true,
+          "portfolio_default_attachment": false,
+          "verified_real_links_only": true,
+          "approved_real_headshot_only": true,
+          "founder_ceo_claim_requires_evidence": true,
+          "founder_ceo_primary_signal_for_operations": false
+        },
+        "motivation_policy": {
+          "positive_switzerland_pull": true,
+          "employer_specific_appreciation_requires_evidence": true,
+          "political_grievance_allowed": false,
+          "fake_flattery_allowed": false
+        },
+        "creative_value_policy": {
+          "allowed_as_secondary_differentiator": true,
+          "employer_approval_required": true,
+          "lawful_agreed_scope_or_working_time_required": true,
+          "unconditional_free_off_clock_labor_allowed": false
+        },
+        "presentation_policy": {
+          "static_html_allowed": true,
+          "plain_text_fallback_required": true,
+          "javascript_allowed": false,
+          "iframe_allowed": false,
+          "forms_allowed": false,
+          "hidden_tracking_allowed": false
+        },
+        "application_adversarial_gate": {
+          "required": true,
+          "schema_version": "APPLICATION-ADVERSARIAL-GATE-3.0",
+          "ready_decisions": [
+            "APPLICATION_READY_NO_SEND",
+            "ELITE_MATCH"
+          ],
+          "hard_fail_compensation_allowed": false,
+          "final_send_ready": false
+        },
+        "recruiter_10_second_gate_required": true,
+        "final_send_ready": false,
+        "outbound": "CLOSED",
+        "send_allowed": 0
+      },
+      "candidate_private_truth_embedded": false,
+      "requires_private_fit_validation": true,
+      "application_ready_no_send": false,
+      "final_send_ready": false,
+      "outbound": "CLOSED",
+      "send_allowed": 0
+    },
+    {
+      "record_id": "MD-126dbea83968b918d331",
+      "hotel_name": "Hotel Joseph's House",
+      "city": "Davos Platz",
+      "market_observed_at": "2026-08-30T21:05:00Z",
+      "vacancy_observed_at": "2026-08-31T18:17:45Z",
+      "target_role": "Mitarbeiter:in Booking Office Mountain Hotels",
+      "vacancy_source_url": "https://www.davosklostersmountains.ch/de/mountains/stellenangebote/Mitarbeiter-in-Booking-Office-Mountain-Hotels_j_2449776",
+      "vacancy_evidence_type": "CURRENT_STRUCTURED_JOBPOSTING",
+      "vacancy_priority": 940,
+      "requirement_evidence": {
+        "language_signal_snippets": [
+          ":\"\\EA39\"}.icon-laenge:before{content:\"\\EA3A\"}.icon-landscape:before{content:\"\\EA3B\"}.icon-language:before{content:\"\\EA3C\"}.icon-last-minute:before{content:\"\\EA3D\"}.icon-lawinen:before{content:\"\\EA3E\"}.icon-like:before{content:\"\\EA3F\"}.ico",
+          "ark:\"\\EA38\";--icon-king-bed:\"\\EA39\";--icon-laenge:\"\\EA3A\";--icon-landscape:\"\\EA3B\";--icon-language:\"\\EA3C\";--icon-last-minute:\"\\EA3D\";--icon-lawinen:\"\\EA3E\";--icon-like:\"\\EA3F\";--icon-linkedin:\"\\EA40\";--icon-mail:\"\\EA41\";--icon-map:\"\\EA42",
+          "auch in anderen Aufgabenbereichen<br />mitzuhelfen</li><li>Sprache: Du verfügst über gute deutsche Sprachkenntnisse in Schrift und Sprache<br />sowie englische Sprachkenntnisse in mündlicher Form</li><li>Einsatz: Du bist ein unverzichtba",
+          "bist bereit auch in anderen Aufgabenbereichen mitzuhelfen Sprache: Du verfügst über gute deutsche Sprachkenntnisse in Schrift und Sprache sowie englische Sprachkenntnisse in mündlicher Form Einsatz: Du bist ein unverzichtbares Bindeglie",
+          "werbungsformular Position/Titel Vorname * Nachname * Strasse * PLZ * Ort * Land * Schweiz Deutschland Frankreich Italien Niederlande Österreich Vereinigtes Königreich Vereinigte Staaten Afghanistan Albanien Algerien Amerikanisch-Samoa Am"
+        ],
+        "experience_signal_snippets": [
+          "en</li></ul><p><span style='color:#f1c40f'><strong>Dein Profil</strong></span></p><ul><li>Ausbildung: Du hast eine abgeschlossene kaufmännische oder gleichwertige Ausbildung</li><li>Arbeitsweise: Du hast eine schnelle Auffassungsgabe, arbeitest gerne selbststä",
+          "betreuung und Information über die Hotels und anderen Angebote der Bergbahnen Dein Profil Ausbildung: Du hast eine abgeschlossene kaufmännische oder gleichwertige Ausbildung Arbeitsweise: Du hast eine schnelle Auffassungsgabe, arbeitest gerne selbstständig, bi"
+        ],
+        "start_signal_snippets": [
+          "fice</strong> der Mountain Hotels suchen wir für<br /><strong>die kommende Wintersaison 2026/27 </strong>eine Person als: </p><p><span style='color:#f1c40f'><strong>Mitarbeiter:in Booking Office</strong> <st",
+          "Office Mountain Hotels Hotels Mitarbeiter:in Booking Office Mountain Hotels ab Wintersaison 2026 100% Infos downloaden Die Davos Klosters Mountains sind fünf Berg- und Skigebiete in den Bündner Alpen. Neben den Bergb",
+          "ung des Teams im Booking Office der Mountain Hotels suchen wir für die kommende Wintersaison 2026/27 eine Person als: Mitarbeiter:in Booking Office 100% Deine Aufgaben Erstellen von Offerten für individuelle Gäste und"
+        ],
+        "housing_signal": false,
+        "contact_emails": [
+          "bewerbung@mountainhotels.ch",
+          "mountains@davosklosters.ch"
+        ],
+        "requires_requirement_detail": false
+      },
+      "strategy": {
+        "strategy_version": "VACANCY-FIRST-APPLICATION-2.0+AAG-3.0",
+        "application_mode": "PRIMARY_EXACT_VACANCY",
+        "hotel_specific_hook": "He revisado la vacante actual de Mitarbeiter:in Booking Office Mountain Hotels en Hotel Joseph's House, Davos Platz.",
+        "subject_seed": "Application — Mitarbeiter:in Booking Office Mountain Hotels | Hotel Joseph's House",
+        "target_role": "Mitarbeiter:in Booking Office Mountain Hotels",
+        "current_roles_observed": [
+          "Mitarbeiter:in Booking Office Mountain Hotels"
+        ],
+        "lane": "OPERATIONS_GENERAL",
+        "exact_live_vacancy_required_for_primary": true,
+        "candidate_truth_block_required": true,
+        "candidate_truth_required_fields": [
+          "role_relevant_evidence",
+          "languages",
+          "availability",
+          "permanent_relocation",
+          "swiss_work_eligibility",
+          "contact_identity"
+        ],
+        "asset_policy": {
+          "role_lane_cv_required": true,
+          "portfolio_default_attachment": false,
+          "verified_real_links_only": true,
+          "approved_real_headshot_only": true,
+          "founder_ceo_claim_requires_evidence": true,
+          "founder_ceo_primary_signal_for_operations": false
+        },
+        "motivation_policy": {
+          "positive_switzerland_pull": true,
+          "employer_specific_appreciation_requires_evidence": true,
+          "political_grievance_allowed": false,
+          "fake_flattery_allowed": false
+        },
+        "creative_value_policy": {
+          "allowed_as_secondary_differentiator": true,
+          "employer_approval_required": true,
+          "lawful_agreed_scope_or_working_time_required": true,
+          "unconditional_free_off_clock_labor_allowed": false
+        },
+        "presentation_policy": {
+          "static_html_allowed": true,
+          "plain_text_fallback_required": true,
+          "javascript_allowed": false,
+          "iframe_allowed": false,
+          "forms_allowed": false,
+          "hidden_tracking_allowed": false
+        },
+        "application_adversarial_gate": {
+          "required": true,
+          "schema_version": "APPLICATION-ADVERSARIAL-GATE-3.0",
+          "ready_decisions": [
+            "APPLICATION_READY_NO_SEND",
+            "ELITE_MATCH"
+          ],
+          "hard_fail_compensation_allowed": false,
+          "final_send_ready": false
+        },
+        "recruiter_10_second_gate_required": true,
+        "final_send_ready": false,
+        "outbound": "CLOSED",
+        "send_allowed": 0
+      },
+      "candidate_private_truth_embedded": false,
+      "requires_private_fit_validation": true,
+      "application_ready_no_send": false,
+      "final_send_ready": false,
+      "outbound": "CLOSED",
+      "send_allowed": 0
+    },
+    {
+      "record_id": "MD-539ff80e0bfde6e12be8",
+      "hotel_name": "Hotel Alte Post",
+      "city": "Davos Platz",
+      "market_observed_at": "2026-08-30T21:05:00Z",
+      "vacancy_observed_at": "2026-08-31T20:31:55Z",
+      "target_role": "Housekeeping/ Allrounder:in Rinerhorn",
+      "vacancy_source_url": "https://www.davosklostersmountains.ch/de/mountains/stellenangebote/Housekeeping-Allrounder-in-Rinerhorn_j_3922189",
+      "vacancy_evidence_type": "CURRENT_STRUCTURED_JOBPOSTING",
+      "vacancy_priority": 940,
+      "requirement_evidence": {
+        "language_signal_snippets": [
+          ":\"\\EA39\"}.icon-laenge:before{content:\"\\EA3A\"}.icon-landscape:before{content:\"\\EA3B\"}.icon-language:before{content:\"\\EA3C\"}.icon-last-minute:before{content:\"\\EA3D\"}.icon-lawinen:before{content:\"\\EA3E\"}.icon-like:before{content:\"\\EA3F\"}.ico",
+          "ark:\"\\EA38\";--icon-king-bed:\"\\EA39\";--icon-laenge:\"\\EA3A\";--icon-landscape:\"\\EA3B\";--icon-language:\"\\EA3C\";--icon-last-minute:\"\\EA3D\";--icon-lawinen:\"\\EA3E\";--icon-like:\"\\EA3F\";--icon-linkedin:\"\\EA40\";--icon-mail:\"\\EA41\";--icon-map:\"\\EA42",
+          "werbungsformular Position/Titel Vorname * Nachname * Strasse * PLZ * Ort * Land * Schweiz Deutschland Frankreich Italien Niederlande Österreich Vereinigtes Königreich Vereinigte Staaten Afghanistan Albanien Algerien Amerikanisch-Samoa Am",
+          "uti Dänemark Ecuador El Salvador Eritrea Estland Eswatini Falklandinseln Fidschi Finnland Französisch-Guayana Französisch-Polynesien Französische Süd- und Antarktisgebiete Färöer Gabun Gambia Georgien Ghana Gibraltar Grenada Griechenland Grö"
+        ],
+        "experience_signal_snippets": [],
+        "start_signal_snippets": [
+          "zum gehobenen Vier-Sterne-<br />Superior Hotel.</p><p>Für die kommende <strong>Wintersaison 2026/27</strong> suchen wir für unsere <strong>Unterkünfte Rinerlodge /</strong><br /><strong>Maxon / Camping in Davos Glari",
+          "eeping/ Allrounder:in Rinerhorn Hotels Housekeeping/ Allrounder:in Rinerhorn ab Wintersaison 2026 100% Infos downloaden Die Davos Klosters Mountains sind fünf Berg- und Skigebiete in den Bündner Alpen. Neben den Bergb",
+          "hen Gruppenhaus bis zum gehobenen Vier-Sterne- Superior Hotel. Für die kommende Wintersaison 2026/27 suchen wir für unsere Unterkünfte Rinerlodge / Maxon / Camping in Davos Glaris noch eine Person als: Housekeeping/Al"
+        ],
+        "housing_signal": false,
+        "contact_emails": [
+          "alice.begesova@mountainhotels.ch",
+          "mountains@davosklosters.ch"
+        ],
+        "requires_requirement_detail": false
+      },
+      "strategy": {
+        "strategy_version": "VACANCY-FIRST-APPLICATION-2.0+AAG-3.0",
+        "application_mode": "PRIMARY_EXACT_VACANCY",
+        "hotel_specific_hook": "He revisado la vacante actual de Housekeeping/ Allrounder:in Rinerhorn en Hotel Alte Post, Davos Platz.",
+        "subject_seed": "Application — Housekeeping/ Allrounder:in Rinerhorn | Hotel Alte Post",
+        "target_role": "Housekeeping/ Allrounder:in Rinerhorn",
+        "current_roles_observed": [
+          "Housekeeping/ Allrounder:in Rinerhorn"
+        ],
+        "lane": "HOUSEKEEPING",
+        "exact_live_vacancy_required_for_primary": true,
+        "candidate_truth_block_required": true,
+        "candidate_truth_required_fields": [
+          "role_relevant_evidence",
+          "languages",
+          "availability",
+          "permanent_relocation",
+          "swiss_work_eligibility",
+          "contact_identity"
+        ],
+        "asset_policy": {
+          "role_lane_cv_required": true,
+          "portfolio_default_attachment": false,
+          "verified_real_links_only": true,
+          "approved_real_headshot_only": true,
+          "founder_ceo_claim_requires_evidence": true,
+          "founder_ceo_primary_signal_for_operations": false
+        },
+        "motivation_policy": {
+          "positive_switzerland_pull": true,
+          "employer_specific_appreciation_requires_evidence": true,
+          "political_grievance_allowed": false,
+          "fake_flattery_allowed": false
+        },
+        "creative_value_policy": {
+          "allowed_as_secondary_differentiator": true,
+          "employer_approval_required": true,
+          "lawful_agreed_scope_or_working_time_required": true,
+          "unconditional_free_off_clock_labor_allowed": false
+        },
+        "presentation_policy": {
+          "static_html_allowed": true,
+          "plain_text_fallback_required": true,
+          "javascript_allowed": false,
+          "iframe_allowed": false,
+          "forms_allowed": false,
+          "hidden_tracking_allowed": false
+        },
+        "application_adversarial_gate": {
+          "required": true,
+          "schema_version": "APPLICATION-ADVERSARIAL-GATE-3.0",
+          "ready_decisions": [
+            "APPLICATION_READY_NO_SEND",
+            "ELITE_MATCH"
+          ],
+          "hard_fail_compensation_allowed": false,
+          "final_send_ready": false
+        },
+        "recruiter_10_second_gate_required": true,
+        "final_send_ready": false,
+        "outbound": "CLOSED",
+        "send_allowed": 0
+      },
+      "candidate_private_truth_embedded": false,
+      "requires_private_fit_validation": true,
+      "application_ready_no_send": false,
+      "final_send_ready": false,
+      "outbound": "CLOSED",
+      "send_allowed": 0
+    },
+    {
+      "record_id": "MD-539ff80e0bfde6e12be8",
+      "hotel_name": "Hotel Alte Post",
+      "city": "Davos Platz",
+      "market_observed_at": "2026-08-30T21:05:00Z",
+      "vacancy_observed_at": "2026-08-31T20:31:55Z",
+      "target_role": "Mitarbeiter:in Booking Office Mountain Hotels",
+      "vacancy_source_url": "https://www.davosklostersmountains.ch/de/mountains/stellenangebote/Mitarbeiter-in-Booking-Office-Mountain-Hotels_j_2449776",
+      "vacancy_evidence_type": "CURRENT_STRUCTURED_JOBPOSTING",
+      "vacancy_priority": 940,
+      "requirement_evidence": {
+        "language_signal_snippets": [
+          ":\"\\EA39\"}.icon-laenge:before{content:\"\\EA3A\"}.icon-landscape:before{content:\"\\EA3B\"}.icon-language:before{content:\"\\EA3C\"}.icon-last-minute:before{content:\"\\EA3D\"}.icon-lawinen:before{content:\"\\EA3E\"}.icon-like:before{content:\"\\EA3F\"}.ico",
+          "ark:\"\\EA38\";--icon-king-bed:\"\\EA39\";--icon-laenge:\"\\EA3A\";--icon-landscape:\"\\EA3B\";--icon-language:\"\\EA3C\";--icon-last-minute:\"\\EA3D\";--icon-lawinen:\"\\EA3E\";--icon-like:\"\\EA3F\";--icon-linkedin:\"\\EA40\";--icon-mail:\"\\EA41\";--icon-map:\"\\EA42",
+          "auch in anderen Aufgabenbereichen<br />mitzuhelfen</li><li>Sprache: Du verfügst über gute deutsche Sprachkenntnisse in Schrift und Sprache<br />sowie englische Sprachkenntnisse in mündlicher Form</li><li>Einsatz: Du bist ein unverzichtba",
+          "bist bereit auch in anderen Aufgabenbereichen mitzuhelfen Sprache: Du verfügst über gute deutsche Sprachkenntnisse in Schrift und Sprache sowie englische Sprachkenntnisse in mündlicher Form Einsatz: Du bist ein unverzichtbares Bindeglie",
+          "werbungsformular Position/Titel Vorname * Nachname * Strasse * PLZ * Ort * Land * Schweiz Deutschland Frankreich Italien Niederlande Österreich Vereinigtes Königreich Vereinigte Staaten Afghanistan Albanien Algerien Amerikanisch-Samoa Am"
+        ],
+        "experience_signal_snippets": [
+          "en</li></ul><p><span style='color:#f1c40f'><strong>Dein Profil</strong></span></p><ul><li>Ausbildung: Du hast eine abgeschlossene kaufmännische oder gleichwertige Ausbildung</li><li>Arbeitsweise: Du hast eine schnelle Auffassungsgabe, arbeitest gerne selbststä",
+          "betreuung und Information über die Hotels und anderen Angebote der Bergbahnen Dein Profil Ausbildung: Du hast eine abgeschlossene kaufmännische oder gleichwertige Ausbildung Arbeitsweise: Du hast eine schnelle Auffassungsgabe, arbeitest gerne selbstständig, bi"
+        ],
+        "start_signal_snippets": [
+          "fice</strong> der Mountain Hotels suchen wir für<br /><strong>die kommende Wintersaison 2026/27 </strong>eine Person als: </p><p><span style='color:#f1c40f'><strong>Mitarbeiter:in Booking Office</strong> <st",
+          "Office Mountain Hotels Hotels Mitarbeiter:in Booking Office Mountain Hotels ab Wintersaison 2026 100% Infos downloaden Die Davos Klosters Mountains sind fünf Berg- und Skigebiete in den Bündner Alpen. Neben den Bergb",
+          "ung des Teams im Booking Office der Mountain Hotels suchen wir für die kommende Wintersaison 2026/27 eine Person als: Mitarbeiter:in Booking Office 100% Deine Aufgaben Erstellen von Offerten für individuelle Gäste und"
+        ],
+        "housing_signal": false,
+        "contact_emails": [
+          "bewerbung@mountainhotels.ch",
+          "mountains@davosklosters.ch"
+        ],
+        "requires_requirement_detail": false
+      },
+      "strategy": {
+        "strategy_version": "VACANCY-FIRST-APPLICATION-2.0+AAG-3.0",
+        "application_mode": "PRIMARY_EXACT_VACANCY",
+        "hotel_specific_hook": "He revisado la vacante actual de Mitarbeiter:in Booking Office Mountain Hotels en Hotel Alte Post, Davos Platz.",
+        "subject_seed": "Application — Mitarbeiter:in Booking Office Mountain Hotels | Hotel Alte Post",
+        "target_role": "Mitarbeiter:in Booking Office Mountain Hotels",
+        "current_roles_observed": [
+          "Mitarbeiter:in Booking Office Mountain Hotels"
+        ],
+        "lane": "OPERATIONS_GENERAL",
+        "exact_live_vacancy_required_for_primary": true,
+        "candidate_truth_block_required": true,
+        "candidate_truth_required_fields": [
+          "role_relevant_evidence",
+          "languages",
+          "availability",
+          "permanent_relocation",
+          "swiss_work_eligibility",
+          "contact_identity"
+        ],
+        "asset_policy": {
+          "role_lane_cv_required": true,
+          "portfolio_default_attachment": false,
+          "verified_real_links_only": true,
+          "approved_real_headshot_only": true,
+          "founder_ceo_claim_requires_evidence": true,
+          "founder_ceo_primary_signal_for_operations": false
+        },
+        "motivation_policy": {
+          "positive_switzerland_pull": true,
+          "employer_specific_appreciation_requires_evidence": true,
+          "political_grievance_allowed": false,
+          "fake_flattery_allowed": false
+        },
+        "creative_value_policy": {
+          "allowed_as_secondary_differentiator": true,
+          "employer_approval_required": true,
+          "lawful_agreed_scope_or_working_time_required": true,
+          "unconditional_free_off_clock_labor_allowed": false
+        },
+        "presentation_policy": {
+          "static_html_allowed": true,
+          "plain_text_fallback_required": true,
+          "javascript_allowed": false,
+          "iframe_allowed": false,
+          "forms_allowed": false,
+          "hidden_tracking_allowed": false
+        },
+        "application_adversarial_gate": {
+          "required": true,
+          "schema_version": "APPLICATION-ADVERSARIAL-GATE-3.0",
+          "ready_decisions": [
+            "APPLICATION_READY_NO_SEND",
+            "ELITE_MATCH"
+          ],
+          "hard_fail_compensation_allowed": false,
+          "final_send_ready": false
+        },
+        "recruiter_10_second_gate_required": true,
+        "final_send_ready": false,
+        "outbound": "CLOSED",
+        "send_allowed": 0
+      },
+      "candidate_private_truth_embedded": false,
+      "requires_private_fit_validation": true,
+      "application_ready_no_send": false,
+      "final_send_ready": false,
+      "outbound": "CLOSED",
+      "send_allowed": 0
+    },
+    {
+      "record_id": "MD-63282370c11b974a42ca",
+      "hotel_name": "Hotel National",
+      "city": "Davos Platz",
+      "market_observed_at": "2026-08-30T21:05:00Z",
+      "vacancy_observed_at": "2026-08-31T18:17:45Z",
+      "target_role": "Housekeeping/ Allrounder:in Rinerhorn",
+      "vacancy_source_url": "https://www.davosklostersmountains.ch/de/mountains/stellenangebote/Housekeeping-Allrounder-in-Rinerhorn_j_3922189",
+      "vacancy_evidence_type": "CURRENT_STRUCTURED_JOBPOSTING",
+      "vacancy_priority": 940,
+      "requirement_evidence": {
+        "language_signal_snippets": [
+          ":\"\\EA39\"}.icon-laenge:before{content:\"\\EA3A\"}.icon-landscape:before{content:\"\\EA3B\"}.icon-language:before{content:\"\\EA3C\"}.icon-last-minute:before{content:\"\\EA3D\"}.icon-lawinen:before{content:\"\\EA3E\"}.icon-like:before{content:\"\\EA3F\"}.ico",
+          "ark:\"\\EA38\";--icon-king-bed:\"\\EA39\";--icon-laenge:\"\\EA3A\";--icon-landscape:\"\\EA3B\";--icon-language:\"\\EA3C\";--icon-last-minute:\"\\EA3D\";--icon-lawinen:\"\\EA3E\";--icon-like:\"\\EA3F\";--icon-linkedin:\"\\EA40\";--icon-mail:\"\\EA41\";--icon-map:\"\\EA42",
+          "werbungsformular Position/Titel Vorname * Nachname * Strasse * PLZ * Ort * Land * Schweiz Deutschland Frankreich Italien Niederlande Österreich Vereinigtes Königreich Vereinigte Staaten Afghanistan Albanien Algerien Amerikanisch-Samoa Am",
+          "uti Dänemark Ecuador El Salvador Eritrea Estland Eswatini Falklandinseln Fidschi Finnland Französisch-Guayana Französisch-Polynesien Französische Süd- und Antarktisgebiete Färöer Gabun Gambia Georgien Ghana Gibraltar Grenada Griechenland Grö"
+        ],
+        "experience_signal_snippets": [],
+        "start_signal_snippets": [
+          "zum gehobenen Vier-Sterne-<br />Superior Hotel.</p><p>Für die kommende <strong>Wintersaison 2026/27</strong> suchen wir für unsere <strong>Unterkünfte Rinerlodge /</strong><br /><strong>Maxon / Camping in Davos Glari",
+          "eeping/ Allrounder:in Rinerhorn Hotels Housekeeping/ Allrounder:in Rinerhorn ab Wintersaison 2026 100% Infos downloaden Die Davos Klosters Mountains sind fünf Berg- und Skigebiete in den Bündner Alpen. Neben den Bergb",
+          "hen Gruppenhaus bis zum gehobenen Vier-Sterne- Superior Hotel. Für die kommende Wintersaison 2026/27 suchen wir für unsere Unterkünfte Rinerlodge / Maxon / Camping in Davos Glaris noch eine Person als: Housekeeping/Al"
+        ],
+        "housing_signal": false,
+        "contact_emails": [
+          "alice.begesova@mountainhotels.ch",
+          "mountains@davosklosters.ch"
+        ],
+        "requires_requirement_detail": false
+      },
+      "strategy": {
+        "strategy_version": "VACANCY-FIRST-APPLICATION-2.0+AAG-3.0",
+        "application_mode": "PRIMARY_EXACT_VACANCY",
+        "hotel_specific_hook": "He revisado la vacante actual de Housekeeping/ Allrounder:in Rinerhorn en Hotel National, Davos Platz.",
+        "subject_seed": "Application — Housekeeping/ Allrounder:in Rinerhorn | Hotel National",
+        "target_role": "Housekeeping/ Allrounder:in Rinerhorn",
+        "current_roles_observed": [
+          "Housekeeping/ Allrounder:in Rinerhorn"
+        ],
+        "lane": "HOUSEKEEPING",
+        "exact_live_vacancy_required_for_primary": true,
+        "candidate_truth_block_required": true,
+        "candidate_truth_required_fields": [
+          "role_relevant_evidence",
+          "languages",
+          "availability",
+          "permanent_relocation",
+          "swiss_work_eligibility",
+          "contact_identity"
+        ],
+        "asset_policy": {
+          "role_lane_cv_required": true,
+          "portfolio_default_attachment": false,
+          "verified_real_links_only": true,
+          "approved_real_headshot_only": true,
+          "founder_ceo_claim_requires_evidence": true,
+          "founder_ceo_primary_signal_for_operations": false
+        },
+        "motivation_policy": {
+          "positive_switzerland_pull": true,
+          "employer_specific_appreciation_requires_evidence": true,
+          "political_grievance_allowed": false,
+          "fake_flattery_allowed": false
+        },
+        "creative_value_policy": {
+          "allowed_as_secondary_differentiator": true,
+          "employer_approval_required": true,
+          "lawful_agreed_scope_or_working_time_required": true,
+          "unconditional_free_off_clock_labor_allowed": false
+        },
+        "presentation_policy": {
+          "static_html_allowed": true,
+          "plain_text_fallback_required": true,
+          "javascript_allowed": false,
+          "iframe_allowed": false,
+          "forms_allowed": false,
+          "hidden_tracking_allowed": false
+        },
+        "application_adversarial_gate": {
+          "required": true,
+          "schema_version": "APPLICATION-ADVERSARIAL-GATE-3.0",
+          "ready_decisions": [
+            "APPLICATION_READY_NO_SEND",
+            "ELITE_MATCH"
+          ],
+          "hard_fail_compensation_allowed": false,
+          "final_send_ready": false
+        },
+        "recruiter_10_second_gate_required": true,
+        "final_send_ready": false,
+        "outbound": "CLOSED",
+        "send_allowed": 0
+      },
+      "candidate_private_truth_embedded": false,
+      "requires_private_fit_validation": true,
+      "application_ready_no_send": false,
+      "final_send_ready": false,
+      "outbound": "CLOSED",
+      "send_allowed": 0
+    },
+    {
+      "record_id": "MD-63282370c11b974a42ca",
+      "hotel_name": "Hotel National",
+      "city": "Davos Platz",
+      "market_observed_at": "2026-08-30T21:05:00Z",
+      "vacancy_observed_at": "2026-08-31T18:17:45Z",
+      "target_role": "Mitarbeiter:in Booking Office Mountain Hotels",
+      "vacancy_source_url": "https://www.davosklostersmountains.ch/de/mountains/stellenangebote/Mitarbeiter-in-Booking-Office-Mountain-Hotels_j_2449776",
+      "vacancy_evidence_type": "CURRENT_STRUCTURED_JOBPOSTING",
+      "vacancy_priority": 940,
+      "requirement_evidence": {
+        "language_signal_snippets": [
+          ":\"\\EA39\"}.icon-laenge:before{content:\"\\EA3A\"}.icon-landscape:before{content:\"\\EA3B\"}.icon-language:before{content:\"\\EA3C\"}.icon-last-minute:before{content:\"\\EA3D\"}.icon-lawinen:before{content:\"\\EA3E\"}.icon-like:before{content:\"\\EA3F\"}.ico",
+          "ark:\"\\EA38\";--icon-king-bed:\"\\EA39\";--icon-laenge:\"\\EA3A\";--icon-landscape:\"\\EA3B\";--icon-language:\"\\EA3C\";--icon-last-minute:\"\\EA3D\";--icon-lawinen:\"\\EA3E\";--icon-like:\"\\EA3F\";--icon-linkedin:\"\\EA40\";--icon-mail:\"\\EA41\";--icon-map:\"\\EA42",
+          "auch in anderen Aufgabenbereichen<br />mitzuhelfen</li><li>Sprache: Du verfügst über gute deutsche Sprachkenntnisse in Schrift und Sprache<br />sowie englische Sprachkenntnisse in mündlicher Form</li><li>Einsatz: Du bist ein unverzichtba",
+          "bist bereit auch in anderen Aufgabenbereichen mitzuhelfen Sprache: Du verfügst über gute deutsche Sprachkenntnisse in Schrift und Sprache sowie englische Sprachkenntnisse in mündlicher Form Einsatz: Du bist ein unverzichtbares Bindeglie",
+          "werbungsformular Position/Titel Vorname * Nachname * Strasse * PLZ * Ort * Land * Schweiz Deutschland Frankreich Italien Niederlande Österreich Vereinigtes Königreich Vereinigte Staaten Afghanistan Albanien Algerien Amerikanisch-Samoa Am"
+        ],
+        "experience_signal_snippets": [
+          "en</li></ul><p><span style='color:#f1c40f'><strong>Dein Profil</strong></span></p><ul><li>Ausbildung: Du hast eine abgeschlossene kaufmännische oder gleichwertige Ausbildung</li><li>Arbeitsweise: Du hast eine schnelle Auffassungsgabe, arbeitest gerne selbststä",
+          "betreuung und Information über die Hotels und anderen Angebote der Bergbahnen Dein Profil Ausbildung: Du hast eine abgeschlossene kaufmännische oder gleichwertige Ausbildung Arbeitsweise: Du hast eine schnelle Auffassungsgabe, arbeitest gerne selbstständig, bi"
+        ],
+        "start_signal_snippets": [
+          "fice</strong> der Mountain Hotels suchen wir für<br /><strong>die kommende Wintersaison 2026/27 </strong>eine Person als: </p><p><span style='color:#f1c40f'><strong>Mitarbeiter:in Booking Office</strong> <st",
+          "Office Mountain Hotels Hotels Mitarbeiter:in Booking Office Mountain Hotels ab Wintersaison 2026 100% Infos downloaden Die Davos Klosters Mountains sind fünf Berg- und Skigebiete in den Bündner Alpen. Neben den Bergb",
+          "ung des Teams im Booking Office der Mountain Hotels suchen wir für die kommende Wintersaison 2026/27 eine Person als: Mitarbeiter:in Booking Office 100% Deine Aufgaben Erstellen von Offerten für individuelle Gäste und"
+        ],
+        "housing_signal": false,
+        "contact_emails": [
+          "bewerbung@mountainhotels.ch",
+          "mountains@davosklosters.ch"
+        ],
+        "requires_requirement_detail": false
+      },
+      "strategy": {
+        "strategy_version": "VACANCY-FIRST-APPLICATION-2.0+AAG-3.0",
+        "application_mode": "PRIMARY_EXACT_VACANCY",
+        "hotel_specific_hook": "He revisado la vacante actual de Mitarbeiter:in Booking Office Mountain Hotels en Hotel National, Davos Platz.",
+        "subject_seed": "Application — Mitarbeiter:in Booking Office Mountain Hotels | Hotel National",
+        "target_role": "Mitarbeiter:in Booking Office Mountain Hotels",
+        "current_roles_observed": [
+          "Mitarbeiter:in Booking Office Mountain Hotels"
+        ],
+        "lane": "OPERATIONS_GENERAL",
+        "exact_live_vacancy_required_for_primary": true,
+        "candidate_truth_block_required": true,
+        "candidate_truth_required_fields": [
+          "role_relevant_evidence",
+          "languages",
+          "availability",
+          "permanent_relocation",
+          "swiss_work_eligibility",
+          "contact_identity"
+        ],
+        "asset_policy": {
+          "role_lane_cv_required": true,
+          "portfolio_default_attachment": false,
+          "verified_real_links_only": true,
+          "approved_real_headshot_only": true,
+          "founder_ceo_claim_requires_evidence": true,
+          "founder_ceo_primary_signal_for_operations": false
+        },
+        "motivation_policy": {
+          "positive_switzerland_pull": true,
+          "employer_specific_appreciation_requires_evidence": true,
+          "political_grievance_allowed": false,
+          "fake_flattery_allowed": false
+        },
+        "creative_value_policy": {
+          "allowed_as_secondary_differentiator": true,
+          "employer_approval_required": true,
+          "lawful_agreed_scope_or_working_time_required": true,
+          "unconditional_free_off_clock_labor_allowed": false
+        },
+        "presentation_policy": {
+          "static_html_allowed": true,
+          "plain_text_fallback_required": true,
+          "javascript_allowed": false,
+          "iframe_allowed": false,
+          "forms_allowed": false,
+          "hidden_tracking_allowed": false
+        },
+        "application_adversarial_gate": {
+          "required": true,
+          "schema_version": "APPLICATION-ADVERSARIAL-GATE-3.0",
+          "ready_decisions": [
+            "APPLICATION_READY_NO_SEND",
+            "ELITE_MATCH"
+          ],
+          "hard_fail_compensation_allowed": false,
+          "final_send_ready": false
+        },
+        "recruiter_10_second_gate_required": true,
+        "final_send_ready": false,
+        "outbound": "CLOSED",
+        "send_allowed": 0
+      },
+      "candidate_private_truth_embedded": false,
+      "requires_private_fit_validation": true,
+      "application_ready_no_send": false,
+      "final_send_ready": false,
+      "outbound": "CLOSED",
+      "send_allowed": 0
+    },
+    {
+      "record_id": "MD-6cff418164655e1bf938",
+      "hotel_name": "Hotel Ochsen",
+      "city": "Davos Platz",
+      "market_observed_at": "2026-08-30T21:05:00Z",
+      "vacancy_observed_at": "2026-08-31T18:17:45Z",
+      "target_role": "Housekeeping/ Allrounder:in Rinerhorn",
+      "vacancy_source_url": "https://www.davosklostersmountains.ch/de/mountains/stellenangebote/Housekeeping-Allrounder-in-Rinerhorn_j_3922189",
+      "vacancy_evidence_type": "CURRENT_STRUCTURED_JOBPOSTING",
+      "vacancy_priority": 940,
+      "requirement_evidence": {
+        "language_signal_snippets": [
+          ":\"\\EA39\"}.icon-laenge:before{content:\"\\EA3A\"}.icon-landscape:before{content:\"\\EA3B\"}.icon-language:before{content:\"\\EA3C\"}.icon-last-minute:before{content:\"\\EA3D\"}.icon-lawinen:before{content:\"\\EA3E\"}.icon-like:before{content:\"\\EA3F\"}.ico",
+          "ark:\"\\EA38\";--icon-king-bed:\"\\EA39\";--icon-laenge:\"\\EA3A\";--icon-landscape:\"\\EA3B\";--icon-language:\"\\EA3C\";--icon-last-minute:\"\\EA3D\";--icon-lawinen:\"\\EA3E\";--icon-like:\"\\EA3F\";--icon-linkedin:\"\\EA40\";--icon-mail:\"\\EA41\";--icon-map:\"\\EA42",
+          "werbungsformular Position/Titel Vorname * Nachname * Strasse * PLZ * Ort * Land * Schweiz Deutschland Frankreich Italien Niederlande Österreich Vereinigtes Königreich Vereinigte Staaten Afghanistan Albanien Algerien Amerikanisch-Samoa Am",
+          "uti Dänemark Ecuador El Salvador Eritrea Estland Eswatini Falklandinseln Fidschi Finnland Französisch-Guayana Französisch-Polynesien Französische Süd- und Antarktisgebiete Färöer Gabun Gambia Georgien Ghana Gibraltar Grenada Griechenland Grö"
+        ],
+        "experience_signal_snippets": [],
+        "start_signal_snippets": [
+          "zum gehobenen Vier-Sterne-<br />Superior Hotel.</p><p>Für die kommende <strong>Wintersaison 2026/27</strong> suchen wir für unsere <strong>Unterkünfte Rinerlodge /</strong><br /><strong>Maxon / Camping in Davos Glari",
+          "eeping/ Allrounder:in Rinerhorn Hotels Housekeeping/ Allrounder:in Rinerhorn ab Wintersaison 2026 100% Infos downloaden Die Davos Klosters Mountains sind fünf Berg- und Skigebiete in den Bündner Alpen. Neben den Bergb",
+          "hen Gruppenhaus bis zum gehobenen Vier-Sterne- Superior Hotel. Für die kommende Wintersaison 2026/27 suchen wir für unsere Unterkünfte Rinerlodge / Maxon / Camping in Davos Glaris noch eine Person als: Housekeeping/Al"
+        ],
+        "housing_signal": false,
+        "contact_emails": [
+          "alice.begesova@mountainhotels.ch",
+          "mountains@davosklosters.ch"
+        ],
+        "requires_requirement_detail": false
+      },
+      "strategy": {
+        "strategy_version": "VACANCY-FIRST-APPLICATION-2.0+AAG-3.0",
+        "application_mode": "PRIMARY_EXACT_VACANCY",
+        "hotel_specific_hook": "He revisado la vacante actual de Housekeeping/ Allrounder:in Rinerhorn en Hotel Ochsen, Davos Platz.",
+        "subject_seed": "Application — Housekeeping/ Allrounder:in Rinerhorn | Hotel Ochsen",
+        "target_role": "Housekeeping/ Allrounder:in Rinerhorn",
+        "current_roles_observed": [
+          "Housekeeping/ Allrounder:in Rinerhorn"
+        ],
+        "lane": "HOUSEKEEPING",
+        "exact_live_vacancy_required_for_primary": true,
+        "candidate_truth_block_required": true,
+        "candidate_truth_required_fields": [
+          "role_relevant_evidence",
+          "languages",
+          "availability",
+          "permanent_relocation",
+          "swiss_work_eligibility",
+          "contact_identity"
+        ],
+        "asset_policy": {
+          "role_lane_cv_required": true,
+          "portfolio_default_attachment": false,
+          "verified_real_links_only": true,
+          "approved_real_headshot_only": true,
+          "founder_ceo_claim_requires_evidence": true,
+          "founder_ceo_primary_signal_for_operations": false
+        },
+        "motivation_policy": {
+          "positive_switzerland_pull": true,
+          "employer_specific_appreciation_requires_evidence": true,
+          "political_grievance_allowed": false,
+          "fake_flattery_allowed": false
+        },
+        "creative_value_policy": {
+          "allowed_as_secondary_differentiator": true,
+          "employer_approval_required": true,
+          "lawful_agreed_scope_or_working_time_required": true,
+          "unconditional_free_off_clock_labor_allowed": false
+        },
+        "presentation_policy": {
+          "static_html_allowed": true,
+          "plain_text_fallback_required": true,
+          "javascript_allowed": false,
+          "iframe_allowed": false,
+          "forms_allowed": false,
+          "hidden_tracking_allowed": false
+        },
+        "application_adversarial_gate": {
+          "required": true,
+          "schema_version": "APPLICATION-ADVERSARIAL-GATE-3.0",
+          "ready_decisions": [
+            "APPLICATION_READY_NO_SEND",
+            "ELITE_MATCH"
+          ],
+          "hard_fail_compensation_allowed": false,
+          "final_send_ready": false
+        },
+        "recruiter_10_second_gate_required": true,
+        "final_send_ready": false,
+        "outbound": "CLOSED",
+        "send_allowed": 0
+      },
+      "candidate_private_truth_embedded": false,
+      "requires_private_fit_validation": true,
+      "application_ready_no_send": false,
+      "final_send_ready": false,
+      "outbound": "CLOSED",
+      "send_allowed": 0
+    },
+    {
+      "record_id": "MD-6cff418164655e1bf938",
+      "hotel_name": "Hotel Ochsen",
+      "city": "Davos Platz",
+      "market_observed_at": "2026-08-30T21:05:00Z",
+      "vacancy_observed_at": "2026-08-31T18:17:45Z",
+      "target_role": "Mitarbeiter:in Booking Office Mountain Hotels",
+      "vacancy_source_url": "https://www.davosklostersmountains.ch/de/mountains/stellenangebote/Mitarbeiter-in-Booking-Office-Mountain-Hotels_j_2449776",
+      "vacancy_evidence_type": "CURRENT_STRUCTURED_JOBPOSTING",
+      "vacancy_priority": 940,
+      "requirement_evidence": {
+        "language_signal_snippets": [
+          ":\"\\EA39\"}.icon-laenge:before{content:\"\\EA3A\"}.icon-landscape:before{content:\"\\EA3B\"}.icon-language:before{content:\"\\EA3C\"}.icon-last-minute:before{content:\"\\EA3D\"}.icon-lawinen:before{content:\"\\EA3E\"}.icon-like:before{content:\"\\EA3F\"}.ico",
+          "ark:\"\\EA38\";--icon-king-bed:\"\\EA39\";--icon-laenge:\"\\EA3A\";--icon-landscape:\"\\EA3B\";--icon-language:\"\\EA3C\";--icon-last-minute:\"\\EA3D\";--icon-lawinen:\"\\EA3E\";--icon-like:\"\\EA3F\";--icon-linkedin:\"\\EA40\";--icon-mail:\"\\EA41\";--icon-map:\"\\EA42",
+          "auch in anderen Aufgabenbereichen<br />mitzuhelfen</li><li>Sprache: Du verfügst über gute deutsche Sprachkenntnisse in Schrift und Sprache<br />sowie englische Sprachkenntnisse in mündlicher Form</li><li>Einsatz: Du bist ein unverzichtba",
+          "bist bereit auch in anderen Aufgabenbereichen mitzuhelfen Sprache: Du verfügst über gute deutsche Sprachkenntnisse in Schrift und Sprache sowie englische Sprachkenntnisse in mündlicher Form Einsatz: Du bist ein unverzichtbares Bindeglie",
+          "werbungsformular Position/Titel Vorname * Nachname * Strasse * PLZ * Ort * Land * Schweiz Deutschland Frankreich Italien Niederlande Österreich Vereinigtes Königreich Vereinigte Staaten Afghanistan Albanien Algerien Amerikanisch-Samoa Am"
+        ],
+        "experience_signal_snippets": [
+          "en</li></ul><p><span style='color:#f1c40f'><strong>Dein Profil</strong></span></p><ul><li>Ausbildung: Du hast eine abgeschlossene kaufmännische oder gleichwertige Ausbildung</li><li>Arbeitsweise: Du hast eine schnelle Auffassungsgabe, arbeitest gerne selbststä",
+          "betreuung und Information über die Hotels und anderen Angebote der Bergbahnen Dein Profil Ausbildung: Du hast eine abgeschlossene kaufmännische oder gleichwertige Ausbildung Arbeitsweise: Du hast eine schnelle Auffassungsgabe, arbeitest gerne selbstständig, bi"
+        ],
+        "start_signal_snippets": [
+          "fice</strong> der Mountain Hotels suchen wir für<br /><strong>die kommende Wintersaison 2026/27 </strong>eine Person als: </p><p><span style='color:#f1c40f'><strong>Mitarbeiter:in Booking Office</strong> <st",
+          "Office Mountain Hotels Hotels Mitarbeiter:in Booking Office Mountain Hotels ab Wintersaison 2026 100% Infos downloaden Die Davos Klosters Mountains sind fünf Berg- und Skigebiete in den Bündner Alpen. Neben den Bergb",
+          "ung des Teams im Booking Office der Mountain Hotels suchen wir für die kommende Wintersaison 2026/27 eine Person als: Mitarbeiter:in Booking Office 100% Deine Aufgaben Erstellen von Offerten für individuelle Gäste und"
+        ],
+        "housing_signal": false,
+        "contact_emails": [
+          "bewerbung@mountainhotels.ch",
+          "mountains@davosklosters.ch"
+        ],
+        "requires_requirement_detail": false
+      },
+      "strategy": {
+        "strategy_version": "VACANCY-FIRST-APPLICATION-2.0+AAG-3.0",
+        "application_mode": "PRIMARY_EXACT_VACANCY",
+        "hotel_specific_hook": "He revisado la vacante actual de Mitarbeiter:in Booking Office Mountain Hotels en Hotel Ochsen, Davos Platz.",
+        "subject_seed": "Application — Mitarbeiter:in Booking Office Mountain Hotels | Hotel Ochsen",
+        "target_role": "Mitarbeiter:in Booking Office Mountain Hotels",
+        "current_roles_observed": [
+          "Mitarbeiter:in Booking Office Mountain Hotels"
+        ],
+        "lane": "OPERATIONS_GENERAL",
+        "exact_live_vacancy_required_for_primary": true,
+        "candidate_truth_block_required": true,
+        "candidate_truth_required_fields": [
+          "role_relevant_evidence",
+          "languages",
+          "availability",
+          "permanent_relocation",
+          "swiss_work_eligibility",
+          "contact_identity"
+        ],
+        "asset_policy": {
+          "role_lane_cv_required": true,
+          "portfolio_default_attachment": false,
+          "verified_real_links_only": true,
+          "approved_real_headshot_only": true,
+          "founder_ceo_claim_requires_evidence": true,
+          "founder_ceo_primary_signal_for_operations": false
+        },
+        "motivation_policy": {
+          "positive_switzerland_pull": true,
+          "employer_specific_appreciation_requires_evidence": true,
+          "political_grievance_allowed": false,
+          "fake_flattery_allowed": false
+        },
+        "creative_value_policy": {
+          "allowed_as_secondary_differentiator": true,
+          "employer_approval_required": true,
+          "lawful_agreed_scope_or_working_time_required": true,
+          "unconditional_free_off_clock_labor_allowed": false
+        },
+        "presentation_policy": {
+          "static_html_allowed": true,
+          "plain_text_fallback_required": true,
+          "javascript_allowed": false,
+          "iframe_allowed": false,
+          "forms_allowed": false,
+          "hidden_tracking_allowed": false
+        },
+        "application_adversarial_gate": {
+          "required": true,
+          "schema_version": "APPLICATION-ADVERSARIAL-GATE-3.0",
+          "ready_decisions": [
+            "APPLICATION_READY_NO_SEND",
+            "ELITE_MATCH"
+          ],
+          "hard_fail_compensation_allowed": false,
+          "final_send_ready": false
+        },
+        "recruiter_10_second_gate_required": true,
+        "final_send_ready": false,
+        "outbound": "CLOSED",
+        "send_allowed": 0
+      },
+      "candidate_private_truth_embedded": false,
+      "requires_private_fit_validation": true,
+      "application_ready_no_send": false,
+      "final_send_ready": false,
+      "outbound": "CLOSED",
+      "send_allowed": 0
+    },
+    {
+      "record_id": "MD-902b1d875b47b4ec0b44",
+      "hotel_name": "Hotel Davoserhof",
+      "city": "Davos Platz",
+      "market_observed_at": "2026-08-30T21:05:00Z",
+      "vacancy_observed_at": "2026-08-31T18:17:45Z",
+      "target_role": "Housekeeping/ Allrounder:in Rinerhorn",
+      "vacancy_source_url": "https://www.davosklostersmountains.ch/de/mountains/stellenangebote/Housekeeping-Allrounder-in-Rinerhorn_j_3922189",
+      "vacancy_evidence_type": "CURRENT_STRUCTURED_JOBPOSTING",
+      "vacancy_priority": 940,
+      "requirement_evidence": {
+        "language_signal_snippets": [
+          ":\"\\EA39\"}.icon-laenge:before{content:\"\\EA3A\"}.icon-landscape:before{content:\"\\EA3B\"}.icon-language:before{content:\"\\EA3C\"}.icon-last-minute:before{content:\"\\EA3D\"}.icon-lawinen:before{content:\"\\EA3E\"}.icon-like:before{content:\"\\EA3F\"}.ico",
+          "ark:\"\\EA38\";--icon-king-bed:\"\\EA39\";--icon-laenge:\"\\EA3A\";--icon-landscape:\"\\EA3B\";--icon-language:\"\\EA3C\";--icon-last-minute:\"\\EA3D\";--icon-lawinen:\"\\EA3E\";--icon-like:\"\\EA3F\";--icon-linkedin:\"\\EA40\";--icon-mail:\"\\EA41\";--icon-map:\"\\EA42",
+          "werbungsformular Position/Titel Vorname * Nachname * Strasse * PLZ * Ort * Land * Schweiz Deutschland Frankreich Italien Niederlande Österreich Vereinigtes Königreich Vereinigte Staaten Afghanistan Albanien Algerien Amerikanisch-Samoa Am",
+          "uti Dänemark Ecuador El Salvador Eritrea Estland Eswatini Falklandinseln Fidschi Finnland Französisch-Guayana Französisch-Polynesien Französische Süd- und Antarktisgebiete Färöer Gabun Gambia Georgien Ghana Gibraltar Grenada Griechenland Grö"
+        ],
+        "experience_signal_snippets": [],
+        "start_signal_snippets": [
+          "zum gehobenen Vier-Sterne-<br />Superior Hotel.</p><p>Für die kommende <strong>Wintersaison 2026/27</strong> suchen wir für unsere <strong>Unterkünfte Rinerlodge /</strong><br /><strong>Maxon / Camping in Davos Glari",
+          "eeping/ Allrounder:in Rinerhorn Hotels Housekeeping/ Allrounder:in Rinerhorn ab Wintersaison 2026 100% Infos downloaden Die Davos Klosters Mountains sind fünf Berg- und Skigebiete in den Bündner Alpen. Neben den Bergb",
+          "hen Gruppenhaus bis zum gehobenen Vier-Sterne- Superior Hotel. Für die kommende Wintersaison 2026/27 suchen wir für unsere Unterkünfte Rinerlodge / Maxon / Camping in Davos Glaris noch eine Person als: Housekeeping/Al"
+        ],
+        "housing_signal": false,
+        "contact_emails": [
+          "alice.begesova@mountainhotels.ch",
+          "mountains@davosklosters.ch"
+        ],
+        "requires_requirement_detail": false
+      },
+      "strategy": {
+        "strategy_version": "VACANCY-FIRST-APPLICATION-2.0+AAG-3.0",
+        "application_mode": "PRIMARY_EXACT_VACANCY",
+        "hotel_specific_hook": "He revisado la vacante actual de Housekeeping/ Allrounder:in Rinerhorn en Hotel Davoserhof, Davos Platz.",
+        "subject_seed": "Application — Housekeeping/ Allrounder:in Rinerhorn | Hotel Davoserhof",
+        "target_role": "Housekeeping/ Allrounder:in Rinerhorn",
+        "current_roles_observed": [
+          "Housekeeping/ Allrounder:in Rinerhorn"
+        ],
+        "lane": "HOUSEKEEPING",
+        "exact_live_vacancy_required_for_primary": true,
+        "candidate_truth_block_required": true,
+        "candidate_truth_required_fields": [
+          "role_relevant_evidence",
+          "languages",
+          "availability",
+          "permanent_relocation",
+          "swiss_work_eligibility",
+          "contact_identity"
+        ],
+        "asset_policy": {
+          "role_lane_cv_required": true,
+          "portfolio_default_attachment": false,
+          "verified_real_links_only": true,
+          "approved_real_headshot_only": true,
+          "founder_ceo_claim_requires_evidence": true,
+          "founder_ceo_primary_signal_for_operations": false
+        },
+        "motivation_policy": {
+          "positive_switzerland_pull": true,
+          "employer_specific_appreciation_requires_evidence": true,
+          "political_grievance_allowed": false,
+          "fake_flattery_allowed": false
+        },
+        "creative_value_policy": {
+          "allowed_as_secondary_differentiator": true,
+          "employer_approval_required": true,
+          "lawful_agreed_scope_or_working_time_required": true,
+          "unconditional_free_off_clock_labor_allowed": false
+        },
+        "presentation_policy": {
+          "static_html_allowed": true,
+          "plain_text_fallback_required": true,
+          "javascript_allowed": false,
+          "iframe_allowed": false,
+          "forms_allowed": false,
+          "hidden_tracking_allowed": false
+        },
+        "application_adversarial_gate": {
+          "required": true,
+          "schema_version": "APPLICATION-ADVERSARIAL-GATE-3.0",
+          "ready_decisions": [
+            "APPLICATION_READY_NO_SEND",
+            "ELITE_MATCH"
+          ],
+          "hard_fail_compensation_allowed": false,
+          "final_send_ready": false
+        },
+        "recruiter_10_second_gate_required": true,
+        "final_send_ready": false,
+        "outbound": "CLOSED",
+        "send_allowed": 0
+      },
+      "candidate_private_truth_embedded": false,
+      "requires_private_fit_validation": true,
+      "application_ready_no_send": false,
+      "final_send_ready": false,
+      "outbound": "CLOSED",
+      "send_allowed": 0
+    },
+    {
+      "record_id": "MD-902b1d875b47b4ec0b44",
+      "hotel_name": "Hotel Davoserhof",
+      "city": "Davos Platz",
+      "market_observed_at": "2026-08-30T21:05:00Z",
+      "vacancy_observed_at": "2026-08-31T18:17:45Z",
+      "target_role": "Mitarbeiter:in Booking Office Mountain Hotels",
+      "vacancy_source_url": "https://www.davosklostersmountains.ch/de/mountains/stellenangebote/Mitarbeiter-in-Booking-Office-Mountain-Hotels_j_2449776",
+      "vacancy_evidence_type": "CURRENT_STRUCTURED_JOBPOSTING",
+      "vacancy_priority": 940,
+      "requirement_evidence": {
+        "language_signal_snippets": [
+          ":\"\\EA39\"}.icon-laenge:before{content:\"\\EA3A\"}.icon-landscape:before{content:\"\\EA3B\"}.icon-language:before{content:\"\\EA3C\"}.icon-last-minute:before{content:\"\\EA3D\"}.icon-lawinen:before{content:\"\\EA3E\"}.icon-like:before{content:\"\\EA3F\"}.ico",
+          "ark:\"\\EA38\";--icon-king-bed:\"\\EA39\";--icon-laenge:\"\\EA3A\";--icon-landscape:\"\\EA3B\";--icon-language:\"\\EA3C\";--icon-last-minute:\"\\EA3D\";--icon-lawinen:\"\\EA3E\";--icon-like:\"\\EA3F\";--icon-linkedin:\"\\EA40\";--icon-mail:\"\\EA41\";--icon-map:\"\\EA42",
+          "auch in anderen Aufgabenbereichen<br />mitzuhelfen</li><li>Sprache: Du verfügst über gute deutsche Sprachkenntnisse in Schrift und Sprache<br />sowie englische Sprachkenntnisse in mündlicher Form</li><li>Einsatz: Du bist ein unverzichtba",
+          "bist bereit auch in anderen Aufgabenbereichen mitzuhelfen Sprache: Du verfügst über gute deutsche Sprachkenntnisse in Schrift und Sprache sowie englische Sprachkenntnisse in mündlicher Form Einsatz: Du bist ein unverzichtbares Bindeglie",
+          "werbungsformular Position/Titel Vorname * Nachname * Strasse * PLZ * Ort * Land * Schweiz Deutschland Frankreich Italien Niederlande Österreich Vereinigtes Königreich Vereinigte Staaten Afghanistan Albanien Algerien Amerikanisch-Samoa Am"
+        ],
+        "experience_signal_snippets": [
+          "en</li></ul><p><span style='color:#f1c40f'><strong>Dein Profil</strong></span></p><ul><li>Ausbildung: Du hast eine abgeschlossene kaufmännische oder gleichwertige Ausbildung</li><li>Arbeitsweise: Du hast eine schnelle Auffassungsgabe, arbeitest gerne selbststä",
+          "betreuung und Information über die Hotels und anderen Angebote der Bergbahnen Dein Profil Ausbildung: Du hast eine abgeschlossene kaufmännische oder gleichwertige Ausbildung Arbeitsweise: Du hast eine schnelle Auffassungsgabe, arbeitest gerne selbstständig, bi"
+        ],
+        "start_signal_snippets": [
+          "fice</strong> der Mountain Hotels suchen wir für<br /><strong>die kommende Wintersaison 2026/27 </strong>eine Person als: </p><p><span style='color:#f1c40f'><strong>Mitarbeiter:in Booking Office</strong> <st",
+          "Office Mountain Hotels Hotels Mitarbeiter:in Booking Office Mountain Hotels ab Wintersaison 2026 100% Infos downloaden Die Davos Klosters Mountains sind fünf Berg- und Skigebiete in den Bündner Alpen. Neben den Bergb",
+          "ung des Teams im Booking Office der Mountain Hotels suchen wir für die kommende Wintersaison 2026/27 eine Person als: Mitarbeiter:in Booking Office 100% Deine Aufgaben Erstellen von Offerten für individuelle Gäste und"
+        ],
+        "housing_signal": false,
+        "contact_emails": [
+          "bewerbung@mountainhotels.ch",
+          "mountains@davosklosters.ch"
+        ],
+        "requires_requirement_detail": false
+      },
+      "strategy": {
+        "strategy_version": "VACANCY-FIRST-APPLICATION-2.0+AAG-3.0",
+        "application_mode": "PRIMARY_EXACT_VACANCY",
+        "hotel_specific_hook": "He revisado la vacante actual de Mitarbeiter:in Booking Office Mountain Hotels en Hotel Davoserhof, Davos Platz.",
+        "subject_seed": "Application — Mitarbeiter:in Booking Office Mountain Hotels | Hotel Davoserhof",
+        "target_role": "Mitarbeiter:in Booking Office Mountain Hotels",
+        "current_roles_observed": [
+          "Mitarbeiter:in Booking Office Mountain Hotels"
+        ],
+        "lane": "OPERATIONS_GENERAL",
+        "exact_live_vacancy_required_for_primary": true,
+        "candidate_truth_block_required": true,
+        "candidate_truth_required_fields": [
+          "role_relevant_evidence",
+          "languages",
+          "availability",
+          "permanent_relocation",
+          "swiss_work_eligibility",
+          "contact_identity"
+        ],
+        "asset_policy": {
+          "role_lane_cv_required": true,
+          "portfolio_default_attachment": false,
+          "verified_real_links_only": true,
+          "approved_real_headshot_only": true,
+          "founder_ceo_claim_requires_evidence": true,
+          "founder_ceo_primary_signal_for_operations": false
+        },
+        "motivation_policy": {
+          "positive_switzerland_pull": true,
+          "employer_specific_appreciation_requires_evidence": true,
+          "political_grievance_allowed": false,
+          "fake_flattery_allowed": false
+        },
+        "creative_value_policy": {
+          "allowed_as_secondary_differentiator": true,
+          "employer_approval_required": true,
+          "lawful_agreed_scope_or_working_time_required": true,
+          "unconditional_free_off_clock_labor_allowed": false
+        },
+        "presentation_policy": {
+          "static_html_allowed": true,
+          "plain_text_fallback_required": true,
+          "javascript_allowed": false,
+          "iframe_allowed": false,
+          "forms_allowed": false,
+          "hidden_tracking_allowed": false
+        },
+        "application_adversarial_gate": {
+          "required": true,
+          "schema_version": "APPLICATION-ADVERSARIAL-GATE-3.0",
+          "ready_decisions": [
+            "APPLICATION_READY_NO_SEND",
+            "ELITE_MATCH"
+          ],
+          "hard_fail_compensation_allowed": false,
+          "final_send_ready": false
+        },
+        "recruiter_10_second_gate_required": true,
+        "final_send_ready": false,
+        "outbound": "CLOSED",
+        "send_allowed": 0
+      },
+      "candidate_private_truth_embedded": false,
+      "requires_private_fit_validation": true,
+      "application_ready_no_send": false,
+      "final_send_ready": false,
+      "outbound": "CLOSED",
+      "send_allowed": 0
+    },
+    {
+      "record_id": "MD-965312485d87f15be8c2",
+      "hotel_name": "Hotel Ochsen 2",
+      "city": "Davos Platz",
+      "market_observed_at": "2026-08-30T21:05:00Z",
+      "vacancy_observed_at": "2026-08-31T18:17:45Z",
+      "target_role": "Housekeeping/ Allrounder:in Rinerhorn",
+      "vacancy_source_url": "https://www.davosklostersmountains.ch/de/mountains/stellenangebote/Housekeeping-Allrounder-in-Rinerhorn_j_3922189",
+      "vacancy_evidence_type": "CURRENT_STRUCTURED_JOBPOSTING",
+      "vacancy_priority": 940,
+      "requirement_evidence": {
+        "language_signal_snippets": [
+          ":\"\\EA39\"}.icon-laenge:before{content:\"\\EA3A\"}.icon-landscape:before{content:\"\\EA3B\"}.icon-language:before{content:\"\\EA3C\"}.icon-last-minute:before{content:\"\\EA3D\"}.icon-lawinen:before{content:\"\\EA3E\"}.icon-like:before{content:\"\\EA3F\"}.ico",
+          "ark:\"\\EA38\";--icon-king-bed:\"\\EA39\";--icon-laenge:\"\\EA3A\";--icon-landscape:\"\\EA3B\";--icon-language:\"\\EA3C\";--icon-last-minute:\"\\EA3D\";--icon-lawinen:\"\\EA3E\";--icon-like:\"\\EA3F\";--icon-linkedin:\"\\EA40\";--icon-mail:\"\\EA41\";--icon-map:\"\\EA42",
+          "werbungsformular Position/Titel Vorname * Nachname * Strasse * PLZ * Ort * Land * Schweiz Deutschland Frankreich Italien Niederlande Österreich Vereinigtes Königreich Vereinigte Staaten Afghanistan Albanien Algerien Amerikanisch-Samoa Am",
+          "uti Dänemark Ecuador El Salvador Eritrea Estland Eswatini Falklandinseln Fidschi Finnland Französisch-Guayana Französisch-Polynesien Französische Süd- und Antarktisgebiete Färöer Gabun Gambia Georgien Ghana Gibraltar Grenada Griechenland Grö"
+        ],
+        "experience_signal_snippets": [],
+        "start_signal_snippets": [
+          "zum gehobenen Vier-Sterne-<br />Superior Hotel.</p><p>Für die kommende <strong>Wintersaison 2026/27</strong> suchen wir für unsere <strong>Unterkünfte Rinerlodge /</strong><br /><strong>Maxon / Camping in Davos Glari",
+          "eeping/ Allrounder:in Rinerhorn Hotels Housekeeping/ Allrounder:in Rinerhorn ab Wintersaison 2026 100% Infos downloaden Die Davos Klosters Mountains sind fünf Berg- und Skigebiete in den Bündner Alpen. Neben den Bergb",
+          "hen Gruppenhaus bis zum gehobenen Vier-Sterne- Superior Hotel. Für die kommende Wintersaison 2026/27 suchen wir für unsere Unterkünfte Rinerlodge / Maxon / Camping in Davos Glaris noch eine Person als: Housekeeping/Al"
+        ],
+        "housing_signal": false,
+        "contact_emails": [
+          "alice.begesova@mountainhotels.ch",
+          "mountains@davosklosters.ch"
+        ],
+        "requires_requirement_detail": false
+      },
+      "strategy": {
+        "strategy_version": "VACANCY-FIRST-APPLICATION-2.0+AAG-3.0",
+        "application_mode": "PRIMARY_EXACT_VACANCY",
+        "hotel_specific_hook": "He revisado la vacante actual de Housekeeping/ Allrounder:in Rinerhorn en Hotel Ochsen 2, Davos Platz.",
+        "subject_seed": "Application — Housekeeping/ Allrounder:in Rinerhorn | Hotel Ochsen 2",
+        "target_role": "Housekeeping/ Allrounder:in Rinerhorn",
+        "current_roles_observed": [
+          "Housekeeping/ Allrounder:in Rinerhorn"
+        ],
+        "lane": "HOUSEKEEPING",
+        "exact_live_vacancy_required_for_primary": true,
+        "candidate_truth_block_required": true,
+        "candidate_truth_required_fields": [
+          "role_relevant_evidence",
+          "languages",
+          "availability",
+          "permanent_relocation",
+          "swiss_work_eligibility",
+          "contact_identity"
+        ],
+        "asset_policy": {
+          "role_lane_cv_required": true,
+          "portfolio_default_attachment": false,
+          "verified_real_links_only": true,
+          "approved_real_headshot_only": true,
+          "founder_ceo_claim_requires_evidence": true,
+          "founder_ceo_primary_signal_for_operations": false
+        },
+        "motivation_policy": {
+          "positive_switzerland_pull": true,
+          "employer_specific_appreciation_requires_evidence": true,
+          "political_grievance_allowed": false,
+          "fake_flattery_allowed": false
+        },
+        "creative_value_policy": {
+          "allowed_as_secondary_differentiator": true,
+          "employer_approval_required": true,
+          "lawful_agreed_scope_or_working_time_required": true,
+          "unconditional_free_off_clock_labor_allowed": false
+        },
+        "presentation_policy": {
+          "static_html_allowed": true,
+          "plain_text_fallback_required": true,
+          "javascript_allowed": false,
+          "iframe_allowed": false,
+          "forms_allowed": false,
+          "hidden_tracking_allowed": false
+        },
+        "application_adversarial_gate": {
+          "required": true,
+          "schema_version": "APPLICATION-ADVERSARIAL-GATE-3.0",
+          "ready_decisions": [
+            "APPLICATION_READY_NO_SEND",
+            "ELITE_MATCH"
+          ],
+          "hard_fail_compensation_allowed": false,
+          "final_send_ready": false
+        },
+        "recruiter_10_second_gate_required": true,
+        "final_send_ready": false,
+        "outbound": "CLOSED",
+        "send_allowed": 0
+      },
+      "candidate_private_truth_embedded": false,
+      "requires_private_fit_validation": true,
+      "application_ready_no_send": false,
+      "final_send_ready": false,
+      "outbound": "CLOSED",
+      "send_allowed": 0
+    },
+    {
+      "record_id": "MD-965312485d87f15be8c2",
+      "hotel_name": "Hotel Ochsen 2",
+      "city": "Davos Platz",
+      "market_observed_at": "2026-08-30T21:05:00Z",
+      "vacancy_observed_at": "2026-08-31T18:17:45Z",
+      "target_role": "Mitarbeiter:in Booking Office Mountain Hotels",
+      "vacancy_source_url": "https://www.davosklostersmountains.ch/de/mountains/stellenangebote/Mitarbeiter-in-Booking-Office-Mountain-Hotels_j_2449776",
+      "vacancy_evidence_type": "CURRENT_STRUCTURED_JOBPOSTING",
+      "vacancy_priority": 940,
+      "requirement_evidence": {
+        "language_signal_snippets": [
+          ":\"\\EA39\"}.icon-laenge:before{content:\"\\EA3A\"}.icon-landscape:before{content:\"\\EA3B\"}.icon-language:before{content:\"\\EA3C\"}.icon-last-minute:before{content:\"\\EA3D\"}.icon-lawinen:before{content:\"\\EA3E\"}.icon-like:before{content:\"\\EA3F\"}.ico",
+          "ark:\"\\EA38\";--icon-king-bed:\"\\EA39\";--icon-laenge:\"\\EA3A\";--icon-landscape:\"\\EA3B\";--icon-language:\"\\EA3C\";--icon-last-minute:\"\\EA3D\";--icon-lawinen:\"\\EA3E\";--icon-like:\"\\EA3F\";--icon-linkedin:\"\\EA40\";--icon-mail:\"\\EA41\";--icon-map:\"\\EA42",
+          "auch in anderen Aufgabenbereichen<br />mitzuhelfen</li><li>Sprache: Du verfügst über gute deutsche Sprachkenntnisse in Schrift und Sprache<br />sowie englische Sprachkenntnisse in mündlicher Form</li><li>Einsatz: Du bist ein unverzichtba",
+          "bist bereit auch in anderen Aufgabenbereichen mitzuhelfen Sprache: Du verfügst über gute deutsche Sprachkenntnisse in Schrift und Sprache sowie englische Sprachkenntnisse in mündlicher Form Einsatz: Du bist ein unverzichtbares Bindeglie",
+          "werbungsformular Position/Titel Vorname * Nachname * Strasse * PLZ * Ort * Land * Schweiz Deutschland Frankreich Italien Niederlande Österreich Vereinigtes Königreich Vereinigte Staaten Afghanistan Albanien Algerien Amerikanisch-Samoa Am"
+        ],
+        "experience_signal_snippets": [
+          "en</li></ul><p><span style='color:#f1c40f'><strong>Dein Profil</strong></span></p><ul><li>Ausbildung: Du hast eine abgeschlossene kaufmännische oder gleichwertige Ausbildung</li><li>Arbeitsweise: Du hast eine schnelle Auffassungsgabe, arbeitest gerne selbststä",
+          "betreuung und Information über die Hotels und anderen Angebote der Bergbahnen Dein Profil Ausbildung: Du hast eine abgeschlossene kaufmännische oder gleichwertige Ausbildung Arbeitsweise: Du hast eine schnelle Auffassungsgabe, arbeitest gerne selbstständig, bi"
+        ],
+        "start_signal_snippets": [
+          "fice</strong> der Mountain Hotels suchen wir für<br /><strong>die kommende Wintersaison 2026/27 </strong>eine Person als: </p><p><span style='color:#f1c40f'><strong>Mitarbeiter:in Booking Office</strong> <st",
+          "Office Mountain Hotels Hotels Mitarbeiter:in Booking Office Mountain Hotels ab Wintersaison 2026 100% Infos downloaden Die Davos Klosters Mountains sind fünf Berg- und Skigebiete in den Bündner Alpen. Neben den Bergb",
+          "ung des Teams im Booking Office der Mountain Hotels suchen wir für die kommende Wintersaison 2026/27 eine Person als: Mitarbeiter:in Booking Office 100% Deine Aufgaben Erstellen von Offerten für individuelle Gäste und"
+        ],
+        "housing_signal": false,
+        "contact_emails": [
+          "bewerbung@mountainhotels.ch",
+          "mountains@davosklosters.ch"
+        ],
+        "requires_requirement_detail": false
+      },
+      "strategy": {
+        "strategy_version": "VACANCY-FIRST-APPLICATION-2.0+AAG-3.0",
+        "application_mode": "PRIMARY_EXACT_VACANCY",
+        "hotel_specific_hook": "He revisado la vacante actual de Mitarbeiter:in Booking Office Mountain Hotels en Hotel Ochsen 2, Davos Platz.",
+        "subject_seed": "Application — Mitarbeiter:in Booking Office Mountain Hotels | Hotel Ochsen 2",
+        "target_role": "Mitarbeiter:in Booking Office Mountain Hotels",
+        "current_roles_observed": [
+          "Mitarbeiter:in Booking Office Mountain Hotels"
+        ],
+        "lane": "OPERATIONS_GENERAL",
+        "exact_live_vacancy_required_for_primary": true,
+        "candidate_truth_block_required": true,
+        "candidate_truth_required_fields": [
+          "role_relevant_evidence",
+          "languages",
+          "availability",
+          "permanent_relocation",
+          "swiss_work_eligibility",
+          "contact_identity"
+        ],
+        "asset_policy": {
+          "role_lane_cv_required": true,
+          "portfolio_default_attachment": false,
+          "verified_real_links_only": true,
+          "approved_real_headshot_only": true,
+          "founder_ceo_claim_requires_evidence": true,
+          "founder_ceo_primary_signal_for_operations": false
+        },
+        "motivation_policy": {
+          "positive_switzerland_pull": true,
+          "employer_specific_appreciation_requires_evidence": true,
+          "political_grievance_allowed": false,
+          "fake_flattery_allowed": false
+        },
+        "creative_value_policy": {
+          "allowed_as_secondary_differentiator": true,
+          "employer_approval_required": true,
+          "lawful_agreed_scope_or_working_time_required": true,
+          "unconditional_free_off_clock_labor_allowed": false
+        },
+        "presentation_policy": {
+          "static_html_allowed": true,
+          "plain_text_fallback_required": true,
+          "javascript_allowed": false,
+          "iframe_allowed": false,
+          "forms_allowed": false,
+          "hidden_tracking_allowed": false
+        },
+        "application_adversarial_gate": {
+          "required": true,
+          "schema_version": "APPLICATION-ADVERSARIAL-GATE-3.0",
+          "ready_decisions": [
+            "APPLICATION_READY_NO_SEND",
+            "ELITE_MATCH"
+          ],
+          "hard_fail_compensation_allowed": false,
+          "final_send_ready": false
+        },
+        "recruiter_10_second_gate_required": true,
+        "final_send_ready": false,
+        "outbound": "CLOSED",
+        "send_allowed": 0
+      },
+      "candidate_private_truth_embedded": false,
+      "requires_private_fit_validation": true,
+      "application_ready_no_send": false,
+      "final_send_ready": false,
+      "outbound": "CLOSED",
+      "send_allowed": 0
+    },
+    {
+      "record_id": "MD-a4a9883e2698146fbf9a",
+      "hotel_name": "Hotel Strela",
+      "city": "Davos Platz",
+      "market_observed_at": "2026-08-30T21:05:00Z",
+      "vacancy_observed_at": "2026-08-31T18:17:45Z",
+      "target_role": "Housekeeping/ Allrounder:in Rinerhorn",
+      "vacancy_source_url": "https://www.davosklostersmountains.ch/de/mountains/stellenangebote/Housekeeping-Allrounder-in-Rinerhorn_j_3922189",
+      "vacancy_evidence_type": "CURRENT_STRUCTURED_JOBPOSTING",
+      "vacancy_priority": 940,
+      "requirement_evidence": {
+        "language_signal_snippets": [
+          ":\"\\EA39\"}.icon-laenge:before{content:\"\\EA3A\"}.icon-landscape:before{content:\"\\EA3B\"}.icon-language:before{content:\"\\EA3C\"}.icon-last-minute:before{content:\"\\EA3D\"}.icon-lawinen:before{content:\"\\EA3E\"}.icon-like:before{content:\"\\EA3F\"}.ico",
+          "ark:\"\\EA38\";--icon-king-bed:\"\\EA39\";--icon-laenge:\"\\EA3A\";--icon-landscape:\"\\EA3B\";--icon-language:\"\\EA3C\";--icon-last-minute:\"\\EA3D\";--icon-lawinen:\"\\EA3E\";--icon-like:\"\\EA3F\";--icon-linkedin:\"\\EA40\";--icon-mail:\"\\EA41\";--icon-map:\"\\EA42",
+          "werbungsformular Position/Titel Vorname * Nachname * Strasse * PLZ * Ort * Land * Schweiz Deutschland Frankreich Italien Niederlande Österreich Vereinigtes Königreich Vereinigte Staaten Afghanistan Albanien Algerien Amerikanisch-Samoa Am",
+          "uti Dänemark Ecuador El Salvador Eritrea Estland Eswatini Falklandinseln Fidschi Finnland Französisch-Guayana Französisch-Polynesien Französische Süd- und Antarktisgebiete Färöer Gabun Gambia Georgien Ghana Gibraltar Grenada Griechenland Grö"
+        ],
+        "experience_signal_snippets": [],
+        "start_signal_snippets": [
+          "zum gehobenen Vier-Sterne-<br />Superior Hotel.</p><p>Für die kommende <strong>Wintersaison 2026/27</strong> suchen wir für unsere <strong>Unterkünfte Rinerlodge /</strong><br /><strong>Maxon / Camping in Davos Glari",
+          "eeping/ Allrounder:in Rinerhorn Hotels Housekeeping/ Allrounder:in Rinerhorn ab Wintersaison 2026 100% Infos downloaden Die Davos Klosters Mountains sind fünf Berg- und Skigebiete in den Bündner Alpen. Neben den Bergb",
+          "hen Gruppenhaus bis zum gehobenen Vier-Sterne- Superior Hotel. Für die kommende Wintersaison 2026/27 suchen wir für unsere Unterkünfte Rinerlodge / Maxon / Camping in Davos Glaris noch eine Person als: Housekeeping/Al"
+        ],
+        "housing_signal": false,
+        "contact_emails": [
+          "alice.begesova@mountainhotels.ch",
+          "mountains@davosklosters.ch"
+        ],
+        "requires_requirement_detail": false
+      },
+      "strategy": {
+        "strategy_version": "VACANCY-FIRST-APPLICATION-2.0+AAG-3.0",
+        "application_mode": "PRIMARY_EXACT_VACANCY",
+        "hotel_specific_hook": "He revisado la vacante actual de Housekeeping/ Allrounder:in Rinerhorn en Hotel Strela, Davos Platz.",
+        "subject_seed": "Application — Housekeeping/ Allrounder:in Rinerhorn | Hotel Strela",
+        "target_role": "Housekeeping/ Allrounder:in Rinerhorn",
+        "current_roles_observed": [
+          "Housekeeping/ Allrounder:in Rinerhorn"
+        ],
+        "lane": "HOUSEKEEPING",
+        "exact_live_vacancy_required_for_primary": true,
+        "candidate_truth_block_required": true,
+        "candidate_truth_required_fields": [
+          "role_relevant_evidence",
+          "languages",
+          "availability",
+          "permanent_relocation",
+          "swiss_work_eligibility",
+          "contact_identity"
+        ],
+        "asset_policy": {
+          "role_lane_cv_required": true,
+          "portfolio_default_attachment": false,
+          "verified_real_links_only": true,
+          "approved_real_headshot_only": true,
+          "founder_ceo_claim_requires_evidence": true,
+          "founder_ceo_primary_signal_for_operations": false
+        },
+        "motivation_policy": {
+          "positive_switzerland_pull": true,
+          "employer_specific_appreciation_requires_evidence": true,
+          "political_grievance_allowed": false,
+          "fake_flattery_allowed": false
+        },
+        "creative_value_policy": {
+          "allowed_as_secondary_differentiator": true,
+          "employer_approval_required": true,
+          "lawful_agreed_scope_or_working_time_required": true,
+          "unconditional_free_off_clock_labor_allowed": false
+        },
+        "presentation_policy": {
+          "static_html_allowed": true,
+          "plain_text_fallback_required": true,
+          "javascript_allowed": false,
+          "iframe_allowed": false,
+          "forms_allowed": false,
+          "hidden_tracking_allowed": false
+        },
+        "application_adversarial_gate": {
+          "required": true,
+          "schema_version": "APPLICATION-ADVERSARIAL-GATE-3.0",
+          "ready_decisions": [
+            "APPLICATION_READY_NO_SEND",
+            "ELITE_MATCH"
+          ],
+          "hard_fail_compensation_allowed": false,
+          "final_send_ready": false
+        },
+        "recruiter_10_second_gate_required": true,
+        "final_send_ready": false,
+        "outbound": "CLOSED",
+        "send_allowed": 0
+      },
+      "candidate_private_truth_embedded": false,
+      "requires_private_fit_validation": true,
+      "application_ready_no_send": false,
+      "final_send_ready": false,
+      "outbound": "CLOSED",
+      "send_allowed": 0
+    },
+    {
+      "record_id": "MD-a4a9883e2698146fbf9a",
+      "hotel_name": "Hotel Strela",
+      "city": "Davos Platz",
+      "market_observed_at": "2026-08-30T21:05:00Z",
+      "vacancy_observed_at": "2026-08-31T18:17:45Z",
+      "target_role": "Mitarbeiter:in Booking Office Mountain Hotels",
+      "vacancy_source_url": "https://www.davosklostersmountains.ch/de/mountains/stellenangebote/Mitarbeiter-in-Booking-Office-Mountain-Hotels_j_2449776",
+      "vacancy_evidence_type": "CURRENT_STRUCTURED_JOBPOSTING",
+      "vacancy_priority": 940,
+      "requirement_evidence": {
+        "language_signal_snippets": [
+          ":\"\\EA39\"}.icon-laenge:before{content:\"\\EA3A\"}.icon-landscape:before{content:\"\\EA3B\"}.icon-language:before{content:\"\\EA3C\"}.icon-last-minute:before{content:\"\\EA3D\"}.icon-lawinen:before{content:\"\\EA3E\"}.icon-like:before{content:\"\\EA3F\"}.ico",
+          "ark:\"\\EA38\";--icon-king-bed:\"\\EA39\";--icon-laenge:\"\\EA3A\";--icon-landscape:\"\\EA3B\";--icon-language:\"\\EA3C\";--icon-last-minute:\"\\EA3D\";--icon-lawinen:\"\\EA3E\";--icon-like:\"\\EA3F\";--icon-linkedin:\"\\EA40\";--icon-mail:\"\\EA41\";--icon-map:\"\\EA42",
+          "auch in anderen Aufgabenbereichen<br />mitzuhelfen</li><li>Sprache: Du verfügst über gute deutsche Sprachkenntnisse in Schrift und Sprache<br />sowie englische Sprachkenntnisse in mündlicher Form</li><li>Einsatz: Du bist ein unverzichtba",
+          "bist bereit auch in anderen Aufgabenbereichen mitzuhelfen Sprache: Du verfügst über gute deutsche Sprachkenntnisse in Schrift und Sprache sowie englische Sprachkenntnisse in mündlicher Form Einsatz: Du bist ein unverzichtbares Bindeglie",
+          "werbungsformular Position/Titel Vorname * Nachname * Strasse * PLZ * Ort * Land * Schweiz Deutschland Frankreich Italien Niederlande Österreich Vereinigtes Königreich Vereinigte Staaten Afghanistan Albanien Algerien Amerikanisch-Samoa Am"
+        ],
+        "experience_signal_snippets": [
+          "en</li></ul><p><span style='color:#f1c40f'><strong>Dein Profil</strong></span></p><ul><li>Ausbildung: Du hast eine abgeschlossene kaufmännische oder gleichwertige Ausbildung</li><li>Arbeitsweise: Du hast eine schnelle Auffassungsgabe, arbeitest gerne selbststä",
+          "betreuung und Information über die Hotels und anderen Angebote der Bergbahnen Dein Profil Ausbildung: Du hast eine abgeschlossene kaufmännische oder gleichwertige Ausbildung Arbeitsweise: Du hast eine schnelle Auffassungsgabe, arbeitest gerne selbstständig, bi"
+        ],
+        "start_signal_snippets": [
+          "fice</strong> der Mountain Hotels suchen wir für<br /><strong>die kommende Wintersaison 2026/27 </strong>eine Person als: </p><p><span style='color:#f1c40f'><strong>Mitarbeiter:in Booking Office</strong> <st",
+          "Office Mountain Hotels Hotels Mitarbeiter:in Booking Office Mountain Hotels ab Wintersaison 2026 100% Infos downloaden Die Davos Klosters Mountains sind fünf Berg- und Skigebiete in den Bündner Alpen. Neben den Bergb",
+          "ung des Teams im Booking Office der Mountain Hotels suchen wir für die kommende Wintersaison 2026/27 eine Person als: Mitarbeiter:in Booking Office 100% Deine Aufgaben Erstellen von Offerten für individuelle Gäste und"
+        ],
+        "housing_signal": false,
+        "contact_emails": [
+          "bewerbung@mountainhotels.ch",
+          "mountains@davosklosters.ch"
+        ],
+        "requires_requirement_detail": false
+      },
+      "strategy": {
+        "strategy_version": "VACANCY-FIRST-APPLICATION-2.0+AAG-3.0",
+        "application_mode": "PRIMARY_EXACT_VACANCY",
+        "hotel_specific_hook": "He revisado la vacante actual de Mitarbeiter:in Booking Office Mountain Hotels en Hotel Strela, Davos Platz.",
+        "subject_seed": "Application — Mitarbeiter:in Booking Office Mountain Hotels | Hotel Strela",
+        "target_role": "Mitarbeiter:in Booking Office Mountain Hotels",
+        "current_roles_observed": [
+          "Mitarbeiter:in Booking Office Mountain Hotels"
+        ],
+        "lane": "OPERATIONS_GENERAL",
+        "exact_live_vacancy_required_for_primary": true,
+        "candidate_truth_block_required": true,
+        "candidate_truth_required_fields": [
+          "role_relevant_evidence",
+          "languages",
+          "availability",
+          "permanent_relocation",
+          "swiss_work_eligibility",
+          "contact_identity"
+        ],
+        "asset_policy": {
+          "role_lane_cv_required": true,
+          "portfolio_default_attachment": false,
+          "verified_real_links_only": true,
+          "approved_real_headshot_only": true,
+          "founder_ceo_claim_requires_evidence": true,
+          "founder_ceo_primary_signal_for_operations": false
+        },
+        "motivation_policy": {
+          "positive_switzerland_pull": true,
+          "employer_specific_appreciation_requires_evidence": true,
+          "political_grievance_allowed": false,
+          "fake_flattery_allowed": false
+        },
+        "creative_value_policy": {
+          "allowed_as_secondary_differentiator": true,
+          "employer_approval_required": true,
+          "lawful_agreed_scope_or_working_time_required": true,
+          "unconditional_free_off_clock_labor_allowed": false
+        },
+        "presentation_policy": {
+          "static_html_allowed": true,
+          "plain_text_fallback_required": true,
+          "javascript_allowed": false,
+          "iframe_allowed": false,
+          "forms_allowed": false,
+          "hidden_tracking_allowed": false
+        },
+        "application_adversarial_gate": {
+          "required": true,
+          "schema_version": "APPLICATION-ADVERSARIAL-GATE-3.0",
+          "ready_decisions": [
+            "APPLICATION_READY_NO_SEND",
+            "ELITE_MATCH"
+          ],
+          "hard_fail_compensation_allowed": false,
+          "final_send_ready": false
+        },
+        "recruiter_10_second_gate_required": true,
+        "final_send_ready": false,
+        "outbound": "CLOSED",
+        "send_allowed": 0
+      },
+      "candidate_private_truth_embedded": false,
+      "requires_private_fit_validation": true,
+      "application_ready_no_send": false,
+      "final_send_ready": false,
+      "outbound": "CLOSED",
+      "send_allowed": 0
+    },
+    {
+      "record_id": "MD-c974bde4d3629963d450",
+      "hotel_name": "RinerLodge / Maxon Pavillon",
+      "city": "Davos Glaris",
+      "market_observed_at": "2026-08-30T21:05:00Z",
+      "vacancy_observed_at": "2026-08-31T18:17:45Z",
+      "target_role": "Housekeeping/ Allrounder:in Rinerhorn",
+      "vacancy_source_url": "https://www.davosklostersmountains.ch/de/mountains/stellenangebote/Housekeeping-Allrounder-in-Rinerhorn_j_3922189",
+      "vacancy_evidence_type": "CURRENT_STRUCTURED_JOBPOSTING",
+      "vacancy_priority": 940,
+      "requirement_evidence": {
+        "language_signal_snippets": [
+          ":\"\\EA39\"}.icon-laenge:before{content:\"\\EA3A\"}.icon-landscape:before{content:\"\\EA3B\"}.icon-language:before{content:\"\\EA3C\"}.icon-last-minute:before{content:\"\\EA3D\"}.icon-lawinen:before{content:\"\\EA3E\"}.icon-like:before{content:\"\\EA3F\"}.ico",
+          "ark:\"\\EA38\";--icon-king-bed:\"\\EA39\";--icon-laenge:\"\\EA3A\";--icon-landscape:\"\\EA3B\";--icon-language:\"\\EA3C\";--icon-last-minute:\"\\EA3D\";--icon-lawinen:\"\\EA3E\";--icon-like:\"\\EA3F\";--icon-linkedin:\"\\EA40\";--icon-mail:\"\\EA41\";--icon-map:\"\\EA42",
+          "werbungsformular Position/Titel Vorname * Nachname * Strasse * PLZ * Ort * Land * Schweiz Deutschland Frankreich Italien Niederlande Österreich Vereinigtes Königreich Vereinigte Staaten Afghanistan Albanien Algerien Amerikanisch-Samoa Am",
+          "uti Dänemark Ecuador El Salvador Eritrea Estland Eswatini Falklandinseln Fidschi Finnland Französisch-Guayana Französisch-Polynesien Französische Süd- und Antarktisgebiete Färöer Gabun Gambia Georgien Ghana Gibraltar Grenada Griechenland Grö"
+        ],
+        "experience_signal_snippets": [],
+        "start_signal_snippets": [
+          "zum gehobenen Vier-Sterne-<br />Superior Hotel.</p><p>Für die kommende <strong>Wintersaison 2026/27</strong> suchen wir für unsere <strong>Unterkünfte Rinerlodge /</strong><br /><strong>Maxon / Camping in Davos Glari",
+          "eeping/ Allrounder:in Rinerhorn Hotels Housekeeping/ Allrounder:in Rinerhorn ab Wintersaison 2026 100% Infos downloaden Die Davos Klosters Mountains sind fünf Berg- und Skigebiete in den Bündner Alpen. Neben den Bergb",
+          "hen Gruppenhaus bis zum gehobenen Vier-Sterne- Superior Hotel. Für die kommende Wintersaison 2026/27 suchen wir für unsere Unterkünfte Rinerlodge / Maxon / Camping in Davos Glaris noch eine Person als: Housekeeping/Al"
+        ],
+        "housing_signal": false,
+        "contact_emails": [
+          "alice.begesova@mountainhotels.ch",
+          "mountains@davosklosters.ch"
+        ],
+        "requires_requirement_detail": false
+      },
+      "strategy": {
+        "strategy_version": "VACANCY-FIRST-APPLICATION-2.0+AAG-3.0",
+        "application_mode": "PRIMARY_EXACT_VACANCY",
+        "hotel_specific_hook": "He revisado la vacante actual de Housekeeping/ Allrounder:in Rinerhorn en RinerLodge / Maxon Pavillon, Davos Glaris.",
+        "subject_seed": "Application — Housekeeping/ Allrounder:in Rinerhorn | RinerLodge / Maxon Pavillon",
+        "target_role": "Housekeeping/ Allrounder:in Rinerhorn",
+        "current_roles_observed": [
+          "Housekeeping/ Allrounder:in Rinerhorn"
+        ],
+        "lane": "HOUSEKEEPING",
+        "exact_live_vacancy_required_for_primary": true,
+        "candidate_truth_block_required": true,
+        "candidate_truth_required_fields": [
+          "role_relevant_evidence",
+          "languages",
+          "availability",
+          "permanent_relocation",
+          "swiss_work_eligibility",
+          "contact_identity"
+        ],
+        "asset_policy": {
+          "role_lane_cv_required": true,
+          "portfolio_default_attachment": false,
+          "verified_real_links_only": true,
+          "approved_real_headshot_only": true,
+          "founder_ceo_claim_requires_evidence": true,
+          "founder_ceo_primary_signal_for_operations": false
+        },
+        "motivation_policy": {
+          "positive_switzerland_pull": true,
+          "employer_specific_appreciation_requires_evidence": true,
+          "political_grievance_allowed": false,
+          "fake_flattery_allowed": false
+        },
+        "creative_value_policy": {
+          "allowed_as_secondary_differentiator": true,
+          "employer_approval_required": true,
+          "lawful_agreed_scope_or_working_time_required": true,
+          "unconditional_free_off_clock_labor_allowed": false
+        },
+        "presentation_policy": {
+          "static_html_allowed": true,
+          "plain_text_fallback_required": true,
+          "javascript_allowed": false,
+          "iframe_allowed": false,
+          "forms_allowed": false,
+          "hidden_tracking_allowed": false
+        },
+        "application_adversarial_gate": {
+          "required": true,
+          "schema_version": "APPLICATION-ADVERSARIAL-GATE-3.0",
+          "ready_decisions": [
+            "APPLICATION_READY_NO_SEND",
+            "ELITE_MATCH"
+          ],
+          "hard_fail_compensation_allowed": false,
+          "final_send_ready": false
+        },
+        "recruiter_10_second_gate_required": true,
+        "final_send_ready": false,
+        "outbound": "CLOSED",
+        "send_allowed": 0
+      },
+      "candidate_private_truth_embedded": false,
+      "requires_private_fit_validation": true,
+      "application_ready_no_send": false,
+      "final_send_ready": false,
+      "outbound": "CLOSED",
+      "send_allowed": 0
+    },
+    {
+      "record_id": "MD-c974bde4d3629963d450",
+      "hotel_name": "RinerLodge / Maxon Pavillon",
+      "city": "Davos Glaris",
+      "market_observed_at": "2026-08-30T21:05:00Z",
+      "vacancy_observed_at": "2026-08-31T18:17:45Z",
+      "target_role": "Mitarbeiter:in Booking Office Mountain Hotels",
+      "vacancy_source_url": "https://www.davosklostersmountains.ch/de/mountains/stellenangebote/Mitarbeiter-in-Booking-Office-Mountain-Hotels_j_2449776",
+      "vacancy_evidence_type": "CURRENT_STRUCTURED_JOBPOSTING",
+      "vacancy_priority": 940,
+      "requirement_evidence": {
+        "language_signal_snippets": [
+          ":\"\\EA39\"}.icon-laenge:before{content:\"\\EA3A\"}.icon-landscape:before{content:\"\\EA3B\"}.icon-language:before{content:\"\\EA3C\"}.icon-last-minute:before{content:\"\\EA3D\"}.icon-lawinen:before{content:\"\\EA3E\"}.icon-like:before{content:\"\\EA3F\"}.ico",
+          "ark:\"\\EA38\";--icon-king-bed:\"\\EA39\";--icon-laenge:\"\\EA3A\";--icon-landscape:\"\\EA3B\";--icon-language:\"\\EA3C\";--icon-last-minute:\"\\EA3D\";--icon-lawinen:\"\\EA3E\";--icon-like:\"\\EA3F\";--icon-linkedin:\"\\EA40\";--icon-mail:\"\\EA41\";--icon-map:\"\\EA42",
+          "auch in anderen Aufgabenbereichen<br />mitzuhelfen</li><li>Sprache: Du verfügst über gute deutsche Sprachkenntnisse in Schrift und Sprache<br />sowie englische Sprachkenntnisse in mündlicher Form</li><li>Einsatz: Du bist ein unverzichtba",
+          "bist bereit auch in anderen Aufgabenbereichen mitzuhelfen Sprache: Du verfügst über gute deutsche Sprachkenntnisse in Schrift und Sprache sowie englische Sprachkenntnisse in mündlicher Form Einsatz: Du bist ein unverzichtbares Bindeglie",
+          "werbungsformular Position/Titel Vorname * Nachname * Strasse * PLZ * Ort * Land * Schweiz Deutschland Frankreich Italien Niederlande Österreich Vereinigtes Königreich Vereinigte Staaten Afghanistan Albanien Algerien Amerikanisch-Samoa Am"
+        ],
+        "experience_signal_snippets": [
+          "en</li></ul><p><span style='color:#f1c40f'><strong>Dein Profil</strong></span></p><ul><li>Ausbildung: Du hast eine abgeschlossene kaufmännische oder gleichwertige Ausbildung</li><li>Arbeitsweise: Du hast eine schnelle Auffassungsgabe, arbeitest gerne selbststä",
+          "betreuung und Information über die Hotels und anderen Angebote der Bergbahnen Dein Profil Ausbildung: Du hast eine abgeschlossene kaufmännische oder gleichwertige Ausbildung Arbeitsweise: Du hast eine schnelle Auffassungsgabe, arbeitest gerne selbstständig, bi"
+        ],
+        "start_signal_snippets": [
+          "fice</strong> der Mountain Hotels suchen wir für<br /><strong>die kommende Wintersaison 2026/27 </strong>eine Person als: </p><p><span style='color:#f1c40f'><strong>Mitarbeiter:in Booking Office</strong> <st",
+          "Office Mountain Hotels Hotels Mitarbeiter:in Booking Office Mountain Hotels ab Wintersaison 2026 100% Infos downloaden Die Davos Klosters Mountains sind fünf Berg- und Skigebiete in den Bündner Alpen. Neben den Bergb",
+          "ung des Teams im Booking Office der Mountain Hotels suchen wir für die kommende Wintersaison 2026/27 eine Person als: Mitarbeiter:in Booking Office 100% Deine Aufgaben Erstellen von Offerten für individuelle Gäste und"
+        ],
+        "housing_signal": false,
+        "contact_emails": [
+          "bewerbung@mountainhotels.ch",
+          "mountains@davosklosters.ch"
+        ],
+        "requires_requirement_detail": false
+      },
+      "strategy": {
+        "strategy_version": "VACANCY-FIRST-APPLICATION-2.0+AAG-3.0",
+        "application_mode": "PRIMARY_EXACT_VACANCY",
+        "hotel_specific_hook": "He revisado la vacante actual de Mitarbeiter:in Booking Office Mountain Hotels en RinerLodge / Maxon Pavillon, Davos Glaris.",
+        "subject_seed": "Application — Mitarbeiter:in Booking Office Mountain Hotels | RinerLodge / Maxon Pavillon",
+        "target_role": "Mitarbeiter:in Booking Office Mountain Hotels",
+        "current_roles_observed": [
+          "Mitarbeiter:in Booking Office Mountain Hotels"
+        ],
+        "lane": "OPERATIONS_GENERAL",
+        "exact_live_vacancy_required_for_primary": true,
+        "candidate_truth_block_required": true,
+        "candidate_truth_required_fields": [
+          "role_relevant_evidence",
+          "languages",
+          "availability",
+          "permanent_relocation",
+          "swiss_work_eligibility",
+          "contact_identity"
+        ],
+        "asset_policy": {
+          "role_lane_cv_required": true,
+          "portfolio_default_attachment": false,
+          "verified_real_links_only": true,
+          "approved_real_headshot_only": true,
+          "founder_ceo_claim_requires_evidence": true,
+          "founder_ceo_primary_signal_for_operations": false
+        },
+        "motivation_policy": {
+          "positive_switzerland_pull": true,
+          "employer_specific_appreciation_requires_evidence": true,
+          "political_grievance_allowed": false,
+          "fake_flattery_allowed": false
+        },
+        "creative_value_policy": {
+          "allowed_as_secondary_differentiator": true,
+          "employer_approval_required": true,
+          "lawful_agreed_scope_or_working_time_required": true,
+          "unconditional_free_off_clock_labor_allowed": false
+        },
+        "presentation_policy": {
+          "static_html_allowed": true,
+          "plain_text_fallback_required": true,
+          "javascript_allowed": false,
+          "iframe_allowed": false,
+          "forms_allowed": false,
+          "hidden_tracking_allowed": false
+        },
+        "application_adversarial_gate": {
+          "required": true,
+          "schema_version": "APPLICATION-ADVERSARIAL-GATE-3.0",
+          "ready_decisions": [
+            "APPLICATION_READY_NO_SEND",
+            "ELITE_MATCH"
+          ],
+          "hard_fail_compensation_allowed": false,
+          "final_send_ready": false
+        },
+        "recruiter_10_second_gate_required": true,
+        "final_send_ready": false,
+        "outbound": "CLOSED",
+        "send_allowed": 0
+      },
+      "candidate_private_truth_embedded": false,
+      "requires_private_fit_validation": true,
+      "application_ready_no_send": false,
+      "final_send_ready": false,
+      "outbound": "CLOSED",
+      "send_allowed": 0
+    },
+    {
+      "record_id": "MD-ef3aa81549c0a56d86cc",
+      "hotel_name": "Club Hotel - Rooms only",
+      "city": "Davos Platz",
+      "market_observed_at": "2026-08-30T21:05:00Z",
+      "vacancy_observed_at": "2026-08-31T18:17:45Z",
+      "target_role": "Housekeeping/ Allrounder:in Rinerhorn",
+      "vacancy_source_url": "https://www.davosklostersmountains.ch/de/mountains/stellenangebote/Housekeeping-Allrounder-in-Rinerhorn_j_3922189",
+      "vacancy_evidence_type": "CURRENT_STRUCTURED_JOBPOSTING",
+      "vacancy_priority": 940,
+      "requirement_evidence": {
+        "language_signal_snippets": [
+          ":\"\\EA39\"}.icon-laenge:before{content:\"\\EA3A\"}.icon-landscape:before{content:\"\\EA3B\"}.icon-language:before{content:\"\\EA3C\"}.icon-last-minute:before{content:\"\\EA3D\"}.icon-lawinen:before{content:\"\\EA3E\"}.icon-like:before{content:\"\\EA3F\"}.ico",
+          "ark:\"\\EA38\";--icon-king-bed:\"\\EA39\";--icon-laenge:\"\\EA3A\";--icon-landscape:\"\\EA3B\";--icon-language:\"\\EA3C\";--icon-last-minute:\"\\EA3D\";--icon-lawinen:\"\\EA3E\";--icon-like:\"\\EA3F\";--icon-linkedin:\"\\EA40\";--icon-mail:\"\\EA41\";--icon-map:\"\\EA42",
+          "werbungsformular Position/Titel Vorname * Nachname * Strasse * PLZ * Ort * Land * Schweiz Deutschland Frankreich Italien Niederlande Österreich Vereinigtes Königreich Vereinigte Staaten Afghanistan Albanien Algerien Amerikanisch-Samoa Am",
+          "uti Dänemark Ecuador El Salvador Eritrea Estland Eswatini Falklandinseln Fidschi Finnland Französisch-Guayana Französisch-Polynesien Französische Süd- und Antarktisgebiete Färöer Gabun Gambia Georgien Ghana Gibraltar Grenada Griechenland Grö"
+        ],
+        "experience_signal_snippets": [],
+        "start_signal_snippets": [
+          "zum gehobenen Vier-Sterne-<br />Superior Hotel.</p><p>Für die kommende <strong>Wintersaison 2026/27</strong> suchen wir für unsere <strong>Unterkünfte Rinerlodge /</strong><br /><strong>Maxon / Camping in Davos Glari",
+          "eeping/ Allrounder:in Rinerhorn Hotels Housekeeping/ Allrounder:in Rinerhorn ab Wintersaison 2026 100% Infos downloaden Die Davos Klosters Mountains sind fünf Berg- und Skigebiete in den Bündner Alpen. Neben den Bergb",
+          "hen Gruppenhaus bis zum gehobenen Vier-Sterne- Superior Hotel. Für die kommende Wintersaison 2026/27 suchen wir für unsere Unterkünfte Rinerlodge / Maxon / Camping in Davos Glaris noch eine Person als: Housekeeping/Al"
+        ],
+        "housing_signal": false,
+        "contact_emails": [
+          "alice.begesova@mountainhotels.ch",
+          "mountains@davosklosters.ch"
+        ],
+        "requires_requirement_detail": false
+      },
+      "strategy": {
+        "strategy_version": "VACANCY-FIRST-APPLICATION-2.0+AAG-3.0",
+        "application_mode": "PRIMARY_EXACT_VACANCY",
+        "hotel_specific_hook": "He revisado la vacante actual de Housekeeping/ Allrounder:in Rinerhorn en Club Hotel - Rooms only, Davos Platz.",
+        "subject_seed": "Application — Housekeeping/ Allrounder:in Rinerhorn | Club Hotel - Rooms only",
+        "target_role": "Housekeeping/ Allrounder:in Rinerhorn",
+        "current_roles_observed": [
+          "Housekeeping/ Allrounder:in Rinerhorn"
+        ],
+        "lane": "HOUSEKEEPING",
+        "exact_live_vacancy_required_for_primary": true,
+        "candidate_truth_block_required": true,
+        "candidate_truth_required_fields": [
+          "role_relevant_evidence",
+          "languages",
+          "availability",
+          "permanent_relocation",
+          "swiss_work_eligibility",
+          "contact_identity"
+        ],
+        "asset_policy": {
+          "role_lane_cv_required": true,
+          "portfolio_default_attachment": false,
+          "verified_real_links_only": true,
+          "approved_real_headshot_only": true,
+          "founder_ceo_claim_requires_evidence": true,
+          "founder_ceo_primary_signal_for_operations": false
+        },
+        "motivation_policy": {
+          "positive_switzerland_pull": true,
+          "employer_specific_appreciation_requires_evidence": true,
+          "political_grievance_allowed": false,
+          "fake_flattery_allowed": false
+        },
+        "creative_value_policy": {
+          "allowed_as_secondary_differentiator": true,
+          "employer_approval_required": true,
+          "lawful_agreed_scope_or_working_time_required": true,
+          "unconditional_free_off_clock_labor_allowed": false
+        },
+        "presentation_policy": {
+          "static_html_allowed": true,
+          "plain_text_fallback_required": true,
+          "javascript_allowed": false,
+          "iframe_allowed": false,
+          "forms_allowed": false,
+          "hidden_tracking_allowed": false
+        },
+        "application_adversarial_gate": {
+          "required": true,
+          "schema_version": "APPLICATION-ADVERSARIAL-GATE-3.0",
+          "ready_decisions": [
+            "APPLICATION_READY_NO_SEND",
+            "ELITE_MATCH"
+          ],
+          "hard_fail_compensation_allowed": false,
+          "final_send_ready": false
+        },
+        "recruiter_10_second_gate_required": true,
+        "final_send_ready": false,
+        "outbound": "CLOSED",
+        "send_allowed": 0
+      },
+      "candidate_private_truth_embedded": false,
+      "requires_private_fit_validation": true,
+      "application_ready_no_send": false,
+      "final_send_ready": false,
+      "outbound": "CLOSED",
+      "send_allowed": 0
+    }
+  ],
+  "selection_policy": "CURRENT_RESOLVED_ROLE_SIGNAL_THEN_EVIDENCE_QUALITY_THEN_GENERIC_ENTRY_ACCESSIBILITY",
+  "candidate_truth_join": "PRIVATE_REQUIRED_BEFORE_APPLICATION_READY",
+  "application_ready_no_send": 0,
+  "final_send_ready": false,
+  "outbound": "CLOSED",
+  "send_allowed": 0
+}

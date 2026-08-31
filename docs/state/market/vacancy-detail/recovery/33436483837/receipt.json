@@ -1,0 +1,21 @@
+{
+  "schema_version": "VACANCY-DETAIL-RECOVERY-RECEIPT-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "github_run_id": "33436483837",
+  "github_sha": "5e7c14d8cb294fcdff3874811108dbe09944ae3b",
+  "failed_run_reused": "33424739389",
+  "previous_recovery_run_id": "33435997228",
+  "retry_generation": 2,
+  "transport_retry_contract": "GITHUB_ARTIFACT_DOWNLOAD_RETRY_5_ALL_ERRORS_DELAY_2_MAX_90_SECONDS",
+  "reused_shards": 43,
+  "recovered_shards": 1,
+  "exact_shard_coverage": 44,
+  "exact_hotel_workset_coverage": 436,
+  "recovery_observed_at": "2026-08-31T20:31:55Z",
+  "vacancy_detail_payload_sha256": "eb20d702d1ed232f6bba00c667b4295eda572dd9938297e2bdfaef060d2c3450",
+  "wave2_selected_count": 25,
+  "authority_advanced": false,
+  "outbound": "CLOSED",
+  "send_allowed": 0,
+  "irreversible_external_actions": 0
+}

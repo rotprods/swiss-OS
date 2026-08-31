@@ -1,0 +1,73 @@
+{
+  "schema_version": "CRM-CURRENT-ENTITY-TRIAGE-PRIORITY-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "parent_git_sha": "cbd3a98c8c0f7c1e35a086fe110f7bdab8032652",
+  "snapshot_id": "HS-MEMBER-DE-33339392661",
+  "source_artifact_id": 9740219406,
+  "source_records_sha256": "b16fdb63a01149e10feb4d506f38301644b73a612f898ce72567ec4fa92da404",
+  "authority": {
+    "epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+    "materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+    "canonical_rows": 690,
+    "next_physical_id": "H-0691_UNALLOCATED",
+    "effect": "NONE"
+  },
+  "unresolved_count": 1403,
+  "unresolved_source_keys_sha256": "c5b436dcd7d2632b3a49ccc1d3f1f75620f0c7db78c4247e5ab9c5394b30d996",
+  "counts_by_triage_state": {"AMBIGUOUS_REVIEW":8,"NOVELTY_REVIEW":1395},
+  "review_priority_bands": {"350000_499999":48,"500000_599999":44,"ge600000":20,"lt350000":1291},
+  "priority_records_count": 120,
+  "priority_records_sha256": "ee63413b449efe3aa26f57c502133e0ad5efc0617227063c61a88c509151c80e",
+  "semantics": {
+    "similarity": "REVIEW_SPACE_REDUCTION_ONLY",
+    "current_manifest_evidence": "FIRST_PARTY_CURRENT_MEMBER_DIRECTORY_IDENTITY_EVIDENCE",
+    "exact_global_name_locality_conflict": "AMBIGUOUS_REVIEW",
+    "verified_no_exact_identity": "NOVELTY_REVIEW_NOT_TERMINAL_NEW_CANONICAL",
+    "terminal_decision_allowed_from_similarity": false,
+    "canonical_id_reservation_allowed": false
+  },
+  "first_bounded_wave": {
+    "batch_id": "CUR-ER-001",
+    "count": 25,
+    "items_sha256": "dc2e74cc0dc692f40918536bb9159b11bbe023f824a6e3142dd07cc8ca58cabf",
+    "rule": "AMBIGUOUS_REVIEW first; then same-city token Jaccard descending; then source_record_key",
+    "items": [
+      {"source_record_key":"MD-23c42891b4246bad2d77","name":"Hotel De la Paix","city":"Interlaken","triage_state":"AMBIGUOUS_REVIEW","max_token_jaccard_ppm":0,"suggested_hotel_ids":[],"evidence_ref":"HS-MEMBER-DE-33339392661:page:0067#record-001"},
+      {"source_record_key":"MD-37df0d95a87f101c1916","name":"Hotel Du Lac","city":"Därligen","triage_state":"AMBIGUOUS_REVIEW","max_token_jaccard_ppm":0,"suggested_hotel_ids":[],"evidence_ref":"HS-MEMBER-DE-33339392661:page:0070#record-010"},
+      {"source_record_key":"MD-63e22fab1822e4e4d4d6","name":"Hotel Astoria","city":"Luzern","triage_state":"AMBIGUOUS_REVIEW","max_token_jaccard_ppm":0,"suggested_hotel_ids":[],"evidence_ref":"HS-MEMBER-DE-33339392661:page:0052#record-002"},
+      {"source_record_key":"MD-9431ebc295760bb420c3","name":"Hôtel Du Port","city":"Villeneuve VD","triage_state":"AMBIGUOUS_REVIEW","max_token_jaccard_ppm":0,"suggested_hotel_ids":[],"evidence_ref":"HS-MEMBER-DE-33339392661:page:0071#record-007"},
+      {"source_record_key":"MD-9fdce5f51a17f47add5b","name":"Hotel De la Paix","city":"Luzern","triage_state":"AMBIGUOUS_REVIEW","max_token_jaccard_ppm":0,"suggested_hotel_ids":[],"evidence_ref":"HS-MEMBER-DE-33339392661:page:0067#record-002"},
+      {"source_record_key":"MD-c87fe8c0ccccc3ed82b6","name":"Hotel Allegra","city":"Pontresina","triage_state":"AMBIGUOUS_REVIEW","max_token_jaccard_ppm":0,"suggested_hotel_ids":[],"evidence_ref":"HS-MEMBER-DE-33339392661:page:0045#record-004"},
+      {"source_record_key":"MD-d736242aadc18957a1f8","name":"Hotel Drei Könige","city":"Einsiedeln","triage_state":"AMBIGUOUS_REVIEW","max_token_jaccard_ppm":0,"suggested_hotel_ids":[],"evidence_ref":"HS-MEMBER-DE-33339392661:page:0070#record-003"},
+      {"source_record_key":"MD-ecb62639311225e2eddc","name":"Hotel Silberhorn","city":"Wengen","triage_state":"AMBIGUOUS_REVIEW","max_token_jaccard_ppm":0,"suggested_hotel_ids":[],"evidence_ref":"HS-MEMBER-DE-33339392661:page:0108#record-007"},
+      {"source_record_key":"MD-a2e0d3a361816ce418a9","name":"ibis budget Zürich City West","city":"Zürich","triage_state":"NOVELTY_REVIEW","max_token_jaccard_ppm":800000,"suggested_hotel_ids":["H-0180","H-0209"],"evidence_ref":"HS-MEMBER-DE-33339392661:page:0123#record-012"},
+      {"source_record_key":"MD-9f3f562d4cd6df0dea0b","name":"OVERLOOK Lodge by CERVO Mountain Resort","city":"Zermatt","triage_state":"NOVELTY_REVIEW","max_token_jaccard_ppm":714286,"suggested_hotel_ids":["H-0201","H-0012"],"evidence_ref":"HS-MEMBER-DE-33339392661:page:0144#record-010"},
+      {"source_record_key":"MD-26f11bcb12746720bf28","name":"B&B Hotel Basel","city":"Basel","triage_state":"NOVELTY_REVIEW","max_token_jaccard_ppm":666667,"suggested_hotel_ids":["H-0050","H-0081","H-0467"],"evidence_ref":"HS-MEMBER-DE-33339392661:page:0011#record-005"},
+      {"source_record_key":"MD-2705c91aead9c3f7ebe3","name":"Hotel Giardino Ascona","city":"Ascona","triage_state":"NOVELTY_REVIEW","max_token_jaccard_ppm":666667,"suggested_hotel_ids":["H-0409","H-0286","H-0641"],"evidence_ref":"HS-MEMBER-DE-33339392661:page:0077#record-006"},
+      {"source_record_key":"MD-40113889b661bbe42f6e","name":"Hotel Piazza Ascona","city":"Ascona","triage_state":"NOVELTY_REVIEW","max_token_jaccard_ppm":666667,"suggested_hotel_ids":["H-0409","H-0286","H-0641"],"evidence_ref":"HS-MEMBER-DE-33339392661:page:0096#record-004"},
+      {"source_record_key":"MD-486279ebe3becd731323","name":"Hotel Stern Chur","city":"Chur","triage_state":"NOVELTY_REVIEW","max_token_jaccard_ppm":666667,"suggested_hotel_ids":["H-0268"],"evidence_ref":"HS-MEMBER-DE-33339392661:page:0111#record-008"},
+      {"source_record_key":"MD-62a56b5517c8455760c2","name":"Hotel Löwen Appenzell","city":"Appenzell","triage_state":"NOVELTY_REVIEW","max_token_jaccard_ppm":666667,"suggested_hotel_ids":["H-0394","H-0297"],"evidence_ref":"HS-MEMBER-DE-33339392661:page:0089#record-005"},
+      {"source_record_key":"MD-68b39654ffd412deda93","name":"Mövenpick Hotel Egerkingen","city":"Egerkingen","triage_state":"NOVELTY_REVIEW","max_token_jaccard_ppm":666667,"suggested_hotel_ids":["H-0520"],"evidence_ref":"HS-MEMBER-DE-33339392661:page:0141#record-010"},
+      {"source_record_key":"MD-812b833d66d6397477bb","name":"ibis Chur Hotel","city":"Chur","triage_state":"NOVELTY_REVIEW","max_token_jaccard_ppm":666667,"suggested_hotel_ids":["H-0268"],"evidence_ref":"HS-MEMBER-DE-33339392661:page:0124#record-002"},
+      {"source_record_key":"MD-acd1ee3590ed3d8789b0","name":"Jazz Hotel Ascona","city":"Ascona","triage_state":"NOVELTY_REVIEW","max_token_jaccard_ppm":666667,"suggested_hotel_ids":["H-0409","H-0286","H-0641"],"evidence_ref":"HS-MEMBER-DE-33339392661:page:0126#record-010"},
+      {"source_record_key":"MD-0032f0199df6d19acede","name":"Carlton Hotel St. Moritz","city":"St. Moritz","triage_state":"NOVELTY_REVIEW","max_token_jaccard_ppm":600000,"suggested_hotel_ids":["H-0472"],"evidence_ref":"HS-MEMBER-DE-33339392661:page:0021#record-012"},
+      {"source_record_key":"MD-254ee0800ea0b2b449c6","name":"Kulm Hotel St. Moritz","city":"St. Moritz","triage_state":"NOVELTY_REVIEW","max_token_jaccard_ppm":600000,"suggested_hotel_ids":["H-0472"],"evidence_ref":"HS-MEMBER-DE-33339392661:page:0132#record-002"},
+      {"source_record_key":"MD-25fccbaebdb52509d9b7","name":"ibis budget Luzern City","city":"Luzern","triage_state":"NOVELTY_REVIEW","max_token_jaccard_ppm":600000,"suggested_hotel_ids":["H-0177"],"evidence_ref":"HS-MEMBER-DE-33339392661:page:0123#record-009"},
+      {"source_record_key":"MD-34ac38fff0b3b6823023","name":"Stay KooooK Bern Wankdorf","city":"Bern","triage_state":"NOVELTY_REVIEW","max_token_jaccard_ppm":600000,"suggested_hotel_ids":["H-0631"],"evidence_ref":"HS-MEMBER-DE-33339392661:page:0160#record-011"},
+      {"source_record_key":"MD-36d93a156cb38be11473","name":"Living Ascona Boutique Hotel","city":"Ascona","triage_state":"NOVELTY_REVIEW","max_token_jaccard_ppm":600000,"suggested_hotel_ids":["H-0641","H-0409","H-0286"],"evidence_ref":"HS-MEMBER-DE-33339392661:page:0136#record-009"},
+      {"source_record_key":"MD-89eed328d9d7b247e107","name":"Mövenpick Hotel Zürich Airport","city":"Glattbrugg","triage_state":"NOVELTY_REVIEW","max_token_jaccard_ppm":600000,"suggested_hotel_ids":["H-0351"],"evidence_ref":"HS-MEMBER-DE-33339392661:page:0142#record-001"},
+      {"source_record_key":"MD-932116a8acb840f02f11","name":"Hauser Hotel St. Moritz","city":"St. Moritz","triage_state":"NOVELTY_REVIEW","max_token_jaccard_ppm":600000,"suggested_hotel_ids":["H-0472"],"evidence_ref":"HS-MEMBER-DE-33339392661:page:0039#record-010"}
+    ]
+  },
+  "safety": {
+    "crm_universe_complete": false,
+    "authority_advanced": false,
+    "canonical_id_reservations": 0,
+    "h_id_allocations": 0,
+    "irreversible_external_actions": 0,
+    "fuzzy_autobind": false,
+    "outbound": "CLOSED",
+    "send_allowed": 0
+  },
+  "next": "EVIDENCE_BACKED_PREAUTH_REVIEW_CUR_ER_001_NO_AUTOBIND"
+}

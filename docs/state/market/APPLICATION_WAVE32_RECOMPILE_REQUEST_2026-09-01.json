@@ -1,0 +1,49 @@
+{
+  "schema_version": "APPLICATION-WAVE32-RECOMPILE-REQUEST-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "request_id": "APPLICATION-WAVE32-RECOMPILE-20260901-R1",
+  "requested_at": "2026-09-01T00:45:00+02:00",
+  "parent_main_sha": "6ca946e61d6145424ff06754831a567d6e2b2f3e",
+  "execution_mode": "RECOMPILE_EXISTING_ARTIFACTS_ONLY_NO_PROVIDER_RESEARCH",
+  "source_market": {
+    "run_id": 33336272106,
+    "artifact_id": 9739544628,
+    "artifact_name": "market-enrichment-2061",
+    "aggregate_sha256": "19308eae6b56ca0b43fc76bc98aa69d57bb885b2c009134bbf58f2f58fe47e23",
+    "records_expected": 2061
+  },
+  "source_vacancy_detail": {
+    "recovery_run_id": 33436483837,
+    "artifact_id": 9774670880,
+    "artifact_name": "vacancy-detail-recovery-33436483837",
+    "artifact_digest": "sha256:b675accc3cbb64eddae3b6e9749e9d15ee0e675ef03652cde2a0c8536735a20f",
+    "payload_sha256": "eb20d702d1ed232f6bba00c667b4295eda572dd9938297e2bdfaef060d2c3450",
+    "records_expected": 436,
+    "shards_total": 44,
+    "reused_shards": 43,
+    "rerun_shards": [14]
+  },
+  "compiler": {
+    "module": "swiss_os.application_wave_v32",
+    "schema_version": "APPLICATION-WAVE-3.2",
+    "limit": 25,
+    "application_adversarial_gate_required": "APPLICATION-ADVERSARIAL-GATE-3.1",
+    "private_packet_compiler_required": "APPLICATION-PRIVATE-PACKET-3.1"
+  },
+  "network_policy": {
+    "hotel_provider_requests_allowed": false,
+    "source_recrawl_allowed": false,
+    "github_artifact_download_only": true
+  },
+  "safety": {
+    "authority_advanced": false,
+    "canonical_id_allocations": 0,
+    "canonical_id_reservations": 0,
+    "crm_universe_complete": false,
+    "outbound": "CLOSED",
+    "send_allowed": 0,
+    "application_ready_no_send": 0,
+    "final_send_ready": false,
+    "irreversible_external_actions": 0
+  }
+}

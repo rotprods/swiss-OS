@@ -1,1 +1,45 @@
-{"active_claim_ids":["CLAIM-CRM-SRR-SPECIAL-006"],"authority_revision":"70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6","base_main_sha":"b0ec94f4a13fb7c24d39454439d9792d90bb7e46","blockers":["The recovered 2061-record HotellerieSuisse member-directory capture is LIVE_PARTIAL with coverage_complete=false and PAGE_COUNT_DRIFT:171,172; source coherence must be repaired before coverage-based reconciliation.","discover.swiss SSR-1.0 remains provider-blocked by missing runtime subscription key/capture-valid structured manifest.","Exact E4 local reconstruction is byte-exact, but durable generated-file Drive egress remains BLOCKED_FILE_REFERENCE_DO_NOT_REPEAT; Sheets-first authority promotion is forbidden.","RECONCILE_REQUIRED remains 1403 and cannot be reduced by absence from the historical partial substrate."],"context_pack_revision":"9d6c4c3d72bc69bdd735827333ac80e557dde0f18ebc1086201916f7975fe8dc","event_watermark":{"event_id":"EVT-20260830T074504Z-CRM006-WORK-STARTED","occurred_at":"2026-08-30T07:45:04Z"},"next_safe_actions":["Merge the fail-closed HSLCA R2 request-trigger change only after exact-head CI and adversarial review pass.","Validate the resulting single-locale live capture for coverage_complete=true, zero page/count coherence violations, unique detail identities and immutable run/artifact provenance.","On coherent success, recompute current candidate export and mass source anti-join before terminal reconciliation; use SSR-1.0 only if a capture-valid discover.swiss manifest is available, otherwise use the provider-neutral member-directory fallback staging route.","Keep H-0691 UNALLOCATED, authority E4 unchanged, OUTBOUND=CLOSED and send_allowed=0."],"project_id":"SWITZERLAND_JOB_OS","projection_revision":"c7d278ce1fb3189b426dcfb9bc7ad2348b94cca08a31b37cf751620d9cea525f","relevant_paths":["STATE.md","docs/state/NEXT.json","docs/state/v2/project-state.json","docs/state/source/HSLCA_R2_COHERENCE_BLOCKER_2026-08-30.json","docs/state/source/HSLCA_LIVE_CAPTURE_REQUEST.json","docs/state/META_EXECUTION_CYCLE_2026-08-30_HSLCA_R2.json","docs/handoffs/META_20260830_CRM_R2_HSLCA_COHERENCE.md"],"relevant_scope_revision":"0f043766bc5cb4b9a47f340629c7dadc251a336d8caeea24e89623234b0f5600","schema_version":"COS-V2-CONTEXT-PACK-1.1","state_refs":["GOAL.md","STATE.md","ARCHITECTURE.md","HANDOFF.md","TASKS.md","LEXICON.md","docs/state/v2/project-state.json","docs/state/v2/checkpoint.json","docs/state/v2/active-claims.json"]}
+{
+  "schema_version": "COS-V2-CONTEXT-PACK-1.1",
+  "project_id": "SWITZERLAND_JOB_OS",
+  "base_main_sha": "02dad1a5bd82219b34430b5fd1cee3ee088642b6",
+  "authority_revision": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+  "projection_revision": "c7d278ce1fb3189b426dcfb9bc7ad2348b94cca08a31b37cf751620d9cea525f",
+  "event_watermark": {
+    "event_id": "EVT-20260830T074504Z-CRM006-WORK-STARTED",
+    "occurred_at": "2026-08-30T07:45:04Z"
+  },
+  "state_refs": [
+    "GOAL.md",
+    "STATE.md",
+    "ARCHITECTURE.md",
+    "HANDOFF.md",
+    "TASKS.md",
+    "LEXICON.md",
+    "docs/state/v2/project-state.json",
+    "docs/state/v2/checkpoint.json",
+    "docs/state/v2/active-claims.json"
+  ],
+  "relevant_paths": [
+    "STATE.md",
+    "docs/state/NEXT.json",
+    "docs/state/v2/project-state.json",
+    "docs/state/CRM_CURRENT_SOURCE_MAPPING_PROJECTION_33339392661.json",
+    "docs/state/CRM_CURRENT_GONTEN_ECV_SRR_LINEAGE_33339392661.json",
+    "docs/state/CRM_EXACT_CURRENT_CANDIDATE_LINEAGE_33339392661.json",
+    "docs/handoffs/META_20260831_CRM_CURRENT_SOURCE_CONTINUITY.md"
+  ],
+  "relevant_scope_revision": "cf67880b67735c8f67e8278d1b5ffcc963faddfcc97a145589ea86176ca714a2",
+  "active_claim_ids": ["CLAIM-CRM-SRR-SPECIAL-006"],
+  "blockers": [
+    "RECONCILE_REQUIRED=1403 remains nonzero on coherent current source HS-MEMBER-DE-33339392661.",
+    "discover.swiss SSR-1.0 structured evidence is provider-blocked by absent subscription key/capture-valid manifest, but provider-neutral resolution remains available.",
+    "Durable exact E4 DB-first provider egress remains BLOCKED_FILE_REFERENCE_DO_NOT_REPEAT; Sheets-first authority promotion is forbidden."
+  ],
+  "next_safe_actions": [
+    "Execute bounded CURRENT_UNRESOLVED_1403_ENTITY_RESOLUTION batches using exact source-key lineage plus current first-party/HotellerieSuisse evidence.",
+    "Use similarity only to rank review; never fuzzy auto-bind, reserve or allocate H-IDs from staging, or advance authority from source/CI/cache artifacts.",
+    "If discover.swiss credentials and a capture-valid manifest appear, add SSR-1.0 as a parallel evidence plane without blocking provider-neutral work.",
+    "Keep authority E4 unchanged, H-0691 UNALLOCATED, OUTBOUND=CLOSED and send_allowed=0."
+  ],
+  "context_pack_revision": "6de44030d8117ab074dc59d9cd460712690bcab8ec6ae56becf958c776a36d47"
+}

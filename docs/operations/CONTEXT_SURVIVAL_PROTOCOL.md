@@ -68,6 +68,7 @@ The current CSP checkpoint MUST content-address at least:
 - `docs/state/NEXT.json`
 - `docs/state/v2/project-state.json`
 - `docs/state/v2/context-pack.json`
+- `docs/state/v2/active-claims.json`
 - the latest explicit domain NEXT pointer selected by the current handoff
 - the canonical next-iteration metaprompt
 
@@ -75,7 +76,7 @@ Additional domain artifacts may be pinned as recovery inputs.
 
 ## 4. Checkpoint semantics
 
-`docs/state/v2/context-survival.json` is a recovery attestation, not authority.
+`docs/continuity/CONTEXT_SURVIVAL.json` is a recovery attestation, not authority. It intentionally lives outside `docs/state/v2/**` so a disjoint continuity writer does not collide with an active domain claim that owns V2 state paths.
 
 It contains:
 
@@ -119,7 +120,7 @@ A successor MUST execute in this order:
 
 1. read live `main` and its first-parent ancestry;
 2. read `GOAL.md`, `STATE.md`, `HANDOFF.md`, `TASKS.md`;
-3. read `docs/state/v2/context-survival.json`;
+3. read `docs/continuity/CONTEXT_SURVIVAL.json`;
 4. verify all pinned Git blob OIDs;
 5. read ProjectState, ContextPack, active claims and latest explicit domain NEXT;
 6. compare active claims/fencing against branches/PRs;

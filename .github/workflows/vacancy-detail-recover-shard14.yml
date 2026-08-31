@@ -62,6 +62,7 @@ jobs:
           assert request['shard_count'] == 44
           assert request['missing_shard_indexes'] == [14]
           assert request['reused_successful_shards'] == 43
+          assert request['retry_generation'] >= 1
           assert request['recovery_observed_at_semantics'] == 'STAMP_AT_ACTUAL_ACTIONS_EXECUTION_NOT_AT_REQUEST_CREATION'
           assert request['safety']['outbound'] == 'CLOSED'
           assert request['safety']['send_allowed'] == 0
@@ -130,7 +131,7 @@ jobs:
               assert packet['canonical_id_reservations'] == 0
               assert packet['outbound'] == 'CLOSED'
               assert packet['send_allowed'] == 0
-          assert indexes == request['expected_reused_indexes'], (indexes, request['expected_reused_indexes'])
+          assert sorted(indexes) == request['expected_reused_indexes'], (sorted(indexes), request['expected_reused_indexes'])
           assert len(files) == 43
           PY
 
@@ -201,6 +202,8 @@ jobs:
             'github_sha':os.environ['GITHUB_SHA'],
             'source_market_run_id':request['source_market_run_id'],
             'failed_vacancy_detail_run_id':request['failed_vacancy_detail_run_id'],
+            'previous_recovery_run_id':request.get('previous_recovery_run_id'),
+            'retry_generation':request.get('retry_generation'),
             'reused_successful_shards':43,
             'recovered_shard_indexes':[14],
             'shards_total':44,
@@ -235,6 +238,8 @@ jobs:
             'github_run_id':os.environ['GITHUB_RUN_ID'],
             'github_sha':os.environ['GITHUB_SHA'],
             'failed_run_reused':request['failed_vacancy_detail_run_id'],
+            'previous_recovery_run_id':request.get('previous_recovery_run_id'),
+            'retry_generation':request.get('retry_generation'),
             'reused_shards':43,
             'recovered_shards':1,
             'exact_shard_coverage':44,

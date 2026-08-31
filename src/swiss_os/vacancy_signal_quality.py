@@ -24,9 +24,26 @@ NAVIGATION_TITLE_RE = re.compile(
     r"unsere küche|unsere kueche|about us|über uns|ueber uns|benefits?|was wir bieten)$",
     re.I,
 )
+ROLE_TITLE_RE = re.compile(
+    r"(?:mitarbeiter|mitarbeiterin|allrounder|housekeep|room attendant|roomboy|reinigung|zimmermäd|"
+    r"service(?:mitarbeiter)?|chef de rang|commis|waiter|waitress|server|serveur|bartender|"
+    r"koch|köchin|kueche|küche|cook|cuisin|steward|dish|spül|spuel|"
+    r"reception|réception|front office|reservation|booking|concierge|guest|night auditor|"
+    r"manager|management|leiter|leitung|director|direktor|assistant|assistent|agent|"
+    r"sales|marketing|content|social media|communication|e-?commerce|revenue|"
+    r"beauty|therap|massage|technician|techniker|elektriker|maintenance|unterhalt|"
+    r"praktik|trainee|apprentice|lehr|fach(?:frau|mann|kraft)|sachbearbeit|collaborateur|employé|responsable)",
+    re.I,
+)
 
 SEMANTIC_ALLOWED = {
     "CURRENT_STRUCTURED_JOBPOSTING",
+    "CURRENT_PAGE_HEADING",
+    "CURRENT_PAGE_TITLE",
+    "CURRENT_PAGE_ROLE_LINK",
+    "CURRENT_ROLE_LIKE_ROUTE",
+}
+NON_STRUCTURED_EVIDENCE = {
     "CURRENT_PAGE_HEADING",
     "CURRENT_PAGE_TITLE",
     "CURRENT_PAGE_ROLE_LINK",
@@ -119,6 +136,8 @@ def semantic_quality(signal: Mapping[str, Any], route: Mapping[str, Any]) -> dic
         reasons.append("GENERIC_VACANCY_BUCKET_NOT_EXACT_ROLE")
     if NAVIGATION_TITLE_RE.match(title):
         reasons.append("NAVIGATION_OR_VENUE_LABEL_NOT_ROLE")
+    if evidence_type in NON_STRUCTURED_EVIDENCE and title and not ROLE_TITLE_RE.search(title):
+        reasons.append("NON_STRUCTURED_TEXT_NOT_ROLE_LIKE")
 
     joblike_url = bool(JOB_URL_RE.search(source_url))
     if evidence_type in {"CURRENT_PAGE_ROLE_LINK", "CURRENT_ROLE_LIKE_ROUTE"} and not joblike_url:
@@ -134,6 +153,7 @@ def semantic_quality(signal: Mapping[str, Any], route: Mapping[str, Any]) -> dic
         "title": title,
         "source_url": source_url,
         "joblike_url": joblike_url,
+        "role_like_title": bool(ROLE_TITLE_RE.search(title)),
         "reasons": reasons,
     }
 

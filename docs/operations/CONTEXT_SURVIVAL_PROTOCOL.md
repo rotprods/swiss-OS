@@ -89,7 +89,7 @@ It contains:
 - active claim IDs;
 - primary architecture/program route;
 - current production route;
-- content SHA-256 for survival-critical files;
+- Git blob OID for every survival-critical file;
 - safety locks;
 - deterministic payload SHA-256.
 
@@ -120,7 +120,7 @@ A successor MUST execute in this order:
 1. read live `main` and its first-parent ancestry;
 2. read `GOAL.md`, `STATE.md`, `HANDOFF.md`, `TASKS.md`;
 3. read `docs/state/v2/context-survival.json`;
-4. verify all pinned file digests;
+4. verify all pinned Git blob OIDs;
 5. read ProjectState, ContextPack, active claims and latest explicit domain NEXT;
 6. compare active claims/fencing against branches/PRs;
 7. reread Drive/DB/other authority planes required by the next material action;

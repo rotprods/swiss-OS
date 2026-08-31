@@ -2,12 +2,12 @@
   "schema_version": "COS-V2-CONTEXT-SURVIVAL-1.0",
   "project_id": "SWITZERLAND_JOB_OS",
   "repo": "rotprods/swiss-OS",
-  "generated_at": "2026-08-31T09:45:00Z",
-  "ancestry_floor_sha": "a3299117a0fa1168b0b36f4da4b2f95cb1ea7719",
+  "generated_at": "2026-08-31T10:17:00Z",
+  "ancestry_floor_sha": "06af39bb00bc50c6b76f5d68f42c7966d8306229",
   "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
   "authority_revision": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
   "projection_revision": "c7d278ce1fb3189b426dcfb9bc7ad2348b94cca08a31b37cf751620d9cea525f",
-  "context_pack_revision": "e96afd0a23c4b98e8cb86bb7ccdf5f037bf7a6f114a6c17dd93273e00edccfbc",
+  "context_pack_revision": "38b4368b3eec4918edbf2d9e4c150a49384c706586b7a11056888d6c18773815",
   "event_watermark": {
     "event_id": "EVT-20260830T074504Z-CRM006-WORK-STARTED",
     "occurred_at": "2026-08-30T07:45:04Z"
@@ -16,8 +16,8 @@
     "CLAIM-CRM-SRR-SPECIAL-006"
   ],
   "primary_program": "REPO_ARCHAEOLOGY_GRAPHIFY_V1",
-  "production_route": "CURRENT_UNRESOLVED_LT350000_ZERO_CANONICAL_CITY_B05",
-  "latest_domain_next": "docs/state/NEXT_CURRENT_UNRESOLVED_LT350_B04.json",
+  "production_route": "CURRENT_UNRESOLVED_LT350000_ZERO_CANONICAL_CITY_B06",
+  "latest_domain_next": "docs/state/NEXT_CURRENT_UNRESOLVED_LT350_B05.json",
   "survival_paths": [
     "GOAL.md",
     "STATE.md",
@@ -29,20 +29,20 @@
     "docs/state/v2/active-claims.json",
     "docs/operations/CONTEXT_SURVIVAL_PROTOCOL.md",
     "docs/handoffs/NEXT_ITERATION_METAPROMPT_V3.md",
-    "docs/state/NEXT_CURRENT_UNRESOLVED_LT350_B04.json"
+    "docs/state/NEXT_CURRENT_UNRESOLVED_LT350_B05.json"
   ],
   "git_blob_oid": {
     "GOAL.md": "6fbecfb43794bd1a8393a4760efeb61b363576bb",
-    "STATE.md": "63d0cf8138a138709c62e94fe144b6312049266a",
+    "STATE.md": "c2a4f23fcec8059a5aa9aa1bfc90ac06e8728321",
     "HANDOFF.md": "d47f81887157ac5e473d02967dab79646f3e9a3a",
     "TASKS.md": "a9fec93c4d9a80dfda8c7526475ae2b593932c69",
     "docs/state/NEXT.json": "7e06df551572b236fc526bc6a13b4bc6035c0bc9",
     "docs/state/v2/project-state.json": "d61b1778b05132557e47ea045d6413f459087830",
-    "docs/state/v2/context-pack.json": "1676ba3a5ab7987dc589be73451b9e4b3254c829",
+    "docs/state/v2/context-pack.json": "3eae01c2d48773562022cd7791059e8b8b853455",
     "docs/state/v2/active-claims.json": "190e650fab0b6146efa08aa8ef93d6a672774d24",
     "docs/operations/CONTEXT_SURVIVAL_PROTOCOL.md": "18c2c518f333cc60e77fece92fc8fa3d6771ed6a",
     "docs/handoffs/NEXT_ITERATION_METAPROMPT_V3.md": "0aa09088597578a984bef9c4e101abf33f3f79eb",
-    "docs/state/NEXT_CURRENT_UNRESOLVED_LT350_B04.json": "85f54a28e390ee488b18b60c969f09983988eb25"
+    "docs/state/NEXT_CURRENT_UNRESOLVED_LT350_B05.json": "a0649b10a784f1b66d8a297e2b411c6bde861784"
   },
   "liveness_findings": [
     "CSP sidecar is authoritative only for recovery integrity, never hotel authority.",
@@ -66,5 +66,5 @@
     "send_allowed": 0,
     "irreversible_external_actions": 0
   },
-  "payload_sha256": "51b7c5297f516400208ac63712101eb7f642bf011fc385a915b105fb6447d096"
+  "payload_sha256": "50011e139d4655255c7ba231cda038f7d7f36fa716f3755bffac70be274fe7af"
 }

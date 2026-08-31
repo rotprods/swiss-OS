@@ -1,0 +1,218 @@
+name: application-wave32-recompile
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "docs/state/market/APPLICATION_WAVE32_RECOMPILE_REQUEST_2026-09-01.json"
+      - ".github/workflows/application-wave32-recompile.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: application-wave32-recompile
+  cancel-in-progress: false
+
+jobs:
+  recompile:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Install package
+        run: python -m pip install -e .
+
+      - name: Validate request is no-crawl and ancestry-safe
+        run: |
+          python - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+          request = json.loads(Path('docs/state/market/APPLICATION_WAVE32_RECOMPILE_REQUEST_2026-09-01.json').read_text())
+          assert request['execution_mode'] == 'RECOMPILE_EXISTING_ARTIFACTS_ONLY_NO_PROVIDER_RESEARCH'
+          assert request['network_policy'] == {
+              'hotel_provider_requests_allowed': False,
+              'source_recrawl_allowed': False,
+              'github_artifact_download_only': True,
+          }
+          assert request['safety']['outbound'] == 'CLOSED'
+          assert request['safety']['send_allowed'] == 0
+          assert request['safety']['authority_advanced'] is False
+          assert request['safety']['canonical_id_allocations'] == 0
+          assert request['safety']['canonical_id_reservations'] == 0
+          parent = request['parent_main_sha']
+          head = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
+          subprocess.run(['git', 'merge-base', '--is-ancestor', parent, head], check=True)
+          PY
+
+      - name: Download exact historical artifacts with bounded GitHub transport retry
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python - <<'PY' > /tmp/artifact-env
+          import json
+          from pathlib import Path
+          r=json.loads(Path('docs/state/market/APPLICATION_WAVE32_RECOMPILE_REQUEST_2026-09-01.json').read_text())
+          print(f"MARKET_ID={r['source_market']['artifact_id']}")
+          print(f"VACANCY_ID={r['source_vacancy_detail']['artifact_id']}")
+          PY
+          source /tmp/artifact-env
+          retry=(--retry 5 --retry-all-errors --retry-delay 2 --retry-max-time 90)
+          curl -fsSL "${retry[@]}" \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/${VACANCY_ID}" \
+            -o vacancy-artifact-meta.json
+          curl -fsSL "${retry[@]}" \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            -L "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/${MARKET_ID}/zip" \
+            -o market.zip
+          curl -fsSL "${retry[@]}" \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            -L "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/${VACANCY_ID}/zip" \
+            -o vacancy.zip
+          mkdir market-source vacancy-source
+          unzip -q market.zip -d market-source
+          unzip -q vacancy.zip -d vacancy-source
+
+      - name: Verify immutable artifact lineage and safety
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from swiss_os.vacancy_detail import sha256_value
+
+          request=json.loads(Path('docs/state/market/APPLICATION_WAVE32_RECOMPILE_REQUEST_2026-09-01.json').read_text())
+          meta=json.loads(Path('vacancy-artifact-meta.json').read_text())
+          assert meta['id'] == request['source_vacancy_detail']['artifact_id']
+          assert meta['digest'] == request['source_vacancy_detail']['artifact_digest']
+          assert meta.get('expired') is False
+
+          market=json.loads(Path('market-source/market-enrichment-2061.json').read_text())
+          declared=market.get('aggregate_sha256')
+          recomputed=sha256_value({k:v for k,v in market.items() if k!='aggregate_sha256'})
+          assert declared == request['source_market']['aggregate_sha256']
+          assert recomputed == declared
+          assert len(market['records']) == request['source_market']['records_expected'] == 2061
+          assert market['safety']['authority_advanced'] is False
+          assert market['safety']['outbound'] == 'CLOSED'
+          assert market['safety']['send_allowed'] == 0
+
+          vacancy=json.loads(Path('vacancy-source/vacancy-detail-436-recovered.json').read_text())
+          assert vacancy['payload_sha256'] == request['source_vacancy_detail']['payload_sha256']
+          assert len(vacancy['records']) == request['source_vacancy_detail']['records_expected'] == 436
+          assert vacancy['authority_advanced'] is False
+          assert vacancy['outbound'] == 'CLOSED'
+          assert vacancy['send_allowed'] == 0
+          PY
+
+      - name: Compile Application Wave 3.2 from existing evidence only
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from swiss_os.application_wave_v32 import compile_top_resolved_vacancy_seeds
+          from swiss_os.vacancy_detail import sha256_value
+
+          request=json.loads(Path('docs/state/market/APPLICATION_WAVE32_RECOMPILE_REQUEST_2026-09-01.json').read_text())
+          market=json.loads(Path('market-source/market-enrichment-2061.json').read_text())
+          vacancy=json.loads(Path('vacancy-source/vacancy-detail-436-recovered.json').read_text())
+          result=compile_top_resolved_vacancy_seeds(
+              market,
+              vacancy,
+              limit=request['compiler']['limit'],
+          )
+          result['compiled_from'] = {
+              'request_id': request['request_id'],
+              'git_sha': '${{ github.sha }}',
+              'market_run_id': request['source_market']['run_id'],
+              'market_artifact_id': request['source_market']['artifact_id'],
+              'market_aggregate_sha256': request['source_market']['aggregate_sha256'],
+              'vacancy_recovery_run_id': request['source_vacancy_detail']['recovery_run_id'],
+              'vacancy_artifact_id': request['source_vacancy_detail']['artifact_id'],
+              'vacancy_payload_sha256': request['source_vacancy_detail']['payload_sha256'],
+              'provider_requests_performed': 0,
+          }
+          assert result['schema_version'] == request['compiler']['schema_version']
+          assert result['application_adversarial_gate_required'] == request['compiler']['application_adversarial_gate_required']
+          assert result['private_packet_compiler_required'] == request['compiler']['private_packet_compiler_required']
+          assert result['application_ready_no_send'] == 0
+          assert result['final_send_ready'] is False
+          assert result['outbound'] == 'CLOSED'
+          assert result['send_allowed'] == 0
+          result['payload_sha256'] = sha256_value(result)
+          Path('application-wave32-public-seeds.json').write_text(json.dumps(result, ensure_ascii=False, sort_keys=True, separators=(',', ':'))+'\n')
+
+          summary = {
+              'schema_version': 'APPLICATION-WAVE32-RECOMPILE-SUMMARY-1.0',
+              'request_id': request['request_id'],
+              'git_sha': '${{ github.sha }}',
+              'provider_requests_performed': 0,
+              'market_records': len(market['records']),
+              'vacancy_detail_records': len(vacancy['records']),
+              'raw_signal_identity_count': result.get('raw_signal_identity_count'),
+              'signal_quality_rejected_count': result.get('signal_quality_rejected_count'),
+              'ownership_review_count': result.get('ownership_review_count'),
+              'primary_vacancy_candidate_count': result.get('primary_vacancy_candidate_count'),
+              'shortlist_exact_role_rejected_count': result.get('shortlist_exact_role_rejected_count'),
+              'selected_count': result.get('selected_count'),
+              'selected': [
+                  {
+                      'record_id': item.get('record_id'),
+                      'hotel_name': item.get('hotel_name'),
+                      'city': item.get('city'),
+                      'target_role': item.get('target_role'),
+                      'vacancy_source_url': item.get('vacancy_source_url'),
+                      'vacancy_evidence_type': item.get('vacancy_evidence_type'),
+                      'vacancy_priority': item.get('vacancy_priority'),
+                      'owner_scope_state': item.get('owner_scope_state'),
+                  }
+                  for item in result.get('selected') or []
+              ],
+              'application_adversarial_gate_required': result['application_adversarial_gate_required'],
+              'application_ready_no_send': 0,
+              'final_send_ready': False,
+              'outbound': 'CLOSED',
+              'send_allowed': 0,
+              'payload_sha256': result['payload_sha256'],
+          }
+          Path('application-wave32-summary.json').write_text(json.dumps(summary, ensure_ascii=False, sort_keys=True, separators=(',', ':'))+'\n')
+
+          receipt = {
+              'schema_version': 'APPLICATION-WAVE32-RECOMPILE-RECEIPT-1.0',
+              'request_id': request['request_id'],
+              'git_sha': '${{ github.sha }}',
+              'market_artifact_id': request['source_market']['artifact_id'],
+              'vacancy_artifact_id': request['source_vacancy_detail']['artifact_id'],
+              'provider_requests_performed': 0,
+              'selected_count': result['selected_count'],
+              'result_payload_sha256': result['payload_sha256'],
+              'outbound': 'CLOSED',
+              'send_allowed': 0,
+          }
+          Path('application-wave32-receipt.json').write_text(json.dumps(receipt, sort_keys=True, separators=(',', ':'))+'\n')
+          PY
+
+      - name: Upload Wave 3.2 recompile artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: application-wave32-${{ github.run_id }}
+          path: |
+            application-wave32-public-seeds.json
+            application-wave32-summary.json
+            application-wave32-receipt.json
+          retention-days: 30
+          if-no-files-found: error

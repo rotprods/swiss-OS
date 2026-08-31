@@ -1,0 +1,67 @@
+{
+  "edges": [
+    {
+      "from": "WAVE-20260831-CRM-CURRENT-LOWCOLLISION-B01",
+      "to": "CRM-REVIEW-FRONTIER",
+      "type": "ADVANCES_PREAUTH_REVIEW"
+    },
+    {
+      "from": "WAVE-20260831-CRM-CURRENT-LOWCOLLISION-B01",
+      "to": "AUTHORITY-E4",
+      "type": "READS_WITHOUT_MUTATION"
+    },
+    {
+      "from": "CRM-REVIEW-FRONTIER",
+      "to": "NEXT-CURRENT-LOWCOLLISION-B02",
+      "type": "SELECTS_NEXT"
+    }
+  ],
+  "generated_at": "2026-08-31T04:54:25Z",
+  "graph_impact": "META",
+  "nodes": [
+    {
+      "authority_effect": "NONE",
+      "id": "WAVE-20260831-CRM-CURRENT-LOWCOLLISION-B01",
+      "route": "CURRENT_UNRESOLVED_1403_ENTITY_RESOLUTION",
+      "state": "COMPLETE_READ_ONLY",
+      "type": "WAVE"
+    },
+    {
+      "id": "CRM-REVIEW-FRONTIER",
+      "new_canonical_preauth_after": 164,
+      "new_canonical_preauth_before": 114,
+      "reconcile_required": 1403,
+      "remaining_unreviewed_preauthority": 1239,
+      "terminal_mappings": 658,
+      "type": "FRONTIER"
+    },
+    {
+      "active_canonical": 690,
+      "advanced": false,
+      "epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+      "id": "AUTHORITY-E4",
+      "physical_rows": 690,
+      "sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+      "type": "AUTHORITY"
+    },
+    {
+      "authority_advance_allowed": false,
+      "canonical_id_allocation_allowed": false,
+      "id": "NEXT-CURRENT-LOWCOLLISION-B02",
+      "outbound_allowed": false,
+      "route": "CURRENT_UNRESOLVED_1403_LOW_COLLISION_BATCH_0002",
+      "type": "NEXT"
+    }
+  ],
+  "parent_git_sha": "cbd3a98c8c0f7c1e35a086fe110f7bdab8032652",
+  "project": "SWITZERLAND_JOB_OS",
+  "safety": {
+    "authority_advanced": false,
+    "canonical_id_reservations": 0,
+    "h_id_allocations": 0,
+    "outbound": "CLOSED",
+    "send_allowed": 0
+  },
+  "schema_version": "META-GRAPH-DELTA-1.0",
+  "wave_id": "WAVE-20260831-CRM-CURRENT-LOWCOLLISION-B01"
+}

@@ -2,23 +2,23 @@
   "schema_version": "COS-V2-PROJECT-STATE-1.0",
   "project_id": "SWITZERLAND_JOB_OS",
   "repo": "rotprods/swiss-OS",
-  "main_sha_observed": "02dad1a5bd82219b34430b5fd1cee3ee088642b6",
+  "main_sha_observed": "cbd3a98c8c0f7c1e35a086fe110f7bdab8032652",
   "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
   "authority_revision": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
   "authority_advanced": false,
   "h_id_allocation_allowed": false,
   "outbound_allowed": false,
-  "state": "CRM_CURRENT_COHERENT_SOURCE_ENTITY_RESOLUTION_READY",
+  "state": "CRM_CURRENT_LOW_COLLISION_B01_PREAUTH_COMPLETE",
   "current_objective_id": "CRM_UNIVERSE_COMPLETE",
   "north_star_ref": "GOAL.md#G-0001",
-  "branch": "meta/crm-current-continuity-20260831",
+  "branch": "wave/crm-current-lowcollision-b01-20260831",
   "projection_revision": "c7d278ce1fb3189b426dcfb9bc7ad2348b94cca08a31b37cf751620d9cea525f",
   "event_watermark": {
     "event_id": "EVT-20260830T074504Z-CRM006-WORK-STARTED",
     "occurred_at": "2026-08-30T07:45:04Z"
   },
   "active_claim_ids": ["CLAIM-CRM-SRR-SPECIAL-006"],
-  "open_prs": [384, 383, 378, 367, 320, 319, 318, 317, 314, 287, 275, 139, 137, 135],
+  "open_prs": [385, 386, 383, 378, 367, 320, 319, 318, 317, 314, 287, 275, 139, 137, 135],
   "live_frontier": {
     "active_canonical": 690,
     "next_h_id": "H-0691_UNALLOCATED",
@@ -42,7 +42,9 @@
     "full_unresolved_source_keys_sha256": "c5b436dcd7d2632b3a49ccc1d3f1f75620f0c7db78c4247e5ab9c5394b30d996",
     "all_source_keys_sha256": "cd30865e22e1acd97d61173e954e728af6a7fb3bc427ed23ba3f2b9cdde7699d",
     "reverse_gap_ids_sha256": "bca692c105efac8c8929c1639e1ebe643dd03f0a6ecab4bb42d86e0acccba568",
-    "total_new_canonical_preauth": 114,
+    "total_new_canonical_preauth": 164,
+    "remaining_unreviewed_preauthority": 1239,
+    "latest_current_resolution_batch": "CURRENT-U1403-LOWCOLLISION-B01",
     "ragr_reviewed": 34,
     "ragr_remaining": 0
   },
@@ -72,10 +74,12 @@
     "Current HotellerieSuisse snapshot HS-MEMBER-DE-33339392661 is coherent at 2061 records / 172 pages with coverage_complete=true and zero capture violations.",
     "The current E4 anti-join projection is conserved at 658 terminal + 1403 RECONCILE_REQUIRED = 2061 with 656 unique canonical targets.",
     "Historical candidate/ECV continuity is accounted 1438/1438: 1436 exact unchanged transfers plus two reviewed Gonten identity transfers.",
+    "CURRENT-U1403-LOWCOLLISION-B01 reviewed 50 exact-lineage low-collision records as NEW_CANONICAL preauthority only, moving the cumulative preauthority frontier 114 to 164 and leaving 1239 historical-current lineage records unreviewed at this layer.",
     "Authority remains E4/690 with H-0691 unallocated; no canonical ID was reserved from staging; OUTBOUND remains CLOSED and send_allowed remains 0."
   ],
   "unverified_work": [
-    "The 1403 current coherent source records require bounded evidence-backed entity resolution or typed non-authority dispositions.",
+    "The 1403 current coherent source records still require terminal evidence-backed mappings or explicitly typed non-authority dispositions; B01 created no terminal mapping delta.",
+    "1239 historical-current lineage records remain unreviewed at the bounded preauthority entity-resolution layer after B01.",
     "Structured discover.swiss SSR-1.0 remains unavailable until a capture-valid provider manifest exists.",
     "Durable provider-accepted exact E4 DB-first authority-write egress remains unproven.",
     "Any later authority promotion still requires exact-current DB-first cross-plane reconciliation."
@@ -88,8 +92,8 @@
     "Library artifacts may be stale relative to GitHub main and live Drive."
   ],
   "next_safe_actions": [
-    "Resolve CURRENT_UNRESOLVED_1403_ENTITY_RESOLUTION in bounded evidence-backed batches, preserving exact source-key lineage and typed unresolved states.",
-    "Use current first-party and HotellerieSuisse evidence for preauthority SRR decisions; use similarity only to rank review.",
+    "Execute CURRENT_UNRESOLVED_1403_LOW_COLLISION_BATCH_0002 from fresh merged main, excluding all B01 reviewed source keys and preserving exact source-key lineage.",
+    "Use current first-party and HotellerieSuisse evidence for preauthority decisions; use similarity only to rank/veto review and never to auto-bind.",
     "If discover.swiss credentials/capture-valid manifest becomes available, add SSR-1.0 as a parallel evidence plane rather than blocking provider-neutral work.",
     "Keep H-0691 unallocated, authority E4 unchanged, OUTBOUND=CLOSED and send_allowed=0."
   ],
@@ -99,8 +103,10 @@
     "docs/state/CRM_CURRENT_SOURCE_MAPPING_PROJECTION_33339392661.json",
     "docs/state/CRM_CURRENT_GONTEN_ECV_SRR_LINEAGE_33339392661.json",
     "docs/state/CRM_EXACT_CURRENT_CANDIDATE_LINEAGE_33339392661.json",
-    "docs/handoffs/META_20260831_CRM_CURRENT_SOURCE_CONTINUITY.md",
+    "docs/state/SRR_CURRENT_LOW_COLLISION_BATCH_0001_33339392661.json",
+    "docs/state/META_GRAPH_DELTA_CRM_CURRENT_LOW_COLLISION_B01_2026-08-31.json",
+    "docs/handoffs/META_20260831_CRM_CURRENT_LOW_COLLISION_B01.md",
     "Drive:HOTELS_MASTER/HOTELS_V2",
-    "main:02dad1a5bd82219b34430b5fd1cee3ee088642b6"
+    "main:cbd3a98c8c0f7c1e35a086fe110f7bdab8032652"
   ]
 }

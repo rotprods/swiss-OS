@@ -1,0 +1,102 @@
+{
+  "decisions": [
+    {
+      "authority_effect": "NONE",
+      "decision": "PROMOTE_33339392661_TO_CURRENT_SOURCE_IDENTITY",
+      "id": "D-CRM-CURRENT-001"
+    },
+    {
+      "authority_effect": "NONE",
+      "decision": "SUPERSEDE_33206402141_FOR_CURRENT_SOURCE_IDENTITY_KEEP_HISTORICAL_LINEAGE",
+      "id": "D-CRM-CURRENT-002"
+    },
+    {
+      "authority_effect": "NONE",
+      "decision": "SELECT_CURRENT_UNRESOLVED_1403_ENTITY_RESOLUTION_AS_NEXT_SAFE_ROUTE",
+      "id": "D-CRM-CURRENT-003"
+    },
+    {
+      "authority_effect": "NONE",
+      "decision": "KEEP_DISCOVER_SSR_PROVIDER_BLOCKED_AND_USE_MEP_FALLBACK",
+      "id": "D-CRM-CURRENT-004"
+    }
+  ],
+  "edges": [
+    {
+      "from": "SOURCE:HS-MEMBER-DE-33339392661",
+      "to": "FRONTIER:CRM_CURRENT",
+      "type": "PROJECTS_CURRENT_SOURCE_MAPPING"
+    },
+    {
+      "from": "AUTHORITY:E4",
+      "to": "FRONTIER:CRM_CURRENT",
+      "type": "CANONICAL_COMPARATOR_AUTHORITY"
+    },
+    {
+      "from": "FRONTIER:CRM_CURRENT",
+      "to": "ROUTE:ENTITY_RESOLUTION_1403",
+      "type": "NEXT_SAFE_PRODUCTIVE_ROUTE"
+    },
+    {
+      "from": "FRONTIER:CRM_CURRENT",
+      "to": "ROUTE:DISCOVER_SSR",
+      "type": "SECONDARY_ROUTE_WHEN_PROVIDER_AVAILABLE"
+    },
+    {
+      "from": "FRONTIER:CRM_CURRENT",
+      "to": "ROUTE:E4_AUTHORITY_PROMOTION",
+      "type": "FUTURE_ROUTE_AFTER_RECONCILIATION"
+    }
+  ],
+  "generated_at": "2026-08-31T00:38:20Z",
+  "nodes": [
+    {
+      "artifact_id": 9740219406,
+      "id": "SOURCE:HS-MEMBER-DE-33339392661",
+      "pages": 172,
+      "records": 2061,
+      "state": "COHERENT_COMPLETE",
+      "type": "SOURCE_SNAPSHOT"
+    },
+    {
+      "canonical_rows": 690,
+      "id": "AUTHORITY:E4",
+      "sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+      "state": "LOCKED",
+      "type": "AUTHORITY_EPOCH"
+    },
+    {
+      "id": "FRONTIER:CRM_CURRENT",
+      "reconcile_required": 1403,
+      "reverse_gaps": 34,
+      "terminal": 658,
+      "type": "MAPPING_FRONTIER"
+    },
+    {
+      "id": "ROUTE:ENTITY_RESOLUTION_1403",
+      "state": "READY",
+      "type": "EXECUTION_ROUTE"
+    },
+    {
+      "id": "ROUTE:DISCOVER_SSR",
+      "state": "BLOCKED_PROVIDER_CREDENTIAL",
+      "type": "EXECUTION_ROUTE"
+    },
+    {
+      "id": "ROUTE:E4_AUTHORITY_PROMOTION",
+      "state": "BLOCKED_DB_FIRST_EGRESS",
+      "type": "EXECUTION_ROUTE"
+    }
+  ],
+  "parent_git_sha": "02dad1a5bd82219b34430b5fd1cee3ee088642b6",
+  "payload_sha256": "42f0933433252ffad9af04a6217d1bb44f165bd6e3cd8df787983527342a692e",
+  "project": "SWITZERLAND_JOB_OS",
+  "safety": {
+    "authority_advanced": false,
+    "canonical_id_reservations": 0,
+    "h_id_allocations": 0,
+    "outbound": "CLOSED",
+    "send_allowed": 0
+  },
+  "schema_version": "META_GRAPH_DELTA-1.0"
+}

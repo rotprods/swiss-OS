@@ -12,8 +12,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMA = "COS-V2-CONTEXT-SURVIVAL-1.0"
 CHECKPOINT = ROOT / "docs/continuity/CONTEXT_SURVIVAL.json"
-DEFAULT_DOMAIN_NEXT = "docs/state/NEXT_CURRENT_UNRESOLVED_LT350_B01.json"
-DEFAULT_SURVIVAL_PATHS = (
+BASE_SURVIVAL_PATHS = (
     "GOAL.md",
     "STATE.md",
     "HANDOFF.md",
@@ -22,7 +21,6 @@ DEFAULT_SURVIVAL_PATHS = (
     "docs/state/v2/project-state.json",
     "docs/state/v2/context-pack.json",
     "docs/state/v2/active-claims.json",
-    DEFAULT_DOMAIN_NEXT,
     "docs/operations/CONTEXT_SURVIVAL_PROTOCOL.md",
     "docs/handoffs/NEXT_ITERATION_METAPROMPT_V3.md",
 )
@@ -78,13 +76,15 @@ def build_checkpoint(
     *,
     base_main_sha: str,
     generated_at: str,
-    latest_domain_next: str = DEFAULT_DOMAIN_NEXT,
+    latest_domain_next: str,
     primary_program: str = "REPO_ARCHAEOLOGY_GRAPHIFY_V1",
 ) -> dict[str, Any]:
     if len(base_main_sha) != 40 or any(c not in "0123456789abcdef" for c in base_main_sha):
         raise ValueError("base_main_sha must be lowercase 40-hex")
     if not generated_at.strip():
         raise ValueError("generated_at required")
+    if not isinstance(latest_domain_next, str) or not latest_domain_next.strip():
+        raise ValueError("latest_domain_next required")
 
     project = load_json("docs/state/v2/project-state.json")
     context = load_json("docs/state/v2/context-pack.json")
@@ -92,10 +92,7 @@ def build_checkpoint(
     next_root = load_json("docs/state/NEXT.json")
     domain = load_json(latest_domain_next)
 
-    paths = list(DEFAULT_SURVIVAL_PATHS)
-    if latest_domain_next != DEFAULT_DOMAIN_NEXT:
-        paths = [latest_domain_next if p == DEFAULT_DOMAIN_NEXT else p for p in paths]
-
+    paths = list(BASE_SURVIVAL_PATHS) + [latest_domain_next]
     claim_ids = sorted(
         str(item.get("claim_id", ""))
         for item in active_claims.get("claims", [])
@@ -184,7 +181,16 @@ def validate_checkpoint(checkpoint: dict[str, Any]) -> list[str]:
     project = load_json("docs/state/v2/project-state.json")
     context = load_json("docs/state/v2/context-pack.json")
     active_claims = load_json("docs/state/v2/active-claims.json")
-    domain = load_json(str(checkpoint.get("latest_domain_next", DEFAULT_DOMAIN_NEXT)))
+    latest_domain_next = checkpoint.get("latest_domain_next")
+    if not isinstance(latest_domain_next, str) or not latest_domain_next.strip():
+        errors.append("INVALID_LATEST_DOMAIN_NEXT")
+        domain = {}
+    else:
+        try:
+            domain = load_json(latest_domain_next)
+        except (OSError, ValueError, json.JSONDecodeError):
+            domain = {}
+            errors.append("INVALID_LATEST_DOMAIN_NEXT")
 
     if checkpoint.get("authority_epoch") != project.get("authority_epoch"):
         errors.append("STALE_AUTHORITY_EPOCH")
@@ -261,17 +267,18 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--write", action="store_true")
     parser.add_argument("--base-main-sha")
     parser.add_argument("--generated-at")
-    parser.add_argument("--latest-domain-next", default=DEFAULT_DOMAIN_NEXT)
+    parser.add_argument("--latest-domain-next")
     args = parser.parse_args(argv)
 
     if args.write:
         base = args.base_main_sha or git("rev-parse", "HEAD~1")
-        generated_at = args.generated_at
-        if not generated_at:
+        if not args.generated_at:
             raise SystemExit("--generated-at is required with --write for deterministic checkpoints")
+        if not args.latest_domain_next:
+            raise SystemExit("--latest-domain-next is required with --write; never infer a historical production pointer")
         checkpoint = build_checkpoint(
             base_main_sha=base,
-            generated_at=generated_at,
+            generated_at=args.generated_at,
             latest_domain_next=args.latest_domain_next,
         )
         CHECKPOINT.parent.mkdir(parents=True, exist_ok=True)

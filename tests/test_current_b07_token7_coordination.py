@@ -23,16 +23,16 @@ class CurrentB07Token7CoordinationTest(unittest.TestCase):
         self.assertEqual([row["claim_id"] for row in active["claims"]], [new["claim_id"]])
         self.assertEqual(active["collisions"], [])
 
-    def test_projection_context_and_csp_are_coherent(self):
+    def test_projection_context_and_csp_are_coherent_without_recursive_digest_cycle(self):
         project = load("docs/state/v2/project-state.json")
         context = load("docs/state/v2/context-pack.json")
         graph = load("docs/state/v2/graph-snapshot.json")
         csp = load("docs/continuity/CONTEXT_SURVIVAL.json")
         self.assertEqual(project["projection_revision"], graph["projection_revision"])
-        self.assertEqual(project["context_pack_revision"], context["context_pack_revision"])
         self.assertEqual(graph["context_pack_revision"], context["context_pack_revision"])
         self.assertEqual(csp["projection_revision"], project["projection_revision"])
         self.assertEqual(csp["context_pack_revision"], context["context_pack_revision"])
+        self.assertNotIn("context_pack_revision", project)
         self.assertEqual(project["active_claim_ids"], ["CLAIM-CRM-CURRENT-B07-007"])
         self.assertEqual(context["active_claim_ids"], ["CLAIM-CRM-CURRENT-B07-007"])
         self.assertEqual(csp["active_claim_ids"], ["CLAIM-CRM-CURRENT-B07-007"])

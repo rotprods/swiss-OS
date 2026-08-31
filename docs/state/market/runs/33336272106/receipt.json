@@ -1,0 +1,15 @@
+{
+  "schema_version": "MARKET-ENRICHMENT-RUN-RECEIPT-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "github_run_id": "33336272106",
+  "github_sha": "b0ec94f4a13fb7c24d39454439d9792d90bb7e46",
+  "source_snapshot_id": "HS-MEMBER-DE-33206402141",
+  "source_records": 2061,
+  "source_records_sha256": "62e26d62d8677a5437e081302b6b4d206c0d27a0fe268c6356aef01da5428dc2",
+  "aggregate_sha256": "19308eae6b56ca0b43fc76bc98aa69d57bb885b2c009134bbf58f2f58fe47e23",
+  "summary_sha256": "724e0a3f53b2b8ea73f482906756d1dc30c36623ff73ad6ef1dc0b239cc94b6f",
+  "authority_advanced": false,
+  "outbound": "CLOSED",
+  "send_allowed": 0,
+  "irreversible_external_actions": 0
+}

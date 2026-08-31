@@ -1,0 +1,28 @@
+{
+  "schema_version": "VACANCY-DETAIL-RUN-REQUEST-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "requested_at": "2026-08-31T17:15:00Z",
+  "observed_at": "2026-08-31T17:15:00Z",
+  "source_market_run_id": "33336272106",
+  "source_market_artifact_id": 9739544628,
+  "source_market_artifact_digest": "sha256:901cf50362f20efe11fee2e5549594ac67344eaadc7b24801067b70b08cbc595",
+  "source_market_aggregate_sha256": "19308eae6b56ca0b43fc76bc98aa69d57bb885b2c009134bbf58f2f58fe47e23",
+  "source_market_snapshot_id": "HS-MEMBER-DE-33206402141",
+  "source_market_snapshot_semantics": "RECOVERED_COMPLETE_MARKET_RESEARCH_PLANE_NOT_CURRENT_CRM_AUTHORITY",
+  "expected_opening_route_hotels": 436,
+  "shard_count": 44,
+  "routes_per_hotel_cap": 8,
+  "application_seed_limit": 25,
+  "strategy": "RECOVER_COMPLETED_MARKET_AGGREGATE_THEN_CURRENTLY_REFETCH_OPENING_ROUTES",
+  "next_after_resolution": "JOIN_TOP25_WITH_PRIVATE_CANDIDATE_TRUTH_AND_ROLE_LANE_ASSETS",
+  "safety": {
+    "authority_advanced": false,
+    "canonical_id_allocations": 0,
+    "canonical_id_reservations": 0,
+    "candidate_private_truth_in_public_artifact": false,
+    "final_send_ready": false,
+    "outbound": "CLOSED",
+    "send_allowed": 0,
+    "irreversible_external_actions": 0
+  }
+}

@@ -92,7 +92,6 @@ jobs:
     permissions:
       actions: read
       contents: write
-      pull-requests: write
     steps:
       - uses: actions/checkout@v7
         with:
@@ -162,7 +161,7 @@ jobs:
             market-enrichment-run-receipt.json
           retention-days: 30
           if-no-files-found: error
-      - name: Open public-safe summary PR
+      - name: Persist public-safe summary branch
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -178,14 +177,5 @@ jobs:
           git add "$DEST"
           git commit -m "state(market): persist 2061 enrichment summary ${GITHUB_RUN_ID}"
           git push --set-upstream origin "$BRANCH"
-          gh pr create \
-            --base main \
-            --head "$BRANCH" \
-            --title "Market: persist 2061-hotel enrichment summary" \
-            --body-file - <<'EOF'
-          Automated public-safe summary for the full 2061-record read-only market-enrichment run.
-
-          Full per-hotel records remain in the GitHub Actions artifact; this PR contains only aggregate metrics and a run receipt. Candidate-specific private truth is not included.
-
-          Hard locks: no canonical authority effect, no H-ID allocation/reservation, CRM_UNIVERSE_COMPLETE remains false, OUTBOUND=CLOSED, send_allowed=0, no irreversible external action.
-          EOF
+          printf '%s\n' "Summary branch persisted: ${BRANCH}"
+          printf '%s\n' "PR creation is intentionally delegated to an authorized interactive orchestrator because this repository does not permit GitHub Actions to create pull requests."

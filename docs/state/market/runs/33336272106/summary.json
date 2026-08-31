@@ -1,0 +1,44 @@
+{
+  "schema_version": "MARKET-ENRICHMENT-SUMMARY-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "source_snapshot_id": "HS-MEMBER-DE-33206402141",
+  "source_records": 2061,
+  "source_records_sha256": "62e26d62d8677a5437e081302b6b4d206c0d27a0fe268c6356aef01da5428dc2",
+  "observed_at": "2026-08-30T21:05:00Z",
+  "aggregate_sha256": "19308eae6b56ca0b43fc76bc98aa69d57bb885b2c009134bbf58f2f58fe47e23",
+  "vacancy_states": {
+    "CAREERS_ROUTE_FOUND_OPENINGS_UNKNOWN_T1": 165,
+    "CAREERS_ROUTE_NOT_DISCOVERED": 1094,
+    "CURRENT_NO_OPENINGS_EXPLICIT_T1": 9,
+    "CURRENT_OPENING_ROUTES_FOUND_T1": 435,
+    "CURRENT_STRUCTURED_OPENINGS_FOUND_T1": 2,
+    "OFFICIAL_SITE_NOT_DISCOVERED": 356
+  },
+  "structured_openings_total": 5,
+  "hotels_with_structured_openings": 2,
+  "hotels_with_opening_routes": 436,
+  "hotels_with_careers_route": 611,
+  "hotels_accepting_spontaneous_applications": 121,
+  "hotels_with_official_site": 1705,
+  "housing_states": {
+    "STAFF_HOUSING_RESEARCH_PENDING": 2061
+  },
+  "people_states": {
+    "PEOPLE_RESEARCH_PENDING": 1523,
+    "TEAM_ROUTE_FOUND": 538
+  },
+  "channel_states": {
+    "CHANNEL_RESEARCH_PENDING": 356,
+    "DIRECT_CAREERS_ROUTE": 611,
+    "OFFICIAL_SITE_ONLY": 1094
+  },
+  "personalized_application_seeds": 2061,
+  "candidate_truth_blocks_required": 2061,
+  "authority_advanced": false,
+  "canonical_id_allocations": 0,
+  "canonical_id_reservations": 0,
+  "outbound": "CLOSED",
+  "send_allowed": 0,
+  "irreversible_external_actions": 0,
+  "summary_sha256": "724e0a3f53b2b8ea73f482906756d1dc30c36623ff73ad6ef1dc0b239cc94b6f"
+}

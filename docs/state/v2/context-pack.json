@@ -28,7 +28,7 @@
     "docs/state/CRM_EXACT_CURRENT_CANDIDATE_LINEAGE_33339392661.json",
     "docs/handoffs/META_20260831_CRM_CURRENT_SOURCE_CONTINUITY.md"
   ],
-  "relevant_scope_revision": "d2c93a7836ec87bf63ecf653cf9868745a0605e0c006a55280de1ef1774ab322",
+  "relevant_scope_revision": "e75225c9fb12988608599fe3d6a30a2849b1305ed643b293a3a9bdf5bc8e1137",
   "active_claim_ids": ["CLAIM-CRM-SRR-SPECIAL-006"],
   "blockers": [
     "RECONCILE_REQUIRED=1403 remains nonzero on coherent current source HS-MEMBER-DE-33339392661.",
@@ -41,5 +41,5 @@
     "If discover.swiss credentials and a capture-valid manifest appear, add SSR-1.0 as a parallel evidence plane without blocking provider-neutral work.",
     "Keep authority E4 unchanged, H-0691 UNALLOCATED, OUTBOUND=CLOSED and send_allowed=0."
   ],
-  "context_pack_revision": "063dc5f2bfadc30b0d503e8c0d9b79bd82075c3591776c47921f605b4d58a8fc"
+  "context_pack_revision": "0a1c24c7433aef898f04236a0c2dab44873d6e7a7cc9ef16478debf28c8409d7"
 }

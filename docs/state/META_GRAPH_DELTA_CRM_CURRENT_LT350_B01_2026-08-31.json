@@ -1,0 +1,83 @@
+{
+  "schema_version": "META-GRAPH-DELTA-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "wave_id": "CURR-U1403-B01",
+  "parent_git_sha": "cbd3a98c8c0f7c1e35a086fe110f7bdab8032652",
+  "authority_effect": "NONE",
+  "nodes": [
+    {
+      "id": "AUTHORITY-E4",
+      "kind": "authority_epoch",
+      "epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+      "sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+      "canonical_rows": 690,
+      "next_physical_id": "H-0691_UNALLOCATED",
+      "advanced": false
+    },
+    {
+      "id": "CURRENT-SOURCE-33339392661",
+      "kind": "coherent_member_directory",
+      "snapshot_id": "HS-MEMBER-DE-33339392661",
+      "artifact_id": 9740219406,
+      "records": 2061,
+      "pages": 172,
+      "coverage_complete": true,
+      "records_sha256": "b16fdb63a01149e10feb4d506f38301644b73a612f898ce72567ec4fa92da404",
+      "authority_effect": "NONE"
+    },
+    {
+      "id": "CURR-U1403-B01",
+      "kind": "bounded_preauthority_entity_resolution_wave",
+      "reviewed": 10,
+      "new_canonical_preauth": 10,
+      "terminal_mapping_delta": 0,
+      "historical_lt350000_tail_remaining": 1279,
+      "reconcile_required": 1403,
+      "canonical_id_reservations": 0,
+      "h_id_allocations": 0,
+      "authority_effect": "NONE"
+    },
+    {
+      "id": "BLOCK-DISCOVER-SSR",
+      "kind": "provider_boundary",
+      "state": "BLOCKED",
+      "dependency": "runtime subscription credential and capture-valid discover.swiss structured manifest",
+      "global_blocker": false,
+      "fallback_route": "provider-neutral current HotellerieSuisse entity resolution"
+    },
+    {
+      "id": "BLOCK-E4-DURABLE-FILE-EGRESS",
+      "kind": "provider_boundary",
+      "state": "BLOCKED_FILE_REFERENCE_DO_NOT_REPEAT",
+      "authority_effect": "NONE"
+    },
+    {
+      "id": "OUTBOUND",
+      "kind": "hard_gate",
+      "state": "CLOSED",
+      "send_allowed": 0
+    },
+    {
+      "id": "NEXT-B02",
+      "kind": "next_pointer",
+      "route": "CURRENT_UNRESOLVED_LT350000_ZERO_CANONICAL_CITY_B02",
+      "authority_effect": "NONE"
+    }
+  ],
+  "edges": [
+    {"from": "CURRENT-SOURCE-33339392661", "to": "CURR-U1403-B01", "type": "EVIDENCE_INPUT"},
+    {"from": "AUTHORITY-E4", "to": "CURR-U1403-B01", "type": "READ_ONLY_COMPARATOR"},
+    {"from": "BLOCK-DISCOVER-SSR", "to": "CURR-U1403-B01", "type": "MEP_FALLBACK_AROUND"},
+    {"from": "CURR-U1403-B01", "to": "NEXT-B02", "type": "COLETTE_NEXT"},
+    {"from": "AUTHORITY-E4", "to": "OUTBOUND", "type": "AUTHORITY_DOES_NOT_OPEN"}
+  ],
+  "safety": {
+    "authority_advanced": false,
+    "canonical_id_reservations": 0,
+    "h_id_allocations": 0,
+    "crm_universe_complete": false,
+    "irreversible_external_actions": 0,
+    "outbound": "CLOSED",
+    "send_allowed": 0
+  }
+}

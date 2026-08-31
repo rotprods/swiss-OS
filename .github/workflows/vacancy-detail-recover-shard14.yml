@@ -36,7 +36,7 @@ jobs:
           set -euo pipefail
           REQUEST='docs/state/market/VACANCY_DETAIL_RECOVERY_REQUEST_SHARD14_2026-08-31.json'
           ARTIFACT_ID="$(python -c "import json;print(json.load(open('$REQUEST'))['source_market_artifact_id'])")"
-          curl -fsSL \
+          curl --retry 5 --retry-all-errors --retry-delay 2 --retry-max-time 90 -fsSL \
             -H "Authorization: Bearer ${GH_TOKEN}" \
             -H "Accept: application/vnd.github+json" \
             -L "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/${ARTIFACT_ID}/zip" \
@@ -62,7 +62,8 @@ jobs:
           assert request['shard_count'] == 44
           assert request['missing_shard_indexes'] == [14]
           assert request['reused_successful_shards'] == 43
-          assert request['retry_generation'] >= 1
+          assert request['retry_generation'] >= 2
+          assert request['transport_retry_contract'] == 'GITHUB_ARTIFACT_DOWNLOAD_RETRY_5_ALL_ERRORS_DELAY_2_MAX_90_SECONDS'
           assert request['recovery_observed_at_semantics'] == 'STAMP_AT_ACTUAL_ACTIONS_EXECUTION_NOT_AT_REQUEST_CREATION'
           assert request['safety']['outbound'] == 'CLOSED'
           assert request['safety']['send_allowed'] == 0
@@ -75,7 +76,7 @@ jobs:
           set -euo pipefail
           REQUEST='docs/state/market/VACANCY_DETAIL_RECOVERY_REQUEST_SHARD14_2026-08-31.json'
           OLD_RUN="$(python -c "import json;print(json.load(open('$REQUEST'))['failed_vacancy_detail_run_id'])")"
-          curl -fsSL \
+          curl --retry 5 --retry-all-errors --retry-delay 2 --retry-max-time 90 -fsSL \
             -H "Authorization: Bearer ${GH_TOKEN}" \
             -H "Accept: application/vnd.github+json" \
             "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/runs/${OLD_RUN}/artifacts?per_page=100" \
@@ -107,7 +108,7 @@ jobs:
           set -euo pipefail
           mkdir -p recovered-shards artifact-zips
           while read -r artifact_id artifact_name; do
-            curl -fsSL \
+            curl --retry 5 --retry-all-errors --retry-delay 2 --retry-max-time 90 -fsSL \
               -H "Authorization: Bearer ${GH_TOKEN}" \
               -H "Accept: application/vnd.github+json" \
               -L "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/${artifact_id}/zip" \
@@ -204,6 +205,7 @@ jobs:
             'failed_vacancy_detail_run_id':request['failed_vacancy_detail_run_id'],
             'previous_recovery_run_id':request.get('previous_recovery_run_id'),
             'retry_generation':request.get('retry_generation'),
+            'transport_retry_contract':request.get('transport_retry_contract'),
             'reused_successful_shards':43,
             'recovered_shard_indexes':[14],
             'shards_total':44,
@@ -240,6 +242,7 @@ jobs:
             'failed_run_reused':request['failed_vacancy_detail_run_id'],
             'previous_recovery_run_id':request.get('previous_recovery_run_id'),
             'retry_generation':request.get('retry_generation'),
+            'transport_retry_contract':request.get('transport_retry_contract'),
             'reused_shards':43,
             'recovered_shards':1,
             'exact_shard_coverage':44,

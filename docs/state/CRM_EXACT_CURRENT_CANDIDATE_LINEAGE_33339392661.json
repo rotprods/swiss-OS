@@ -1,0 +1,82 @@
+{
+  "authority": {
+    "aliases": 0,
+    "canonical_rows": 690,
+    "effect": "NONE",
+    "epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+    "materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+    "next_physical_id": "H-0691_UNALLOCATED"
+  },
+  "changed_identity_transfers": [
+    {
+      "city": "Gonten",
+      "current_name": "Huus Bären 1602",
+      "current_source_record_key": "MD-a954ba352532b916caa2",
+      "old_name": "Appenzeller Huus, Huus Bären",
+      "old_source_record_key": "MD-1776f584db74aa28b566",
+      "review_ref": "docs/state/CRM_CURRENT_GONTEN_ECV_SRR_LINEAGE_33339392661.json",
+      "state": "RECONCILE_REQUIRED"
+    },
+    {
+      "city": "Gonten",
+      "current_name": "Huus Löwen 1878",
+      "current_source_record_key": "MD-5ab40d162390a7b74c5f",
+      "old_name": "Appenzeller Huus, Huus Löwen",
+      "old_source_record_key": "MD-602d416c1e4106d2e085",
+      "review_ref": "docs/state/CRM_CURRENT_GONTEN_ECV_SRR_LINEAGE_33339392661.json",
+      "state": "RECONCILE_REQUIRED"
+    }
+  ],
+  "current_source": {
+    "artifact_id": 9740219406,
+    "coverage_complete": true,
+    "github_actions_run_id": 33339392661,
+    "pages": 172,
+    "records": 2061,
+    "records_sha256": "b16fdb63a01149e10feb4d506f38301644b73a612f898ce72567ec4fa92da404",
+    "snapshot_id": "HS-MEMBER-DE-33339392661"
+  },
+  "exact_unchanged_mapping_materialization": {
+    "count": 1436,
+    "current_source_artifact_id": 9740219406,
+    "deterministic_rebuild_rule": "Join historical candidate records to current coherent records on exact detail_url AND normalized exact name+city; reject all non-exact identities. The only rejected historical candidate URLs are the two Gonten renames recorded in changed_identity_transfers.",
+    "historical_candidate_artifact_id": 9718866661,
+    "mapping_sha256": "ddd1368fde0233f98885f6513bdf1b0142b669d3e0d882dd2b7634ca00954b5c"
+  },
+  "frontier": {
+    "candidate_lineage_accounted": 1438,
+    "canonical_id_reservations": 0,
+    "changed_identity_transfers": 2,
+    "exact_unchanged_transfers": 1436,
+    "h_id_allocations": 0,
+    "reconcile_required": 1403,
+    "terminal_source_mappings": 658
+  },
+  "generated_at": "2026-08-31T02:30:00Z",
+  "historical_candidate_lineage": {
+    "candidate_artifact_id": 9718866661,
+    "candidate_records": 1438,
+    "candidate_records_sha256": "34d9aa9cfa4fe896bf1db8fba4dedfded9a1dbf2e135b847101904644d16bba0",
+    "scope": "LINEAGE_ONLY_NOT_CURRENT_SOURCE_AUTHORITY",
+    "snapshot_id": "HS-MEMBER-DE-33206402141"
+  },
+  "mapping_sha256": "ddd1368fde0233f98885f6513bdf1b0142b669d3e0d882dd2b7634ca00954b5c",
+  "next_route": "CURRENT_UNRESOLVED_1403_ENTITY_RESOLUTION",
+  "parent_git_sha": "02dad1a5bd82219b34430b5fd1cee3ee088642b6",
+  "project": "SWITZERLAND_JOB_OS",
+  "qa": {
+    "authority_advanced": false,
+    "candidate_lineage_partition_conserved": true,
+    "canonical_id_reservations": 0,
+    "current_source_manifest_coherent_complete": true,
+    "exact_unchanged_current_keys_unique": true,
+    "exact_unchanged_detail_urls_unique": true,
+    "exact_unchanged_old_keys_unique": true,
+    "fuzzy_autobind": false,
+    "h_id_allocations": 0,
+    "irreversible_external_actions": 0,
+    "outbound": "CLOSED",
+    "send_allowed": 0
+  },
+  "schema_version": "CRM-EXACT-CURRENT-CANDIDATE-LINEAGE-1.0"
+}

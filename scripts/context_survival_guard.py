@@ -11,7 +11,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMA = "COS-V2-CONTEXT-SURVIVAL-1.0"
-CHECKPOINT = ROOT / "docs/state/v2/context-survival.json"
+CHECKPOINT = ROOT / "docs/continuity/CONTEXT_SURVIVAL.json"
 DEFAULT_DOMAIN_NEXT = "docs/state/NEXT_CURRENT_UNRESOLVED_LT350_B01.json"
 DEFAULT_SURVIVAL_PATHS = (
     "GOAL.md",
@@ -21,6 +21,7 @@ DEFAULT_SURVIVAL_PATHS = (
     "docs/state/NEXT.json",
     "docs/state/v2/project-state.json",
     "docs/state/v2/context-pack.json",
+    "docs/state/v2/active-claims.json",
     DEFAULT_DOMAIN_NEXT,
     "docs/operations/CONTEXT_SURVIVAL_PROTOCOL.md",
     "docs/handoffs/NEXT_ITERATION_METAPROMPT_V3.md",
@@ -120,6 +121,10 @@ def build_checkpoint(
         "latest_domain_next": latest_domain_next,
         "survival_paths": paths,
         "git_blob_oid": file_oids,
+        "liveness_findings": [
+            "CSP sidecar is authoritative only for recovery integrity, never hotel authority.",
+            "The COS event watermark may lag live main; zero-context bootstrap MUST verify live ancestry and pinned files rather than infer freshness from event time alone.",
+        ],
         "resume_contract": [
             "verify live main and ancestry",
             "verify every pinned survival-file Git blob OID",

@@ -1,0 +1,96 @@
+{
+  "schema_version": "CRM-CURRENT-UNRESOLVED-ANTI-JOIN-STAGING-1.0",
+  "project": "SWITZERLAND_JOB_OS",
+  "parent_git_sha": "cbd3a98c8c0f7c1e35a086fe110f7bdab8032652",
+  "snapshot_id": "HS-MEMBER-DE-33339392661",
+  "source": {
+    "artifact_id": 9740219406,
+    "records": 2061,
+    "pages": 172,
+    "coverage_complete": true,
+    "records_sha256": "b16fdb63a01149e10feb4d506f38301644b73a612f898ce72567ec4fa92da404"
+  },
+  "authority": {
+    "epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+    "materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+    "canonical_rows": 690,
+    "aliases": 0,
+    "next_physical_id": "H-0691_UNALLOCATED",
+    "effect": "NONE"
+  },
+  "candidate_lineage": {
+    "historical_candidate_artifact_id": 9718866661,
+    "historical_candidate_records": 1438,
+    "exact_unchanged_transfers": 1436,
+    "changed_identity_transfers": 2,
+    "accounted": 1438,
+    "pairs_sha256": "5622e244339bee80bbc91bdd2d1563a8f89ab522991de732ec6e4a498f40df49"
+  },
+  "terminal_projection": {
+    "exact_unique_name_city": 623,
+    "reviewed_exception_transfers": 35,
+    "terminal_source_mappings": 658,
+    "unique_canonical_targets": 656,
+    "terminal_pairs_sha256": "3e5be19a0132602ca377df36986e287291c7551a5009f9fde6b24c1315ff8de4"
+  },
+  "anti_join": {
+    "operation": "current coherent source MINUS exact-current terminal projection",
+    "unresolved_candidate_records": 1403,
+    "unresolved_source_keys_sha256": "c5b436dcd7d2632b3a49ccc1d3f1f75620f0c7db78c4247e5ab9c5394b30d996",
+    "source_key_conservation": "658 + 1403 = 2061"
+  },
+  "staging": {
+    "batch_size": 50,
+    "batches_count": 29,
+    "batches_sha256": "5ab8c4ed8f6977510e1a33a7f068b25d5581c4231412ddfc1c84b1569e25ff91",
+    "batches": [
+      {"batch_id":"CUR-U1403-01","count":50,"source_record_keys_sha256":"0825f02fc2eb68a7cdf69b90e6f9669485f89b1fd585cf91aee998f564e719c6"},
+      {"batch_id":"CUR-U1403-02","count":50,"source_record_keys_sha256":"8e0c408facc8a48c898fb3340a489b6ca1e72cc1364390629a67247dce3c3f44"},
+      {"batch_id":"CUR-U1403-03","count":50,"source_record_keys_sha256":"5c0dde76a8f685ba1a58b98e4cb0db98e6af2db0c4adeec5180392d1f893be75"},
+      {"batch_id":"CUR-U1403-04","count":50,"source_record_keys_sha256":"8b5f9f671c40546134124b1bb8be763c8f956fa0090f9904669f4aa91750c206"},
+      {"batch_id":"CUR-U1403-05","count":50,"source_record_keys_sha256":"b6499fbed7f37f8dbb387e12c0d7ab0dc480fb337b960f3f91d01dfb9685537e"},
+      {"batch_id":"CUR-U1403-06","count":50,"source_record_keys_sha256":"9743b0ef8d979b98b3a5e6b41ca077faa7d1c747b58e69464fbbd1c484709b48"},
+      {"batch_id":"CUR-U1403-07","count":50,"source_record_keys_sha256":"625c0efed65bb3bdd7fc347b0d94e3f4b0e4817193dd8ebe5db91a22fbee5bae"},
+      {"batch_id":"CUR-U1403-08","count":50,"source_record_keys_sha256":"a66ec20db65ae5c25ff3692caa1fb7c975cd75e95a5ae6528176b5ecac0e56a9"},
+      {"batch_id":"CUR-U1403-09","count":50,"source_record_keys_sha256":"7a4f506a7b2119683b0ef41111d4526e94d8d2e4cd07f2de2676c598be1d1812"},
+      {"batch_id":"CUR-U1403-10","count":50,"source_record_keys_sha256":"ac7238a47edfc7dec866103427d9160c2f4c36a5c7e0ee16291e22932823491d"},
+      {"batch_id":"CUR-U1403-11","count":50,"source_record_keys_sha256":"d8c8c2340e9d40907bfa7d57f1988e7b348d1d5026ae7217e16a6b614d461879"},
+      {"batch_id":"CUR-U1403-12","count":50,"source_record_keys_sha256":"133ea60aa4b8d050435b16b2db3b67b476c462147faa9d4c73c1e449a7be700f"},
+      {"batch_id":"CUR-U1403-13","count":50,"source_record_keys_sha256":"d9f2c8490722487dc3b17b8fb3217e9d17ee275f78587d78392c80ab002c3139"},
+      {"batch_id":"CUR-U1403-14","count":50,"source_record_keys_sha256":"d5472226e954edf5760dc841ee08a4f6f2c1cc83c6fa0f41d0041f3b66dbaaf2"},
+      {"batch_id":"CUR-U1403-15","count":50,"source_record_keys_sha256":"b74d4ee0aee5f3e606878306c7b44bf6f7ec8b307702d024bbd18ea73900be8c"},
+      {"batch_id":"CUR-U1403-16","count":50,"source_record_keys_sha256":"b88e34f5f8c91bc46e2ae4949db2a532bcf7698ff2693e5bb2d7dffd6d3f1ae0"},
+      {"batch_id":"CUR-U1403-17","count":50,"source_record_keys_sha256":"d7c63187a803a482a5bbcb8caaf28d4d90acb54dae4c3a2b8aaeed111df206dc"},
+      {"batch_id":"CUR-U1403-18","count":50,"source_record_keys_sha256":"fd3a82ede8eb4e490180ea8b0806789ac8e518acd997ac142787f968d2288d72"},
+      {"batch_id":"CUR-U1403-19","count":50,"source_record_keys_sha256":"81b182aee525a0159d8e7520f13b39eae71ae00c4b201242e9e66f3227c21ba0"},
+      {"batch_id":"CUR-U1403-20","count":50,"source_record_keys_sha256":"2051095d3627a6324af9ee3e342a9614cfc78c22883c3f3959ea7640cd6191c1"},
+      {"batch_id":"CUR-U1403-21","count":50,"source_record_keys_sha256":"7f0500d921451076ab86e049bd5134179f977c76a1189a511852d9b5cc5ecb25"},
+      {"batch_id":"CUR-U1403-22","count":50,"source_record_keys_sha256":"5f564f210818731c92d2e113fe1cc059d603f19e551fd960478d7d8dc823dfa1"},
+      {"batch_id":"CUR-U1403-23","count":50,"source_record_keys_sha256":"d4cfe53888f2e932fc0e26eeada67c59e0a1e533751688757c8b5a19f803cc06"},
+      {"batch_id":"CUR-U1403-24","count":50,"source_record_keys_sha256":"0cff24c893716071a371be5f7d688f5a3fab82a262905f04840821fca605f8e5"},
+      {"batch_id":"CUR-U1403-25","count":50,"source_record_keys_sha256":"86231bc62edb1605d7693594fabca307e1bab58251576d39ab2785cb5c1297a8"},
+      {"batch_id":"CUR-U1403-26","count":50,"source_record_keys_sha256":"7243974f6c258d27768ab3332466163fbfb42291d3888c26067c62af28fb1e07"},
+      {"batch_id":"CUR-U1403-27","count":50,"source_record_keys_sha256":"d2e0ba68f709afb6e82dac5126cfc4ca3f716feb9453b391732aed2380417e24"},
+      {"batch_id":"CUR-U1403-28","count":50,"source_record_keys_sha256":"886144be3a1d56115fe5c38ad937b09ece5114ef32cf40740c2ff966c2605084"},
+      {"batch_id":"CUR-U1403-29","count":3,"source_record_keys_sha256":"fba1905d30fb14aa7d5eaef7a910d8cb09993bce8fb66af726854f17b66d5512"}
+    ]
+  },
+  "review_priority": {
+    "authority": "REVIEW_SPACE_REDUCTION_ONLY",
+    "terminal_decision_allowed_from_similarity": false,
+    "bands": {"350000_499999":48,"500000_599999":44,"ge600000":20,"lt350000":1291},
+    "priority_records_count": 120,
+    "priority_records_sha256": "ee63413b449efe3aa26f57c502133e0ad5efc0617227063c61a88c509151c80e"
+  },
+  "safety": {
+    "crm_universe_complete": false,
+    "authority_advanced": false,
+    "canonical_id_reservations": 0,
+    "h_id_allocations": 0,
+    "irreversible_external_actions": 0,
+    "fuzzy_autobind": false,
+    "outbound": "CLOSED",
+    "send_allowed": 0
+  },
+  "next": "CURRENT_ENTITY_TRIAGE_PRIORITY_REVIEW"
+}

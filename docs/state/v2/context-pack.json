@@ -28,7 +28,7 @@
     "docs/state/CRM_EXACT_CURRENT_CANDIDATE_LINEAGE_33339392661.json",
     "docs/handoffs/META_20260831_CRM_CURRENT_SOURCE_CONTINUITY.md"
   ],
-  "relevant_scope_revision": "e2c4f5ef24c90e4efbc1345d3953713fb70e7c8a400319e0884c54c2ce29c06b",
+  "relevant_scope_revision": "3a3aeec6cc288d7408d660635b9f42e61506a99f2c77ab4d7a9723025e7f858a",
   "active_claim_ids": [
     "CLAIM-CRM-SRR-SPECIAL-006"
   ],
@@ -43,5 +43,5 @@
     "If discover.swiss credentials and a capture-valid manifest appear, add SSR-1.0 as a parallel evidence plane without blocking provider-neutral work.",
     "Keep authority E4 unchanged, H-0691 UNALLOCATED, OUTBOUND=CLOSED and send_allowed=0."
   ],
-  "context_pack_revision": "ef02eb0387f062908cf693910a2b9631548c06a4a20a4aee899828f61f6fa5fb"
+  "context_pack_revision": "cad09403257b169c8db8d0ef77547fc7e98e58205b89a8da4bc2c0a5979c7851"
 }

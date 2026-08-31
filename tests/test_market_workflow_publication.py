@@ -48,9 +48,10 @@ class MarketWorkflowPublicationTests(unittest.TestCase):
         data = json.loads(Path('docs/state/market/VACANCY_DETAIL_RECOVERY_REQUEST_SHARD14_2026-08-31.json').read_text(encoding='utf-8'))
         self.assertEqual(data['failed_vacancy_detail_run_id'], '33424739389')
         self.assertEqual(data['failed_vacancy_detail_head_sha'], '1f2dacad3c222408e180d45c72a340332667237e')
-        self.assertEqual(data['retry_generation'], 1)
-        self.assertEqual(data['previous_recovery_run_id'], '33435429793')
-        self.assertEqual(data['previous_recovery_failure'], 'LEXICOGRAPHIC_INDEX_VALIDATION_ONLY_NO_WEB_RESEARCH_EXECUTED')
+        self.assertEqual(data['retry_generation'], 2)
+        self.assertEqual(data['previous_recovery_run_id'], '33435997228')
+        self.assertEqual(data['previous_recovery_failure'], 'GITHUB_ARTIFACT_DOWNLOAD_503_BEFORE_SHARD14_NO_WEB_RESEARCH_EXECUTED')
+        self.assertEqual(data['transport_retry_contract'], 'GITHUB_ARTIFACT_DOWNLOAD_RETRY_5_ALL_ERRORS_DELAY_2_MAX_90_SECONDS')
         self.assertEqual(data['missing_shard_indexes'], [14])
         self.assertEqual(data['reused_successful_shards'], 43)
         self.assertEqual(len(data['expected_reused_indexes']), 43)
@@ -67,7 +68,7 @@ class MarketWorkflowPublicationTests(unittest.TestCase):
         self.assertEqual(data['safety']['outbound'], 'CLOSED')
         self.assertEqual(data['safety']['send_allowed'], 0)
 
-    def test_shard14_recovery_workflow_is_minimal_exact_timestamped_and_no_send(self):
+    def test_shard14_recovery_workflow_is_minimal_exact_timestamped_retry_bounded_and_no_send(self):
         text = Path('.github/workflows/vacancy-detail-recover-shard14.yml').read_text(encoding='utf-8')
         self.assertNotIn('gh pr create', text)
         self.assertIn('failed_vacancy_detail_run_id', text)
@@ -81,6 +82,10 @@ class MarketWorkflowPublicationTests(unittest.TestCase):
         self.assertIn("date -u +'%Y-%m-%dT%H:%M:%SZ'", text)
         self.assertIn('recovery-observed-at.txt', text)
         self.assertNotIn("['recovery_observed_at']", text)
+        self.assertGreaterEqual(text.count('--retry 5'), 3)
+        self.assertGreaterEqual(text.count('--retry-all-errors'), 3)
+        self.assertGreaterEqual(text.count('--retry-delay 2'), 3)
+        self.assertGreaterEqual(text.count('--retry-max-time 90'), 3)
         self.assertIn("'mixed_observation_epochs':True", text)
         self.assertIn("'outbound':'CLOSED'", text)
         self.assertIn("'send_allowed':0", text)

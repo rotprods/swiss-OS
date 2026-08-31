@@ -45,7 +45,9 @@ ECV remaining never verified                       0
 prior >=0.60 review                              20 / 20
 prior 0.50–0.599999 review                       46 / 46
 prior lower49 ordinary review                    47 / 47
+lower49 typed SRR materialized                   47 / 47
 RAGR evidence-classified                         34 / 34
+cumulative NEW_CANONICAL preauthority             124
 historical <0.35 previously unreviewed tail     1289
 zero-same-city conservative sub-lane             485
 current <0.35 B01 reviewed                        10

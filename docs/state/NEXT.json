@@ -20,6 +20,29 @@
   ],
   "checkpoint_id": "CRM_UNIVERSE_COMPLETE",
   "cycle_id": "META-20260831-CRM-CURRENT-REBASE",
+  "ecv_frontier": {
+    "candidate_records_total": 1438,
+    "current_detail_verified": 1438,
+    "latest_artifact_id": 9718233409,
+    "latest_github_actions_job_id": 99132088946,
+    "latest_github_actions_run_id": 33264513065,
+    "latest_subbatch_id": "HS-MEMBER-DE-33206402141:WORK:0001:SUB:0073",
+    "latest_subbatch_packet_sha256": "6844012f0c52fff07720b70e3a5cb9a0947a81d8463878c23a61cbb0d7eacfa3",
+    "next_staged_batch": "HS-MEMBER-DE-33206402141:WORK:0005:SUB:0001",
+    "next_staged_batch_path": "docs/state/CMI_WORK_BATCH_0005_SUB0001_33206402141.json",
+    "next_staged_items": 3,
+    "next_staged_items_sha256": "9c07c1fe200f27a79a1c10550f39ad9fd94f5ba2d3a996791d6061ddd600a4c2",
+    "next_staged_original_candidate_offsets": [
+      733,
+      913,
+      981
+    ],
+    "next_staged_state": "ECV_TERMINAL_VERIFIED",
+    "pending_requeue": 0,
+    "remaining_never_verified": 0,
+    "remaining_unverified": 0,
+    "scope_state": "HISTORICAL_PARTIAL_SUBSTRATE_LINEAGE_ONLY"
+  },
   "exact_dependency": "Continue deterministic SRR/entity-resolution over the 1403 current unresolved source records using immutable source keys and current evidence. The structured discover.swiss SSR route remains unavailable until a runtime subscription key yields a capture-valid manifest. Authority promotion remains unavailable until an exact durable DB-first E4 write/reconciliation route is recovered and an authority batch is independently eligible.",
   "generated_at": "2026-08-31T00:38:20Z",
   "hard_blockers": [
@@ -38,6 +61,7 @@
     "unique_canonical_targets": 656
   },
   "next_route": "CURRENT_UNRESOLVED_1403_ENTITY_RESOLUTION",
+  "outbound_allowed": false,
   "parent_git_sha": "02dad1a5bd82219b34430b5fd1cee3ee088642b6",
   "parent_sha_semantics": "Verified current main at activation bootstrap; resume only if this SHA is current or an ancestor and E4 authority tuple remains unchanged.",
   "productive_route_available": true,
@@ -94,5 +118,21 @@
     "snapshot_id": "HS-MEMBER-DE-33339392661",
     "source_artifact_id": 9740219406,
     "source_run_id": 33339392661
+  },
+  "source_universe": {
+    "candidate_artifact_id": 9718866661,
+    "candidate_export_artifact_digest_sha256": "d58c57c5a83cd2ff740f0ec900163f5c7aa795b032045cf9d30ffd194733465e",
+    "candidate_export_artifact_id": 9718866661,
+    "candidate_export_gzip_sha256": "071e2cf1b895b63457c56066de7d8653b3182a12d1260ff9be7709a684fcf194",
+    "candidate_export_manifest_path": "docs/state/CRM_CANDIDATE_EXPORT_33206402141.manifest.json",
+    "candidate_export_records_sha256": "34d9aa9cfa4fe896bf1db8fba4dedfded9a1dbf2e135b847101904644d16bba0",
+    "candidate_records": 1438,
+    "candidate_records_sha256": "34d9aa9cfa4fe896bf1db8fba4dedfded9a1dbf2e135b847101904644d16bba0",
+    "pages": 172,
+    "records": 2061,
+    "records_sha256": "62e26d62d8677a5437e081302b6b4d206c0d27a0fe268c6356aef01da5428dc2",
+    "scope_state": "HISTORICAL_PARTIAL_SUBSTRATE_NOT_CURRENT_COVERAGE",
+    "snapshot_id": "HS-MEMBER-DE-33206402141",
+    "source_artifact_id": 9700376482
   }
 }

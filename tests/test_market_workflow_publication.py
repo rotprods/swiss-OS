@@ -48,6 +48,9 @@ class MarketWorkflowPublicationTests(unittest.TestCase):
         data = json.loads(Path('docs/state/market/VACANCY_DETAIL_RECOVERY_REQUEST_SHARD14_2026-08-31.json').read_text(encoding='utf-8'))
         self.assertEqual(data['failed_vacancy_detail_run_id'], '33424739389')
         self.assertEqual(data['failed_vacancy_detail_head_sha'], '1f2dacad3c222408e180d45c72a340332667237e')
+        self.assertEqual(data['retry_generation'], 1)
+        self.assertEqual(data['previous_recovery_run_id'], '33435429793')
+        self.assertEqual(data['previous_recovery_failure'], 'LEXICOGRAPHIC_INDEX_VALIDATION_ONLY_NO_WEB_RESEARCH_EXECUTED')
         self.assertEqual(data['missing_shard_indexes'], [14])
         self.assertEqual(data['reused_successful_shards'], 43)
         self.assertEqual(len(data['expected_reused_indexes']), 43)
@@ -72,6 +75,7 @@ class MarketWorkflowPublicationTests(unittest.TestCase):
         self.assertIn('--shard-index 14', text)
         self.assertIn('assert len(files) == 43', text)
         self.assertIn('assert len(files) == 44', text)
+        self.assertIn("assert sorted(indexes) == request['expected_reused_indexes']", text)
         self.assertIn('indexes == list(range(44))', text)
         self.assertIn('python -m swiss_os.vacancy_detail_fault_isolation', text)
         self.assertIn("date -u +'%Y-%m-%dT%H:%M:%SZ'", text)
@@ -81,6 +85,16 @@ class MarketWorkflowPublicationTests(unittest.TestCase):
         self.assertIn("'outbound':'CLOSED'", text)
         self.assertIn("'send_allowed':0", text)
         self.assertIn('authorized interactive orchestrator', text)
+
+    def test_numeric_order_regression_fixture(self):
+        filenames = [
+            'vacancy-detail-shard-1.json',
+            'vacancy-detail-shard-10.json',
+            'vacancy-detail-shard-2.json',
+        ]
+        lexical = [int(name.removeprefix('vacancy-detail-shard-').removesuffix('.json')) for name in sorted(filenames)]
+        self.assertEqual(lexical, [1, 10, 2])
+        self.assertEqual(sorted(lexical), [1, 2, 10])
 
     def test_recovered_market_summary_receipt_match(self):
         summary = json.loads(Path('docs/state/market/runs/33336272106/summary.json').read_text(encoding='utf-8'))

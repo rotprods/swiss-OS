@@ -1,6 +1,6 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest reconstructed frontier: **2026-08-31 current-source entity-resolution B03**. Verified bootstrap main parent: **`bc33616bbb7964c2dac2d2783f3506a4c04c4438`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Authority materialized SHA: **`70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`**.
+Latest reconstructed frontier: **2026-08-31 current-source entity-resolution B04**. Verified bootstrap main parent: **`a3299117a0fa1168b0b36f4da4b2f95cb1ea7719`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Authority materialized SHA: **`70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`**.
 
 ## Authority — unchanged / locked
 
@@ -14,7 +14,7 @@ OUTBOUND                        CLOSED
 send_allowed                      0
 ```
 
-Live Drive `HOTELS_V2` was re-read through row 691 during this activation: `H-0690` is the physical frontier and `H-0691` is absent/unallocated. No staging, cache, canary, CI artifact, candidate export, SRR/ECV result or source crawl can become authoritative or advance this authority.
+Live Drive `HOTELS_V2` was re-read through the physical frontier during this activation: `H-0690` remains the last canonical row and `H-0691` is absent/unallocated. No staging, cache, canary, CI artifact, candidate export, source-research decision or preauthority SRR/EGR result can become authoritative or allocate/reserve an H-ID.
 
 ## Current coherent source universe
 
@@ -31,7 +31,7 @@ RECONCILE_REQUIRED              1403
 reverse authority source gaps     34
 ```
 
-The earlier `HS-MEMBER-DE-33206402141` capture remains historical lineage only. Current coherent-source candidate continuity is fully accounted: 1436 exact unchanged identities plus two changed Gonten identities. Historical completed prioritized SRR/RAGR work remains monotonic and non-authoritative.
+The older `HS-MEMBER-DE-33206402141` capture is historical lineage only. Current candidate continuity remains fully accounted: 1436 exact unchanged identities plus two changed Gonten identities.
 
 ## Entity-resolution frontier
 
@@ -45,21 +45,23 @@ prior 0.50–0.599999 review                       46 / 46
 prior lower49 ordinary review                    47 / 47
 lower49 typed SRR materialized                   47 / 47
 RAGR evidence-classified                         34 / 34
-cumulative NEW_CANONICAL preauthority             144
+cumulative NEW_CANONICAL preauthority             154
 historical <0.35 previously unreviewed tail     1289
 zero-same-city conservative sub-lane             485
-current <0.35 reviewed cumulative                 30
-current <0.35 B03 reviewed                        10
-current <0.35 B03 NEW_CANONICAL preauthority      10
-historical <0.35 tail remaining                 1259
-zero-same-city lane remaining                    455
+current <0.35 reviewed cumulative                 40
+current <0.35 B04 reviewed                        10
+current <0.35 B04 NEW_CANONICAL preauthority      10
+historical <0.35 tail remaining                 1249
+zero-same-city lane remaining                    445
 H-ID allocations                                   0
 canonical ID reservations                          0
 ```
 
-`docs/state/CRM_CURRENT_UNRESOLVED_LT350_B03_2026-08-31.json` records the third bounded current-source continuation. Ten more deterministic zero-same-city records were independently verified and cross-city collision reviewed. All ten are `NEW_CANONICAL_PREAUTH`, remain `RECONCILE_REQUIRED`, and create no terminal mapping or authority effect. `Weinhaus am Bach - Landhotel Hirschen` is explicitly handled under EGR-1.0 as an accommodation component of Landhotel Hirschen Erlinsbach; the parent/component relationship is preserved as metadata and is not converted into an alias merely from shared operator/property context.
+`docs/state/CRM_CURRENT_UNRESOLVED_LT350_B04_2026-08-31.json` records the fourth bounded exact-current continuation. Two Radisson high-similarity collisions were explicitly proved to be distinct properties from canonical `H-0222` rather than fuzzy-bound. `Solution-Grischun` is preserved under EGR-1.0 as a named operator managing multi-unit holiday accommodation, with legal seat Bonaduz and current accommodation inventory in Chur; no single-physical-hotel identity or alias collapse is inferred. All ten B04 rows remain `NEW_CANONICAL_PREAUTH` / `RECONCILE_REQUIRED`, with zero terminal mapping delta.
 
-## Capability / provider frontier
+## Continuity / capability frontier
+
+CSP-1.0 is active. `docs/continuity/CONTEXT_SURVIVAL.json` must validate before zero-context resumption and must be regenerated whenever a pinned survival file or latest domain NEXT changes.
 
 ```text
 GitHub read/write/branch/PR/CI       YES
@@ -73,31 +75,31 @@ capture-valid discover manifest      ABSENT
 durable DB-first E4 egress           BLOCKED_FILE_REFERENCE_DO_NOT_REPEAT
 ```
 
-The coherent HotellerieSuisse source keeps provider-neutral entity resolution productive. Structured discover.swiss SSR-1.0 is an optional accelerator only when a runtime subscription credential and capture-valid manifest become available. Do not retry the blocked generated-file egress family.
+Structured discover.swiss SSR-1.0 remains provider-blocked, but the provider-neutral current HotellerieSuisse entity-resolution route remains safe and productive. Do not retry the blocked exact E4 generated-file egress family.
 
 ## Open P0 / highest-value safe bottleneck
 
-`CRM_UNIVERSE_COMPLETE` remains **FALSE** because **1403 current coherent source records remain `RECONCILE_REQUIRED`**. Preacthority `NEW_CANONICAL` dispositions deliberately do not reduce that terminal mapping count or reserve IDs. The highest-value safe route is to keep typing the exact-current unresolved tail in bounded evidence-backed waves while authority remains locked.
+`CRM_UNIVERSE_COMPLETE` remains **FALSE** because **1403 current coherent source records remain `RECONCILE_REQUIRED`**. Preacthority NEW_CANONICAL typing is review progress only; it neither terminalizes source mappings nor advances the authority denominator. Continue bounded evidence-backed resolution while E4 remains locked.
 
 ## NEXT
 
-Execute **`CURRENT_UNRESOLVED_LT350000_ZERO_CANONICAL_CITY_B04`** over:
+Execute **`CURRENT_UNRESOLVED_LT350000_ZERO_CANONICAL_CITY_B05`** over:
 
 ```text
-MD-0ec9184e0553996c8017
-MD-11392326bb8d2e36b225
-MD-12012a3229867154fec7
-MD-12981db89c28b8b3af89
-MD-12ddaa1053593368724c
-MD-13927887bbb57d617e5e
-MD-139b78cdebb6cec44ad5
-MD-147ce42ea282ff9d8373
-MD-14b893f819ede5ee43f9
-MD-14f0349e0f07cd0d3ae0
+MD-1523bc8c54a8f80c63a1
+MD-15328beab2813a777e0d
+MD-1679afa763ce7de7c324
+MD-16d503bef0fa48f1d44d
+MD-172e10497469ac29259e
+MD-17a059dc9632c6ff4d1d
+MD-17af64859ef43e875027
+MD-1855265ec07d6b3c1a40
+MD-18cbb9206e15539f177d
+MD-18ddf5bd589df297650d
 ```
 
-Continue exact current-source identities from the previously unreviewed `<0.35` lineage tail, prioritizing the conservative zero-same-city lane. Require current independent evidence and cross-city collision/granularity review. Similarity may rank review order only; fuzzy autobind is forbidden. Never reserve/allocate H-IDs from staging, never create authority from review/cache/canary state, and keep `OUTBOUND=CLOSED` / `send_allowed=0`.
+Reconstruct live ancestry, validate CSP-1.0, and re-read E4 first. Continue current identity/accommodation evidence review, explicit canonical-collision review where similarity is material, and EGR-1.0 where operator/property granularity is ambiguous. Similarity is rank-only; fuzzy autobind is forbidden. Keep `OUTBOUND=CLOSED` / `send_allowed=0`.
 
-Recovery inputs and exact blockers are persisted in `docs/state/NEXT_CURRENT_UNRESOLVED_LT350_B03.json` and `docs/handoffs/META_20260831_CRM_CURRENT_LT350_B03.md`.
+Recovery inputs and exact blockers are persisted in `docs/state/NEXT_CURRENT_UNRESOLVED_LT350_B04.json` and `docs/handoffs/META_20260831_CRM_CURRENT_LT350_B04.md`.
 
 **VERIFY LIVE TRUTH BEFORE EXECUTION.**

@@ -11,7 +11,8 @@ class ContextSurvivalGuardTests(unittest.TestCase):
         payload = json.loads(CHECKPOINT.read_text(encoding="utf-8"))
         self.assertEqual(validate_checkpoint(payload), [])
         self.assertEqual(payload["primary_program"], "REPO_ARCHAEOLOGY_GRAPHIFY_V1")
-        self.assertEqual(payload["production_route"], "CURRENT_UNRESOLVED_LT350000_ZERO_CANONICAL_CITY_B02")
+        self.assertEqual(payload["latest_domain_next"], "docs/state/NEXT_CURRENT_UNRESOLVED_LT350_B02.json")
+        self.assertEqual(payload["production_route"], "CURRENT_UNRESOLVED_LT350000_ZERO_CANONICAL_CITY_B03")
         self.assertFalse(payload["safety"]["authority_advance_allowed"])
         self.assertFalse(payload["safety"]["canonical_id_allocation_allowed"])
         self.assertEqual(payload["safety"]["canonical_id_reservations_from_staging"], 0)
@@ -31,6 +32,11 @@ class ContextSurvivalGuardTests(unittest.TestCase):
         self.assertIn("This is NOT a request to create, edit, resume, or inspect a scheduled task", text)
         self.assertIn("CHAT/MODEL MEMORY IS DISPOSABLE CACHE", text)
         self.assertIn("START NOW WITH ZERO-CONTEXT BOOTSTRAP", text)
+
+    def test_checkpoint_generation_requires_explicit_domain_next(self):
+        text = Path("scripts/context_survival_guard.py").read_text(encoding="utf-8")
+        self.assertIn("--latest-domain-next is required with --write", text)
+        self.assertNotIn("DEFAULT_DOMAIN_NEXT", text)
 
 
 if __name__ == "__main__":

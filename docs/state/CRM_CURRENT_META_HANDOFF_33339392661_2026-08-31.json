@@ -1,0 +1,101 @@
+{
+  "authority": {
+    "alias_edges": 0,
+    "canonical_rows": 690,
+    "effect": "NONE",
+    "epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+    "materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+    "next_physical_id": "H-0691_UNALLOCATED"
+  },
+  "capabilities": {
+    "discover_swiss_capture_valid_manifest": false,
+    "discover_swiss_subscription_key": false,
+    "drive_native_sheets_read_write": true,
+    "drive_recovery_artifact_create": true,
+    "exact_e4_durable_db_first_egress": "BLOCKED_FILE_REFERENCE_DO_NOT_REPEAT",
+    "github_ci_and_actions_artifacts": true,
+    "github_read_write_branch_pr_merge": true,
+    "web_research": true
+  },
+  "current_source": {
+    "artifact_id": 9740219406,
+    "capture_mode": "LIVE_COMPLETE_COHERENT",
+    "coverage_complete": true,
+    "github_actions_run_id": 33339392661,
+    "pages": 172,
+    "records": 2061,
+    "records_sha256": "b16fdb63a01149e10feb4d506f38301644b73a612f898ce72567ec4fa92da404",
+    "snapshot_id": "HS-MEMBER-DE-33339392661"
+  },
+  "generated_at": "2026-08-31T00:38:20Z",
+  "mapping_frontier": {
+    "exact_active_matches": 623,
+    "gonten_renamed_reviews_reconfirmed": 2,
+    "reconcile_required": 1403,
+    "reverse_authority_source_gaps": 34,
+    "reviewed_exceptional_mappings_carried": 35,
+    "terminal_source_mappings": 658,
+    "unique_canonical_targets": 656
+  },
+  "next": {
+    "exact_blockers": [
+      "DISCOVER_SWISS_RUNTIME_SUBSCRIPTION_KEY_ABSENT",
+      "DISCOVER_SWISS_CAPTURE_VALID_MANIFEST_ABSENT",
+      "DURABLE_DB_FIRST_E4_EGRESS_BLOCKED_FILE_REFERENCE_DO_NOT_REPEAT",
+      "RECONCILE_REQUIRED_1403_NOT_ZERO"
+    ],
+    "productive_route_available": true,
+    "recovery_inputs": [
+      "docs/state/CRM_CURRENT_SOURCE_MAPPING_PROJECTION_33339392661.json",
+      "docs/state/CRM_CURRENT_GONTEN_ECV_SRR_LINEAGE_33339392661.json",
+      "GitHub Actions artifact 9740219406 / run 33339392661",
+      "Drive HOTELS_MASTER 1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w / HOTELS_V2",
+      "authority E4 / 70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6"
+    ],
+    "route": "CURRENT_UNRESOLVED_1403_ENTITY_RESOLUTION",
+    "secondary_route": "STRUCTURED_DISCOVER_SSR_WHEN_RUNTIME_KEY_AVAILABLE"
+  },
+  "open_p0s": [
+    {
+      "issue": 240,
+      "route": "CRM_UNIVERSE_COMPLETE",
+      "state": "OPEN"
+    },
+    {
+      "issue": 239,
+      "route": "BATCH_SAFE_SOURCE_RESOLUTION",
+      "state": "OPEN"
+    },
+    {
+      "issue": 14,
+      "route": "API_FIRST_SOURCE_UNIVERSE_AND_RECONCILIATION",
+      "state": "OPEN"
+    }
+  ],
+  "operational_reconstruction": {
+    "drive_hotels_master_id": "1DsO0U4i7aUY4FOF-zldJONQN2StUK6MfvHu0TqbY84w",
+    "drive_hotels_master_modified_time": "2026-08-30T21:30:11.606Z",
+    "drive_hotels_v2_h0690_present": true,
+    "drive_hotels_v2_h0691_present": false,
+    "file_library_read": true,
+    "file_library_write": false,
+    "github_main_ancestry": [
+      "02dad1a5bd82219b34430b5fd1cee3ee088642b6",
+      "df375cf63200ed83fdc172ae7d1274e4bb458a34",
+      "39302962480d708ce408cce636e49da05874670f"
+    ]
+  },
+  "parent_git_sha": "02dad1a5bd82219b34430b5fd1cee3ee088642b6",
+  "payload_sha256": "c481fd76f8ce95f1be8a4bf8bfef6fee1cb7fac0e43c0c6d4d825961ab9e731e",
+  "project": "SWITZERLAND_JOB_OS",
+  "safety": {
+    "authority_advanced": false,
+    "canonical_id_reservations": 0,
+    "crm_universe_complete": false,
+    "h_id_allocations": 0,
+    "irreversible_external_actions": 0,
+    "outbound": "CLOSED",
+    "send_allowed": 0
+  },
+  "schema_version": "CRM_CURRENT_HANDOFF-1.0"
+}

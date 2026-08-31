@@ -10,7 +10,9 @@
     "docs/state/CRM_CURRENT_GONTEN_ECV_SRR_LINEAGE_33339392661.json",
     "docs/state/CRM_EXACT_CURRENT_CANDIDATE_LINEAGE_33339392661.json",
     "docs/state/RAGR34_POST_REVIEW_DISPOSITION_WORKSET_2026-08-30.json",
-    "docs/handoffs/META_20260831_CRM_CURRENT_SOURCE_CONTINUITY.md"
+    "docs/state/SRR_CURRENT_LOW_COLLISION_BATCH_0001_33339392661.json",
+    "docs/state/META_GRAPH_DELTA_CRM_CURRENT_LOW_COLLISION_B01_2026-08-31.json",
+    "docs/handoffs/META_20260831_CRM_CURRENT_LOW_COLLISION_B01.md"
   ],
   "authority_advance_allowed": false,
   "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
@@ -68,9 +70,9 @@
     "remaining_never_verified": 0,
     "remaining_unverified": 0
   },
-  "exact_dependency": "Resolve the 1403 current coherent HotellerieSuisse source records that do not yet have terminal mappings. Use only evidence-backed preauthority decisions; fuzzy similarity may rank candidates but must never auto-bind. Structured discover.swiss SSR-1.0 remains an optional accelerator blocked by the absent runtime subscription/capture-valid manifest, not a blocker to provider-neutral entity-resolution work.",
+  "exact_dependency": "Continue bounded preauthority resolution on the coherent current HotellerieSuisse source, beginning with CURRENT_UNRESOLVED_1403_LOW_COLLISION_BATCH_0002 and excluding the 50 B01 records already reviewed. Similarity may rank or veto review but may never auto-bind. Structured discover.swiss SSR-1.0 remains an optional accelerator blocked by the absent runtime subscription/capture-valid manifest, not a blocker to provider-neutral entity-resolution work.",
   "execution_mode": "READ_ONLY_RESEARCH_AND_PREAUTH_ENTITY_RESOLUTION",
-  "generated_at": "2026-08-31T02:30:00Z",
+  "generated_at": "2026-08-31T06:10:45Z",
   "goal_id": "G-0500",
   "graph_impact": "META",
   "hard_blockers": [
@@ -88,29 +90,32 @@
     "terminal_source_mappings": 658,
     "unique_canonical_targets": 656
   },
-  "next_route": "CURRENT_UNRESOLVED_1403_ENTITY_RESOLUTION",
+  "next_route": "CURRENT_UNRESOLVED_1403_LOW_COLLISION_BATCH_0002",
   "outbound_allowed": false,
-  "parent_git_sha": "02dad1a5bd82219b34430b5fd1cee3ee088642b6",
-  "parent_sha_semantics": "Verified live main at wave bootstrap. Resume only if current main is this SHA or a descendant and the E4 authority tuple remains unchanged.",
+  "parent_git_sha": "cbd3a98c8c0f7c1e35a086fe110f7bdab8032652",
+  "parent_sha_semantics": "Verified live main at B01 bootstrap. Resume only if current main is this SHA or a descendant and the E4 authority tuple remains unchanged; after B01 merge use the resulting merge SHA as the next wave base.",
   "project": "SWITZERLAND_JOB_OS",
   "recovery_route": [
-    "Verify current GitHub main is the recorded parent SHA or a descendant.",
+    "Verify current GitHub main is cbd3a98c8c0f7c1e35a086fe110f7bdab8032652 or a descendant and identify the latest merged B01 descendant before branching.",
     "Re-read Drive HOTELS_V2 and confirm 690 canonical rows with H-0691 absent/unallocated.",
     "Verify E4 authority epoch/materialized SHA and token6 ceiling are unchanged.",
     "Use HS-MEMBER-DE-33339392661 / artifact 9740219406 as the coherent current member-directory source.",
     "Use CRM_EXACT_CURRENT_CANDIDATE_LINEAGE_33339392661.json only for lineage transfer; it grants no authority.",
+    "Exclude all source keys in SRR_CURRENT_LOW_COLLISION_BATCH_0001_33339392661.json from B02 selection.",
     "Preserve completed historical SRR/RAGR frontiers monotonically; do not regress or reopen completed batches unless new exact-current contradictory evidence exists.",
-    "Continue CURRENT_UNRESOLVED_1403_ENTITY_RESOLUTION in bounded evidence-backed batches.",
+    "Execute CURRENT_UNRESOLVED_1403_LOW_COLLISION_BATCH_0002 as the next bounded evidence-backed preauthority wave.",
     "If discover.swiss becomes available, capture a valid structured manifest and run SSR-1.0 as an additional evidence plane.",
     "Keep OUTBOUND=CLOSED and send_allowed=0."
   ],
   "required_inputs": [
-    "GitHub current main 02dad1a5bd82219b34430b5fd1cee3ee088642b6 or descendant",
+    "GitHub main cbd3a98c8c0f7c1e35a086fe110f7bdab8032652 or descendant containing merged B01",
     "authority E4 / SHA 70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
     "Drive HOTELS_MASTER/HOTELS_V2",
     "current source run 33339392661 / artifact 9740219406",
     "docs/state/CRM_CURRENT_SOURCE_MAPPING_PROJECTION_33339392661.json",
     "docs/state/CRM_CURRENT_GONTEN_ECV_SRR_LINEAGE_33339392661.json",
+    "docs/state/CRM_EXACT_CURRENT_CANDIDATE_LINEAGE_33339392661.json",
+    "docs/state/SRR_CURRENT_LOW_COLLISION_BATCH_0001_33339392661.json",
     "historical candidate artifact 9718866661"
   ],
   "review_frontier": {
@@ -120,7 +125,14 @@
       "remaining": 0,
       "reviewed_after": 46
     },
-    "cumulative_new_canonical_preauth": 114,
+    "cumulative_new_canonical_preauth": 164,
+    "current_unresolved": {
+      "latest_batch": "CURRENT-U1403-LOWCOLLISION-B01",
+      "latest_batch_reviewed": 50,
+      "latest_batch_new_canonical_preauth": 50,
+      "remaining_unreviewed_preauthority": 1239,
+      "next_batch": "CURRENT_UNRESOLVED_1403_LOW_COLLISION_BATCH_0002"
+    },
     "ge600": {
       "new_canonical_preauth": 20,
       "relationship_unresolved": 0,
@@ -178,7 +190,7 @@
     "send_allowed": 0
   },
   "schema_version": "NPP-1.2",
-  "selected_route": "CURRENT_UNRESOLVED_1403_ENTITY_RESOLUTION",
+  "selected_route": "CURRENT_UNRESOLVED_1403_LOW_COLLISION_BATCH_0002",
   "source_frontier": {
     "capture_mode": "LIVE_COMPLETE_MATERIALIZED_COUNT",
     "capture_violations": [],

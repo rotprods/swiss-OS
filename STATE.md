@@ -14,6 +14,8 @@ OUTBOUND                        CLOSED
 send_allowed                      0
 ```
 
+The **authoritative** operational ceiling is E4/690 only. Every current source-review, staging, cache, CI and **canary** artifact is non-authoritative until a separately eligible cross-plane authority transaction passes all gates.
+
 Live Drive `HOTELS_V2` was re-read in this activation: `H-0690` remains the last physical/canonical row and `H-0691` is absent/unallocated. No staging/cache/canary/source-review result may reserve an ID or advance authority.
 
 ## Current coherent source universe

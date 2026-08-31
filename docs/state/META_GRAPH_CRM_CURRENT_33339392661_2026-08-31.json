@@ -89,7 +89,7 @@
     }
   ],
   "parent_git_sha": "02dad1a5bd82219b34430b5fd1cee3ee088642b6",
-  "payload_sha256": "42f0933433252ffad9af04a6217d1bb44f165bd6e3cd8df787983527342a692e",
+  "payload_sha256": "b7e9bff4cddef4a8d2083e1285b6ed56652d072d1258bdfe658ea88a0d2ca55d",
   "project": "SWITZERLAND_JOB_OS",
   "safety": {
     "authority_advanced": false,

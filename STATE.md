@@ -53,15 +53,22 @@ The two Gonten renames (`Huus Bären 1602`, `Huus Löwen 1878`) were explicitly 
 
 Source conservation remains `658 + 1403 = 2061`.
 
-## Historical ECV lineage guard frontier
+## Monotonic historical review frontier
 
-The completed 1438-row ECV candidate lineage from `HS-MEMBER-DE-33206402141` remains preserved only for deterministic historical lineage and CI guards. It is not the current source-coverage authority.
+The reviewed pre-authority work remains valid lineage and must never regress merely because the current source capture changed. It does not independently authorize a terminal mapping or canonical mutation.
 
 ```text
+ECV exact-current                         1438 / 1438
 ECV verified frontier                     1438 / 1438
 ECV remaining never verified                 0
 ECV pending requeue                          0
+lower49 typed SRR materialized              47 / 47
+cumulative NEW_CANONICAL preauthority      114
+RAGR evidence-classified                   34 / 34
+RAGR IN_SCOPE_NO_SOURCE_MATCH              24
 ```
+
+The completed 1438-row ECV candidate lineage from `HS-MEMBER-DE-33206402141` remains historical deterministic lineage only; the current source-coverage authority is `HS-MEMBER-DE-33339392661`. Carry-forward decisions are eligible only where current-source identity/evidence is explicitly re-anchored.
 
 ## Open P0 execution program
 

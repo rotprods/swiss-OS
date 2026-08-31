@@ -4,6 +4,7 @@ from unittest.mock import patch
 from swiss_os.market_enrichment import FetchResult
 from swiss_os.vacancy_detail import aggregate_shards
 from swiss_os.vacancy_detail_fault_isolation import (
+    PUBLIC_URL_SAFETY_ERRORS,
     ROUTE_REJECTION_STATE,
     compile_shard_fault_isolated,
     resolve_route_isolated,
@@ -53,19 +54,36 @@ def market_aggregate(records):
 
 
 class VacancyDetailFaultIsolationTests(unittest.TestCase):
-    def test_value_error_becomes_typed_route_rejection(self):
+    def test_all_known_public_url_safety_value_errors_become_typed_rejections(self):
+        self.assertEqual(
+            PUBLIC_URL_SAFETY_ERRORS,
+            {
+                "only public HTTPS URLs are allowed",
+                "URL credentials/non-standard ports are forbidden",
+                "hostname must resolve only to public addresses",
+            },
+        )
+        for message in PUBLIC_URL_SAFETY_ERRORS:
+            with self.subTest(message=message), patch(
+                "swiss_os.vacancy_detail_fault_isolation.resolve_route",
+                side_effect=ValueError(message),
+            ):
+                result = resolve_route_isolated(FakeClient(), "https://example.com/jobs", "2026-08-31T20:10:00Z")
+            self.assertEqual(result["resolution_state"], ROUTE_REJECTION_STATE)
+            self.assertEqual(result["fetch_state"], "URL_REJECTED")
+            self.assertEqual(result["role_signals"], [])
+            self.assertFalse(result["no_openings_explicit"])
+            self.assertEqual(result["authority_effect"], "NONE")
+            self.assertEqual(result["outbound"], "CLOSED")
+            self.assertEqual(result["send_allowed"], 0)
+
+    def test_unrecognized_value_error_is_not_mislabeled_as_security(self):
         with patch(
             "swiss_os.vacancy_detail_fault_isolation.resolve_route",
-            side_effect=ValueError("hostname must resolve only to public addresses"),
+            side_effect=ValueError("unexpected parser invariant"),
         ):
-            result = resolve_route_isolated(FakeClient(), "https://example.com/jobs", "2026-08-31T20:10:00Z")
-        self.assertEqual(result["resolution_state"], ROUTE_REJECTION_STATE)
-        self.assertEqual(result["fetch_state"], "URL_REJECTED")
-        self.assertEqual(result["role_signals"], [])
-        self.assertFalse(result["no_openings_explicit"])
-        self.assertEqual(result["authority_effect"], "NONE")
-        self.assertEqual(result["outbound"], "CLOSED")
-        self.assertEqual(result["send_allowed"], 0)
+            with self.assertRaisesRegex(ValueError, "unexpected parser invariant"):
+                resolve_route_isolated(FakeClient(), "https://example.com/jobs", "2026-08-31T20:10:00Z")
 
     def test_non_safety_runtime_failure_is_not_silently_swallowed(self):
         with patch(

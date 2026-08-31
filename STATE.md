@@ -41,6 +41,7 @@ exact unchanged current lineage                 1436
 changed Gonten lineage                             2
 candidate lineage accounted                     1438 / 1438
 ECV verified frontier                           1438 / 1438
+ECV remaining never verified                       0
 prior >=0.60 review                              20 / 20
 prior 0.50–0.599999 review                       46 / 46
 prior lower49 ordinary review                    47 / 47

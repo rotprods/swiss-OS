@@ -35,11 +35,15 @@ def main():
     for path in sorted((ROOT/"docs/state/v2/claims").glob("*.json")):
         value=json.loads(path.read_text(encoding="utf-8")); claims.append(value); errors.extend(f"{path.name}:{x}" for x in validate_claim(value))
     projection=reduce_coordination(events,claims); errors.extend(f"projection:{x}" for x in projection["violations"])
-    if state.get("projection_revision")!=projection["projection_revision"]: errors.append("PROJECT_STATE_PROJECTION_REVISION_MISMATCH")
+    if state.get("projection_revision")!=projection["projection_revision"]:
+        errors.append("PROJECT_STATE_PROJECTION_REVISION_MISMATCH")
+        errors.append(f"EXPECTED_PROJECTION_REVISION:{projection['projection_revision']}")
     context=load("docs/state/v2/context-pack.json")
     paths=context.get("relevant_paths") if isinstance(context.get("relevant_paths"),list) else []
     try: current_scope=scope_revision(paths)
     except (ValueError,subprocess.SubprocessError) as exc: errors.append(f"context:{exc}"); current_scope=""
+    if current_scope and context.get("relevant_scope_revision")!=current_scope:
+        errors.append(f"EXPECTED_RELEVANT_SCOPE_REVISION:{current_scope}")
     errors.extend(f"context:{x}" for x in validate_context_pack(context,base_is_ancestor=is_ancestor(context.get("base_main_sha")),current_projection_revision=projection["projection_revision"],current_relevant_scope_revision=current_scope,current_authority_revision=str(state.get("authority_revision",""))))
     if context.get("event_watermark")!=projection.get("event_watermark"): errors.append("CONTEXT_EVENT_WATERMARK_MISMATCH")
     active=load("docs/state/v2/active-claims.json")

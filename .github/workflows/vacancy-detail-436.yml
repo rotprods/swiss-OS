@@ -66,13 +66,13 @@ jobs:
           assert request['safety']['outbound'] == 'CLOSED'
           assert request['safety']['send_allowed'] == 0
           PY
-      - name: Resolve current vacancy detail shard
+      - name: Resolve current vacancy detail shard with route fault isolation
         env:
           SHARD_INDEX: ${{ matrix.shard }}
         run: |
           set -euo pipefail
           OBSERVED_AT="$(python -c "import json;print(json.load(open('docs/state/market/VACANCY_DETAIL_RUN_REQUEST_436_2026-08-31.json'))['observed_at'])")"
-          python -m swiss_os.vacancy_detail run-shard \
+          python -m swiss_os.vacancy_detail_fault_isolation \
             --aggregate market-source/market-enrichment-2061.json \
             --shard-index "$SHARD_INDEX" \
             --shard-count 44 \
@@ -158,6 +158,7 @@ jobs:
             'vacancy_detail_payload_sha256':detail['payload_sha256'],
             'wave2_resolved_vacancy_signal_count':wave['resolved_vacancy_signal_count'],
             'wave2_selected_count':wave['selected_count'],
+            'application_adversarial_gate_required':'APPLICATION-ADVERSARIAL-GATE-3.0',
             'authority_advanced':False,
             'canonical_id_allocations':0,
             'canonical_id_reservations':0,

@@ -1,0 +1,281 @@
+name: vacancy-detail-recover-shard14
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/state/market/VACANCY_DETAIL_RECOVERY_REQUEST_SHARD14_2026-08-31.json'
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: vacancy-detail-recover-shard14
+  cancel-in-progress: false
+
+jobs:
+  recover-and-aggregate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Install package
+        run: python -m pip install -e .
+
+      - name: Download recovered 2061 market aggregate
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          REQUEST='docs/state/market/VACANCY_DETAIL_RECOVERY_REQUEST_SHARD14_2026-08-31.json'
+          ARTIFACT_ID="$(python -c "import json;print(json.load(open('$REQUEST'))['source_market_artifact_id'])")"
+          curl -fsSL \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            -L "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/${ARTIFACT_ID}/zip" \
+            -o market-source.zip
+          mkdir -p market-source
+          unzip -q -j market-source.zip -d market-source
+          test -f market-source/market-enrichment-2061.json
+
+      - name: Validate market aggregate lineage
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from swiss_os.vacancy_detail import opening_route_workset, sha256_value
+          request=json.loads(Path('docs/state/market/VACANCY_DETAIL_RECOVERY_REQUEST_SHARD14_2026-08-31.json').read_text())
+          market=json.loads(Path('market-source/market-enrichment-2061.json').read_text())
+          declared=market.get('aggregate_sha256')
+          recomputed=sha256_value({k:v for k,v in market.items() if k!='aggregate_sha256'})
+          assert declared == request['source_market_aggregate_declared_sha256']
+          assert recomputed == declared
+          assert len(opening_route_workset(market)) == 436
+          assert request['shard_count'] == 44
+          assert request['missing_shard_indexes'] == [14]
+          assert request['reused_successful_shards'] == 43
+          assert request['recovery_observed_at_semantics'] == 'STAMP_AT_ACTUAL_ACTIONS_EXECUTION_NOT_AT_REQUEST_CREATION'
+          assert request['safety']['outbound'] == 'CLOSED'
+          assert request['safety']['send_allowed'] == 0
+          PY
+
+      - name: Discover exactly 43 reusable shard artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          REQUEST='docs/state/market/VACANCY_DETAIL_RECOVERY_REQUEST_SHARD14_2026-08-31.json'
+          OLD_RUN="$(python -c "import json;print(json.load(open('$REQUEST'))['failed_vacancy_detail_run_id'])")"
+          curl -fsSL \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/runs/${OLD_RUN}/artifacts?per_page=100" \
+            -o old-artifacts.json
+          python - <<'PY'
+          import json,re
+          from pathlib import Path
+          request=json.loads(Path('docs/state/market/VACANCY_DETAIL_RECOVERY_REQUEST_SHARD14_2026-08-31.json').read_text())
+          payload=json.loads(Path('old-artifacts.json').read_text())
+          expected=set(request['expected_reused_indexes'])
+          found={}
+          for artifact in payload.get('artifacts',[]):
+              match=re.fullmatch(r'vacancy-detail-shard-(\d+)', artifact.get('name',''))
+              if not match or artifact.get('expired'):
+                  continue
+              index=int(match.group(1))
+              if index in found:
+                  raise SystemExit(f'duplicate reusable shard artifact {index}')
+              found[index]=int(artifact['id'])
+          if set(found) != expected:
+              raise SystemExit(f'reusable shard set mismatch missing={sorted(expected-set(found))} extra={sorted(set(found)-expected)}')
+          Path('artifact-downloads.txt').write_text(''.join(f'{found[index]} vacancy-detail-shard-{index}\n' for index in sorted(found)))
+          PY
+
+      - name: Download and validate 43 reusable shards
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p recovered-shards artifact-zips
+          while read -r artifact_id artifact_name; do
+            curl -fsSL \
+              -H "Authorization: Bearer ${GH_TOKEN}" \
+              -H "Accept: application/vnd.github+json" \
+              -L "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/${artifact_id}/zip" \
+              -o "artifact-zips/${artifact_name}.zip"
+            unzip -q -j "artifact-zips/${artifact_name}.zip" -d recovered-shards
+          done < artifact-downloads.txt
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          request=json.loads(Path('docs/state/market/VACANCY_DETAIL_RECOVERY_REQUEST_SHARD14_2026-08-31.json').read_text())
+          files=sorted(Path('recovered-shards').glob('vacancy-detail-shard-*.json'))
+          indexes=[]
+          for path in files:
+              packet=json.loads(path.read_text())
+              index=int(packet['shard_index'])
+              indexes.append(index)
+              assert packet['shard_count'] == 44
+              assert packet['observed_at'] == request['original_observed_at']
+              assert packet['authority_advanced'] is False
+              assert packet['canonical_id_allocations'] == 0
+              assert packet['canonical_id_reservations'] == 0
+              assert packet['outbound'] == 'CLOSED'
+              assert packet['send_allowed'] == 0
+          assert indexes == request['expected_reused_indexes'], (indexes, request['expected_reused_indexes'])
+          assert len(files) == 43
+          PY
+
+      - name: Re-run only missing shard 14 with route fault isolation
+        run: |
+          set -euo pipefail
+          RECOVERY_OBSERVED_AT="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          printf '%s\n' "$RECOVERY_OBSERVED_AT" > recovery-observed-at.txt
+          python -m swiss_os.vacancy_detail_fault_isolation \
+            --aggregate market-source/market-enrichment-2061.json \
+            --shard-index 14 \
+            --shard-count 44 \
+            --observed-at "$RECOVERY_OBSERVED_AT" \
+            --out recovered-shards/vacancy-detail-shard-14.json
+
+      - name: Prove exact 44-shard recovery set
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          files=sorted(Path('recovered-shards').glob('vacancy-detail-shard-*.json'))
+          packets=[json.loads(path.read_text()) for path in files]
+          indexes=sorted(int(packet['shard_index']) for packet in packets)
+          assert len(files) == 44
+          assert indexes == list(range(44))
+          recovered=next(packet for packet in packets if int(packet['shard_index']) == 14)
+          actual_observed_at=Path('recovery-observed-at.txt').read_text().strip()
+          assert recovered['observed_at'] == actual_observed_at
+          assert recovered['execution_adapter'] == 'VACANCY-DETAIL-FAULT-ISOLATION-1.0'
+          assert recovered['authority_advanced'] is False
+          assert recovered['outbound'] == 'CLOSED'
+          assert recovered['send_allowed'] == 0
+          PY
+
+      - name: Aggregate exact 436-hotel vacancy-detail coverage
+        run: |
+          set -euo pipefail
+          python -m swiss_os.vacancy_detail aggregate \
+            --market-aggregate market-source/market-enrichment-2061.json \
+            --input-dir recovered-shards \
+            --out vacancy-detail-436-recovered.json
+
+      - name: Compile vacancy-first Wave 2 top 25
+        run: |
+          set -euo pipefail
+          python scripts/compile_application_wave_v2.py \
+            --market-aggregate market-source/market-enrichment-2061.json \
+            --vacancy-detail vacancy-detail-436-recovered.json \
+            --limit 25 \
+            --out application-wave2-public-seeds.json
+
+      - name: Build public-safe recovery summary and receipt
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          request=json.loads(Path('docs/state/market/VACANCY_DETAIL_RECOVERY_REQUEST_SHARD14_2026-08-31.json').read_text())
+          detail=json.loads(Path('vacancy-detail-436-recovered.json').read_text())
+          wave=json.loads(Path('application-wave2-public-seeds.json').read_text())
+          recovered=json.loads(Path('recovered-shards/vacancy-detail-shard-14.json').read_text())
+          actual_observed_at=Path('recovery-observed-at.txt').read_text().strip()
+          summary={
+            'schema_version':'VACANCY-DETAIL-RECOVERY-SUMMARY-1.0',
+            'project':'SWITZERLAND_JOB_OS',
+            'github_run_id':os.environ['GITHUB_RUN_ID'],
+            'github_sha':os.environ['GITHUB_SHA'],
+            'source_market_run_id':request['source_market_run_id'],
+            'failed_vacancy_detail_run_id':request['failed_vacancy_detail_run_id'],
+            'reused_successful_shards':43,
+            'recovered_shard_indexes':[14],
+            'shards_total':44,
+            'workset_total':detail['workset_total'],
+            'workset_sha256':detail['workset_sha256'],
+            'original_observed_at':request['original_observed_at'],
+            'recovery_observed_at':actual_observed_at,
+            'recovery_observed_at_semantics':request['recovery_observed_at_semantics'],
+            'mixed_observation_epochs':True,
+            'recovered_shard_route_rejections':recovered.get('route_rejections',0),
+            'role_signal_hotels':detail['role_signal_hotels'],
+            'role_signal_total':detail['role_signal_total'],
+            'route_resolution_states':detail['route_resolution_states'],
+            'vacancy_detail_payload_sha256':detail['payload_sha256'],
+            'wave2_resolved_vacancy_signal_count':wave['resolved_vacancy_signal_count'],
+            'wave2_selected_count':wave['selected_count'],
+            'application_adversarial_gate_required':'APPLICATION-ADVERSARIAL-GATE-3.0',
+            'candidate_private_truth_embedded':False,
+            'application_ready_no_send':0,
+            'final_send_ready':False,
+            'authority_advanced':False,
+            'canonical_id_allocations':0,
+            'canonical_id_reservations':0,
+            'outbound':'CLOSED',
+            'send_allowed':0,
+            'irreversible_external_actions':0,
+          }
+          Path('vacancy-detail-recovery-summary.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2)+'\n')
+          receipt={
+            'schema_version':'VACANCY-DETAIL-RECOVERY-RECEIPT-1.0',
+            'project':'SWITZERLAND_JOB_OS',
+            'github_run_id':os.environ['GITHUB_RUN_ID'],
+            'github_sha':os.environ['GITHUB_SHA'],
+            'failed_run_reused':request['failed_vacancy_detail_run_id'],
+            'reused_shards':43,
+            'recovered_shards':1,
+            'exact_shard_coverage':44,
+            'exact_hotel_workset_coverage':detail['workset_total'],
+            'recovery_observed_at':actual_observed_at,
+            'vacancy_detail_payload_sha256':detail['payload_sha256'],
+            'wave2_selected_count':wave['selected_count'],
+            'authority_advanced':False,
+            'outbound':'CLOSED',
+            'send_allowed':0,
+            'irreversible_external_actions':0,
+          }
+          Path('vacancy-detail-recovery-receipt.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n')
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vacancy-detail-recovery-${{ github.run_id }}
+          path: |
+            vacancy-detail-436-recovered.json
+            vacancy-detail-recovery-summary.json
+            vacancy-detail-recovery-receipt.json
+            application-wave2-public-seeds.json
+            recovered-shards/vacancy-detail-shard-14.json
+          retention-days: 30
+          if-no-files-found: error
+
+      - name: Persist public-safe recovery branch
+        run: |
+          set -euo pipefail
+          BRANCH="state/vacancy-detail-recovery-${GITHUB_RUN_ID}"
+          DEST="docs/state/market/vacancy-detail/recovery/${GITHUB_RUN_ID}"
+          mkdir -p "$DEST"
+          cp vacancy-detail-recovery-summary.json "$DEST/summary.json"
+          cp vacancy-detail-recovery-receipt.json "$DEST/receipt.json"
+          cp application-wave2-public-seeds.json "$DEST/application-wave2-public-seeds.json"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$BRANCH"
+          git add "$DEST"
+          git commit -m "state(application): persist recovered vacancy-detail Wave 2 ${GITHUB_RUN_ID}"
+          git push --set-upstream origin "$BRANCH"
+          printf '%s\n' "Recovery summary branch persisted: ${BRANCH}"
+          printf '%s\n' "PR creation is delegated to an authorized interactive orchestrator."

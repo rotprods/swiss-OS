@@ -53,13 +53,18 @@ class MarketWorkflowPublicationTests(unittest.TestCase):
         self.assertEqual(len(data['expected_reused_indexes']), 43)
         self.assertEqual(sorted(data['expected_reused_indexes'] + data['missing_shard_indexes']), list(range(44)))
         self.assertTrue(data['mixed_observation_epochs_expected'])
+        self.assertEqual(
+            data['recovery_observed_at_semantics'],
+            'STAMP_AT_ACTUAL_ACTIONS_EXECUTION_NOT_AT_REQUEST_CREATION',
+        )
+        self.assertNotIn('recovery_observed_at', data)
         self.assertEqual(data['application_adversarial_gate_required'], 'APPLICATION-ADVERSARIAL-GATE-3.0')
         self.assertFalse(data['safety']['authority_advanced'])
         self.assertFalse(data['safety']['final_send_ready'])
         self.assertEqual(data['safety']['outbound'], 'CLOSED')
         self.assertEqual(data['safety']['send_allowed'], 0)
 
-    def test_shard14_recovery_workflow_is_minimal_exact_and_no_send(self):
+    def test_shard14_recovery_workflow_is_minimal_exact_timestamped_and_no_send(self):
         text = Path('.github/workflows/vacancy-detail-recover-shard14.yml').read_text(encoding='utf-8')
         self.assertNotIn('gh pr create', text)
         self.assertIn('failed_vacancy_detail_run_id', text)
@@ -69,6 +74,9 @@ class MarketWorkflowPublicationTests(unittest.TestCase):
         self.assertIn('assert len(files) == 44', text)
         self.assertIn('indexes == list(range(44))', text)
         self.assertIn('python -m swiss_os.vacancy_detail_fault_isolation', text)
+        self.assertIn("date -u +'%Y-%m-%dT%H:%M:%SZ'", text)
+        self.assertIn('recovery-observed-at.txt', text)
+        self.assertNotIn("['recovery_observed_at']", text)
         self.assertIn("'mixed_observation_epochs':True", text)
         self.assertIn("'outbound':'CLOSED'", text)
         self.assertIn("'send_allowed':0", text)

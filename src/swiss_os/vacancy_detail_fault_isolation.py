@@ -10,15 +10,17 @@ from .vacancy_detail import SCHEMA_VERSION, opening_route_workset, resolve_route
 
 
 ROUTE_REJECTION_STATE = "ROUTE_URL_REJECTED_SECURITY_BOUNDARY"
+PUBLIC_URL_SAFETY_ERRORS = frozenset(
+    {
+        "only public HTTPS URLs are allowed",
+        "URL credentials/non-standard ports are forbidden",
+        "hostname must resolve only to public addresses",
+    }
+)
 
 
 def rejected_route_result(route_url: str, observed_at: str, exc: ValueError) -> dict[str, Any]:
-    """Materialize a route-level safety rejection without weakening the safety check.
-
-    The route remains unresolved and contributes no role/no-opening inference. Only the
-    blast radius changes: one rejected URL cannot destroy evidence collected for the
-    other records assigned to the same deterministic shard.
-    """
+    """Materialize a recognized route-level safety rejection without weakening it."""
     return {
         "requested_url": route_url,
         "final_url": None,
@@ -46,6 +48,8 @@ def resolve_route_isolated(client: HttpResearchClient, route_url: str, observed_
     try:
         return resolve_route(client, route_url, observed_at)
     except ValueError as exc:
+        if str(exc) not in PUBLIC_URL_SAFETY_ERRORS:
+            raise
         return rejected_route_result(route_url, observed_at, exc)
 
 

@@ -6,11 +6,10 @@
     "state": "ACTIVE_UNTIL_EXPLICIT_RELEASE_OR_SUPERSESSION"
   },
   "artifacts": [
-    "docs/state/source/HSLCA_R2_COHERENCE_BLOCKER_2026-08-30.json",
-    "docs/state/source/HSLCA_LIVE_CAPTURE_REQUEST.json",
-    "docs/state/CRM_CANDIDATE_EXPORT_33206402141.manifest.json",
-    "docs/handoffs/META_20260830_CRM_R2_HSLCA_COHERENCE.md",
-    "docs/state/RAGR34_POST_REVIEW_DISPOSITION_WORKSET_2026-08-30.json"
+    "docs/state/CRM_CURRENT_SOURCE_MAPPING_PROJECTION_33339392661.json",
+    "docs/state/CRM_CURRENT_GONTEN_ECV_SRR_LINEAGE_33339392661.json",
+    "docs/state/CRM_EXACT_CURRENT_CANDIDATE_LINEAGE_33339392661.json",
+    "docs/handoffs/META_20260831_CRM_CURRENT_SOURCE_CONTINUITY.md"
   ],
   "authority_advance_allowed": false,
   "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
@@ -25,21 +24,30 @@
     "physical_rows": 690,
     "send_allowed": 0
   },
+  "candidate_lineage": {
+    "artifact_path": "docs/state/CRM_EXACT_CURRENT_CANDIDATE_LINEAGE_33339392661.json",
+    "authority_effect": "NONE",
+    "candidate_records": 1438,
+    "changed_identity_current_transfers": 2,
+    "exact_unchanged_current_transfers": 1436,
+    "historical_candidate_artifact_id": 9718866661,
+    "lineage_accounted": 1438,
+    "mapping_sha256": "ddd1368fde0233f98885f6513bdf1b0142b669d3e0d882dd2b7634ca00954b5c"
+  },
   "canonical_id_allocation_allowed": false,
   "capabilities_required": [
     "github_read_write_ci",
-    "github_actions_networked_runner",
     "public_hotelleriesuisse_member_directory",
-    "drive_native_sheets_read"
+    "drive_native_sheets_read",
+    "web_current_first_party_research"
   ],
   "checkpoint_id": "CRM_UNIVERSE_COMPLETE",
-  "cycle_id": "META-20260830-CRM-R2-HSLCA-COHERENCE",
+  "cycle_id": "META-20260831-CRM-CURRENT-ENTITY-RESOLUTION",
   "done_when": [
-    "A fresh single-locale member-directory capture completes without page/count coherence violations.",
-    "The selected member-directory manifest has coverage_complete=true and complete page/record identity QA.",
-    "The new source artifact is persisted with immutable run/artifact/hash provenance.",
-    "No canonical H-ID allocation/reservation or authority mutation occurred.",
-    "OUTBOUND remains CLOSED and send_allowed remains 0."
+    "The current 2061-record coherent source universe is fully partitioned into evidence-backed terminal mappings or explicitly typed non-authority dispositions.",
+    "RECONCILE_REQUIRED reaches 0 without allocating or reserving canonical IDs from staging.",
+    "Any authority promotion, if later eligible, uses exact-current DB-first cross-plane reconciliation rather than CI/cache/canary evidence.",
+    "OUTBOUND remains CLOSED and send_allowed remains 0 until separately authorized."
   ],
   "ecv_frontier": {
     "candidate_records_total": 1438,
@@ -59,101 +67,50 @@
     "remaining_never_verified": 0,
     "remaining_unverified": 0
   },
-  "exact_dependency": "Obtain one coherent current German HotellerieSuisse member-directory capture/manifest with coverage_complete=true. The recovered 2061-record run is LIVE_PARTIAL and failed closed on PAGE_COUNT_DRIFT:171,172, so it cannot be used as complete directory coverage or as authority for absence/exclusion.",
-  "execution_mode": "READ_ONLY_RESEARCH",
-  "generated_at": "2026-08-30T22:25:00Z",
+  "exact_dependency": "Resolve the 1403 current coherent HotellerieSuisse source records that do not yet have terminal mappings. Use only evidence-backed preauthority decisions; fuzzy similarity may rank candidates but must never auto-bind. Structured discover.swiss SSR-1.0 remains an optional accelerator blocked by the absent runtime subscription/capture-valid manifest, not a blocker to provider-neutral entity-resolution work.",
+  "execution_mode": "READ_ONLY_RESEARCH_AND_PREAUTH_ENTITY_RESOLUTION",
+  "generated_at": "2026-08-31T02:30:00Z",
   "goal_id": "G-0500",
   "graph_impact": "META",
   "hard_blockers": [
-    "CURRENT_MEMBER_DIRECTORY_MANIFEST_NOT_COHERENT_COMPLETE",
+    "RECONCILE_REQUIRED_1403_NOT_ZERO",
     "DISCOVER_SWISS_RUNTIME_SUBSCRIPTION_KEY_ABSENT",
-    "SSR_1_0_REQUIRES_CAPTURE_VALID_DISCOVER_SWISS_MANIFEST_FOR_STRUCTURED_ROUTE",
-    "DURABLE_DB_FIRST_E4_EGRESS_BLOCKED_FILE_REFERENCE_DO_NOT_REPEAT",
-    "RECONCILE_REQUIRED_1403_NOT_ZERO"
+    "SSR_1_0_STRUCTURED_DISCOVER_ROUTE_BLOCKED_UNTIL_CAPTURE_VALID_DISCOVER_MANIFEST",
+    "DURABLE_DB_FIRST_E4_EGRESS_BLOCKED_FILE_REFERENCE_DO_NOT_REPEAT"
   ],
   "mapping_frontier": {
-    "full_terminal_pairs_sha256": "cdcecdf445395fe36c6318c2f0103757b0a14ec08d33e229c138df2ec36ad56e",
-    "full_unresolved_source_keys_sha256": "910cfd92974025a836430612387d380be0f15d173d41f20fda6fea2bcca48581",
+    "full_terminal_pairs_sha256": "3e5be19a0132602ca377df36986e287291c7551a5009f9fde6b24c1315ff8de4",
+    "full_unresolved_source_keys_sha256": "c5b436dcd7d2632b3a49ccc1d3f1f75620f0c7db78c4247e5ab9c5394b30d996",
     "operational_authority": false,
     "reconcile_required": 1403,
     "reverse_authority_source_gaps": 34,
     "terminal_source_mappings": 658,
     "unique_canonical_targets": 656
   },
-  "next_route": "R2_HSLCA_COHERENT_MEMBER_DIRECTORY_RECAPTURE",
+  "next_route": "CURRENT_UNRESOLVED_1403_ENTITY_RESOLUTION",
   "outbound_allowed": false,
-  "parent_git_sha": "b0ec94f4a13fb7c24d39454439d9792d90bb7e46",
+  "parent_git_sha": "02dad1a5bd82219b34430b5fd1cee3ee088642b6",
   "parent_sha_semantics": "Verified live main at wave bootstrap. Resume only if current main is this SHA or a descendant and the E4 authority tuple remains unchanged.",
   "project": "SWITZERLAND_JOB_OS",
   "recovery_route": [
-    "Read current GitHub main and verify this parent is current or an ancestor.",
-    "Re-read Drive HOTELS_V2 and verify H-0691 remains absent/unallocated.",
-    "Verify E4 authority epoch/hash and token6 ceiling are unchanged.",
-    "Read the HSLCA coherence blocker and live capture request.",
-    "Run or inspect the fresh bounded HSLCA capture; never coerce page/count drift into completeness.",
-    "If coverage_complete=true, validate the exact fresh manifest artifact and recompute current anti-join/source identity before choosing SSR or fallback staging.",
-    "If the capture again drifts, persist exact diagnostics and route to the next provider-safe acquisition strategy.",
+    "Verify current GitHub main is the recorded parent SHA or a descendant.",
+    "Re-read Drive HOTELS_V2 and confirm 690 canonical rows with H-0691 absent/unallocated.",
+    "Verify E4 authority epoch/materialized SHA and token6 ceiling are unchanged.",
+    "Use HS-MEMBER-DE-33339392661 / artifact 9740219406 as the coherent current member-directory source.",
+    "Use CRM_EXACT_CURRENT_CANDIDATE_LINEAGE_33339392661.json only for lineage transfer; it grants no authority.",
+    "Continue CURRENT_UNRESOLVED_1403_ENTITY_RESOLUTION in bounded evidence-backed batches.",
+    "If discover.swiss becomes available, capture a valid structured manifest and run SSR-1.0 as an additional evidence plane.",
     "Keep OUTBOUND=CLOSED and send_allowed=0."
   ],
   "required_inputs": [
-    "GitHub current main b0ec94f4a13fb7c24d39454439d9792d90bb7e46 or descendant",
+    "GitHub current main 02dad1a5bd82219b34430b5fd1cee3ee088642b6 or descendant",
     "authority E4 / SHA 70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
-    "docs/state/source/HSLCA_LIVE_CAPTURE_REQUEST.json",
-    "docs/state/source/HSLCA_R2_COHERENCE_BLOCKER_2026-08-30.json",
-    "source artifact 9700376482 / run 33206402141",
-    "docs/state/RAGR34_POST_REVIEW_DISPOSITION_WORKSET_2026-08-30.json",
-    "docs/state/CRM_CANDIDATE_EXPORT_33206402141.manifest.json",
-    "Drive HOTELS_MASTER/HOTELS_V2"
+    "Drive HOTELS_MASTER/HOTELS_V2",
+    "current source run 33339392661 / artifact 9740219406",
+    "docs/state/CRM_CURRENT_SOURCE_MAPPING_PROJECTION_33339392661.json",
+    "docs/state/CRM_CURRENT_GONTEN_ECV_SRR_LINEAGE_33339392661.json",
+    "historical candidate artifact 9718866661"
   ],
-  "resume_instructions": [
-    "Verify live main ancestry, E4 authority tuple and H-0691 unallocated state.",
-    "Inspect the current HSLCA request/run status and exact artifact before any downstream source mapping.",
-    "Treat the 1438 candidate export and 2061 source rows as historical partial-substrate lineage, not as complete current member-directory coverage.",
-    "Do not allocate/reserve canonical IDs from staging or canary state.",
-    "Do not advance authority from source acquisition, cache or CI evidence."
-  ],
-  "review_frontier": {
-    "band500599": {
-      "effective_total": 46,
-      "new_canonical_preauth_after": 46,
-      "remaining": 0,
-      "reviewed_after": 46
-    },
-    "cumulative_new_canonical_preauth": 114,
-    "ge600": {
-      "new_canonical_preauth": 20,
-      "relationship_unresolved": 0,
-      "reviewed": 20,
-      "total": 20
-    },
-    "lower49": {
-      "ordinary_evidence_reviewed": 47,
-      "ordinary_exact_workset": 47,
-      "ordinary_typed_srr": 47,
-      "ordinary_typed_srr_remaining": 0,
-      "special_reviewed": 2,
-      "total": 49,
-      "workset_batch_sizes": [10, 10, 10, 10, 7],
-      "workset_sha256": "8817941127ede8f9329d81b4831b1fd6643e9ab4c19438c3fa612b78e1169050"
-    },
-    "overall_relationship_granularity_unresolved": 0,
-    "ragr": {
-      "batch_hotel_ids": [],
-      "batch_id": "RAGR34-COMPLETE",
-      "classification_counts": {
-        "COMPONENT/GROUP GRANULARITY": 2,
-        "DATA DEFECT": 3,
-        "IN_SCOPE_NO_SOURCE_MATCH": 24,
-        "OUT_OF_SNAPSHOT_SCOPE": 0,
-        "SUPERSEDED/RENAMED WITH EVIDENCE": 5,
-        "UNRESOLVED": 0
-      },
-      "remaining": 0,
-      "review_queue_sha256": "cf47dc91057df8653cd75729cb39320605e193e476c6828f24956b69e2848b9c",
-      "reviewed": 34,
-      "total": 34
-    }
-  },
   "runtime_capability_frontier": {
     "discover_swiss_capture_valid_manifest": false,
     "discover_swiss_subscription": false,
@@ -177,42 +134,22 @@
     "send_allowed": 0
   },
   "schema_version": "NPP-1.2",
-  "selected_route": "R2_HSLCA_COHERENT_MEMBER_DIRECTORY_RECAPTURE",
+  "selected_route": "CURRENT_UNRESOLVED_1403_ENTITY_RESOLUTION",
   "source_frontier": {
-    "artifact_zip_sha256": "721f9ff9f84e2d5d9df62c6b22f12e7354cef3a298cb8990be66a202e1e769ce",
-    "candidate_records": 1438,
-    "capture_mode": "LIVE_PARTIAL",
-    "capture_violations": ["REPORTED_RECORDS_UNRESOLVED", "PAGE_COUNT_DRIFT:171,172"],
-    "coverage_claim": "PARTIAL",
-    "coverage_complete": false,
+    "capture_mode": "LIVE_COMPLETE_MATERIALIZED_COUNT",
+    "capture_violations": [],
+    "coverage_claim": "COMPLETE",
+    "coverage_complete": true,
+    "historical_partial_source_artifact_id": 9700376482,
     "pages": 172,
-    "ragr24_exact_name_city_matches_in_partial_snapshot": 0,
-    "ragr_in_scope_no_source_match": 24,
     "reconcile_required": 1403,
     "records": 2061,
-    "records_sha256": "62e26d62d8677a5437e081302b6b4d206c0d27a0fe268c6356aef01da5428dc2",
+    "records_sha256": "b16fdb63a01149e10feb4d506f38301644b73a612f898ce72567ec4fa92da404",
     "reverse_authority_source_gaps": 34,
-    "snapshot_id": "HS-MEMBER-DE-33206402141",
-    "source_artifact_id": 9700376482,
-    "source_job_id": 98968446260,
-    "source_run_id": 33206402141,
+    "snapshot_id": "HS-MEMBER-DE-33339392661",
+    "source_artifact_id": 9740219406,
+    "source_run_id": 33339392661,
     "terminal_source_mappings": 658,
     "unique_canonical_targets": 656
-  },
-  "source_universe": {
-    "candidate_artifact_id": 9718866661,
-    "candidate_export_artifact_digest_sha256": "d58c57c5a83cd2ff740f0ec900163f5c7aa795b032045cf9d30ffd194733465e",
-    "candidate_export_artifact_id": 9718866661,
-    "candidate_export_gzip_sha256": "071e2cf1b895b63457c56066de7d8653b3182a12d1260ff9be7709a684fcf194",
-    "candidate_export_manifest_path": "docs/state/CRM_CANDIDATE_EXPORT_33206402141.manifest.json",
-    "candidate_export_records_sha256": "34d9aa9cfa4fe896bf1db8fba4dedfded9a1dbf2e135b847101904644d16bba0",
-    "candidate_records": 1438,
-    "candidate_records_sha256": "34d9aa9cfa4fe896bf1db8fba4dedfded9a1dbf2e135b847101904644d16bba0",
-    "pages": 172,
-    "records": 2061,
-    "records_sha256": "62e26d62d8677a5437e081302b6b4d206c0d27a0fe268c6356aef01da5428dc2",
-    "scope_state": "HISTORICAL_PARTIAL_SUBSTRATE_NOT_COVERAGE_COMPLETE",
-    "snapshot_id": "HS-MEMBER-DE-33206402141",
-    "source_artifact_id": 9700376482
   }
 }

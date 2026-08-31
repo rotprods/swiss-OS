@@ -1,0 +1,64 @@
+{
+  "schema_version": "NPP-1.2-WAVE-POINTER",
+  "project": "SWITZERLAND_JOB_OS",
+  "checkpoint_id": "CRM_UNIVERSE_COMPLETE",
+  "route": "CURRENT_UNRESOLVED_LT350000_ZERO_CANONICAL_CITY_B02",
+  "parent_git_sha": "cbd3a98c8c0f7c1e35a086fe110f7bdab8032652",
+  "parent_sha_semantics": "Resume only if current main is this SHA or a descendant and the E4 authority tuple is unchanged.",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "authority_parent_materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+  "authority_advance_allowed": false,
+  "canonical_id_allocation_allowed": false,
+  "current_source": {
+    "snapshot_id": "HS-MEMBER-DE-33339392661",
+    "run_id": 33339392661,
+    "artifact_id": 9740219406,
+    "records": 2061,
+    "pages": 172,
+    "records_sha256": "b16fdb63a01149e10feb4d506f38301644b73a612f898ce72567ec4fa92da404",
+    "coverage_complete": true
+  },
+  "mapping_frontier": {
+    "terminal_source_mappings": 658,
+    "unique_canonical_targets": 656,
+    "reconcile_required": 1403,
+    "reverse_authority_source_gaps": 34
+  },
+  "historical_lt350000_unreviewed_tail_total": 1289,
+  "historical_lt350000_unreviewed_tail_reviewed_current": 10,
+  "historical_lt350000_unreviewed_tail_remaining": 1279,
+  "zero_same_city_canonical_population_at_b01_selection": 485,
+  "b01_source_record_keys": [
+    "MD-006cf8014a406f7c860b",
+    "MD-00b5a813d1a39d693130",
+    "MD-0178d918d3d8d28271d6",
+    "MD-01ae76ba000233702676",
+    "MD-01e9ea0e18fbcd931df8",
+    "MD-01f7bc45d9b68ffa2950",
+    "MD-020599fdbb6c434c0696",
+    "MD-02e7960f5bfbc403aafe",
+    "MD-0300afd3df838ed5fc0e",
+    "MD-033dbc82f02485146685"
+  ],
+  "exact_dependency": "Continue the exact-current unresolved entity-resolution lane using current coherent HotellerieSuisse identities transferred from the previously unreviewed <0.35 lineage tail. Prefer records whose normalized source city has zero canonical rows, but require current independent property evidence and cross-city name-collision review before NEW_CANONICAL preauthority. Similarity is rank-only; do not create terminal mappings, allocate/reserve H-IDs, or advance authority from this lane.",
+  "provider_boundaries": [
+    "DISCOVER_SWISS_RUNTIME_SUBSCRIPTION_KEY_ABSENT",
+    "SSR_1_0_CAPTURE_VALID_DISCOVER_MANIFEST_ABSENT",
+    "DURABLE_DB_FIRST_E4_EGRESS_BLOCKED_FILE_REFERENCE_DO_NOT_REPEAT"
+  ],
+  "recovery_inputs": [
+    "GitHub main cbd3a98c8c0f7c1e35a086fe110f7bdab8032652 or descendant",
+    "authority E4 / 70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+    "Drive HOTELS_MASTER/HOTELS_V2 read-only 690-row projection",
+    "HS-MEMBER-DE-33339392661 / Actions run 33339392661 / artifact 9740219406",
+    "docs/state/CRM_EXACT_CURRENT_CANDIDATE_LINEAGE_33339392661.json",
+    "docs/state/CRM_CURRENT_UNRESOLVED_LT350_B01_2026-08-31.json",
+    "historical SOURCE_RESOLUTION_REVIEW_UNRESOLVED_1403_33206402141.json for lineage-only band provenance"
+  ],
+  "outbound": "CLOSED",
+  "send_allowed": 0,
+  "h_id_allocations": 0,
+  "canonical_id_reservations": 0,
+  "crm_universe_complete": false,
+  "irreversible_external_actions": 0
+}

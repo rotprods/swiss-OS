@@ -1,0 +1,156 @@
+{
+  "authority": {
+    "canonical_rows": 690,
+    "effect": "NONE",
+    "epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+    "materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+    "next_physical_id": "H-0691_UNALLOCATED"
+  },
+  "decisions": [
+    {
+      "authority_effect": "NONE",
+      "canonical_h_id_reserved": false,
+      "cross_city_distinctness_basis": "CURRENT_PROPERTY_CITY/ADDRESS_EVIDENCE_DIFFERS_FROM_ALL_GLOBAL_TOP_NAME_CANDIDATE_CITIES",
+      "current_evidence": [
+        {
+          "fact": "Hotel Grimselpasshöhe; Grimselpass, 3999 Oberwald; rooms and reservation surfaced current.",
+          "tier": "FIRST_PARTY",
+          "url": "https://hotel-grimselpass.ch/en/"
+        }
+      ],
+      "current_max_same_city_token_jaccard_ppm": 0,
+      "decision": "NEW_CANONICAL_PREAUTH",
+      "global_max_token_jaccard_ppm": 250000,
+      "global_top_name_candidates": [
+        {"canonical_name":"Hotel Fravi","city":"Andeer","hotel_id":"H-0008","similarity_ppm":250000},
+        {"canonical_name":"Hotel Matterhornblick","city":"Zermatt","hotel_id":"H-0010","similarity_ppm":250000},
+        {"canonical_name":"Hotel Pollux","city":"Zermatt","hotel_id":"H-0017","similarity_ppm":250000},
+        {"canonical_name":"7132 Hotel","city":"Vals","hotel_id":"H-0036","similarity_ppm":250000},
+        {"canonical_name":"Adhhoc Hotel","city":"Naters","hotel_id":"H-0043","similarity_ppm":250000}
+      ],
+      "h_id_allocated": false,
+      "historical_similarity_band": "lt350000",
+      "mapping_state": "RECONCILE_REQUIRED",
+      "ordinal": 1,
+      "reason_code": "CURRENT_PROPERTY_EVIDENCE_PLUS_ZERO_CANONICAL_ROWS_IN_NORMALIZED_SOURCE_CITY_NO_EXISTING_TARGET_PROVEN",
+      "same_city_canonical_count": 0,
+      "source_city": "Oberwald",
+      "source_detail_url": "https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-hotel-grimsel-passhoehe",
+      "source_evidence_ref": "HS-MEMBER-DE-33339392661:page:0078#record-004",
+      "source_name": "Hotel Grimsel Passhöhe",
+      "source_record_key": "MD-006cf8014a406f7c860b",
+      "terminal_mapping_created": false
+    },
+    {
+      "authority_effect": "NONE",
+      "canonical_h_id_reserved": false,
+      "cross_city_distinctness_basis": "CURRENT_PROPERTY_CITY/ADDRESS_EVIDENCE_DIFFERS_FROM_ALL_GLOBAL_TOP_NAME_CANDIDATE_CITIES",
+      "current_evidence": [{"fact":"Seehotel Schiff at Seestrasse 4, 8268 Mannenbach-Salenstein; website seehotel.ch and current opening/contact data.","tier":"QUALIFIED_DESTINATION","url":"https://www.myswitzerland.com/en-us/experiences/food-wine/restaurant/seehotel-schiff/"}],
+      "current_max_same_city_token_jaccard_ppm": 0,
+      "decision": "NEW_CANONICAL_PREAUTH",
+      "global_max_token_jaccard_ppm": 333333,
+      "global_top_name_candidates": [
+        {"canonical_name":"Seehotel Sternen","city":"Horw","hotel_id":"H-0637","similarity_ppm":333333},
+        {"canonical_name":"Seehotel Belvédère","city":"Hergiswil NW","hotel_id":"H-0668","similarity_ppm":333333},
+        {"canonical_name":"Seehotel Kastanienbaum","city":"Kastanienbaum","hotel_id":"H-0669","similarity_ppm":333333}
+      ],
+      "h_id_allocated": false,
+      "historical_similarity_band": "lt350000",
+      "mapping_state": "RECONCILE_REQUIRED",
+      "ordinal": 2,
+      "reason_code": "CURRENT_PROPERTY_EVIDENCE_PLUS_ZERO_CANONICAL_ROWS_IN_NORMALIZED_SOURCE_CITY_NO_EXISTING_TARGET_PROVEN",
+      "same_city_canonical_count": 0,
+      "source_city": "Mannenbach-Salenstein",
+      "source_detail_url": "https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-seehotel-schiff",
+      "source_evidence_ref": "HS-MEMBER-DE-33339392661:page:0156#record-006",
+      "source_name": "Seehotel Schiff",
+      "source_record_key": "MD-00b5a813d1a39d693130",
+      "terminal_mapping_created": false
+    },
+    {
+      "authority_effect": "NONE","canonical_h_id_reserved":false,"cross_city_distinctness_basis":"CURRENT_PROPERTY_CITY/ADDRESS_EVIDENCE_DIFFERS_FROM_ALL_GLOBAL_TOP_NAME_CANDIDATE_CITIES","current_evidence":[{"fact":"Hotel Serpiano, Via Serpiano, 6867 Serpiano; active lodging, spa, restaurant, booking.","tier":"FIRST_PARTY","url":"https://www.serpiano.ch/en/"}],"current_max_same_city_token_jaccard_ppm":0,"decision":"NEW_CANONICAL_PREAUTH","global_max_token_jaccard_ppm":500000,"global_top_name_candidates":[{"canonical_name":"Hotel Panorama","city":"Hasliberg Reuti","hotel_id":"H-0133","similarity_ppm":500000},{"canonical_name":"Hôtel Panorama","city":"Mollens VS","hotel_id":"H-0134","similarity_ppm":500000}],"h_id_allocated":false,"historical_similarity_band":"lt350000","mapping_state":"RECONCILE_REQUIRED","ordinal":3,"reason_code":"CURRENT_PROPERTY_EVIDENCE_PLUS_ZERO_CANONICAL_ROWS_IN_NORMALIZED_SOURCE_CITY_NO_EXISTING_TARGET_PROVEN","same_city_canonical_count":0,"source_city":"Serpiano","source_detail_url":"https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-hotel-serpiano-panorama-retreat","source_evidence_ref":"HS-MEMBER-DE-33339392661:page:0108#record-005","source_name":"Hotel Serpiano Panorama Retreat","source_record_key":"MD-0178d918d3d8d28271d6","terminal_mapping_created":false
+    },
+    {
+      "authority_effect":"NONE","canonical_h_id_reserved":false,"cross_city_distinctness_basis":"CURRENT_PROPERTY_CITY/ADDRESS_EVIDENCE_DIFFERS_FROM_ALL_GLOBAL_TOP_NAME_CANDIDATE_CITIES","current_evidence":[{"fact":"Hotel-Speiserestaurant Hallwyl AG, Boniswilerstrasse 17, 5707 Seengen; current hotel rooms/contact.","tier":"FIRST_PARTY","url":"https://hallwylseengen.ch/hotel/"}],"current_max_same_city_token_jaccard_ppm":0,"decision":"NEW_CANONICAL_PREAUTH","global_max_token_jaccard_ppm":250000,"global_top_name_candidates":[{"canonical_name":"Hotel Fravi","city":"Andeer","hotel_id":"H-0008","similarity_ppm":250000}],"h_id_allocated":false,"historical_similarity_band":"lt350000","mapping_state":"RECONCILE_REQUIRED","ordinal":4,"reason_code":"CURRENT_PROPERTY_EVIDENCE_PLUS_ZERO_CANONICAL_ROWS_IN_NORMALIZED_SOURCE_CITY_NO_EXISTING_TARGET_PROVEN","same_city_canonical_count":0,"source_city":"Seengen","source_detail_url":"https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-hotel-speiserestaurant-hallwyl","source_evidence_ref":"HS-MEMBER-DE-33339392661:page:0121#record-006","source_name":"Hotel-Speiserestaurant Hallwyl","source_record_key":"MD-01ae76ba000233702676","terminal_mapping_created":false
+    },
+    {
+      "authority_effect":"NONE","canonical_h_id_reserved":false,"cross_city_distinctness_basis":"CURRENT_PROPERTY_CITY/ADDRESS_EVIDENCE_DIFFERS_FROM_ALL_GLOBAL_TOP_NAME_CANDIDATE_CITIES","current_evidence":[{"fact":"Hotel Restaurant Capricorns, Wergenstein; hotel contact and current operating information.","tier":"QUALIFIED_DESTINATION","url":"https://www.graubuenden.ch/fr/gastronomie/hotel-restaurant-capricorns"}],"current_max_same_city_token_jaccard_ppm":0,"decision":"NEW_CANONICAL_PREAUTH","global_max_token_jaccard_ppm":500000,"global_top_name_candidates":[{"canonical_name":"Restaurant Hotel Baseltor","city":"Solothurn","hotel_id":"H-0234","similarity_ppm":500000}],"h_id_allocated":false,"historical_similarity_band":"lt350000","mapping_state":"RECONCILE_REQUIRED","ordinal":5,"reason_code":"CURRENT_PROPERTY_EVIDENCE_PLUS_ZERO_CANONICAL_ROWS_IN_NORMALIZED_SOURCE_CITY_NO_EXISTING_TARGET_PROVEN","same_city_canonical_count":0,"source_city":"Wergenstein","source_detail_url":"https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-hotel-restaurant-capricorns","source_evidence_ref":"HS-MEMBER-DE-33339392661:page:0100#record-002","source_name":"Hotel Restaurant Capricorns","source_record_key":"MD-01e9ea0e18fbcd931df8","terminal_mapping_created":false
+    },
+    {
+      "authority_effect":"NONE","canonical_h_id_reserved":false,"cross_city_distinctness_basis":"CURRENT_PROPERTY_CITY/ADDRESS_EVIDENCE_DIFFERS_FROM_ALL_GLOBAL_TOP_NAME_CANDIDATE_CITIES","current_evidence":[{"fact":"Meisser Resort, Dorfstrasse 42, 7545 Guarda; current 2026 seasons and active hotel operation.","tier":"FIRST_PARTY","url":"https://www.hotel-meisser.ch/"},{"fact":"Meisser Lodge independently listed at Dorfstrasse 42, 7545 Guarda.","tier":"QUALIFIED_DESTINATION","url":"https://www.engadin.com/en/meisser-lodge"}],"current_max_same_city_token_jaccard_ppm":0,"decision":"NEW_CANONICAL_PREAUTH","global_max_token_jaccard_ppm":333333,"global_top_name_candidates":[{"canonical_name":"Weissbad Lodge***","city":"Weissbad","hotel_id":"H-0535","similarity_ppm":333333},{"canonical_name":"Villars Lodge","city":"Villars-sur-Ollon","hotel_id":"H-0608","similarity_ppm":333333},{"canonical_name":"Stoos Lodge","city":"Stoos SZ","hotel_id":"H-0633","similarity_ppm":333333}],"h_id_allocated":false,"historical_similarity_band":"lt350000","mapping_state":"RECONCILE_REQUIRED","ordinal":6,"reason_code":"CURRENT_PROPERTY_EVIDENCE_PLUS_ZERO_CANONICAL_ROWS_IN_NORMALIZED_SOURCE_CITY_NO_EXISTING_TARGET_PROVEN","same_city_canonical_count":0,"source_city":"Guarda","source_detail_url":"https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-meisser-lodge","source_evidence_ref":"HS-MEMBER-DE-33339392661:page:0139#record-002","source_name":"Meisser Lodge","source_record_key":"MD-01f7bc45d9b68ffa2950","terminal_mapping_created":false
+    },
+    {
+      "authority_effect":"NONE","canonical_h_id_reserved":false,"cross_city_distinctness_basis":"CURRENT_PROPERTY_CITY/ADDRESS_EVIDENCE_DIFFERS_FROM_ALL_GLOBAL_TOP_NAME_CANDIDATE_CITIES","current_evidence":[{"fact":"Hota Hotel Saint-Imier, Rue du Vallon 30, 2610 Saint-Imier; active hotel and booking/contact.","tier":"FIRST_PARTY","url":"https://hotahotels.com/en/hotel/saint-imier/"}],"current_max_same_city_token_jaccard_ppm":0,"decision":"NEW_CANONICAL_PREAUTH","global_max_token_jaccard_ppm":200000,"global_top_name_candidates":[{"canonical_name":"Hotel Fravi","city":"Andeer","hotel_id":"H-0008","similarity_ppm":200000}],"h_id_allocated":false,"historical_similarity_band":"lt350000","mapping_state":"RECONCILE_REQUIRED","ordinal":7,"reason_code":"CURRENT_PROPERTY_EVIDENCE_PLUS_ZERO_CANONICAL_ROWS_IN_NORMALIZED_SOURCE_CITY_NO_EXISTING_TARGET_PROVEN","same_city_canonical_count":0,"source_city":"St-Imier","source_detail_url":"https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-hota-hotel-saint-imier","source_evidence_ref":"HS-MEMBER-DE-33339392661:page:0042#record-004","source_name":"Hota Hotel Saint-Imier","source_record_key":"MD-020599fdbb6c434c0696","terminal_mapping_created":false
+    },
+    {
+      "authority_effect":"NONE","canonical_h_id_reserved":false,"cross_city_distinctness_basis":"CURRENT_PROPERTY_CITY/ADDRESS_EVIDENCE_DIFFERS_FROM_ALL_GLOBAL_TOP_NAME_CANDIDATE_CITIES","current_evidence":[{"fact":"Hotel Stella, Via al Parco 14, 6644 Orselina; 39 rooms, current website/contact.","tier":"QUALIFIED_DESTINATION","url":"https://www.ascona-locarno.com/en/hotels/details/Hotel-Stella/10004170"},{"fact":"Hotel Stella, Orselina; current accommodation listing and facilities.","tier":"QUALIFIED_DESTINATION","url":"https://www.myswitzerland.com/en-us/accommodations/hotel-stella/"}],"current_max_same_city_token_jaccard_ppm":0,"decision":"NEW_CANONICAL_PREAUTH","global_max_token_jaccard_ppm":500000,"global_top_name_candidates":[{"canonical_name":"Stella Swiss Quality Hotel","city":"Interlaken","hotel_id":"H-0626","similarity_ppm":500000}],"h_id_allocated":false,"historical_similarity_band":"lt350000","mapping_state":"RECONCILE_REQUIRED","ordinal":8,"reason_code":"CURRENT_PROPERTY_EVIDENCE_PLUS_ZERO_CANONICAL_ROWS_IN_NORMALIZED_SOURCE_CITY_NO_EXISTING_TARGET_PROVEN","same_city_canonical_count":0,"source_city":"Orselina","source_detail_url":"https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-hotel-stella","source_evidence_ref":"HS-MEMBER-DE-33339392661:page:0111#record-007","source_name":"Hotel Stella","source_record_key":"MD-02e7960f5bfbc403aafe","terminal_mapping_created":false
+    },
+    {
+      "authority_effect":"NONE","canonical_h_id_reserved":false,"cross_city_distinctness_basis":"CURRENT_PROPERTY_CITY/ADDRESS_EVIDENCE_DIFFERS_FROM_ALL_GLOBAL_TOP_NAME_CANDIDATE_CITIES","current_evidence":[{"fact":"Hotel Bodenhaus, Bodaplatz 2, 7435 Splügen; hotel remains open/current with direct website contact.","tier":"QUALIFIED_DESTINATION","url":"https://www.graubuenden.ch/en/gastronomy/hotel-bodenhaus"}],"current_max_same_city_token_jaccard_ppm":0,"decision":"NEW_CANONICAL_PREAUTH","global_max_token_jaccard_ppm":333333,"global_top_name_candidates":[{"canonical_name":"Hotel Fravi","city":"Andeer","hotel_id":"H-0008","similarity_ppm":333333}],"h_id_allocated":false,"historical_similarity_band":"lt350000","mapping_state":"RECONCILE_REQUIRED","ordinal":9,"reason_code":"CURRENT_PROPERTY_EVIDENCE_PLUS_ZERO_CANONICAL_ROWS_IN_NORMALIZED_SOURCE_CITY_NO_EXISTING_TARGET_PROVEN","same_city_canonical_count":0,"source_city":"Splügen","source_detail_url":"https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-hotel-bodenhaus","source_evidence_ref":"HS-MEMBER-DE-33339392661:page:0057#record-006","source_name":"Hotel Bodenhaus","source_record_key":"MD-0300afd3df838ed5fc0e","terminal_mapping_created":false
+    },
+    {
+      "authority_effect":"NONE","canonical_h_id_reserved":false,"cross_city_distinctness_basis":"CURRENT_PROPERTY_CITY/ADDRESS_EVIDENCE_DIFFERS_FROM_ALL_GLOBAL_TOP_NAME_CANDIDATE_CITIES","current_evidence":[{"fact":"Hotel Weissenstein AG, Vorderer Weissenstein 2, CH-4515 Oberdorf SO; current hotel/reception/contact.","tier":"FIRST_PARTY","url":"https://www.hotelweissenstein.ch/de/kontakt/"}],"current_max_same_city_token_jaccard_ppm":0,"decision":"NEW_CANONICAL_PREAUTH","global_max_token_jaccard_ppm":333333,"global_top_name_candidates":[{"canonical_name":"Hotel Fravi","city":"Andeer","hotel_id":"H-0008","similarity_ppm":333333}],"h_id_allocated":false,"historical_similarity_band":"lt350000","mapping_state":"RECONCILE_REQUIRED","ordinal":10,"reason_code":"CURRENT_PROPERTY_EVIDENCE_PLUS_ZERO_CANONICAL_ROWS_IN_NORMALIZED_SOURCE_CITY_NO_EXISTING_TARGET_PROVEN","same_city_canonical_count":0,"source_city":"Oberdorf SO","source_detail_url":"https://www.hotelleriesuisse.ch/de/verband/mitgliedschaft/mitgliederverzeichnis/hotel-hotel-weissenstein","source_evidence_ref":"HS-MEMBER-DE-33339392661:page:0117#record-010","source_name":"Hotel Weissenstein","source_record_key":"MD-033dbc82f02485146685","terminal_mapping_created":false
+    }
+  ],
+  "frontier": {
+    "batch_new_canonical_preauth": 10,
+    "batch_reviewed": 10,
+    "batch_terminal_mapping_delta": 0,
+    "canonical_id_reservations": 0,
+    "cumulative_historical_unreviewed_tail_typed_in_this_series": 10,
+    "h_id_allocations": 0,
+    "historical_lt350000_unreviewed_tail_remaining": 1279,
+    "reconcile_required": 1403,
+    "terminal_source_mappings": 658
+  },
+  "next": {
+    "exact_dependency": "Continue exact current-source entity resolution from the 1289 previously unreviewed <0.35 lineage tail. Prefer current identities with zero normalized-city canonical rows and require current independent evidence plus cross-city collision review before NEW_CANONICAL preauthority. Do not allocate/reserve H-IDs or create terminal mappings from this review-only lane.",
+    "parent_sha_semantics": "Resume only if current main is the merged descendant of the recorded parent and the E4 authority tuple remains unchanged.",
+    "recovery_inputs": [
+      "HS-MEMBER-DE-33339392661 / artifact 9740219406",
+      "Drive HOTELS_MASTER/HOTELS_V2 690-row read-only projection",
+      "CRM_EXACT_CURRENT_CANDIDATE_LINEAGE_33339392661.json",
+      "historical unresolved <0.35 tail derived from SOURCE_RESOLUTION_REVIEW_UNRESOLVED_1403_33206402141.json"
+    ],
+    "route": "CURRENT_UNRESOLVED_LT350000_ZERO_CANONICAL_CITY_B02"
+  },
+  "parent_git_sha": "cbd3a98c8c0f7c1e35a086fe110f7bdab8032652",
+  "payload_sha256": "661624f3f96807076e92ab9a697896e96f09ea381a13da775d88deafd2af8f0d",
+  "project": "SWITZERLAND_JOB_OS",
+  "qa": {
+    "all_decisions_current_evidence_backed": true,
+    "all_selected_current_source_records": true,
+    "all_selected_same_city_canonical_count_zero": true,
+    "all_source_keys_unique": true,
+    "authority_advanced": false,
+    "canonical_id_reservations": 0,
+    "crm_universe_complete": false,
+    "cross_city_name_collisions_reviewed": true,
+    "fuzzy_autobind": false,
+    "h_id_allocations": 0,
+    "irreversible_external_actions": 0,
+    "outbound": "CLOSED",
+    "send_allowed": 0
+  },
+  "schema_version": "CRM-CURRENT-UNRESOLVED-ENTITY-RESOLUTION-WAVE-1.0",
+  "selection": {
+    "batch_size": 10,
+    "historical_lt350000_unreviewed_identity_lineage": 1289,
+    "same_city_zero_canonical_population": 485,
+    "selected_source_record_keys": [
+      "MD-006cf8014a406f7c860b","MD-00b5a813d1a39d693130","MD-0178d918d3d8d28271d6","MD-01ae76ba000233702676","MD-01e9ea0e18fbcd931df8","MD-01f7bc45d9b68ffa2950","MD-020599fdbb6c434c0696","MD-02e7960f5bfbc403aafe","MD-0300afd3df838ed5fc0e","MD-033dbc82f02485146685"
+    ],
+    "selection_is_authority": false,
+    "strategy": "Select current identities transferred exactly from the historical <0.35 unreviewed tail, then choose normalized source cities with zero canonical rows in the read-only 690-row authority projection; sort by current source_record_key; take first 10.",
+    "unresolved_before": 1403
+  },
+  "source": {
+    "artifact_id": 9740219406,
+    "coverage_complete": true,
+    "pages": 172,
+    "records": 2061,
+    "records_sha256": "b16fdb63a01149e10feb4d506f38301644b73a612f898ce72567ec4fa92da404",
+    "snapshot_id": "HS-MEMBER-DE-33339392661"
+  },
+  "wave_id": "CURR-U1403-B01"
+}

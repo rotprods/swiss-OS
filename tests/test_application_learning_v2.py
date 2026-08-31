@@ -1,5 +1,14 @@
 import unittest
 
+from swiss_os.application_adversarial import (
+    AuditState,
+    DIMENSION_WEIGHTS,
+    HARD_GATE_EXPECTED,
+    QUESTION_BANK,
+    RISK_COMPONENTS,
+    STAKEHOLDERS,
+    evaluate_application,
+)
 from swiss_os.application_learning import (
     ApplicationLearningError,
     EvidenceClass,
@@ -18,6 +27,18 @@ from swiss_os.application_wave import compile_private_packet, compile_top_exact_
 
 
 class ApplicationLearningV2Tests(unittest.TestCase):
+    def ready_aag(self):
+        return evaluate_application(
+            dimension_scores={key: 95 for key in DIMENSION_WEIGHTS},
+            hard_gate_states=dict(HARD_GATE_EXPECTED),
+            risk_scores={key: 10 for key in RISK_COMPONENTS},
+            evidence_confidence_score=98,
+            human_resonance_score=92,
+            desperation_score=5,
+            questionnaire_answers={question.question_id: AuditState.PASS.value for question in QUESTION_BANK},
+            stakeholder_votes={stakeholder: True for stakeholder in STAKEHOLDERS},
+        )
+
     def test_lane_selection_is_role_first(self):
         self.assertEqual(classify_lane("Zimmermädchen / Roomboy"), Lane.HOUSEKEEPING)
         self.assertEqual(classify_lane("Kitchen Helper"), Lane.KITCHEN_SUPPORT)
@@ -52,6 +73,8 @@ class ApplicationLearningV2Tests(unittest.TestCase):
         self.assertEqual(exact["application_mode"], "PRIMARY_EXACT_VACANCY")
         self.assertEqual(fallback["application_mode"], "SPONTANEOUS_FALLBACK_RESEARCH_ONLY")
         self.assertEqual(no_route["application_mode"], "RESEARCH_ONLY_NO_APPLICATION_ROUTE")
+        self.assertTrue(exact["application_adversarial_gate"]["required"])
+        self.assertFalse(exact["application_adversarial_gate"]["hard_fail_compensation_allowed"])
         self.assertFalse(exact["final_send_ready"])
         self.assertEqual(exact["send_allowed"], 0)
 
@@ -62,7 +85,7 @@ class ApplicationLearningV2Tests(unittest.TestCase):
         self.assertTrue(digital["asset_policy"]["portfolio_default_attachment"])
         self.assertFalse(ops["asset_policy"]["founder_ceo_primary_signal_for_operations"])
 
-    def test_recruiter_gate_blocks_unverified_founder_photo_links(self):
+    def test_recruiter_gate_blocks_unverified_founder_photo_links_and_missing_aag(self):
         seed = build_vacancy_first_seed({"name": "A", "city": "B"}, [{"title": "Housekeeping Attendant"}], None)
         truth = {
             "role_relevant_evidence": ["evidence"],
@@ -83,6 +106,7 @@ class ApplicationLearningV2Tests(unittest.TestCase):
         self.assertIn("FOUNDER_CEO_CLAIM_UNVERIFIED", gate["failures"])
         self.assertIn("HEADSHOT_UNVERIFIED", gate["failures"])
         self.assertIn("LINKS_UNVERIFIED", gate["failures"])
+        self.assertIn("AAG_REQUIRED", gate["failures"])
         self.assertFalse(gate["final_send_ready"])
 
     def test_motivation_rejects_grievance_and_fake_flattery(self):
@@ -130,7 +154,7 @@ class ApplicationLearningV2Tests(unittest.TestCase):
         self.assertFalse(result["final_send_ready"])
         self.assertEqual(result["send_allowed"], 0)
 
-    def test_private_packet_requires_role_evidence_and_verified_assets(self):
+    def test_private_packet_requires_role_evidence_verified_assets_and_aag(self):
         seed = {
             "record_id": "x",
             "hotel_name": "Hotel",
@@ -149,8 +173,12 @@ class ApplicationLearningV2Tests(unittest.TestCase):
         packet = compile_private_packet(seed, candidate_truth=candidate_truth, role_relevant_evidence=[], approved_asset_refs={"links": [], "links_verified": True, "headshot_approved": False})
         self.assertFalse(packet["application_ready_no_send"])
         self.assertIn("CANDIDATE_TRUTH_INCOMPLETE", packet["recruiter_gate"]["failures"])
+        self.assertIn("AAG_REQUIRED", packet["recruiter_gate"]["failures"])
+
+        candidate_truth["application_adversarial_gate"] = self.ready_aag()
         packet2 = compile_private_packet(seed, candidate_truth=candidate_truth, role_relevant_evidence=[{"claim": "verified role evidence"}], approved_asset_refs={"links": [], "links_verified": True, "headshot_approved": False})
         self.assertTrue(packet2["application_ready_no_send"])
+        self.assertTrue(packet2["recruiter_gate"]["aag_pass"])
         self.assertFalse(packet2["final_send_ready"])
         self.assertEqual(packet2["send_allowed"], 0)
 

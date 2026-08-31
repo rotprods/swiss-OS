@@ -39,6 +39,7 @@ The earlier `HS-MEMBER-DE-33206402141` capture remains historical lineage only. 
 historical candidate records                    1438
 candidate lineage accounted                     1438 / 1438
 ECV verified frontier                           1438 / 1438
+ECV remaining never verified                    0
 prior >=0.60 review                              20 / 20
 prior 0.50–0.599999 review                       46 / 46
 prior lower49 ordinary review                    47 / 47

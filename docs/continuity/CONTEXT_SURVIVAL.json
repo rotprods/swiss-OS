@@ -25,10 +25,10 @@
     "docs/state/v2/active-claims.json": "01bdf302180e02e474d2c1f3efb8e2e0a4706236",
     "docs/operations/CONTEXT_SURVIVAL_PROTOCOL.md": "18c2c518f333cc60e77fece92fc8fa3d6771ed6a",
     "docs/handoffs/NEXT_ITERATION_METAPROMPT_V3.md": "0aa09088597578a984bef9c4e101abf33f3f79eb",
-    "docs/state/NEXT_CURRENT_UNRESOLVED_LT350_B07.json": "50835c062b69664e86d8f0fc9909ce2d3b03e6a1"
+    "docs/state/NEXT_CURRENT_UNRESOLVED_LT350_B07.json": "63e9a4edc0b31ac54d1e602b77a3eed0a6445b9f"
   },
   "liveness_findings": ["CSP sidecar is authoritative only for recovery integrity, never hotel authority.","The COS event watermark may lag live main; zero-context bootstrap MUST verify live ancestry and pinned files rather than infer freshness from event time alone."],
   "resume_contract": ["verify live main and ancestry","verify every pinned survival-file Git blob OID","re-read active claims/fencing","re-read external authority before material mutation","rebuild checkpoint on any survival-file drift","resume highest-value safe route; never resume from chat memory alone"],
   "safety": {"authority_advance_allowed":false,"canonical_id_allocation_allowed":false,"canonical_id_reservations_from_staging":0,"authority_from_canary_or_cache":false,"crm_universe_complete":false,"outbound":"CLOSED","send_allowed":0,"irreversible_external_actions":0},
-  "payload_sha256": "97b43a957ecb8a6a313b0cf245a7e1f9bf2dbc328c3beaa0b9d3ca16c5cfd33d"
+  "payload_sha256": "6895fd39452357f13babb0e598fe3fe3204086597232de9275096e284dc4865e"
 }

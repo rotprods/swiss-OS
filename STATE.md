@@ -1,6 +1,6 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest reconstructed frontier: **2026-08-31 current-source entity-resolution B02**. Verified bootstrap main parent: **`0807b4a81f8b8efc71040b6631f15bc1ee21c0cf`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Authority materialized SHA: **`70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`**.
+Latest reconstructed frontier: **2026-08-31 current-source entity-resolution B03**. Verified bootstrap main parent: **`bc33616bbb7964c2dac2d2783f3506a4c04c4438`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Authority materialized SHA: **`70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`**.
 
 ## Authority — unchanged / locked
 
@@ -45,19 +45,19 @@ prior 0.50–0.599999 review                       46 / 46
 prior lower49 ordinary review                    47 / 47
 lower49 typed SRR materialized                   47 / 47
 RAGR evidence-classified                         34 / 34
-cumulative NEW_CANONICAL preauthority             134
+cumulative NEW_CANONICAL preauthority             144
 historical <0.35 previously unreviewed tail     1289
 zero-same-city conservative sub-lane             485
-current <0.35 reviewed cumulative                 20
-current <0.35 B02 reviewed                        10
-current <0.35 B02 NEW_CANONICAL preauthority      10
-historical <0.35 tail remaining                 1269
-zero-same-city lane remaining                    465
+current <0.35 reviewed cumulative                 30
+current <0.35 B03 reviewed                        10
+current <0.35 B03 NEW_CANONICAL preauthority      10
+historical <0.35 tail remaining                 1259
+zero-same-city lane remaining                    455
 H-ID allocations                                   0
 canonical ID reservations                          0
 ```
 
-`docs/state/CRM_CURRENT_UNRESOLVED_LT350_B02_2026-08-31.json` records the second bounded current-source continuation. Ten more deterministic zero-same-city records were independently verified and cross-city collision reviewed. All ten are `NEW_CANONICAL_PREAUTH`, remain `RECONCILE_REQUIRED`, and create no terminal mapping or authority effect. `Meisser Hotel` is explicitly handled under EGR-1.0 as a separately listed/marketed accommodation product related to `Meisser Lodge`; the relationship is preserved and is not converted into an alias merely from shared resort/operator/address context.
+`docs/state/CRM_CURRENT_UNRESOLVED_LT350_B03_2026-08-31.json` records the third bounded current-source continuation. Ten more deterministic zero-same-city records were independently verified and cross-city collision reviewed. All ten are `NEW_CANONICAL_PREAUTH`, remain `RECONCILE_REQUIRED`, and create no terminal mapping or authority effect. `Weinhaus am Bach - Landhotel Hirschen` is explicitly handled under EGR-1.0 as an accommodation component of Landhotel Hirschen Erlinsbach; the parent/component relationship is preserved as metadata and is not converted into an alias merely from shared operator/property context.
 
 ## Capability / provider frontier
 
@@ -81,23 +81,23 @@ The coherent HotellerieSuisse source keeps provider-neutral entity resolution pr
 
 ## NEXT
 
-Execute **`CURRENT_UNRESOLVED_LT350000_ZERO_CANONICAL_CITY_B03`** over:
+Execute **`CURRENT_UNRESOLVED_LT350000_ZERO_CANONICAL_CITY_B04`** over:
 
 ```text
-MD-093d8446cfe53ffec88b
-MD-09963b437cb80cee857c
-MD-09a234f3dc4beac16e95
-MD-0a64704ec8d9b0ca8a70
-MD-0a77a406de39fa90cbab
-MD-0c0ecaa4c33ef165153c
-MD-0d0e11f71cd8fa3382d9
-MD-0d8236983bc08da309d7
-MD-0ddfa1e31ababc955395
-MD-0dffa4b98adaf08c2499
+MD-0ec9184e0553996c8017
+MD-11392326bb8d2e36b225
+MD-12012a3229867154fec7
+MD-12981db89c28b8b3af89
+MD-12ddaa1053593368724c
+MD-13927887bbb57d617e5e
+MD-139b78cdebb6cec44ad5
+MD-147ce42ea282ff9d8373
+MD-14b893f819ede5ee43f9
+MD-14f0349e0f07cd0d3ae0
 ```
 
 Continue exact current-source identities from the previously unreviewed `<0.35` lineage tail, prioritizing the conservative zero-same-city lane. Require current independent evidence and cross-city collision/granularity review. Similarity may rank review order only; fuzzy autobind is forbidden. Never reserve/allocate H-IDs from staging, never create authority from review/cache/canary state, and keep `OUTBOUND=CLOSED` / `send_allowed=0`.
 
-Recovery inputs and exact blockers are persisted in `docs/state/NEXT_CURRENT_UNRESOLVED_LT350_B02.json` and `docs/handoffs/META_20260831_CRM_CURRENT_LT350_B02.md`.
+Recovery inputs and exact blockers are persisted in `docs/state/NEXT_CURRENT_UNRESOLVED_LT350_B03.json` and `docs/handoffs/META_20260831_CRM_CURRENT_LT350_B03.md`.
 
 **VERIFY LIVE TRUTH BEFORE EXECUTION.**

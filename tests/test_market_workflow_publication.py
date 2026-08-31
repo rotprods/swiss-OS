@@ -17,11 +17,20 @@ class MarketWorkflowPublicationTests(unittest.TestCase):
         self.assertIn('application-wave2-public-seeds.json', text)
         self.assertIn('authorized interactive orchestrator', text)
 
+    def test_vacancy_detail_workflow_validates_self_addressed_market_hash_without_hashing_itself(self):
+        text = Path('.github/workflows/vacancy-detail-436.yml').read_text(encoding='utf-8')
+        self.assertIn("declared=market.get('aggregate_sha256')", text)
+        self.assertIn("if k!='aggregate_sha256'", text)
+        self.assertIn("assert recomputed == declared", text)
+        self.assertNotIn("assert sha256_value(market) == request['source_market_aggregate_sha256']", text)
+
     def test_vacancy_detail_run_request_is_exact_and_fail_closed(self):
         data = json.loads(Path('docs/state/market/VACANCY_DETAIL_RUN_REQUEST_436_2026-08-31.json').read_text(encoding='utf-8'))
         self.assertEqual(data['source_market_run_id'], '33336272106')
         self.assertEqual(data['source_market_artifact_id'], 9739544628)
         self.assertEqual(data['source_market_aggregate_sha256'], '19308eae6b56ca0b43fc76bc98aa69d57bb885b2c009134bbf58f2f58fe47e23')
+        self.assertEqual(data['source_market_hash_contract'], 'SHA256_CANONICAL_JSON_EXCLUDING_AGGREGATE_SHA256_FIELD')
+        self.assertGreaterEqual(data['retry_generation'], 1)
         self.assertEqual(data['expected_opening_route_hotels'], 436)
         self.assertEqual(data['shard_count'], 44)
         self.assertFalse(data['safety']['authority_advanced'])

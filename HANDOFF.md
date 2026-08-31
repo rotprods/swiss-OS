@@ -14,7 +14,7 @@ Read, in order:
 3. `STATE.md`;
 4. `ARCHITECTURE.md`;
 5. `docs/operations/CONTEXT_SURVIVAL_PROTOCOL.md`;
-6. `docs/state/v2/context-survival.json` and verify every pinned digest;
+6. `docs/continuity/CONTEXT_SURVIVAL.json` and verify every pinned digest;
 7. `docs/state/v2/project-state.json`;
 8. `docs/state/v2/context-pack.json`;
 9. `docs/state/v2/active-claims.json` plus durable claim records;

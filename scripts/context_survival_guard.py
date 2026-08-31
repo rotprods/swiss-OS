@@ -35,11 +35,15 @@ def sha256_json(value: Any) -> str:
     return hashlib.sha256(canonical_json(value).encode("utf-8")).hexdigest()
 
 
-def file_sha256(rel: str) -> str:
+def git(*args: str) -> str:
+    return subprocess.check_output(["git", *args], cwd=ROOT, text=True).strip()
+
+
+def file_oid(rel: str) -> str:
     path = ROOT / rel
     if not path.is_file():
         raise ValueError(f"missing survival file: {rel}")
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    return git("hash-object", rel)
 
 
 def load_json(rel: str) -> dict[str, Any]:
@@ -47,10 +51,6 @@ def load_json(rel: str) -> dict[str, Any]:
     if not isinstance(value, dict):
         raise ValueError(f"{rel}: expected JSON object")
     return value
-
-
-def git(*args: str) -> str:
-    return subprocess.check_output(["git", *args], cwd=ROOT, text=True).strip()
 
 
 def is_ancestor(base: str, head: str = "HEAD") -> bool:
@@ -100,7 +100,7 @@ def build_checkpoint(
         for item in active_claims.get("claims", [])
         if isinstance(item, dict) and item.get("claim_id")
     )
-    file_digests = {rel: file_sha256(rel) for rel in paths}
+    file_oids = {rel: file_oid(rel) for rel in paths}
 
     safety = next_root.get("safety") if isinstance(next_root.get("safety"), dict) else {}
     checkpoint: dict[str, Any] = {
@@ -119,10 +119,10 @@ def build_checkpoint(
         "production_route": domain_route(domain),
         "latest_domain_next": latest_domain_next,
         "survival_paths": paths,
-        "file_sha256": file_digests,
+        "git_blob_oid": file_oids,
         "resume_contract": [
             "verify live main and ancestry",
-            "verify every pinned survival file digest",
+            "verify every pinned survival-file Git blob OID",
             "re-read active claims/fencing",
             "re-read external authority before material mutation",
             "rebuild checkpoint on any survival-file drift",
@@ -157,20 +157,20 @@ def validate_checkpoint(checkpoint: dict[str, Any]) -> list[str]:
         errors.append("ANCESTRY_FLOOR_NOT_ANCESTOR")
 
     paths = checkpoint.get("survival_paths")
-    digests = checkpoint.get("file_sha256")
+    digests = checkpoint.get("git_blob_oid")
     if not isinstance(paths, list) or not paths:
         errors.append("INVALID_SURVIVAL_PATHS")
         paths = []
     if not isinstance(digests, dict):
-        errors.append("INVALID_FILE_DIGESTS")
+        errors.append("INVALID_FILE_OIDS")
         digests = {}
     for rel in paths:
         if not isinstance(rel, str) or not rel.strip():
             errors.append("INVALID_SURVIVAL_PATH")
             continue
         try:
-            current = file_sha256(rel)
-        except ValueError:
+            current = file_oid(rel)
+        except (ValueError, subprocess.SubprocessError):
             errors.append(f"MISSING_SURVIVAL_FILE:{rel}")
             continue
         if digests.get(rel) != current:

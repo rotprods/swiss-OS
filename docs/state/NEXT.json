@@ -1,4 +1,17 @@
 {
+  "active_claim": {
+    "authority_ceiling": "PREAUTH_SRR_DECISION_ONLY_NO_CANONICAL_MUTATION",
+    "claim_id": "CLAIM-CRM-SRR-SPECIAL-006",
+    "fencing_token": 6,
+    "state": "ACTIVE_UNTIL_EXPLICIT_RELEASE_OR_SUPERSESSION"
+  },
+  "artifacts": [
+    "docs/state/CRM_CURRENT_SOURCE_MAPPING_PROJECTION_33339392661.json",
+    "docs/state/CRM_CURRENT_GONTEN_ECV_SRR_LINEAGE_33339392661.json",
+    "docs/state/RAGR34_POST_REVIEW_DISPOSITION_WORKSET_2026-08-30.json",
+    "docs/state/CRM_CANDIDATE_EXPORT_33206402141.manifest.json",
+    "docs/handoffs/META_20260831_CRM_CURRENT_REBASE.md"
+  ],
   "authority_advance_allowed": false,
   "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
   "authority_parent_materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
@@ -32,11 +45,7 @@
     "next_staged_batch_path": "docs/state/CMI_WORK_BATCH_0005_SUB0001_33206402141.json",
     "next_staged_items": 3,
     "next_staged_items_sha256": "9c07c1fe200f27a79a1c10550f39ad9fd94f5ba2d3a996791d6061ddd600a4c2",
-    "next_staged_original_candidate_offsets": [
-      733,
-      913,
-      981
-    ],
+    "next_staged_original_candidate_offsets": [733, 913, 981],
     "next_staged_state": "ECV_TERMINAL_VERIFIED",
     "pending_requeue": 0,
     "remaining_never_verified": 0,
@@ -72,17 +81,61 @@
     "docs/state/CRM_CURRENT_SOURCE_MAPPING_PROJECTION_33339392661.json",
     "docs/state/CRM_CURRENT_GONTEN_ECV_SRR_LINEAGE_33339392661.json",
     "source artifact 9740219406 / run 33339392661 / snapshot HS-MEMBER-DE-33339392661",
+    "docs/state/RAGR34_POST_REVIEW_DISPOSITION_WORKSET_2026-08-30.json",
     "Drive HOTELS_MASTER/HOTELS_V2"
   ],
   "resume_instructions": [
     "Verify live main ancestry and exact E4 authority tuple.",
     "Re-read Drive HOTELS_V2; H-0691 must remain absent/unallocated before any authority-capable work.",
     "Use the coherent current 2061-record source manifest, not the superseded partial artifact 9700376482, for current source identity.",
+    "Preserve the completed lower49 47/47 and RAGR 34/34 review frontiers monotonically while re-anchoring only evidence-valid current source identities.",
     "Continue the 1403 unresolved source records in bounded deterministic SRR/entity-resolution batches; fuzzy similarity may generate review candidates but must never autobind.",
     "Never allocate or reserve canonical H-IDs from staging/review state.",
     "Do not advance authority from current-source, cache, canary, CI, or staging evidence.",
     "Keep OUTBOUND=CLOSED and send_allowed=0."
   ],
+  "review_frontier": {
+    "band500599": {
+      "effective_total": 46,
+      "new_canonical_preauth_after": 46,
+      "remaining": 0,
+      "reviewed_after": 46
+    },
+    "cumulative_new_canonical_preauth": 114,
+    "ge600": {
+      "new_canonical_preauth": 20,
+      "relationship_unresolved": 0,
+      "reviewed": 20,
+      "total": 20
+    },
+    "lower49": {
+      "ordinary_evidence_reviewed": 47,
+      "ordinary_exact_workset": 47,
+      "ordinary_typed_srr": 47,
+      "ordinary_typed_srr_remaining": 0,
+      "special_reviewed": 2,
+      "total": 49,
+      "workset_batch_sizes": [10, 10, 10, 10, 7],
+      "workset_sha256": "8817941127ede8f9329d81b4831b1fd6643e9ab4c19438c3fa612b78e1169050"
+    },
+    "overall_relationship_granularity_unresolved": 0,
+    "ragr": {
+      "batch_hotel_ids": [],
+      "batch_id": "RAGR34-COMPLETE",
+      "classification_counts": {
+        "COMPONENT/GROUP GRANULARITY": 2,
+        "DATA DEFECT": 3,
+        "IN_SCOPE_NO_SOURCE_MATCH": 24,
+        "OUT_OF_SNAPSHOT_SCOPE": 0,
+        "SUPERSEDED/RENAMED WITH EVIDENCE": 5,
+        "UNRESOLVED": 0
+      },
+      "remaining": 0,
+      "review_queue_sha256": "cf47dc91057df8653cd75729cb39320605e193e476c6828f24956b69e2848b9c",
+      "reviewed": 34,
+      "total": 34
+    }
+  },
   "runtime_capability_frontier": {
     "discover_swiss_capture_valid_manifest": false,
     "discover_swiss_subscription": false,

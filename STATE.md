@@ -42,11 +42,14 @@ changed Gonten lineage              2
 candidate lineage accounted     1438 / 1438
 ECV verified frontier            1438 / 1438
 ECV remaining never verified        0
+lower49 typed SRR materialized     47 / 47
+RAGR evidence-classified           34 / 34
+cumulative NEW_CANONICAL preauthority 114
 H-ID allocations                    0
 canonical ID reservations           0
 ```
 
-`docs/state/CRM_EXACT_CURRENT_CANDIDATE_LINEAGE_33339392661.json` deterministically transfers 1436 unchanged historical candidate identities onto the current coherent source by exact detail URL + normalized exact name/city. The two changed Gonten identities are handled by `CRM_CURRENT_GONTEN_ECV_SRR_LINEAGE_33339392661.json`. These are lineage and preauthority review products only.
+`docs/state/CRM_EXACT_CURRENT_CANDIDATE_LINEAGE_33339392661.json` deterministically transfers 1436 unchanged historical candidate identities onto the current coherent source by exact detail URL + normalized exact name/city. The two changed Gonten identities are handled by `CRM_CURRENT_GONTEN_ECV_SRR_LINEAGE_33339392661.json`. These are lineage and preauthority review products only. Historical completed SRR/RAGR frontiers above are preserved monotonically; they do not grant authority and are not reopened by the current-source re-anchor.
 
 ## Capability / provider frontier
 

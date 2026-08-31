@@ -11,8 +11,18 @@ class ContextSurvivalGuardTests(unittest.TestCase):
         payload = json.loads(CHECKPOINT.read_text(encoding="utf-8"))
         self.assertEqual(validate_checkpoint(payload), [])
         self.assertEqual(payload["primary_program"], "REPO_ARCHAEOLOGY_GRAPHIFY_V1")
-        self.assertEqual(payload["latest_domain_next"], "docs/state/NEXT_CURRENT_UNRESOLVED_LT350_B03.json")
-        self.assertEqual(payload["production_route"], "CURRENT_UNRESOLVED_LT350000_ZERO_CANONICAL_CITY_B04")
+
+        # The live domain NEXT is intentionally mutable. Test the continuity
+        # invariant (checkpoint -> pinned NEXT -> route), not a historical Bxx
+        # literal that becomes stale after every legitimate COLETTE wave.
+        latest_domain_next = payload["latest_domain_next"]
+        self.assertIn(latest_domain_next, payload["survival_paths"])
+        self.assertTrue(latest_domain_next.startswith("docs/state/NEXT_"))
+        domain_next_path = Path(latest_domain_next)
+        self.assertTrue(domain_next_path.is_file())
+        domain_next = json.loads(domain_next_path.read_text(encoding="utf-8"))
+        self.assertEqual(payload["production_route"], domain_next["route"])
+
         self.assertFalse(payload["safety"]["authority_advance_allowed"])
         self.assertFalse(payload["safety"]["canonical_id_allocation_allowed"])
         self.assertEqual(payload["safety"]["canonical_id_reservations_from_staging"], 0)

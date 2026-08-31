@@ -1,0 +1,70 @@
+{
+  "schema_version": "COS-V2-CONTEXT-SURVIVAL-1.0",
+  "project_id": "SWITZERLAND_JOB_OS",
+  "repo": "rotprods/swiss-OS",
+  "generated_at": "2026-08-31T09:30:00Z",
+  "ancestry_floor_sha": "04e4d1f9b5e7c180f1bcb9c6e8575fd3639fbad3",
+  "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+  "authority_revision": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
+  "projection_revision": "c7d278ce1fb3189b426dcfb9bc7ad2348b94cca08a31b37cf751620d9cea525f",
+  "context_pack_revision": "62b0f737ee8ef3e102eaaff12ce265ad8bf857cf21132244802eca4a05be9fd6",
+  "event_watermark": {
+    "event_id": "EVT-20260830T074504Z-CRM006-WORK-STARTED",
+    "occurred_at": "2026-08-30T07:45:04Z"
+  },
+  "active_claim_ids": [
+    "CLAIM-CRM-SRR-SPECIAL-006"
+  ],
+  "primary_program": "REPO_ARCHAEOLOGY_GRAPHIFY_V1",
+  "production_route": "CURRENT_UNRESOLVED_LT350000_ZERO_CANONICAL_CITY_B04",
+  "latest_domain_next": "docs/state/NEXT_CURRENT_UNRESOLVED_LT350_B03.json",
+  "survival_paths": [
+    "GOAL.md",
+    "STATE.md",
+    "HANDOFF.md",
+    "TASKS.md",
+    "docs/state/NEXT.json",
+    "docs/state/v2/project-state.json",
+    "docs/state/v2/context-pack.json",
+    "docs/state/v2/active-claims.json",
+    "docs/operations/CONTEXT_SURVIVAL_PROTOCOL.md",
+    "docs/handoffs/NEXT_ITERATION_METAPROMPT_V3.md",
+    "docs/state/NEXT_CURRENT_UNRESOLVED_LT350_B03.json"
+  ],
+  "git_blob_oid": {
+    "GOAL.md": "6fbecfb43794bd1a8393a4760efeb61b363576bb",
+    "STATE.md": "db8b146598bbad8554a0daf5f6ae7bffe7224df3",
+    "HANDOFF.md": "d47f81887157ac5e473d02967dab79646f3e9a3a",
+    "TASKS.md": "a9fec93c4d9a80dfda8c7526475ae2b593932c69",
+    "docs/state/NEXT.json": "7e06df551572b236fc526bc6a13b4bc6035c0bc9",
+    "docs/state/v2/project-state.json": "d61b1778b05132557e47ea045d6413f459087830",
+    "docs/state/v2/context-pack.json": "2478264c646522ba9086d13d9c47c064db1ae6b9",
+    "docs/state/v2/active-claims.json": "190e650fab0b6146efa08aa8ef93d6a672774d24",
+    "docs/operations/CONTEXT_SURVIVAL_PROTOCOL.md": "18c2c518f333cc60e77fece92fc8fa3d6771ed6a",
+    "docs/handoffs/NEXT_ITERATION_METAPROMPT_V3.md": "0aa09088597578a984bef9c4e101abf33f3f79eb",
+    "docs/state/NEXT_CURRENT_UNRESOLVED_LT350_B03.json": "810c563f41075a5bea41c2522fc23aa131794493"
+  },
+  "liveness_findings": [
+    "CSP sidecar is authoritative only for recovery integrity, never hotel authority.",
+    "The COS event watermark may lag live main; zero-context bootstrap MUST verify live ancestry and pinned files rather than infer freshness from event time alone."
+  ],
+  "resume_contract": [
+    "verify live main and ancestry",
+    "verify every pinned survival-file Git blob OID",
+    "re-read active claims/fencing",
+    "re-read external authority before material mutation",
+    "rebuild checkpoint on any survival-file drift",
+    "resume highest-value safe route; never resume from chat memory alone"
+  ],
+  "safety": {
+    "authority_advance_allowed": false,
+    "canonical_id_allocation_allowed": false,
+    "canonical_id_reservations_from_staging": 0,
+    "authority_from_canary_or_cache": false,
+    "crm_universe_complete": false,
+    "outbound": "CLOSED",
+    "send_allowed": 0,
+    "irreversible_external_actions": 0
+  },
+  "payload_sha256": "cd621935f1b006e3c6c03f463946297dccdaa75101f2d4dfb5c97c5cb56845b2"
+}

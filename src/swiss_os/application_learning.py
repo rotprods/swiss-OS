@@ -207,6 +207,16 @@ def build_vacancy_first_seed(
     }
 
 
+def _strict_receipt_score(receipt: Mapping[str, Any], key: str) -> int | None:
+    raw = receipt.get(key)
+    if raw is None or isinstance(raw, bool) or not isinstance(raw, (int, float)):
+        return None
+    value = int(round(float(raw)))
+    if value < 0 or value > 100:
+        return None
+    return value
+
+
 def _aag_receipt_state(candidate_truth: Mapping[str, Any]) -> tuple[bool, str | None, str | None]:
     receipt = candidate_truth.get("application_adversarial_gate")
     if not isinstance(receipt, Mapping):
@@ -225,15 +235,26 @@ def _aag_receipt_state(candidate_truth: Mapping[str, Any]) -> tuple[bool, str | 
         return False, decision, "AAG_OUTBOUND_SAFETY_MISMATCH"
     if receipt.get("blockers"):
         return False, decision, "AAG_BLOCKERS_PRESENT"
-    if int(receipt.get("application_quality_score") or 0) < 92:
+
+    scores = {
+        "application_quality_score": _strict_receipt_score(receipt, "application_quality_score"),
+        "evidence_confidence_score": _strict_receipt_score(receipt, "evidence_confidence_score"),
+        "employer_risk_score": _strict_receipt_score(receipt, "employer_risk_score"),
+        "desperation_score": _strict_receipt_score(receipt, "desperation_score"),
+        "human_resonance_score": _strict_receipt_score(receipt, "human_resonance_score"),
+    }
+    invalid = [key for key, value in scores.items() if value is None]
+    if invalid:
+        return False, decision, f"AAG_SCORE_INVALID:{invalid[0]}"
+    if scores["application_quality_score"] < 92:
         return False, decision, "AAG_QUALITY_BELOW_READY"
-    if int(receipt.get("evidence_confidence_score") or 0) < 95:
+    if scores["evidence_confidence_score"] < 95:
         return False, decision, "AAG_EVIDENCE_BELOW_READY"
-    if int(receipt.get("employer_risk_score") or 100) > 20:
+    if scores["employer_risk_score"] > 20:
         return False, decision, "AAG_EMPLOYER_RISK_TOO_HIGH"
-    if int(receipt.get("desperation_score") or 100) > 15:
+    if scores["desperation_score"] > 15:
         return False, decision, "AAG_DESPERATION_TOO_HIGH"
-    if int(receipt.get("human_resonance_score") or 0) < 85:
+    if scores["human_resonance_score"] < 85:
         return False, decision, "AAG_RESONANCE_BELOW_READY"
     return True, decision, None
 

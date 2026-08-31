@@ -17,6 +17,12 @@ class MarketWorkflowPublicationTests(unittest.TestCase):
         self.assertIn('application-wave2-public-seeds.json', text)
         self.assertIn('authorized interactive orchestrator', text)
 
+    def test_vacancy_detail_full_workflow_uses_route_fault_isolation_adapter(self):
+        text = Path('.github/workflows/vacancy-detail-436.yml').read_text(encoding='utf-8')
+        self.assertIn('python -m swiss_os.vacancy_detail_fault_isolation', text)
+        self.assertNotIn('python -m swiss_os.vacancy_detail run-shard', text)
+        self.assertIn('route fault isolation', text.lower())
+
     def test_vacancy_detail_workflow_validates_self_addressed_market_hash_without_hashing_itself(self):
         text = Path('.github/workflows/vacancy-detail-436.yml').read_text(encoding='utf-8')
         self.assertIn("declared=market.get('aggregate_sha256')", text)
@@ -37,6 +43,36 @@ class MarketWorkflowPublicationTests(unittest.TestCase):
         self.assertFalse(data['safety']['final_send_ready'])
         self.assertEqual(data['safety']['outbound'], 'CLOSED')
         self.assertEqual(data['safety']['send_allowed'], 0)
+
+    def test_shard14_recovery_request_reuses_exact_prior_success_set(self):
+        data = json.loads(Path('docs/state/market/VACANCY_DETAIL_RECOVERY_REQUEST_SHARD14_2026-08-31.json').read_text(encoding='utf-8'))
+        self.assertEqual(data['failed_vacancy_detail_run_id'], '33424739389')
+        self.assertEqual(data['failed_vacancy_detail_head_sha'], '1f2dacad3c222408e180d45c72a340332667237e')
+        self.assertEqual(data['missing_shard_indexes'], [14])
+        self.assertEqual(data['reused_successful_shards'], 43)
+        self.assertEqual(len(data['expected_reused_indexes']), 43)
+        self.assertEqual(sorted(data['expected_reused_indexes'] + data['missing_shard_indexes']), list(range(44)))
+        self.assertTrue(data['mixed_observation_epochs_expected'])
+        self.assertEqual(data['application_adversarial_gate_required'], 'APPLICATION-ADVERSARIAL-GATE-3.0')
+        self.assertFalse(data['safety']['authority_advanced'])
+        self.assertFalse(data['safety']['final_send_ready'])
+        self.assertEqual(data['safety']['outbound'], 'CLOSED')
+        self.assertEqual(data['safety']['send_allowed'], 0)
+
+    def test_shard14_recovery_workflow_is_minimal_exact_and_no_send(self):
+        text = Path('.github/workflows/vacancy-detail-recover-shard14.yml').read_text(encoding='utf-8')
+        self.assertNotIn('gh pr create', text)
+        self.assertIn('failed_vacancy_detail_run_id', text)
+        self.assertIn('reused_successful_shards', text)
+        self.assertIn('--shard-index 14', text)
+        self.assertIn('assert len(files) == 43', text)
+        self.assertIn('assert len(files) == 44', text)
+        self.assertIn('indexes == list(range(44))', text)
+        self.assertIn('python -m swiss_os.vacancy_detail_fault_isolation', text)
+        self.assertIn("'mixed_observation_epochs':True", text)
+        self.assertIn("'outbound':'CLOSED'", text)
+        self.assertIn("'send_allowed':0", text)
+        self.assertIn('authorized interactive orchestrator', text)
 
     def test_recovered_market_summary_receipt_match(self):
         summary = json.loads(Path('docs/state/market/runs/33336272106/summary.json').read_text(encoding='utf-8'))

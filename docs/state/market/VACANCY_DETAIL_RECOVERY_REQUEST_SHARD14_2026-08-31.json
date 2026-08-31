@@ -8,7 +8,7 @@
   "failed_vacancy_detail_run_id": "33424739389",
   "failed_vacancy_detail_head_sha": "1f2dacad3c222408e180d45c72a340332667237e",
   "original_observed_at": "2026-08-31T18:17:45Z",
-  "recovery_observed_at": "2026-08-31T20:12:00Z",
+  "recovery_observed_at_semantics": "STAMP_AT_ACTUAL_ACTIONS_EXECUTION_NOT_AT_REQUEST_CREATION",
   "shard_count": 44,
   "reused_successful_shards": 43,
   "missing_shard_indexes": [14],

@@ -7,6 +7,9 @@
   "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
   "authority_parent_materialized_sha256": "70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
   "checkpoint_id": "CRM_UNIVERSE_COMPLETE",
+  "authority_advance_allowed": false,
+  "canonical_id_allocation_allowed": false,
+  "outbound_allowed": false,
   "active_claim": {"claim_id":"CLAIM-CRM-CURRENT-B07-007","fencing_token":7,"authority_ceiling":"PREAUTH_CURRENT_SOURCE_REVIEW_ONLY_NO_CANONICAL_MUTATION","state":"ACTIVE"},
   "source_universe": {
     "candidate_artifact_id": 9718866661,

@@ -1,0 +1,45 @@
+import json
+from pathlib import Path
+import unittest
+
+
+class MarketWorkflowPublicationTests(unittest.TestCase):
+    def test_market_workflow_does_not_attempt_forbidden_actions_pr_creation(self):
+        text = Path('.github/workflows/market-enrichment-2061.yml').read_text(encoding='utf-8')
+        self.assertNotIn('gh pr create', text)
+        self.assertIn('Persist public-safe summary branch', text)
+        self.assertIn('authorized interactive orchestrator', text)
+
+    def test_vacancy_detail_workflow_is_no_send_and_no_actions_pr_create(self):
+        text = Path('.github/workflows/vacancy-detail-436.yml').read_text(encoding='utf-8')
+        self.assertNotIn('gh pr create', text)
+        self.assertIn('vacancy-detail-436', text)
+        self.assertIn('application-wave2-public-seeds.json', text)
+        self.assertIn('authorized interactive orchestrator', text)
+
+    def test_vacancy_detail_run_request_is_exact_and_fail_closed(self):
+        data = json.loads(Path('docs/state/market/VACANCY_DETAIL_RUN_REQUEST_436_2026-08-31.json').read_text(encoding='utf-8'))
+        self.assertEqual(data['source_market_run_id'], '33336272106')
+        self.assertEqual(data['source_market_artifact_id'], 9739544628)
+        self.assertEqual(data['source_market_aggregate_sha256'], '19308eae6b56ca0b43fc76bc98aa69d57bb885b2c009134bbf58f2f58fe47e23')
+        self.assertEqual(data['expected_opening_route_hotels'], 436)
+        self.assertEqual(data['shard_count'], 44)
+        self.assertFalse(data['safety']['authority_advanced'])
+        self.assertFalse(data['safety']['final_send_ready'])
+        self.assertEqual(data['safety']['outbound'], 'CLOSED')
+        self.assertEqual(data['safety']['send_allowed'], 0)
+
+    def test_recovered_market_summary_receipt_match(self):
+        summary = json.loads(Path('docs/state/market/runs/33336272106/summary.json').read_text(encoding='utf-8'))
+        receipt = json.loads(Path('docs/state/market/runs/33336272106/receipt.json').read_text(encoding='utf-8'))
+        self.assertEqual(summary['aggregate_sha256'], receipt['aggregate_sha256'])
+        self.assertEqual(summary['summary_sha256'], receipt['summary_sha256'])
+        self.assertEqual(summary['hotels_with_opening_routes'], 436)
+        self.assertEqual(summary['source_records'], 2061)
+        self.assertFalse(summary['authority_advanced'])
+        self.assertEqual(summary['outbound'], 'CLOSED')
+        self.assertEqual(summary['send_allowed'], 0)
+
+
+if __name__ == '__main__':
+    unittest.main()

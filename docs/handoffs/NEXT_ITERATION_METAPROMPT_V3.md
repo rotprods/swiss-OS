@@ -18,7 +18,7 @@ BOOTSTRAP — ZERO CONTEXT
 1. Read current GitHub main SHA/ancestry for rotprods/swiss-OS.
 2. Read GOAL.md, STATE.md, HANDOFF.md, TASKS.md, ARCHITECTURE.md.
 3. Read docs/operations/CONTEXT_SURVIVAL_PROTOCOL.md.
-4. Read docs/state/v2/context-survival.json and verify every pinned file digest. If stale, reconstruct and refresh it before material continuation.
+4. Read docs/continuity/CONTEXT_SURVIVAL.json and verify every pinned file digest/OID. If stale, reconstruct and refresh it before material continuation.
 5. Read docs/state/v2/project-state.json, docs/state/v2/context-pack.json, docs/state/v2/active-claims.json and the durable claim files.
 6. Read docs/state/NEXT.json and the latest explicit domain NEXT/handoff referenced by STATE/HANDOFF/CSP.
 7. Reconcile open PRs/branches with claims/fencing and current main. An unmerged branch is proposal, never authority.
@@ -75,8 +75,8 @@ CONTEXT SURVIVAL / COMPACTION
 Before any long/tool-heavy phase, after every material merge/external-state mutation, and before context handoff/compaction:
 - persist decisions/state/evidence/results;
 - update current NEXT/handoff;
-- rebuild docs/state/v2/context-survival.json;
-- verify its digests;
+- rebuild docs/continuity/CONTEXT_SURVIVAL.json;
+- verify its pinned Git blob OIDs;
 - if available in a Responses/Codex harness, count input tokens and compact proactively after major milestones / before context exhaustion;
 - native compaction is opaque continuation state, not project authority.
 

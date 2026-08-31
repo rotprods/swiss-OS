@@ -1,6 +1,6 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest reconstructed frontier: **2026-08-31 current-source entity-resolution B05**. Verified bootstrap main parent: **`06af39bb00bc50c6b76f5d68f42c7966d8306229`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Authority materialized SHA: **`70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`**.
+Latest reconstructed frontier: **2026-08-31 current-source entity-resolution B06**. Verified bootstrap main parent: **`1bbabe457d8ec561249b2bb52b862096df900d42`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Authority materialized SHA: **`70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`**.
 
 ## Authority — unchanged / locked
 
@@ -16,7 +16,7 @@ send_allowed                      0
 
 The **authoritative** operational ceiling is E4/690 only. Every current source-review, staging, cache, CI and **canary** artifact is non-authoritative until a separately eligible cross-plane authority transaction passes all gates.
 
-Live Drive `HOTELS_V2` was re-read in this activation: `H-0690` remains the last physical/canonical row and `H-0691` is absent/unallocated. No staging/cache/canary/source-review result may reserve an ID or advance authority.
+Live Drive `HOTELS_V2` was re-read after B05: `H-0690` remains the last physical/canonical row and `H-0691` is absent/unallocated. No staging/cache/canary/source-review result may reserve an ID or advance authority.
 
 ## Current coherent source universe
 
@@ -46,15 +46,15 @@ lower49 typed SRR materialized                   47 / 47
 RAGR evidence-classified                         34 / 34
 historical <0.35 previously unreviewed tail     1289
 zero-exact-city conservative lane                485
-current <0.35 reviewed cumulative                 50
-cumulative NEW_CANONICAL preauthority             164
-historical <0.35 tail remaining                 1239
-zero-exact-city lane remaining                   435
+current <0.35 reviewed cumulative                 60
+cumulative NEW_CANONICAL preauthority             174
+historical <0.35 tail remaining                 1229
+zero-exact-city lane remaining                   425
 H-ID allocations                                   0
 canonical ID reservations                          0
 ```
 
-B05 is persisted in `docs/state/CRM_CURRENT_UNRESOLVED_LT350_B05_2026-08-31.json`. It explicitly catches two fast-lane exceptions: `St. Moritz-Bad` is reconciled against the existing St. Moritz locality cluster before keeping Jugendherberge St. Moritz preauthority-new; `Hôtel Magrappé` and separately listed `Hôtel Chalet Royal` retain a shared-reception sibling relationship under EGR-1.0 rather than being collapsed. All ten B05 rows remain `RECONCILE_REQUIRED`; terminal mapping delta is zero.
+B06 is persisted in `docs/state/CRM_CURRENT_UNRESOLVED_LT350_B06_2026-08-31.json`. It explicitly reconciles `Montreux-Territet` against the current Montreux cluster before preserving Jugendherberge Montreux as a distinct preauthority entity; Chante-Joux is preserved under EGR-1.0 as a group-accommodation facility rather than being coerced into a conventional hotel identity; generic name/token collisions for Gasthof Bären, Hotel & Restaurant Promenade and Hotel Restaurant Badhof remain non-binding. All ten B06 rows remain `RECONCILE_REQUIRED`; terminal mapping delta is zero.
 
 ## Continuity / capability
 
@@ -62,6 +62,6 @@ CSP-1.0 is active and must validate before zero-context resumption. GitHub/CI, D
 
 ## NEXT
 
-Execute **`CURRENT_UNRESOLVED_LT350000_ZERO_CANONICAL_CITY_B06`** over the exact keys in `docs/state/NEXT_CURRENT_UNRESOLVED_LT350_B05.json` after live main, CSP and E4 reconstruction. Similarity is review-space reduction only; re-check locality variants and property/operator granularity before any preauthority disposition. Never reserve/allocate H-IDs here. Keep `OUTBOUND=CLOSED` / `send_allowed=0`.
+Execute **`CURRENT_UNRESOLVED_LT350000_ZERO_CANONICAL_CITY_B07`** over the exact keys in `docs/state/NEXT_CURRENT_UNRESOLVED_LT350_B06.json` after live main, CSP and E4 reconstruction. Similarity is review-space reduction only; re-check locality variants, generic collisions, accommodation type and EGR relationships before any preauthority disposition. Never reserve/allocate H-IDs here. Keep `OUTBOUND=CLOSED` / `send_allowed=0`.
 
 **VERIFY LIVE TRUTH BEFORE EXECUTION.**

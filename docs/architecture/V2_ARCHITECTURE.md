@@ -1,321 +1,274 @@
-# SWITZERLAND_JOB_OS — V2 ARCHITECTURE
+# SWITZERLAND_JOB_OS — CANONICAL V2.2 ARCHITECTURE
 
-**Status:** V2 CANDIDATE — architecture/pre-authority  
-**Authority:** stable system architecture after merge; never hotel operational authority  
-**Owner:** Principal Systems Architect  
-**Supersedes:** architecture coordination conventions that relied on prose/chat; retains compatible V1 domain contracts.
+**Status:** IMPLEMENTED_ARCHITECTURE / DOMAIN_MIGRATION_PARTIAL  
+**Authority:** stable system architecture; never hotel/candidate/application operational authority  
+**Owner:** Principal Systems Architecture  
+**Source revision:** `/GRAPH-REFACTOR-V2` reconsolidation + merged W1–W5  
+**Supersedes:** prior V2 architecture prose where incompatible; preserves compatible V1 domain contracts and historical truth.
 
-## 1. Executive V2
+## 1. Executive V2.2
 
-V2 keeps the existing operational authority chain and domain engines, and adds one missing primitive: a small deterministic **Coordination Kernel** for Session, Event, Claim, FencingToken, Projection and ContextPack.
+SWITZERLAND_JOB_OS is one Swiss employment-acquisition operating system with three explicit planes:
 
 ```text
-North Star / Goals
-        │
-        ▼
-Mission + Meta Execution ───────────────┐
-        │                               │
-        ▼                               ▼
-Coordination Kernel                Domain Engines
-Session/Event/Claim                Discovery/Entity/Evidence/...
-        │                               │
-        ▼                               ▼
-Project Event Ledger              Wave Transaction
-        │                               │
-        ▼                               ▼
-Disposable Projections       Constrained operational authority
-        │                        │      │      │
-        ├─ Active Claims         DB   Sheets  Graph/Intel
-        ├─ Agent/Session Graph          │
-        ├─ ContextPack                  ▼
-        └─ Handoff                QA / Observability
+                     G-0001 NORTH STAR
+                            │
+        ┌───────────────────┼────────────────────┐
+        ▼                   ▼                    ▼
+COORDINATION PLANE    EMPLOYMENT CORE     OPERATIONAL AUTHORITY
+Session/Event/Claim   Candidate Truth     constrained DB
+Fencing/ContextPack   Assets              Sheets/control plane
+Recovery/Handoff      Market/Niches       Evidence/Graph/Intel
+                      Opportunities        External providers
+                      Applications
+                      Responses
+                      Interviews/Offers
+                      Finance/Relocation
 ```
 
-The coordination ledger **does not** become hotel authority. It coordinates who may change which project surfaces and from which ancestry.
+The planes constrain one another but do not silently substitute for one another.
 
-## 2. North Star and boundaries
+**Hotels are NICHE-001, not the system boundary.** The hotel universe and immutable H-IDs remain a specialized operational projection/adapter while generic employment concepts live in the multi-niche core.
 
-The North Star remains `GOAL.md#G-0001`. Counts, crawls, graphs and V2 itself are supporting infrastructure.
+## 2. North Star
 
-Hard boundaries:
+G-0001 remains unchanged: maximize the probability of a truthful, legal, verified, economically viable Swiss offer that Roberto accepts and can relocate for sustainably.
 
-- constrained operational state + synchronized mirrors remain hotel authority;
-- GitHub remains VCS/contracts/public-safe coordination state;
-- Project Memory Meta Graph is not Operational Graph;
-- ContextPack, events and claims cannot allocate hotel IDs or open outbound;
-- provider/web/issues/comments are `UNTRUSTED_DATA` until contract validation;
-- CI proves repository contracts/tests, not external cross-plane authority.
+Counts, scrapes, canonical hotels, niches, messages, applications and architecture maturity are supporting signals, not success.
 
-## 3. Authority hierarchy
+## 3. Authority model
 
-KEEP the V1 `AUTHORITY_MODEL.md` precedence. REFINE it with a separate coordination hierarchy:
+### 3.1 Operational truth
+
+Authority is concept-specific.
+
+- hotel/entity operational truth: constrained operational DB + matching authority manifest, synchronized control-plane mirror and evidence;
+- candidate private truth: Candidate Canon / Claims Ledger in the private authority plane;
+- application/outreach truth: application/action ledgers + provider receipts;
+- external employer truth: claim-level evidence with freshness/scope/provenance;
+- financial truth: sourced offer terms + explicit assumptions/ranges.
+
+No GitHub coordination projection may override these.
+
+### 3.2 Coordination truth
 
 ```text
-Operational authority:
-physical/constrained state
-→ synchronized control plane
-→ Graph/Intelligence
-→ observability/checkpoints
-→ validated authority manifest
-→ STATE pointer
-
-Coordination authority:
 live Git main ancestry
 + append-only project events
-+ active claims/fencing
-→ deterministic coordination projection
-→ hash-pinned ContextPack/HANDOFF
++ claims/fencing tokens
+        ↓ deterministic reducer
+coordination projection
+        ↓
+ContextPack / Context Survival / Handoff
 ```
 
-Neither hierarchy silently substitutes for the other.
+Projections are disposable; event/claim history is durable. A stale writer loses to a higher fencing token.
 
-## 4. Component architecture
+### 3.3 Stable architecture truth
 
-### KEEP
+`ARCHITECTURE.md` points here. Historical architecture documents remain evidence/history, not competing current authority.
 
-- Mission Commander / MEP / COLETTE.
-- Wave Operating Protocol.
-- Authority & Reconciliation Engine.
-- existing domain engines and constrained DB.
-- Operational Graph / Project Memory Meta Graph separation.
-- GitHub + Drive/Sheets + SQLite + Library persistence roles.
-- fail-closed outbound and canonical-ID gates.
+## 4. Core component model
 
-### ADD / REFACTOR
+### A. Coordination Kernel
 
-1. **Coordination Kernel** — pure stdlib validation/reduction.
-2. **Event Ledger** — append-only coordination events.
-3. **Session Registry projection** — derived from events.
-4. **Claim Registry projection** — bounded scopes + fencing.
-5. **ContextPack** — resumption bundle pinned to main/projection/authority revisions.
-6. **Root canonical pointers** — ARCHITECTURE/HANDOFF/TASKS/LEXICON.
-7. **V2 contract guard** — CI rejection of stale/unsafe coordination state.
-8. **Death/recovery drill** — projection deletion must be recoverable.
+Session, Event, Claim, Lease semantics, FencingToken, reducer, projection revision, ContextPack, Context Survival, death drill.
 
-### DO NOT ADD
+Responsibilities: ownership, ancestry, continuity, collision detection, recovery.
 
-No Kafka, Redis, Postgres, Kubernetes, microservice split, vector DB, distributed locks or always-on daemon is justified by current measured load. Interfaces may permit future replacement only after measured triggers.
+Explicit non-responsibilities: hotel identity decisions, candidate facts, application authorization, H-ID allocation, email sending.
 
-## 5. Event model
+### B. Candidate Truth OS
 
-Coordination events are immutable facts identified by globally unique `event_id`, `session_id`, `workstream_id`, `objective_id`, `correlation_id` and an idempotency key.
+Candidate Canon → Claims Ledger → lane truth gates.
 
-Required event families:
+Allowed states include `VERIFIED`, `UNKNOWN`, `CONFLICT`; external claims require approved evidence/wording. Technical QA never equals human approval.
 
-- HELLO / WORK_STARTED / HEARTBEAT / WORK_PROGRESS;
-- CLAIM_ACQUIRED / CLAIM_RELEASED / CLAIM_SUPERSEDED;
-- DECISION_RECORDED / EVIDENCE_RECORDED;
-- CHECKPOINT_REACHED;
-- WORK_BLOCKED / WORK_COMPLETED;
-- CONTEXT_PACK_EMITTED.
+### C. Candidate Asset OS
 
-Project events never rewrite historical events. Corrections are new events referencing causation/supersession.
+Candidate truth → versioned asset manifests → renderer → text/render/link QA → human approval → approved asset.
 
-## 6. State model
+Primary families: CV_MASTER, CV_ENTRY, CV_HYBRID, CV_CREATIVE, portfolio/case studies where lane-relevant, email identity/signature.
+
+### D. Multi-Niche Market Core
+
+Generic entities: NICHES, NICHE_ADAPTERS, ORGANIZATIONS, LOCATIONS, GROUPS, BRANDS, SOURCES, SNAPSHOTS, SOURCE_RECORDS, PEOPLE, CHANNELS, ROLE_FAMILIES, OPPORTUNITIES, EVIDENCE, BENEFITS, HOUSING, FIT.
+
+A niche adapter declares taxonomy, source/snapshot semantics, entity resolution, roles, seasonality, channels, scoring extensions and QA. Global truth/governance is never forked per niche.
+
+### E. NICHE-001 Hotels
+
+`canonical_hotels` remains authoritative during compatibility migration. `legacy_hotel_org_bridge` maps hotels into generic organizations. W2 must prove semantic equivalence before any authority migration. CP-0750 remains a hotel-specific scale checkpoint, not North Star progress.
+
+### F. Application Packet Compiler
+
+Inputs: organization + opportunity + lane + channel + evidence + candidate truth + approved assets.
+
+Outputs: stable application identity, versioned packet identity, selected assets/claims/evidence and reason vector.
+
+Application idempotency is independent of CV revision; changing an asset cannot authorize duplicate application.
+
+### G. Application Adversarial Gate
+
+`PACKET_COMPILED != SEND_AUTHORIZED`.
+
+Before any irreversible action: target binding, evidence freshness, candidate asset approval, channel policy, suppression, idempotency, duplicate/group logic and explicit user authorization must all pass.
+
+### H. Response / Learning Engine
+
+APPLICATION → THREAD → RESPONSE → typed OUTCOME → observed reason / inferred hypothesis separation → lane/CV/template/channel/niche metrics.
+
+Canonical outcomes: ACKNOWLEDGED, NO_VACANCY, REJECTED, MORE_INFO, INTERVIEW, OFFER, WITHDRAWN, OTHER.
+
+### I. Interview / Offer / Finance / Relocation
+
+Interview creates preparation/follow-up state. Offer verification precedes sourced financial viability. G-0001 closes only after offer acceptance and relocation readiness.
+
+## 5. Data and graph model
+
+Operational relational state is the authority substrate for high-volume entities. Graphs are relationship projections unless explicitly declared authoritative for a concept.
+
+### Project Memory Meta Graph
+
+Goals, checkpoints, sessions, claims, decisions, risks, artifacts, tests, evidence, architecture and workstreams.
+
+### Operational Graph
+
+Organizations, groups, people, channels, opportunities, applications and domain relationships derived from constrained operational state.
+
+Never treat project-memory graph JSON as a full operational backup.
+
+## 6. Temporal hypergraph semantics
+
+Every material node/edge carries where applicable: `valid_from`, `valid_until`, source event/commit, authority, evidence, confidence and supersession. Corrections append new truth and use `SUPERSEDES`; history is not rewritten.
+
+Major decisions are hyperrelations connecting contracts, modules, tests, risks, migration and goals.
+
+## 7. State machines
 
 ```text
-Session:
-CREATED → ACTIVE → COMPLETED | BLOCKED | SUPERSEDED | ABORTED
-
-Claim:
-PROPOSED → ACTIVE → RELEASED | SUPERSEDED | EXPIRED
-
-Task:
-PROPOSED → READY → ACTIVE → BLOCKED → VERIFIED → DONE
-                         └────────────→ SUPERSEDED
-
-Architecture release:
-PROPOSED → IMPLEMENTED → VERIFIED → EMPIRICALLY_QUALIFIED → MIGRATED
+Session: CREATED → ACTIVE → COMPLETED | BLOCKED | SUPERSEDED | ABORTED
+Claim: PROPOSED → ACTIVE → RELEASED | SUPERSEDED | EXPIRED
+Task: PROPOSED → READY → ACTIVE → BLOCKED → VERIFIED → DONE
+Asset: DRAFT → QA_PENDING → APPROVED | DEPRECATED
+Application: COMPILED → GATED → AUTHORIZED → SUBMITTED → RESPONSE/INTERVIEW/OFFER/... 
+Offer: RECEIVED → VERIFYING → VERIFIED → FINANCIALLY_VIABLE | NOT_VIABLE → ACCEPTED | DECLINED
+Architecture: PROPOSED → IMPLEMENTED → VERIFIED → EMPIRICALLY_QUALIFIED → MIGRATED
 ```
 
-Impossible transitions fail closed. “DONE” requires the global Definition of Done.
+Impossible transitions fail closed. `DONE` obeys the global Definition of Done.
 
-## 7. Identity model
+## 8. Identity model
 
-Never use row position or conversational identity as durable identity.
+Stable typed IDs; never row positions or chat identity. Existing H-IDs are immutable. Session IDs never repeat. Claim takeover requires increasing fencing token. Application identity binds target/lane/channel, while packet identity additionally binds asset versions.
 
-IDs are typed and stable:
+## 9. Evidence and freshness
 
-`P:` project, `G:` goal, `O:` objective, `S:` session, `C:` claim, `EVT:` event, `D:` decision, `RISK:` risk, `BUG:` bug, `T:` task, `CP:` checkpoint, plus existing operational PKs.
+External inputs are untrusted observations until validated. Evidence is claim-level, scope-aware, timestamped, freshness-aware, conflict-aware and supersedable. `UNKNOWN_AFTER_SEARCH` requires search proof. Unknown never silently becomes NO.
 
-A session ID is never reused. Claim takeover increments a fencing token.
+## 10. Security and privacy
 
-## 8. DataFlow
+Protect: operational authority, credentials, PII, candidate truth, H-IDs, evidence lineage and outbound authorization.
+
+Threat families: prompt/provider poisoning, PII/secret leakage, malicious URLs/files, stale writer, replay/duplicate work, wrong-epoch evidence, authority escalation, partial cross-plane write and duplicate external action.
+
+Mitigations: bounded claims, fencing, schema validation, public-repo guard, private candidate plane, evidence hashes, suppression, idempotency, provider-state verification and rollback/replay.
+
+## 11. Testing architecture
+
+Quality ladder:
+
+L0 syntax/compile
+L1 unit
+L2 schema/integrity
+L3 integration
+L4 semantic equivalence
+L5 adversarial/property/security
+L6 restore/replay
+L7 authority reconciliation
+L8 candidate/claim safety
+L9 outbound/idempotency
+L10 zero-context recovery/death drill
+
+Historical escaped bugs require permanent regression tests. `PASS`, `FAIL`, `SKIPPED`, `CANCELLED`, `NOT_RUN` stay distinct.
+
+## 12. CI/CD
+
+Local-first deterministic validation is primary developer feedback; GitHub Actions is an independent redundant verifier, not operational authority.
 
 ```text
-External input
-→ untrusted observation
-→ validator/normalizer
-→ evidence
-→ bounded decision
-→ wave/canary
-→ authority gate
-→ operational commit
-→ projections
-→ artifact/evidence receipt
+LOCAL PASS → PR → REMOTE PASS → ancestry reread → merge → post-merge qualification
 ```
 
-Coordination path:
+Never merge solely because CI once passed if main/authority changed materially.
 
-```text
-Git ancestry + events + claims
-→ deterministic reducer
-→ projection revision
-→ ContextPack revision
-→ zero-context handoff
-```
+## 13. Recovery model
 
-Provenance cannot be dropped between stages.
+Coordination recovery is executable: replay append-only events/claims, rebuild projections and ContextPack, reject drift, then re-read operational authority.
 
-## 9. Hypergraph model
+Operational recovery remains DB/manifest + synchronized control-plane reconciliation. Deleting chat, local checkout, graph projection or local cache must not destroy recoverable project state.
 
-V2 treats decisions as hyperrelations. A single decision can modify contracts, modules, tests, risks, migration and goals simultaneously. `V2_GRAPH_MODEL.md` defines canonical node/edge ontology and COS projections.
+## 14. Documentation architecture
 
-## 10. Memory / knowledge model
+Canonical roots: `AGENTS.md`, `README.md`, `GOAL.md`, `STATE.md`, `ARCHITECTURE.md`, `LEXICON.md`, `TASKS.md`, `HANDOFF.md`.
 
-Memory classes:
+Detailed current contracts live under `docs/architecture`, `docs/operations`, `docs/state/v2`. Historical docs remain explicitly historical/superseded.
 
-- ephemeral: tool scratch;
-- working: current session projection;
-- project: event/decision/task graph;
-- procedural: contracts/runbooks/tests;
-- historical: superseded events/releases/incidents;
-- long-lived: stable goal/authority/ontology;
-- deprecated: preserved but excluded from current projections.
-
-Invalidation is revision-based, not conversational. A ContextPack is stale when main SHA, projection revision, authority revision or relevant watermark changed.
-
-## 11. Agent model
-
-Agent capability never implies authority. An Agent executes through a Session; a Session owns zero or more Claims; each Claim has bounded resource/semantic scopes, excluded scopes and a fencing token.
-
-Two ACTIVE claims that overlap in exclusive scope are a coordination collision unless explicitly marked shared. A stale writer with an older fencing token loses.
-
-## 12. Tool model
-
-Tools are trust-boundary nodes with capability state:
-
-`AVAILABLE | DEGRADED_EXTERNAL | UNAVAILABLE | BLOCKED_POLICY`.
-
-A tool failure does not change project truth. Fallbacks must preserve authority semantics. No claim of background/real-time execution without a real runtime.
-
-## 13. Security model
-
-Primary assets: operational authority, credentials/secrets, PII, candidate truth, canonical IDs, evidence lineage and outbound authorization.
-
-Primary threats:
-
-- prompt/provider poisoning;
-- public-repo secret/PII leakage;
-- malicious URLs/files/path input;
-- stale writer/claim takeover;
-- replay/duplicate work;
-- evidence from wrong artifact/epoch;
-- authority escalation via booleans/string coercion;
-- cross-plane partial write.
-
-Mitigations: validation, authority ceilings, idempotency, fencing, immutable evidence hashes, repo guard, PK-keyed writes, cross-plane gates, replay/restore.
-
-## 14. Recovery model
-
-Authoritative operational recovery remains V1-compatible.
-
-Coordination recovery:
-
-1. read live Git main;
-2. load append-only events and claim records;
-3. validate schemas/hashes;
-4. replay reducer;
-5. compare projection revision;
-6. rebuild ContextPack;
-7. re-read external authority where required;
-8. resume only if ancestry/authority ceilings agree.
-
-Delete any projection/cache and it must be reproducible.
-
-## 15. Testing model
-
-Required taxonomy:
-
-unit, contract, schema, property-style, integration, E2E, physical runtime, security, concurrency, replay, recovery, performance, empirical qualification and agent-death drill.
-
-Historical escaped bugs become permanent tests. CI statuses remain distinct: `PASS | FAIL | SKIPPED | CANCELLED | NOT_RUN`.
-
-## 16. CI/CD
-
-Keep one repository guard pipeline. V2 adds a cheap stdlib contract guard and tests. Do not create a second CI authority.
-
-Merge requirements for V2:
-
-- repo guard green;
-- V2 guard green;
-- unit tests green;
-- main ancestry reread;
-- PR overlap reviewed;
-- no hotel authority/outbound mutation in diff.
-
-## 17. Observability
-
-Track project-level:
-
-- event watermark;
-- projection revision;
-- ContextPack revision;
-- active/stale claims;
-- collision count;
-- time-to-zero-context-resume;
-- stale-context rejection count;
-- duplicate-idempotency rejection count;
-- recovery/replay pass rate.
-
-Do not optimize these metrics at the expense of G-0001.
-
-## 18. Documentation architecture
-
-Canonical surfaces:
-
-`AGENTS.md`, `README.md`, `GOAL.md`, `STATE.md`, `ARCHITECTURE.md`, `LEXICON.md`, `TASKS.md`, `HANDOFF.md`.
-
-Detailed architecture/contracts live under `docs/`; mutable machine state lives under `docs/state/v2/`; historical handoffs remain historical and do not become current merely by filename recency.
-
-## 19. Developer/agent workflow
+## 15. Agent workflow
 
 ```text
 READ LIVE MAIN
-→ RECONSTRUCT AUTHORITY
-→ READ CONTEXT PACK
-→ VALIDATE CONTEXT FRESHNESS
-→ SCAN ACTIVE CLAIMS / PRS
-→ ACQUIRE CLAIM
-→ EMIT WORK_STARTED
-→ IMPLEMENT BOUNDED SCOPE
-→ TEST + ATTACK
-→ REREAD MAIN
-→ REBASE/RECOMPILE IF MOVED
-→ PR / CI
-→ EMIT EVIDENCE + HANDOFF
-→ RELEASE CLAIM
+→ reconstruct authority + ContextPack
+→ scan claims/PRs/blockers
+→ acquire bounded claim
+→ WORK_STARTED event
+→ implement bounded scope
+→ local tests + adversarial review
+→ reread main/authority
+→ PR + independent CI
+→ merge only on current ancestry
+→ post-merge qualification
+→ durable evidence/handoff
+→ release/supersede claim
 ```
 
-## 20. Migration strategy
+## 16. Migration strategy
 
-No big-bang rewrite.
+No big bang.
 
-- Phase A: introduce V2 coordination surfaces in parallel.
-- Phase B: CI-enforce contracts.
-- Phase C: make root pointers canonical.
-- Phase D: migrate active workstreams to session/claim/events.
-- Phase E: close/supersede stale PRs after semantic comparison.
-- Phase F: delete only proven duplicate coordination surfaces.
+1. Coordination V2 kernel — implemented and empirically qualified.
+2. Multi-niche additive schema — implemented.
+3. NICHE-001 compatibility tooling — implemented; real semantic promotion blocked by unresolved authority drift where applicable.
+4. Candidate Truth/Asset foundation — implemented; private human approval remains separate.
+5. Application Packet Compiler — implemented.
+6. Target-bound adversarial gate — must reconcile asset/current-packet SSOT before merge.
+7. Response/learning engine — next product loop.
+8. Second niche only after one end-to-end employment loop produces meaningful signal or a strategic source justifies earlier work.
 
-Domain-engine code is refactored only when a measured defect justifies it.
+## 17. Overengineering filter
 
-## 21. Performance and cost
+No Kafka/Redis/Kubernetes/microservices/vector DB/distributed worker fleet without measured trigger. New abstraction must solve a demonstrated cross-niche/global responsibility. Prefer interfaces now and infrastructure later.
 
-Current bottleneck is evidence/entity-resolution throughput and coordination drift, not compute. V2 uses O(n²) claim collision comparison only for the tiny active-claim set; event replay is linear. Introduce indexing/store changes only when measured event/claim volume makes this material.
+## 18. Current residual blockers
 
-## 22. Lifecycle and deprecation
+Architecture completion does not imply North Star readiness. Current typed blockers include:
 
-Historical V1 artifacts are preserved. V2 marks them `KEEP`, `REFINE`, `SUPERSEDED` or `DEPRECATED`; it never rewrites history.
+- CRM source universe still unresolved; root NEXT is authoritative for mutable counts;
+- H-0580 cross-plane semantic drift blocks hotel authority promotion until evidence/reconciliation closes it;
+- candidate external assets remain subject to private/human approval state;
+- target-bound application authorization is not yet production-qualified;
+- outbound remains CLOSED until all independent gates and explicit authorization pass.
 
-V2 cannot be declared FINAL until recovery, death drill, concurrency, security, migration and final gauntlet checkpoints pass.
+## 19. V2.2 Definition of Done
+
+V2.2 architecture is accepted when:
+
+- this document is the single canonical architecture surface;
+- goal compatibility is explicit and non-destructive;
+- coordination recovery/death drill remains green;
+- tasks/checkpoints reflect merged W1–W5 and residual domain blockers;
+- no architecture document claims operational authority;
+- current open PRs are semantically classified before they can masquerade as active work;
+- all remaining uncertainty is represented as BLOCKER/RISK/UNKNOWN/DEFERRED_DECISION with resolution path.
+
+V2.2 architectural acceptance does **not** mean G-0001, CRM universe, candidate readiness or outbound are complete.

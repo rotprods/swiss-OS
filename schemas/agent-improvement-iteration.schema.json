@@ -3,10 +3,22 @@
   "$id":"https://swiss-os.local/schemas/agent-improvement-iteration.schema.json",
   "title":"Agent Improvement Iteration Receipt",
   "type":"object",
-  "required":["schema_version","iteration_id","decision","reason","metric_results","tests_passed","invariant_violations","security_violations","complexity_delta","graph_nodes","graph_edges"],
+  "required":["schema_version","iteration_id","context","proposal","decision","reason","metric_results","tests_passed","invariant_violations","security_violations","complexity_delta","graph_nodes","graph_edges"],
   "properties":{
-    "schema_version":{"const":"AGENT-IMPROVEMENT-ITERATION-1.0"},
+    "schema_version":{"const":"AGENT-IMPROVEMENT-ITERATION-1.1"},
     "iteration_id":{"type":"string","pattern":"^ITER-[0-9a-f]{20}$"},
+    "context":{
+      "type":"object",
+      "required":["project_id","agent_id","session_id","workstream_id","objective_id","correlation_id","goal_ids","plan_id","task_id","claim_id","fencing_token","branch","worktree","base_main_sha","authority_ceiling","graph_program"],
+      "properties":{"graph_program":{"const":"GRAPH-REFACTOR-V2"},"goal_ids":{"type":"array","minItems":1,"items":{"type":"string"}},"fencing_token":{"type":"integer","minimum":1}},
+      "additionalProperties":true
+    },
+    "proposal":{
+      "type":"object",
+      "required":["hypothesis","changed_paths","evaluation_suite","budget_seconds","complexity_delta","reversible","notes"],
+      "properties":{"hypothesis":{"type":"string","minLength":1},"changed_paths":{"type":"array","minItems":1},"evaluation_suite":{"type":"array","minItems":1},"budget_seconds":{"type":"integer","minimum":1}},
+      "additionalProperties":true
+    },
     "decision":{"enum":["KEEP","DISCARD","CRASH","BLOCKED"]},
     "reason":{"type":"string","minLength":1},
     "tests_passed":{"type":"boolean"},

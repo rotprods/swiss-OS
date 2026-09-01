@@ -1,0 +1,71 @@
+{
+  "schema_version": "V2-COORDINATION-REBUILD-CONFIG-1.0",
+  "project_id": "SWITZERLAND_JOB_OS",
+  "base_main_sha": "302981981017af1191c305db4f0734b44149d504",
+  "generated_at": "2026-09-01T15:20:10Z",
+  "state": "GRAPH_V2_COORDINATION_RECOVERY_ACTIVE",
+  "current_objective_id": "OBJ-GRAPH-V2-CURRENT-TRUTH",
+  "branch": "fix/v2-coordination-recovery-token8",
+  "open_prs": [415, 414, 406, 320, 319, 318, 317, 314, 287, 275, 139, 137, 135],
+  "latest_domain_next": "docs/state/NEXT_CURRENT_UNRESOLVED_LT350_B06.json",
+  "state_refs": [
+    "GOAL.md",
+    "STATE.md",
+    "ARCHITECTURE.md",
+    "HANDOFF.md",
+    "TASKS.md",
+    "LEXICON.md",
+    "docs/state/v2/project-state.json",
+    "docs/state/v2/checkpoint.json",
+    "docs/state/v2/active-claims.json",
+    "docs/refactor-v2/GRAPH_REFACTOR_V2_RECONSOLIDATION_2026-09-01.md"
+  ],
+  "relevant_paths": [
+    "GOAL.md",
+    "STATE.md",
+    "ARCHITECTURE.md",
+    "HANDOFF.md",
+    "TASKS.md",
+    "docs/state/NEXT.json",
+    "docs/state/v2/project-state.json",
+    "docs/state/v2/active-claims.json",
+    "docs/refactor-v2/GRAPH_REFACTOR_V2_RECONSOLIDATION_2026-09-01.md",
+    "docs/refactor-v2/implementation_program_2026-09-01.json",
+    "docs/refactor-v2/graph_snapshot_2026-09-01.json"
+  ],
+  "blockers": [
+    "P0 issue #416: stale coordination projections are being rebuilt under fencing token8.",
+    "RECONCILE_REQUIRED=1403 remains nonzero on coherent current source; domain resolution is separate from this recovery claim.",
+    "H-0580 semantic cross-plane drift remains a blocker for hotel-authority promotion.",
+    "Candidate CV_ENTRY_V2 and CV_HYBRID_V2 are QA_PENDING until explicit human content/visual approval.",
+    "PR #415 target-readiness integration is BLOCKED pending SSOT/asset-state fixes from adversarial review."
+  ],
+  "verified_work": [
+    "Current authority remains E4/690 and was not modified by GRAPH-V2 reconsolidation.",
+    "The current coherent source remains 2061 records / 172 pages with root NEXT reporting terminal=658 and RECONCILE_REQUIRED=1403.",
+    "PR #404 token7 B07 work was explicitly closed as superseded by current ancestry; its evidence remains historical/preauthority only.",
+    "GRAPH-REFACTOR-V2 live reconsolidation is persisted on main via commit 302981981017af1191c305db4f0734b44149d504.",
+    "W5 packet compiler is merged and keeps application identity stable across asset revisions; PACKET_COMPILED is not send authorization."
+  ],
+  "unverified_work": [
+    "V2 coordination projections and Context Survival require exact reducer rebuild and zero-context death-drill requalification.",
+    "Canonical V2 architecture still requires V2.2 consolidation with multi-niche Candidate/Application OS.",
+    "Candidate external assets require human approval before APPROVED state.",
+    "PR #415 requires correction and requalification before merge.",
+    "The 1403 unresolved current source records remain domain work; B07 evidence must be recovered onto a fresh future CRM claim before use."
+  ],
+  "risks": [
+    "A stale coordination projection can misroute or falsely block successor agents even when E4 authority is intact.",
+    "An unmerged fencing-token branch must not silently become current authority; fencing history must remain monotonic and explicit.",
+    "Technical asset QA can be mistaken for candidate approval unless status is bound to private authority.",
+    "Stable application rows can become a second source of truth if consumers treat version-specific asset summary fields as current packet provenance.",
+    "Stale open PRs can masquerade as active work and cause semantic collision."
+  ],
+  "next_safe_actions": [
+    "Finish token8 reducer-based coordination rebuild and pass context-survival/death-drill guards on exact current ancestry.",
+    "Compile canonical V2.2 architecture integrating coordination kernel and multi-niche Candidate/Application OS.",
+    "Create a non-destructive goal compatibility map and recompile TASKS/checkpoints from the integrated architecture.",
+    "Semantically classify remaining open PRs and close/supersede stale branches only after preserving valuable evidence.",
+    "Keep authority E4 unchanged, H-0691 UNALLOCATED, CRM_UNIVERSE_COMPLETE=false, OUTBOUND=CLOSED and send_allowed=0."
+  ]
+}

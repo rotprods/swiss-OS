@@ -4,7 +4,9 @@ from typing import Mapping, Sequence
 
 EVENT_SCHEMA="COS-V2-EVENT-1.0"; CLAIM_SCHEMA="COS-V2-CLAIM-1.0"; CONTEXT_SCHEMA="COS-V2-CONTEXT-PACK-1.1"; PROJECT_STATE_SCHEMA="COS-V2-PROJECT-STATE-1.0"
 ACTIVE_CLAIM_STATES=frozenset({"ACTIVE"})
+TERMINAL_CLAIM_STATES=frozenset({"RELEASED","SUPERSEDED","EXPIRED"})
 KNOWN_EVENT_TYPES=frozenset({"HELLO","WORK_STARTED","WORK_PROGRESS","WORK_BLOCKED","WORK_COMPLETED","CLAIM_ACQUIRED","CLAIM_RELEASED","CLAIM_SUPERSEDED","CHECKPOINT_REACHED","DECISION_RECORDED","EVIDENCE_RECORDED","CONTEXT_PACK_EMITTED","HEARTBEAT"})
+CLAIM_LIFECYCLE_EVENTS=frozenset({"CLAIM_ACQUIRED","CLAIM_RELEASED","CLAIM_SUPERSEDED"})
 class CoordinationError(ValueError): pass
 def canonical_json(value:object)->str: return json.dumps(value,ensure_ascii=False,sort_keys=True,separators=(",",":"))
 def sha256_json(value:object)->str: return hashlib.sha256(canonical_json(value).encode()).hexdigest()
@@ -50,6 +52,60 @@ def detect_claim_collisions(claims):
             ss=scopes_overlap(left.get("semantic_scopes",[]) if isinstance(left.get("semantic_scopes"),list) else [],right.get("semantic_scopes",[]) if isinstance(right.get("semantic_scopes"),list) else [])
             if rs or ss: out.append({"left_claim_id":_text(left,"claim_id"),"right_claim_id":_text(right,"claim_id"),"resource_overlap":rs,"semantic_overlap":ss})
     return out
+def _claim_refs(event:Mapping[str,object])->tuple[str,...]:
+    values=event.get("causation",[])
+    if not isinstance(values,list): return ()
+    refs=[]
+    for value in values:
+        if isinstance(value,str) and value.startswith("claim:") and value[6:].strip(): refs.append(value[6:].strip())
+    return tuple(dict.fromkeys(refs))
+def project_claim_lifecycle(events,claims):
+    """Derive current claim state from durable lifecycle events, not mutable claim prose alone.
+
+    Legacy claims may predate their CLAIM_ACQUIRED event. If a claim has a terminal
+    lifecycle event but no acquisition event, the reducer treats it as ACTIVE at the
+    start of the observed ledger and then applies the terminal transition. This keeps
+    old ledgers replayable while still making future release/supersession event-driven.
+    """
+    events=list(events); claims=list(claims); errors=[]; by_id={}; projected={}
+    for claim in claims:
+        cid=_text(claim,"claim_id")
+        if not cid: continue
+        if cid in by_id: errors.append(f"DUPLICATE_CLAIM_ID:{cid}")
+        by_id[cid]=claim
+    lifecycle=[]; acquired=set(); terminal=set()
+    for event in events:
+        et=_text(event,"event_type")
+        if et not in CLAIM_LIFECYCLE_EVENTS: continue
+        refs=_claim_refs(event); eid=_text(event,"event_id") or "<unknown>"
+        if len(refs)!=1:
+            errors.append(f"CLAIM_LIFECYCLE_REFERENCE_COUNT:{eid}:{len(refs)}"); continue
+        cid=refs[0]
+        if cid not in by_id:
+            errors.append(f"CLAIM_LIFECYCLE_UNKNOWN_CLAIM:{eid}:{cid}"); continue
+        lifecycle.append((_text(event,"occurred_at"),eid,et,cid))
+        if et=="CLAIM_ACQUIRED": acquired.add(cid)
+        else: terminal.add(cid)
+    for cid,claim in by_id.items():
+        item=dict(claim)
+        if cid in acquired: item["state"]="PROPOSED"
+        elif cid in terminal: item["state"]="ACTIVE"
+        projected[cid]=item
+    for _,eid,et,cid in sorted(lifecycle):
+        item=projected[cid]; state=str(item.get("state",""))
+        if et=="CLAIM_ACQUIRED":
+            if state not in {"PROPOSED","READY"}: errors.append(f"INVALID_CLAIM_TRANSITION:{eid}:{state}->ACTIVE")
+            else: item["state"]="ACTIVE"
+        elif et=="CLAIM_RELEASED":
+            if state!="ACTIVE": errors.append(f"INVALID_CLAIM_TRANSITION:{eid}:{state}->RELEASED")
+            else: item["state"]="RELEASED"
+        elif et=="CLAIM_SUPERSEDED":
+            if state!="ACTIVE": errors.append(f"INVALID_CLAIM_TRANSITION:{eid}:{state}->SUPERSEDED")
+            else: item["state"]="SUPERSEDED"
+    for cid,item in projected.items():
+        declared=str(by_id[cid].get("state","")); effective=str(item.get("state",""))
+        if declared!=effective: errors.append(f"CLAIM_DECLARED_STATE_DRIFT:{cid}:{declared}->{effective}")
+    return tuple(projected[cid] for cid in sorted(projected)),tuple(dict.fromkeys(errors))
 def reduce_coordination(events,claims):
     events=list(events); claims=list(claims); errors=[]; ids=set(); idem={}; sessions={}
     for e in events:
@@ -68,10 +124,11 @@ def reduce_coordination(events,claims):
             if _text(e,"event_type")=="WORK_COMPLETED": s["state"]="COMPLETED"
             elif _text(e,"event_type")=="WORK_BLOCKED": s["state"]="BLOCKED"
     for c in claims: errors.extend(f"{_text(c,'claim_id') or '<unknown>'}:{x}" for x in validate_claim(c))
+    effective_claims,lifecycle_errors=project_claim_lifecycle(events,claims); errors.extend(lifecycle_errors)
     watermark=None
     if events:
         ordered=sorted((_text(e,"occurred_at"),_text(e,"event_id")) for e in events); watermark={"occurred_at":ordered[-1][0],"event_id":ordered[-1][1]}
-    p={"schema_version":"COS-V2-COORDINATION-PROJECTION-1.0","events_count":len(events),"claims_count":len(claims),"sessions":sorted(sessions.values(),key=lambda x:x["session_id"]),"active_claim_ids":sorted(_text(c,"claim_id") for c in claims if c.get("state") in ACTIVE_CLAIM_STATES),"claim_collisions":detect_claim_collisions(claims),"event_watermark":watermark,"violations":sorted(set(errors))}
+    p={"schema_version":"COS-V2-COORDINATION-PROJECTION-1.1","events_count":len(events),"claims_count":len(claims),"sessions":sorted(sessions.values(),key=lambda x:x["session_id"]),"claim_states":[{"claim_id":_text(c,"claim_id"),"state":str(c.get("state","")),"fencing_token":c.get("fencing_token")} for c in effective_claims],"active_claim_ids":sorted(_text(c,"claim_id") for c in effective_claims if c.get("state") in ACTIVE_CLAIM_STATES),"claim_collisions":detect_claim_collisions(effective_claims),"event_watermark":watermark,"violations":sorted(set(errors))}
     p["projection_revision"]=sha256_json(p); return p
 def build_context_pack(*,project_id,base_main_sha,authority_revision,projection,state_refs,relevant_paths,relevant_scope_revision,blockers,next_safe_actions):
     if not _is_git_sha(base_main_sha): raise CoordinationError("base_main_sha must be lowercase 40-hex Git object ID")

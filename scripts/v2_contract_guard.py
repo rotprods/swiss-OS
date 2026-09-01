@@ -55,9 +55,21 @@ def main():
     if state.get("h_id_allocation_allowed") is not False: errors.append("STATE_H_ID_ALLOCATION_FORBIDDEN")
     if state.get("outbound_allowed") is not False: errors.append("STATE_OUTBOUND_FORBIDDEN")
     errors.extend(f"death-drill:MISSING_{key}" for key in death_drill(state))
-    tasks=load("docs/state/v2/tasks.json"); tids=[i.get("task_id") for i in tasks.get("tasks",[]) if isinstance(i,dict)]
+    tasks=load("docs/state/v2/tasks.json"); raw_tasks=tasks.get("tasks",[])
+    if not isinstance(raw_tasks,list): errors.append("INVALID_TASK_PROGRAM"); raw_tasks=[]
+    expected_tasks_sha256=hashlib.sha256(json.dumps(raw_tasks,ensure_ascii=False,sort_keys=True,separators=(",",":")).encode()).hexdigest()
+    if tasks.get("tasks_sha256")!=expected_tasks_sha256: errors.append("TASKS_SHA256_MISMATCH")
+    task_rows=[i for i in raw_tasks if isinstance(i,dict)]; tids=[i.get("task_id") for i in task_rows]
     if len(tids)!=len(set(tids)): errors.append("DUPLICATE_TASK_ID")
     if not tids: errors.append("EMPTY_TASK_PROGRAM")
+    known_task_ids={value for value in tids if isinstance(value,str) and value}
+    for task in task_rows:
+        task_id=str(task.get("task_id","<unknown>"))
+        inputs=task.get("inputs",[]) if isinstance(task.get("inputs"),list) else []
+        dependencies=task.get("dependencies",[]) if isinstance(task.get("dependencies"),list) else []
+        dependency_ids={value for value in dependencies if isinstance(value,str)}
+        for dependency in sorted(dependency_ids-known_task_ids): errors.append(f"UNKNOWN_TASK_DEPENDENCY:{task_id}:{dependency}")
+        for input_ref in sorted({value for value in inputs if isinstance(value,str) and value in known_task_ids}-dependency_ids): errors.append(f"TASK_INPUT_DEPENDENCY_MISSING:{task_id}:{input_ref}")
     cps=load("docs/state/v2/checkpoint.json"); cids=[i.get("id") for i in cps.get("checkpoints",[]) if isinstance(i,dict)]
     if len(cids)!=len(set(cids)): errors.append("DUPLICATE_CHECKPOINT_ID")
     if errors:

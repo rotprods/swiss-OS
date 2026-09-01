@@ -1,45 +1,45 @@
 {
   "schema_version":"V2-COORDINATION-REBUILD-CONFIG-1.3",
   "project_id":"SWITZERLAND_JOB_OS",
-  "primary_program":"GRAPH_REFACTOR_V2_FORWARD_LIFECYCLE_CONTRACT",
-  "base_main_sha":"e13b05fc24cb5b5f0883d86bddfb6d602007fb48",
-  "generated_at":"2026-09-01T21:39:00Z",
-  "state":"GRAPH_V2_FORWARD_LIFECYCLE_CONTRACT_ACTIVE",
-  "current_objective_id":"OBJ-V2-FORWARD-LIFECYCLE-CAUSATION",
-  "branch":"fix/v2-forward-lifecycle-contract-token11",
-  "open_prs":[425,420,414,406,320,319,318,317,314,287,275],
+  "primary_program":"GRAPH_REFACTOR_V2_FORWARD_LIFECYCLE_POSTMERGE_QUALIFICATION",
+  "base_main_sha":"f4fbfeea36e746eef98185076d11e2231f3a0640",
+  "generated_at":"2026-09-01T22:10:00Z",
+  "state":"GRAPH_V2_FORWARD_LIFECYCLE_POSTMERGE_QUALIFIED_IDLE",
+  "current_objective_id":"OBJ-V2-FORWARD-LIFECYCLE-POSTMERGE-QUALIFICATION",
+  "branch":"fix/v2-token11-postmerge-release",
+  "open_prs":[425,414,406,320,319,318,317,314,287,275],
   "latest_domain_next":"docs/state/NEXT_CURRENT_UNRESOLVED_LT350_B06.json",
-  "state_refs":["GOAL.md","STATE.md","ARCHITECTURE.md","HANDOFF.md","TASKS.md","LEXICON.md","docs/architecture/V2_2_CANONICAL_ARCHITECTURE.md","docs/state/v2/project-state.json","docs/state/v2/active-claims.json","docs/state/v2/legacy-event-boundary.json","issue:#417","issue:#426"],
-  "relevant_paths":["GOAL.md","STATE.md","ARCHITECTURE.md","HANDOFF.md","TASKS.md","docs/state/NEXT.json","docs/architecture/V2_2_CANONICAL_ARCHITECTURE.md","src/swiss_os/v2_coordination.py","scripts/rebuild_v2_coordination.py","scripts/v2_contract_guard.py","scripts/v2_forward_event_guard.py","schemas/v2/event.schema.json","schemas/v2/event-1.1.schema.json","docs/state/v2/legacy-event-boundary.json","docs/state/v2/project-state.json","docs/state/v2/active-claims.json"],
-  "source_refs":["main:e13b05fc24cb5b5f0883d86bddfb6d602007fb48","pr:#424:MERGED","issue:#417:CLOSED_COMPLETED","issue:#426:OPEN","claim:CLAIM-GRAPHV2-LIFECYCLE-010:RELEASED","claim:CLAIM-GRAPHV2-FORWARD-LIFECYCLE-011:ACTIVE"],
-  "blockers":["RECONCILE_REQUIRED=1403 remains domain work outside token11.","H-0580 remains a separate hotel authority blocker.","Candidate external assets remain subject to private human approval."],
-  "verified_work":["Issue #417 is closed after event-derived lifecycle repair and token10 post-merge release.","Token10 is terminal and the token11 wave started from exact main e13b05fc24cb5b5f0883d86bddfb6d602007fb48 with no active predecessor claims.","COS-V2-EVENT-1.1 forward validation requires exactly one explicit claim causation for lifecycle events.","The canonical forward event builder emits only COS-V2-EVENT-1.1.","A Git-tree legacy boundary freezes COS-V2-EVENT-1.0 compatibility to byte-identical event files that already existed at main e13b05fc24cb5b5f0883d86bddfb6d602007fb48.","E4/690, H-0691 unallocated, CRM_UNIVERSE_COMPLETE=false and OUTBOUND=CLOSED remain unchanged."],
-  "unverified_work":["Token11 projections and Context Survival must be rebuilt from the new claim/event ledger state.","The forward event guard must pass against the full historical corpus in CI.","Full repo guard, zero-context death drill and unit suite must pass before merge.","Token11 must be explicitly released and requalified after merge before issue #426 closes."],
-  "risks":["Allowing any newly created COS-V2-EVENT-1.0 path would turn historical fallback back into a production writer path.","Mutating a historical 1.0 event would change replay semantics and must fail closed.","A forward lifecycle event with zero or multiple claim causations creates ambiguous ownership and must be rejected.","Coordination hardening must not leak into CRM, hotel authority, candidate private truth or outbound."],
-  "next_safe_actions":["Materialize token11 deterministic coordination projections.","Run V2 forward-event guard against the frozen 1.0 Git-tree boundary and current 1.1 lifecycle event.","Run full repo guard plus zero-context death drill.","Merge only from a fresh non-colliding main descendant with expected head SHA.","After merge, explicitly release token11, rebuild zero-active-claim projections, rerun qualification and close issue #426."],
-  "liveness_findings":["COS-V2-EVENT-1.0 is historical replay compatibility only after the frozen boundary.","COS-V2-EVENT-1.1 is the current production event contract.","Token11 has coordination-schema authority only; it cannot execute domain or external mutations."],
-  "resume_contract":["verify live main remains e13b05fc24cb5b5f0883d86bddfb6d602007fb48 or a descendant","verify legacy-event-boundary frozen SHA is an ancestor","replay all 1.0 legacy events byte-identically","require every new event path to use 1.1","require exactly one claim causation on every forward lifecycle event","verify fencing high watermark 11 and only token11 active","reject stale ContextPack/CSP","keep authority/H-ID/outbound locks closed"],
+  "state_refs":["GOAL.md","STATE.md","ARCHITECTURE.md","HANDOFF.md","TASKS.md","LEXICON.md","docs/architecture/V2_2_CANONICAL_ARCHITECTURE.md","docs/architecture/V2_FORWARD_EVENT_CONTRACT.md","docs/state/v2/project-state.json","docs/state/v2/active-claims.json","docs/state/v2/legacy-event-boundary.json","issue:#417","issue:#426","pr:#428"],
+  "relevant_paths":["GOAL.md","STATE.md","ARCHITECTURE.md","HANDOFF.md","TASKS.md","docs/state/NEXT.json","docs/architecture/V2_2_CANONICAL_ARCHITECTURE.md","docs/architecture/V2_FORWARD_EVENT_CONTRACT.md","src/swiss_os/v2_coordination.py","scripts/rebuild_v2_coordination.py","scripts/v2_contract_guard.py","scripts/v2_forward_event_guard.py","schemas/v2/event.schema.json","schemas/v2/event-1.1.schema.json","docs/state/v2/legacy-event-boundary.json","docs/state/v2/project-state.json","docs/state/v2/active-claims.json"],
+  "source_refs":["main:f4fbfeea36e746eef98185076d11e2231f3a0640","pr:#428:MERGED","issue:#417:CLOSED_COMPLETED","issue:#426:RESOLVED_PENDING_RELEASE_PR_MERGE","claim:CLAIM-GRAPHV2-LIFECYCLE-010:RELEASED","claim:CLAIM-GRAPHV2-FORWARD-LIFECYCLE-011:RELEASED","actions:33564790103:SUCCESS","actions:33564790005:SUCCESS"],
+  "blockers":["RECONCILE_REQUIRED=1403 remains domain work outside coordination recovery.","H-0580 remains a separate hotel authority blocker.","Candidate external assets remain subject to private human approval."],
+  "verified_work":["PR #428 merged the forward event 1.1 contract and frozen legacy 1.0 boundary to main at f4fbfeea36e746eef98185076d11e2231f3a0640.","Exact-main repo-guard run 33564790103 and materializer run 33564790005 both passed.","COS-V2-EVENT-1.1 is the only forward production event contract and forward CLAIM_* lifecycle events require exactly one explicit claim causation.","Token11 is explicitly released after exact-main qualification; no coordination writer should remain active after the release PR merges.","E4/690, H-0691 unallocated, CRM_UNIVERSE_COMPLETE=false and OUTBOUND=CLOSED remain unchanged."],
+  "unverified_work":["Release-event projections and Context Survival must be rebuilt from the token11 terminal event.","Full repo guard, forward-event guard, zero-context death drill and unit suite must pass on the release branch.","The bounded release PR must merge before issue #426 closes.","OMEGA repository archaeology must acquire token12 from the post-release main before any new coordination write."],
+  "risks":["Leaving token11 active after merge would recreate a phantom writer despite the new forward contract.","Any future coordination writer must acquire a strictly monotonic fencing token after token11 is terminal.","The historical 1.0 event boundary must remain byte-identical and no release process may widen domain authority.","Coordination qualification must not leak into CRM, hotel authority, candidate private truth or outbound."],
+  "next_safe_actions":["Rebuild active-claims/project-state/ContextPack/graph/Context Survival from the token11 release event.","Run deterministic rebuild, V2 contract, V2 forward-event guard, Context Survival, zero-context death drill and full unit suite.","Merge the bounded release PR from fresh main with expected head SHA.","Close issue #426 completed after exact-main post-release CI passes.","Then acquire fencing token12 for OMEGA open-PR archaeology and selective capability salvage."],
+  "liveness_findings":["COS-V2-EVENT-1.0 remains frozen historical replay compatibility only.","COS-V2-EVENT-1.1 is the current forward writer contract.","Token11 is terminal after exact-main post-merge qualification; the coordination plane is intentionally idle until token12 or another legitimate successor claim."],
+  "resume_contract":["verify live main is f4fbfeea36e746eef98185076d11e2231f3a0640 or a descendant","verify legacy-event-boundary frozen SHA is an ancestor and all 1.0 events remain byte-identical","replay events/claims and verify zero active coordination claims after token11 release","verify fencing high watermark remains 11 until a legitimate successor claim","require every new event path to use 1.1 and every lifecycle event to carry exactly one claim causation","re-read operational authority before any domain mutation","reject stale ContextPack/CSP","keep authority/H-ID/outbound locks closed"],
   "graph":{
     "nodes":[
       {"id":"P:SWITZERLAND_JOB_OS","type":"Project","state":"ACTIVE"},
       {"id":"G:G-0001","type":"NorthStar","state":"ACTIVE"},
       {"id":"C:CLAIM-GRAPHV2-LIFECYCLE-010","type":"Claim","state":"RELEASED_TOKEN_10"},
-      {"id":"C:CLAIM-GRAPHV2-FORWARD-LIFECYCLE-011","type":"Claim","state":"ACTIVE_TOKEN_11"},
+      {"id":"C:CLAIM-GRAPHV2-FORWARD-LIFECYCLE-011","type":"Claim","state":"RELEASED_TOKEN_11"},
       {"id":"ISSUE:417","type":"Bug","state":"CLOSED_COMPLETED"},
-      {"id":"ISSUE:426","type":"ContractHardening","state":"ACTIVE"},
+      {"id":"ISSUE:426","type":"ContractHardening","state":"RESOLVED_PENDING_RELEASE_PR_MERGE"},
       {"id":"SCHEMA:COS-V2-EVENT-1.0","type":"EventSchema","state":"LEGACY_FROZEN"},
       {"id":"SCHEMA:COS-V2-EVENT-1.1","type":"EventSchema","state":"FORWARD_ACTIVE"},
       {"id":"ARCH:V2.2","type":"Architecture","state":"MERGED_CANONICAL"}
     ],
     "edges":[
       {"from":"C:CLAIM-GRAPHV2-FORWARD-LIFECYCLE-011","to":"C:CLAIM-GRAPHV2-LIFECYCLE-010","type":"FOLLOWS"},
-      {"from":"C:CLAIM-GRAPHV2-FORWARD-LIFECYCLE-011","to":"ISSUE:426","type":"CLAIMS"},
+      {"from":"ISSUE:426","to":"C:CLAIM-GRAPHV2-FORWARD-LIFECYCLE-011","type":"RESOLVED_BY"},
       {"from":"SCHEMA:COS-V2-EVENT-1.1","to":"SCHEMA:COS-V2-EVENT-1.0","type":"SUPERSEDES_FOR_PRODUCTION"},
       {"from":"SCHEMA:COS-V2-EVENT-1.0","to":"ISSUE:426","type":"LEGACY_COMPATIBILITY_BOUNDARY"},
       {"from":"ARCH:V2.2","to":"G:G-0001","type":"SERVES"}
     ],
     "hyperrelations":[
-      {"id":"HR:FORWARD-LIFECYCLE-011","type":"FENCED_FORWARD_EVENT_CONTRACT","members":["C:CLAIM-GRAPHV2-FORWARD-LIFECYCLE-011","ISSUE:426","SCHEMA:COS-V2-EVENT-1.0","SCHEMA:COS-V2-EVENT-1.1","ARCH:V2.2"],"semantics":"Token11 makes legacy 1.0 replay immutable and establishes 1.1 as the only forward production event contract, with explicit claim causation mandatory for lifecycle events."}
+      {"id":"HR:FORWARD-LIFECYCLE-011-POSTMERGE","type":"FENCED_FORWARD_EVENT_QUALIFICATION","members":["C:CLAIM-GRAPHV2-FORWARD-LIFECYCLE-011","ISSUE:426","SCHEMA:COS-V2-EVENT-1.0","SCHEMA:COS-V2-EVENT-1.1","ARCH:V2.2"],"semantics":"Token11 is released after PR #428 exact-main qualification; issue #426 is resolved pending the bounded release PR while 1.1 remains the forward contract and 1.0 remains frozen history."}
     ]
   }
 }

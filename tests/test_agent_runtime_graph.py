@@ -20,16 +20,25 @@ class AgentRuntimeGraphTests(unittest.TestCase):
         return {
             "heartbeat_id": f"HB-{session}-{observed_at}", "project_id": "SWITZERLAND_JOB_OS",
             "agent_id": agent, "session_id": session, "workstream_id": "WS-X", "objective_id": "OBJ-X",
-            "task_id": "TASK-X", "claim_id": claim, "fencing_token": token, "observed_at": observed_at,
-            "state": state, "branch": branch, "worktree": worktree,
+            "goal_ids": ["G-0001"], "plan_id": "PLAN-X", "task_id": "TASK-X", "claim_id": claim,
+            "fencing_token": token, "observed_at": observed_at, "state": state, "branch": branch, "worktree": worktree,
+            "base_main_sha": "a" * 40, "authority_ceiling": "TEST_ONLY", "graph_program": "GRAPH-REFACTOR-V2",
+            "pr_number": 100 + token, "current_iteration_id": None, "next_safe_action": "resume exact task from heartbeat",
         }
 
-    def test_global_projection_contains_goal_worktree_pr_hypothesis_and_evaluator(self):
+    def test_heartbeat_alone_reconstructs_full_active_work_graph(self):
+        graph = reduce_agent_runtime_graph([], [self.hb(session="SES-A", agent="AGENT-A", claim="CLAIM-A", token=1, observed_at="2026-09-01T22:20:00Z")], as_of="2026-09-01T22:20:10Z")
+        self.assertEqual(graph["violations"], [])
+        types = {n["type"] for n in graph["nodes"]}
+        for expected in {"Agent", "Session", "Goal", "Plan", "Task", "Claim", "Worktree", "Branch", "PullRequest", "Heartbeat"}:
+            self.assertIn(expected, types)
+
+    def test_global_projection_contains_hypothesis_and_evaluator(self):
         graph = reduce_agent_runtime_graph([self.receipt()], [self.hb(session="SES-A", agent="AGENT-A", claim="CLAIM-A", token=1, observed_at="2026-09-01T22:20:00Z")], as_of="2026-09-01T22:20:10Z")
         self.assertEqual(graph["violations"], [])
         types = {n["type"] for n in graph["nodes"]}
-        for expected in {"Agent", "Session", "Goal", "Claim", "Worktree", "PullRequest", "Experiment", "Hypothesis", "TestSuite", "Heartbeat"}:
-            self.assertIn(expected, types)
+        self.assertIn("Hypothesis", types)
+        self.assertIn("TestSuite", types)
 
     def test_discarded_experiment_remains_in_projection(self):
         receipt = self.receipt(decision_metric=1)

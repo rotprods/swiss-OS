@@ -1,0 +1,1 @@
+{"schema_version":"COS-V2-LEGACY-EVENT-BOUNDARY-1.0","project_id":"SWITZERLAND_JOB_OS","legacy_schema_version":"COS-V2-EVENT-1.0","forward_schema_version":"COS-V2-EVENT-1.1","frozen_at_main_sha":"e13b05fc24cb5b5f0883d86bddfb6d602007fb48","event_path_prefix":"docs/state/v2/events/","issue":426,"authority_effect":"NONE"}

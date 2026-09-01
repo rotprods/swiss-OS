@@ -2,10 +2,12 @@ import copy, unittest
 from swiss_os.v2_coordination import *
 GIT_SHA="a"*40
 SCOPE_REV="b"*64
-def event(event_id="EVT-1",idempotency="idem-1",event_type="WORK_STARTED"):
-    return {"schema_version":"COS-V2-EVENT-1.0","event_id":event_id,"event_type":event_type,"occurred_at":"2026-08-29T21:42:00Z","project_id":"P","agent_id":"A","session_id":"S","workstream_id":"W","objective_id":"O","correlation_id":"C","repo":"owner/repo","main_sha_observed":GIT_SHA,"base_sha":GIT_SHA,"authority_ceiling":"PREAUTHORITY","summary":"x","next_action":"y","idempotency_key":idempotency,"canonical_hotel_mutation_allowed":False,"h_id_allocation_allowed":False,"outbound_allowed":False}
-def claim(claim_id="CL-1",scopes=None,semantics=None,token=1):
-    return {"schema_version":"COS-V2-CLAIM-1.0","claim_id":claim_id,"project_id":"P","agent_id":"A","session_id":"S","workstream_id":"W","objective_id":"O","correlation_id":"C","state":"ACTIVE","claimed_at":"2026-08-29T21:42:00Z","base_sha":GIT_SHA,"branch":"branch","resource_scopes":scopes or ["architecture"],"semantic_scopes":semantics or ["ARCHITECTURE"],"excluded_scopes":["OUTBOUND"],"fencing_token":token,"authority_ceiling":"PREAUTHORITY","idempotency_key":claim_id}
+def event(event_id="EVT-1",idempotency="idem-1",event_type="WORK_STARTED",causation=None,occurred_at="2026-08-29T21:42:00Z"):
+    payload={"schema_version":"COS-V2-EVENT-1.0","event_id":event_id,"event_type":event_type,"occurred_at":occurred_at,"project_id":"P","agent_id":"A","session_id":"S","workstream_id":"W","objective_id":"O","correlation_id":"C","repo":"owner/repo","main_sha_observed":GIT_SHA,"base_sha":GIT_SHA,"authority_ceiling":"PREAUTHORITY","summary":"x","next_action":"y","idempotency_key":idempotency,"canonical_hotel_mutation_allowed":False,"h_id_allocation_allowed":False,"outbound_allowed":False}
+    if causation is not None: payload["causation"]=causation
+    return payload
+def claim(claim_id="CL-1",scopes=None,semantics=None,token=1,state="ACTIVE"):
+    return {"schema_version":"COS-V2-CLAIM-1.0","claim_id":claim_id,"project_id":"P","agent_id":"A","session_id":"S","workstream_id":"W","objective_id":"O","correlation_id":"C","state":state,"claimed_at":"2026-08-29T21:42:00Z","base_sha":GIT_SHA,"branch":"branch","resource_scopes":scopes or ["architecture"],"semantic_scopes":semantics or ["ARCHITECTURE"],"excluded_scopes":["OUTBOUND"],"fencing_token":token,"authority_ceiling":"PREAUTHORITY","idempotency_key":claim_id}
 class T(unittest.TestCase):
     def test_event(self):
         self.assertEqual(validate_event(event()),())
@@ -24,6 +26,38 @@ class T(unittest.TestCase):
     def test_duplicate_event(self):
         p=reduce_coordination([event("E1","i1"),event("E1","i2")],[])
         self.assertIn("DUPLICATE_EVENT_ID:E1",p["violations"])
+    def test_claim_release_is_event_derived(self):
+        c=claim(state="RELEASED")
+        acquired=event("E-A","i-a","CLAIM_ACQUIRED",["claim:CL-1"],"2026-08-29T21:42:00Z")
+        released=event("E-R","i-r","CLAIM_RELEASED",["claim:CL-1"],"2026-08-29T21:43:00Z")
+        projected,errs=project_claim_lifecycle([released,acquired],[c])
+        self.assertEqual(errs,())
+        self.assertEqual(projected[0]["state"],"RELEASED")
+        self.assertEqual(reduce_coordination([released,acquired],[c])["active_claim_ids"],[])
+    def test_claim_supersession_is_event_derived(self):
+        c=claim(state="SUPERSEDED")
+        acquired=event("E-A","i-a","CLAIM_ACQUIRED",["claim:CL-1"],"2026-08-29T21:42:00Z")
+        superseded=event("E-S","i-s","CLAIM_SUPERSEDED",["claim:CL-1"],"2026-08-29T21:43:00Z")
+        projected,errs=project_claim_lifecycle([superseded,acquired],[c])
+        self.assertEqual(errs,())
+        self.assertEqual(projected[0]["state"],"SUPERSEDED")
+    def test_legacy_terminal_event_without_acquire_replays(self):
+        c=claim(state="RELEASED")
+        released=event("E-R","i-r","CLAIM_RELEASED",["claim:CL-1"])
+        projected,errs=project_claim_lifecycle([released],[c])
+        self.assertEqual(errs,())
+        self.assertEqual(projected[0]["state"],"RELEASED")
+    def test_stale_mutable_claim_state_is_detected(self):
+        c=claim(state="ACTIVE")
+        acquired=event("E-A","i-a","CLAIM_ACQUIRED",["claim:CL-1"],"2026-08-29T21:42:00Z")
+        released=event("E-R","i-r","CLAIM_RELEASED",["claim:CL-1"],"2026-08-29T21:43:00Z")
+        _,errs=project_claim_lifecycle([acquired,released],[c])
+        self.assertIn("CLAIM_DECLARED_STATE_DRIFT:CL-1:ACTIVE->RELEASED",errs)
+    def test_claim_lifecycle_requires_exact_claim_reference(self):
+        c=claim()
+        bad=event("E-R","i-r","CLAIM_RELEASED",[])
+        _,errs=project_claim_lifecycle([bad],[c])
+        self.assertIn("CLAIM_LIFECYCLE_REFERENCE_COUNT:E-R:0",errs)
     def test_context_descendant_head_without_scope_drift_is_valid(self):
         p=reduce_coordination([event()],[claim()])
         pack=build_context_pack(project_id="P",base_main_sha=GIT_SHA,authority_revision="A",projection=p,state_refs=[],relevant_paths=["ARCHITECTURE.md"],relevant_scope_revision=SCOPE_REV,blockers=[],next_safe_actions=[])

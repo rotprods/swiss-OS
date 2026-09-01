@@ -7,6 +7,8 @@ from scripts.context_survival_guard import CHECKPOINT, validate_checkpoint
 
 
 RECOVERY_CONFIG = Path("docs/refactor-v2/coordination_recovery_token8_config.json")
+ROOT_NEXT = Path("docs/state/NEXT.json")
+ACTIVE_CLAIMS = Path("docs/state/v2/active-claims.json")
 
 
 class ContextSurvivalGuardTests(unittest.TestCase):
@@ -40,6 +42,18 @@ class ContextSurvivalGuardTests(unittest.TestCase):
         self.assertTrue(config["primary_program"].strip())
         self.assertEqual(payload["primary_program"], config["primary_program"])
         self.assertNotEqual(payload["primary_program"], "REPO_ARCHAEOLOGY_GRAPHIFY_V1")
+
+    def test_root_next_active_claim_matches_durable_active_claim_projection(self):
+        next_payload = json.loads(ROOT_NEXT.read_text(encoding="utf-8"))
+        active = json.loads(ACTIVE_CLAIMS.read_text(encoding="utf-8"))
+        claims = active.get("claims", [])
+        self.assertEqual(len(claims), 1)
+        projected = claims[0]
+        root_claim = next_payload["active_claim"]
+        self.assertEqual(root_claim["claim_id"], projected["claim_id"])
+        self.assertEqual(root_claim["fencing_token"], projected["fencing_token"])
+        self.assertEqual(root_claim["authority_ceiling"], projected["authority_ceiling"])
+        self.assertEqual(active["fencing_high_watermark"], root_claim["fencing_token"])
 
     def test_unsafe_checkpoint_fails_closed(self):
         payload = json.loads(CHECKPOINT.read_text(encoding="utf-8"))

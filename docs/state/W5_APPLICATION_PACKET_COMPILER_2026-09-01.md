@@ -4,7 +4,7 @@ Status: implementation candidate; outbound remains CLOSED.
 
 ## Contract
 
-The compiler is a metadata/state compiler, not a sender. It converts an organization/opportunity + lane + verified candidate fields + approved private asset manifests + selected channel into one deterministic application packet identity.
+The compiler is a metadata/state compiler, not a sender. It converts an organization/opportunity + lane + verified candidate fields + approved private asset manifests + selected channel into deterministic application and packet identities.
 
 It reuses existing W3 contracts instead of defining parallel truth semantics:
 - `candidate_truth.evaluate_lane()` is the lane gate.
@@ -20,11 +20,17 @@ It reuses existing W3 contracts instead of defining parallel truth semantics:
 
 Multiple approved primary assets fail closed. The compiler never invents a 'latest version' rule from version strings.
 
-## Idempotency
+## Dual identity / idempotency
 
-Application identity is a SHA-256 over organization, optional opportunity, lane, primary asset, supplemental assets and channel. Recompiling the same input yields the same packet/application/idempotency identity.
+Application identity and packet identity are intentionally different.
 
-`persist_application()` writes metadata only to `applications_v2`; it performs no rendering, Gmail mutation, browser action or outbound send. A repeated identical idempotency key is a no-op.
+`application_id` / `idempotency_key` are a SHA-256 over the target semantics only: organization + optional opportunity + lane + selected channel. They do **not** include the CV, portfolio, case-study version or content hash. Re-rendering or replacing an asset therefore cannot authorize a second application to the same target.
+
+`packet_id` is version-specific. It is a SHA-256 over the stable application key plus the exact primary/supplemental asset identities, versions and content hashes. Changing an approved CV or supplemental artifact produces a new packet version while preserving the same application identity.
+
+This split prevents duplicate outbound while retaining exact packet provenance.
+
+`persist_application()` writes metadata only to `applications_v2`; it performs no rendering, Gmail mutation, browser action or outbound send. A repeated identical application idempotency key is a no-op.
 
 ## Current real-world gate
 

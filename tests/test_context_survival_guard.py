@@ -6,11 +6,15 @@ from pathlib import Path
 from scripts.context_survival_guard import CHECKPOINT, validate_checkpoint
 
 
+RECOVERY_CONFIG = Path("docs/refactor-v2/coordination_recovery_token8_config.json")
+
+
 class ContextSurvivalGuardTests(unittest.TestCase):
     def test_live_checkpoint_is_reconstructable_and_safe(self):
         payload = json.loads(CHECKPOINT.read_text(encoding="utf-8"))
+        config = json.loads(RECOVERY_CONFIG.read_text(encoding="utf-8"))
         self.assertEqual(validate_checkpoint(payload), [])
-        self.assertEqual(payload["primary_program"], "REPO_ARCHAEOLOGY_GRAPHIFY_V1")
+        self.assertEqual(payload["primary_program"], config["primary_program"])
 
         # The live domain NEXT is intentionally mutable. Test the continuity
         # invariant (checkpoint -> pinned NEXT -> route), not a historical Bxx
@@ -28,6 +32,14 @@ class ContextSurvivalGuardTests(unittest.TestCase):
         self.assertEqual(payload["safety"]["canonical_id_reservations_from_staging"], 0)
         self.assertEqual(payload["safety"]["outbound"], "CLOSED")
         self.assertEqual(payload["safety"]["send_allowed"], 0)
+
+    def test_primary_program_is_explicit_durable_state_not_historical_literal(self):
+        payload = json.loads(CHECKPOINT.read_text(encoding="utf-8"))
+        config = json.loads(RECOVERY_CONFIG.read_text(encoding="utf-8"))
+        self.assertIn("primary_program", config)
+        self.assertTrue(config["primary_program"].strip())
+        self.assertEqual(payload["primary_program"], config["primary_program"])
+        self.assertNotEqual(payload["primary_program"], "REPO_ARCHAEOLOGY_GRAPHIFY_V1")
 
     def test_unsafe_checkpoint_fails_closed(self):
         payload = json.loads(CHECKPOINT.read_text(encoding="utf-8"))

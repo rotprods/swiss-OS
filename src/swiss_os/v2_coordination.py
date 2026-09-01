@@ -7,6 +7,7 @@ ACTIVE_CLAIM_STATES=frozenset({"ACTIVE"})
 TERMINAL_CLAIM_STATES=frozenset({"RELEASED","SUPERSEDED","EXPIRED"})
 KNOWN_EVENT_TYPES=frozenset({"HELLO","WORK_STARTED","WORK_PROGRESS","WORK_BLOCKED","WORK_COMPLETED","CLAIM_ACQUIRED","CLAIM_RELEASED","CLAIM_SUPERSEDED","CHECKPOINT_REACHED","DECISION_RECORDED","EVIDENCE_RECORDED","CONTEXT_PACK_EMITTED","HEARTBEAT"})
 CLAIM_LIFECYCLE_EVENTS=frozenset({"CLAIM_ACQUIRED","CLAIM_RELEASED","CLAIM_SUPERSEDED"})
+LEGACY_LIFECYCLE_REF_INFERENCE_BEFORE="2026-09-01T00:00:00Z"
 class CoordinationError(ValueError): pass
 def canonical_json(value:object)->str: return json.dumps(value,ensure_ascii=False,sort_keys=True,separators=(",",":"))
 def sha256_json(value:object)->str: return hashlib.sha256(canonical_json(value).encode()).hexdigest()
@@ -18,6 +19,13 @@ def _require_text(payload,key,errors):
     return v
 def _is_git_sha(v:str)->bool: return len(v)==40 and all(c in "0123456789abcdef" for c in v)
 def _is_sha256(v:str)->bool: return len(v)==64 and all(c in "0123456789abcdef" for c in v)
+def _claim_refs(event:Mapping[str,object])->tuple[str,...]:
+    values=event.get("causation",[])
+    if not isinstance(values,list): return ()
+    refs=[]
+    for value in values:
+        if isinstance(value,str) and value.startswith("claim:") and value[6:].strip(): refs.append(value[6:].strip())
+    return tuple(dict.fromkeys(refs))
 def validate_event(event):
     errors=[]
     if event.get("schema_version")!=EVENT_SCHEMA: errors.append("INVALID_EVENT_SCHEMA")
@@ -29,6 +37,8 @@ def validate_event(event):
         if v and not _is_git_sha(v): errors.append(f"INVALID_{key.upper()}")
     for key in ("canonical_hotel_mutation_allowed","h_id_allocation_allowed","outbound_allowed"):
         if not isinstance(event.get(key),bool): errors.append(f"INVALID_{key.upper()}_BOOLEAN")
+    if et in CLAIM_LIFECYCLE_EVENTS and _text(event,"occurred_at")>=LEGACY_LIFECYCLE_REF_INFERENCE_BEFORE and len(_claim_refs(event))!=1:
+        errors.append("INVALID_CLAIM_LIFECYCLE_REFERENCE_COUNT")
     return tuple(dict.fromkeys(errors))
 def validate_claim(claim):
     errors=[]
@@ -52,20 +62,26 @@ def detect_claim_collisions(claims):
             ss=scopes_overlap(left.get("semantic_scopes",[]) if isinstance(left.get("semantic_scopes"),list) else [],right.get("semantic_scopes",[]) if isinstance(right.get("semantic_scopes"),list) else [])
             if rs or ss: out.append({"left_claim_id":_text(left,"claim_id"),"right_claim_id":_text(right,"claim_id"),"resource_overlap":rs,"semantic_overlap":ss})
     return out
-def _claim_refs(event:Mapping[str,object])->tuple[str,...]:
-    values=event.get("causation",[])
-    if not isinstance(values,list): return ()
-    refs=[]
-    for value in values:
-        if isinstance(value,str) and value.startswith("claim:") and value[6:].strip(): refs.append(value[6:].strip())
-    return tuple(dict.fromkeys(refs))
+def _infer_legacy_claim_ref(event:Mapping[str,object],by_id:Mapping[str,Mapping[str,object]])->str:
+    """Resolve pre-V2.1 lifecycle events without mutating append-only history.
+
+    Only events before the explicit-reference migration boundary are eligible, and
+    only when session/agent/workstream/objective/correlation identity resolves to
+    exactly one durable claim. Ambiguity remains a hard failure.
+    """
+    if _text(event,"occurred_at")>=LEGACY_LIFECYCLE_REF_INFERENCE_BEFORE: return ""
+    keys=("session_id","agent_id","workstream_id","objective_id","correlation_id")
+    matches=[]
+    for cid,claim in by_id.items():
+        if all(_text(event,key) and _text(event,key)==_text(claim,key) for key in keys): matches.append(cid)
+    return matches[0] if len(matches)==1 else ""
 def project_claim_lifecycle(events,claims):
     """Derive current claim state from durable lifecycle events, not mutable claim prose alone.
 
-    Legacy claims may predate their CLAIM_ACQUIRED event. If a claim has a terminal
-    lifecycle event but no acquisition event, the reducer treats it as ACTIVE at the
-    start of the observed ledger and then applies the terminal transition. This keeps
-    old ledgers replayable while still making future release/supersession event-driven.
+    V2.1+ lifecycle events require one explicit ``claim:<id>`` causation reference.
+    Historical pre-boundary events are not rewritten: a missing reference may be
+    inferred only from a unique exact session/agent/workstream/objective/correlation
+    match. If that identity is not unique, replay fails closed.
     """
     events=list(events); claims=list(claims); errors=[]; by_id={}; projected={}
     for claim in claims:
@@ -78,6 +94,9 @@ def project_claim_lifecycle(events,claims):
         et=_text(event,"event_type")
         if et not in CLAIM_LIFECYCLE_EVENTS: continue
         refs=_claim_refs(event); eid=_text(event,"event_id") or "<unknown>"
+        if not refs:
+            inferred=_infer_legacy_claim_ref(event,by_id)
+            if inferred: refs=(inferred,)
         if len(refs)!=1:
             errors.append(f"CLAIM_LIFECYCLE_REFERENCE_COUNT:{eid}:{len(refs)}"); continue
         cid=refs[0]

@@ -67,8 +67,11 @@ class CompiledApplicationPacket:
     target_role: str
     vacancy_source_url: str
     selected_asset_manifest_id: str
+    selected_asset_version: str
+    selected_asset_sha256: str
     selected_channel_id: str
     supplemental_asset_ids: tuple[str, ...]
+    supplemental_assets_json: str
     idempotency_key: str
     readiness_binding_sha256: str
     aag_receipt_sha256: str
@@ -84,8 +87,11 @@ class CompiledApplicationPacket:
             "target_role": self.target_role,
             "vacancy_source_url": self.vacancy_source_url,
             "selected_asset_manifest_id": self.selected_asset_manifest_id,
+            "selected_asset_version": self.selected_asset_version,
+            "selected_asset_sha256": self.selected_asset_sha256,
             "selected_channel_id": self.selected_channel_id,
             "supplemental_asset_count": len(self.supplemental_asset_ids),
+            "supplemental_assets": json.loads(self.supplemental_assets_json),
             "idempotency_key": self.idempotency_key,
             "readiness_binding_sha256": self.readiness_binding_sha256,
             "aag_receipt_sha256": self.aag_receipt_sha256,
@@ -99,6 +105,10 @@ class CompiledApplicationPacket:
 def _hash(payload: dict[str, object]) -> str:
     raw = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
     return hashlib.sha256(raw).hexdigest()
+
+
+def _canonical_json(value: object) -> str:
+    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
 
 
 def _synthesized_asset_fields(assets: Iterable[AssetManifest]) -> tuple[CandidateField, ...]:
@@ -170,12 +180,14 @@ def compile_packet(request: PacketCompileRequest) -> CompiledApplicationPacket:
 
     primary = _select_primary_asset(request.lane, request.assets)
     supplements = _supplemental_assets(request.lane, request.assets)
+    primary_identity = _asset_identity(primary)
+    supplement_identities = [_asset_identity(a) for a in supplements]
     application_hash = _application_identity(request)
     packet_hash = _hash({
         "application_key": application_hash,
         "readiness_binding_sha256": request.readiness.binding_sha256,
-        "primary": _asset_identity(primary),
-        "supplements": [_asset_identity(a) for a in supplements],
+        "primary": primary_identity,
+        "supplements": supplement_identities,
     })
 
     return CompiledApplicationPacket(
@@ -187,8 +199,11 @@ def compile_packet(request: PacketCompileRequest) -> CompiledApplicationPacket:
         target_role=request.readiness.target_role,
         vacancy_source_url=request.readiness.vacancy_source_url,
         selected_asset_manifest_id=primary.asset_id,
+        selected_asset_version=primary.version,
+        selected_asset_sha256=primary.content_sha256 or "",
         selected_channel_id=request.channel_id,
         supplemental_asset_ids=tuple(a.asset_id for a in supplements),
+        supplemental_assets_json=_canonical_json(supplement_identities),
         idempotency_key=application_hash,
         readiness_binding_sha256=request.readiness.binding_sha256,
         aag_receipt_sha256=request.readiness.aag_receipt_sha256,
@@ -239,7 +254,7 @@ def persist_packet_receipt(
     *,
     created_at: str,
 ) -> bool:
-    """Persist one version-specific packet/readiness receipt; no outbound action exists here."""
+    """Persist one exact version-specific packet/readiness receipt; no outbound action exists here."""
     application = conn.execute(
         "SELECT application_id FROM applications_v2 WHERE application_id=?",
         (packet.application_id,),
@@ -258,8 +273,9 @@ def persist_packet_receipt(
         """INSERT INTO application_packet_receipts_v1(
              packet_id, application_id, readiness_binding_sha256, aag_receipt_sha256,
              target_role, vacancy_source_url, selected_asset_manifest_id,
-             selected_channel_id, supplemental_asset_count, state, created_at
-           ) VALUES(?,?,?,?,?,?,?,?,?,?,?)""",
+             selected_asset_version, selected_asset_sha256, selected_channel_id,
+             supplemental_assets_json, state, created_at
+           ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)""",
         (
             packet.packet_id,
             packet.application_id,
@@ -268,8 +284,10 @@ def persist_packet_receipt(
             packet.target_role,
             packet.vacancy_source_url,
             packet.selected_asset_manifest_id,
+            packet.selected_asset_version,
+            packet.selected_asset_sha256,
             packet.selected_channel_id,
-            len(packet.supplemental_asset_ids),
+            packet.supplemental_assets_json,
             "PACKET_COMPILED_NO_SEND",
             created_at,
         ),
@@ -283,7 +301,7 @@ def persist_compiled_packet(
     *,
     created_at: str,
 ) -> tuple[bool, bool]:
-    """Persist stable application + versioned packet receipt in one transaction boundary."""
+    """Persist stable application + exact packet receipt in one transaction boundary."""
     with conn:
         application_inserted = persist_application(conn, packet, created_at=created_at)
         packet_inserted = persist_packet_receipt(conn, packet, created_at=created_at)

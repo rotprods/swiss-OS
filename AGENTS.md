@@ -4,6 +4,22 @@
 
 Every agent optimizes the G-0001 North Star, not vanity metrics.
 
+## Mandatory GRAPH-REFACTOR-V2 bootstrap
+
+Every material agent MUST operate inside `GRAPH-REFACTOR-V2`. Before mutation it must read `docs/operations/AGENT_AUTORESEARCH_PROGRAM.md` and bind its work to durable graph identity:
+
+```text
+project_id + agent_id + session_id + workstream_id + objective_id + correlation_id
++ goal_ids[] + plan_id + task_id + claim_id + fencing_token
++ worktree + branch + PR(if any) + base_main_sha + authority_ceiling
+```
+
+No anonymous material work is valid. `session_id` is never reused. Every parallel agent uses an isolated worktree/branch and a non-colliding claim. Every bounded iteration records a testable hypothesis, baseline, evaluation suite and one of `KEEP | DISCARD | CRASH | BLOCKED`. Discarded/crashed code may be reverted; the experiment evidence and graph lineage remain durable.
+
+Before starting the next mutation, persist a death-safe heartbeat sufficient for another zero-context agent to recover the exact goal/plan/task, claim/fencing ownership, worktree/branch/PR, experiment state, tests/evidence and next safe action. A PR is not ownership; the claim/fencing token is ownership.
+
+The Autoresearch loop never weakens authority, security, candidate-truth, human-approval or outbound gates. See `src/swiss_os/agent_improvement_runtime.py` for executable keep/discard semantics.
+
 Before material work:
 
 1. read `docs/operations/META_EXECUTION_PROTOCOL.md`;

@@ -75,6 +75,11 @@ class CompiledApplicationPacket:
         }
 
 
+def _hash(payload: dict[str, object]) -> str:
+    raw = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
+    return hashlib.sha256(raw).hexdigest()
+
+
 def _synthesized_asset_fields(assets: Iterable[AssetManifest]) -> tuple[CandidateField, ...]:
     by_field: dict[str, bool] = {}
     for asset in assets:
@@ -99,79 +104,67 @@ def _select_primary_asset(lane: str, assets: Iterable[AssetManifest]) -> AssetMa
     candidates = [a for a in assets if a.asset_type == required_type and a.approved]
     if not candidates:
         raise ValueError(f"no approved {required_type} asset for lane {lane}")
-    # Fail closed on ambiguity: version ordering is not a governance rule.
     if len(candidates) != 1:
         ids = ",".join(sorted(a.asset_id for a in candidates))
         raise ValueError(f"ambiguous approved primary assets for lane {lane}: {ids}")
     return candidates[0]
 
 
-def _supplemental_assets(lane: str, assets: Iterable[AssetManifest]) -> tuple[str, ...]:
-    required: tuple[str, ...]
-    if lane in {"HYBRID", "CREATIVE"}:
-        required = ("PORTFOLIO", "CASE_STUDY")
-    else:
-        required = ()
-
-    selected: list[str] = []
+def _supplemental_assets(lane: str, assets: Iterable[AssetManifest]) -> tuple[AssetManifest, ...]:
+    required = ("PORTFOLIO", "CASE_STUDY") if lane in {"HYBRID", "CREATIVE"} else ()
+    selected: list[AssetManifest] = []
     for asset_type in required:
         matches = [a for a in assets if a.asset_type == asset_type and a.approved]
         if len(matches) != 1:
             raise ValueError(f"expected exactly one approved {asset_type} for lane {lane}")
-        selected.append(matches[0].asset_id)
+        selected.append(matches[0])
     return tuple(selected)
 
 
-def _stable_identity_payload(
-    organization_id: str,
-    opportunity_id: str | None,
-    lane: str,
-    primary_asset_id: str,
-    supplemental_asset_ids: tuple[str, ...],
-    channel_id: str,
-) -> str:
-    payload = {
-        "organization_id": organization_id,
-        "opportunity_id": opportunity_id or "",
-        "lane": lane,
-        "primary_asset_id": primary_asset_id,
-        "supplemental_asset_ids": list(supplemental_asset_ids),
-        "channel_id": channel_id,
+def _application_identity(request: PacketCompileRequest) -> str:
+    # Stable across asset revisions: replacing a CV must never authorize a duplicate application.
+    return _hash({
+        "organization_id": request.organization_id,
+        "opportunity_id": request.opportunity_id or "",
+        "lane": request.lane,
+        "channel_id": request.channel_id,
+    })
+
+
+def _asset_identity(asset: AssetManifest) -> dict[str, object]:
+    return {
+        "asset_id": asset.asset_id,
+        "asset_type": asset.asset_type,
+        "version": asset.version,
+        "content_sha256": asset.content_sha256 or "",
     }
-    raw = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
-    return hashlib.sha256(raw).hexdigest()
 
 
 def compile_packet(request: PacketCompileRequest) -> CompiledApplicationPacket:
     request.validate()
-    asset_fields = _synthesized_asset_fields(request.assets)
-    merged_fields = tuple(request.candidate_fields) + asset_fields
-    gate = evaluate_lane(request.lane, merged_fields)
+    gate = evaluate_lane(request.lane, tuple(request.candidate_fields) + _synthesized_asset_fields(request.assets))
     if not gate.ready:
-        raise ValueError(
-            f"lane gate blocked: missing={','.join(gate.missing)} blocked={','.join(gate.blocked)}"
-        )
+        raise ValueError(f"lane gate blocked: missing={','.join(gate.missing)} blocked={','.join(gate.blocked)}")
 
     primary = _select_primary_asset(request.lane, request.assets)
     supplements = _supplemental_assets(request.lane, request.assets)
-    identity_hash = _stable_identity_payload(
-        request.organization_id,
-        request.opportunity_id,
-        request.lane,
-        primary.asset_id,
-        supplements,
-        request.channel_id,
-    )
+    application_hash = _application_identity(request)
+    packet_hash = _hash({
+        "application_key": application_hash,
+        "primary": _asset_identity(primary),
+        "supplements": [_asset_identity(a) for a in supplements],
+    })
+
     return CompiledApplicationPacket(
-        packet_id=f"PKT-{identity_hash[:20]}",
-        application_id=f"APP-{identity_hash[:20]}",
+        packet_id=f"PKT-{packet_hash[:20]}",
+        application_id=f"APP-{application_hash[:20]}",
         organization_id=request.organization_id,
         opportunity_id=request.opportunity_id,
         lane=request.lane,
         selected_asset_manifest_id=primary.asset_id,
         selected_channel_id=request.channel_id,
-        supplemental_asset_ids=supplements,
-        idempotency_key=identity_hash,
+        supplemental_asset_ids=tuple(a.asset_id for a in supplements),
+        idempotency_key=application_hash,
         gate=gate,
     )
 
@@ -183,11 +176,7 @@ def persist_application(
     created_at: str,
     state: str = "PACKET_COMPILED",
 ) -> bool:
-    """Persist metadata only. Never sends or renders external content.
-
-    Returns True when inserted and False when the same idempotency key already exists.
-    A conflicting pre-existing application_id or idempotency_key remains a database error.
-    """
+    """Persist application metadata only; this function never sends or renders content."""
     existing = conn.execute(
         "SELECT application_id FROM applications_v2 WHERE idempotency_key=?",
         (packet.idempotency_key,),

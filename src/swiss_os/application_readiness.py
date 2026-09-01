@@ -3,19 +3,20 @@ from __future__ import annotations
 from dataclasses import dataclass
 import hashlib
 import json
-from typing import Any, Mapping
+from typing import Any, Mapping, Sequence
 from urllib.parse import urlsplit
 
 from .application_adversarial_v31 import (
     HARD_GATE_EXPECTED as AAG31_HARD_GATES,
     SCHEMA_VERSION as AAG31_SCHEMA_VERSION,
 )
+from .candidate_assets import AssetManifest
 
 SCHEMA_VERSION = "TARGET-BOUND-APPLICATION-READINESS-1.0"
 READY_DECISIONS = frozenset({"APPLICATION_READY_NO_SEND", "ELITE_MATCH"})
 
 
-def _canonical_sha256(value: Mapping[str, Any]) -> str:
+def _canonical_sha256(value: Any) -> str:
     raw = json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
     return hashlib.sha256(raw).hexdigest()
 
@@ -27,12 +28,34 @@ def _require_text(value: str | None, field: str) -> str:
     return text
 
 
+def _require_sha256(value: str | None, field: str) -> str:
+    text = _require_text(value, field).lower()
+    if len(text) != 64 or any(c not in "0123456789abcdef" for c in text):
+        raise ValueError(f"{field} must be SHA-256 hex")
+    return text
+
+
 def _https_url(value: str) -> str:
     text = _require_text(value, "vacancy_source_url")
     parsed = urlsplit(text)
     if parsed.scheme.lower() != "https" or not parsed.hostname:
         raise ValueError("vacancy_source_url must be absolute HTTPS")
     return text
+
+
+def asset_set_sha256(assets: Sequence[AssetManifest]) -> str:
+    """Hash only public-safe asset identity/version/content metadata, never private refs."""
+    rows: list[dict[str, str]] = []
+    for asset in assets:
+        asset.validate()
+        rows.append({
+            "asset_id": asset.asset_id,
+            "asset_type": asset.asset_type,
+            "version": asset.version,
+            "content_sha256": asset.content_sha256 or "",
+        })
+    rows.sort(key=lambda row: (row["asset_type"], row["asset_id"], row["version"], row["content_sha256"]))
+    return _canonical_sha256(rows)
 
 
 def _validate_aag31(aag_receipt: Mapping[str, Any]) -> None:
@@ -75,6 +98,9 @@ class TargetBoundReadinessReceipt:
     channel_id: str
     target_role: str
     vacancy_source_url: str
+    candidate_truth_sha256: str
+    vacancy_evidence_sha256: str
+    evaluated_asset_set_sha256: str
     aag_schema_version: str
     aag_decision: str
     aag_receipt_sha256: str
@@ -95,6 +121,9 @@ class TargetBoundReadinessReceipt:
         channel_id: str,
         target_role: str,
         vacancy_source_url: str,
+        candidate_truth_sha256: str,
+        vacancy_evidence_sha256: str,
+        evaluated_asset_set_sha256: str,
         aag_receipt: Mapping[str, Any],
     ) -> "TargetBoundReadinessReceipt":
         _validate_aag31(aag_receipt)
@@ -104,6 +133,9 @@ class TargetBoundReadinessReceipt:
         channel_id = _require_text(channel_id, "channel_id")
         target_role = _require_text(target_role, "target_role")
         vacancy_source_url = _https_url(vacancy_source_url)
+        candidate_truth_sha256 = _require_sha256(candidate_truth_sha256, "candidate_truth_sha256")
+        vacancy_evidence_sha256 = _require_sha256(vacancy_evidence_sha256, "vacancy_evidence_sha256")
+        evaluated_asset_set_sha256 = _require_sha256(evaluated_asset_set_sha256, "evaluated_asset_set_sha256")
         aag_sha = _canonical_sha256(aag_receipt)
         target = {
             "organization_id": organization_id,
@@ -112,6 +144,9 @@ class TargetBoundReadinessReceipt:
             "channel_id": channel_id,
             "target_role": target_role,
             "vacancy_source_url": vacancy_source_url,
+            "candidate_truth_sha256": candidate_truth_sha256,
+            "vacancy_evidence_sha256": vacancy_evidence_sha256,
+            "evaluated_asset_set_sha256": evaluated_asset_set_sha256,
             "aag_schema_version": AAG31_SCHEMA_VERSION,
             "aag_receipt_sha256": aag_sha,
         }
@@ -124,6 +159,9 @@ class TargetBoundReadinessReceipt:
             channel_id=channel_id,
             target_role=target_role,
             vacancy_source_url=vacancy_source_url,
+            candidate_truth_sha256=candidate_truth_sha256,
+            vacancy_evidence_sha256=vacancy_evidence_sha256,
+            evaluated_asset_set_sha256=evaluated_asset_set_sha256,
             aag_schema_version=AAG31_SCHEMA_VERSION,
             aag_decision=str(aag_receipt["decision"]),
             aag_receipt_sha256=aag_sha,
@@ -144,18 +182,17 @@ class TargetBoundReadinessReceipt:
         _require_text(self.channel_id, "channel_id")
         _require_text(self.target_role, "target_role")
         _https_url(self.vacancy_source_url)
+        _require_sha256(self.candidate_truth_sha256, "candidate_truth_sha256")
+        _require_sha256(self.vacancy_evidence_sha256, "vacancy_evidence_sha256")
+        _require_sha256(self.evaluated_asset_set_sha256, "evaluated_asset_set_sha256")
         if self.aag_schema_version != AAG31_SCHEMA_VERSION:
             raise ValueError("target-bound readiness requires AAG-3.1")
         if self.aag_decision not in READY_DECISIONS:
             raise ValueError("target-bound readiness decision not ready")
         if self.hard_gate_count != len(AAG31_HARD_GATES):
             raise ValueError("target-bound readiness hard-gate count mismatch")
-        for field, value in (
-            ("aag_receipt_sha256", self.aag_receipt_sha256),
-            ("binding_sha256", self.binding_sha256),
-        ):
-            if len(value) != 64 or any(c not in "0123456789abcdef" for c in value.lower()):
-                raise ValueError(f"{field} must be SHA-256 hex")
+        _require_sha256(self.aag_receipt_sha256, "aag_receipt_sha256")
+        _require_sha256(self.binding_sha256, "binding_sha256")
         if self.application_ready_no_send is not True:
             raise ValueError("target-bound readiness flag must be true")
         if self.final_send_ready is not False or self.outbound != "CLOSED" or self.send_allowed != 0:
@@ -168,6 +205,9 @@ class TargetBoundReadinessReceipt:
             "channel_id": self.channel_id,
             "target_role": self.target_role,
             "vacancy_source_url": self.vacancy_source_url,
+            "candidate_truth_sha256": self.candidate_truth_sha256,
+            "vacancy_evidence_sha256": self.vacancy_evidence_sha256,
+            "evaluated_asset_set_sha256": self.evaluated_asset_set_sha256,
             "aag_schema_version": self.aag_schema_version,
             "aag_receipt_sha256": self.aag_receipt_sha256,
         })
@@ -181,6 +221,8 @@ class TargetBoundReadinessReceipt:
         opportunity_id: str | None,
         lane: str,
         channel_id: str,
+        candidate_truth_sha256: str,
+        vacancy_evidence_sha256: str,
     ) -> None:
         self.validate()
         if not opportunity_id:
@@ -190,16 +232,26 @@ class TargetBoundReadinessReceipt:
             "opportunity_id": opportunity_id,
             "lane": lane,
             "channel_id": channel_id,
+            "candidate_truth_sha256": _require_sha256(candidate_truth_sha256, "candidate_truth_sha256"),
+            "vacancy_evidence_sha256": _require_sha256(vacancy_evidence_sha256, "vacancy_evidence_sha256"),
         }
         observed = {
             "organization_id": self.organization_id,
             "opportunity_id": self.opportunity_id,
             "lane": self.lane,
             "channel_id": self.channel_id,
+            "candidate_truth_sha256": self.candidate_truth_sha256,
+            "vacancy_evidence_sha256": self.vacancy_evidence_sha256,
         }
         mismatches = [key for key in expected if expected[key] != observed[key]]
         if mismatches:
-            raise ValueError(f"readiness target mismatch: {mismatches[0]}")
+            raise ValueError(f"readiness target/input mismatch: {mismatches[0]}")
+
+    def validate_asset_set(self, assets: Sequence[AssetManifest]) -> None:
+        self.validate()
+        observed = asset_set_sha256(assets)
+        if observed != self.evaluated_asset_set_sha256:
+            raise ValueError("readiness evaluated asset set mismatch")
 
     def public_safe_receipt(self) -> dict[str, object]:
         self.validate()
@@ -211,6 +263,9 @@ class TargetBoundReadinessReceipt:
             "channel_id": self.channel_id,
             "target_role": self.target_role,
             "vacancy_source_url": self.vacancy_source_url,
+            "candidate_truth_sha256": self.candidate_truth_sha256,
+            "vacancy_evidence_sha256": self.vacancy_evidence_sha256,
+            "evaluated_asset_set_sha256": self.evaluated_asset_set_sha256,
             "aag_schema_version": self.aag_schema_version,
             "aag_decision": self.aag_decision,
             "aag_receipt_sha256": self.aag_receipt_sha256,

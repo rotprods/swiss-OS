@@ -22,6 +22,8 @@ jobs:
         run: python scripts/system_contract_guard.py
       - name: Agent improvement / GRAPH-REFACTOR-V2 guard
         run: python scripts/agent_improvement_guard.py
+      - name: Session Runtime Protocol guard
+        run: python scripts/session_runtime_guard.py
       - name: Deterministic V2 coordination rebuild guard
         run: python scripts/rebuild_v2_coordination.py --config docs/refactor-v2/coordination_current_config.json --output-dir /tmp/v2-coordination-rebuild --check
       - name: V2 coordination contract guard

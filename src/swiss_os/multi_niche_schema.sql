@@ -89,6 +89,23 @@ CREATE TABLE IF NOT EXISTS applications_v2 (
   selected_asset_manifest_id TEXT, selected_channel_id TEXT, idempotency_key TEXT NOT NULL UNIQUE, created_at TEXT NOT NULL
 );
 
+-- Version-specific packet/readiness provenance. applications_v2 remains the stable
+-- target/idempotency identity; re-rendering or re-validating cannot authorize a duplicate application.
+CREATE TABLE IF NOT EXISTS application_packet_receipts_v1 (
+  packet_id TEXT PRIMARY KEY,
+  application_id TEXT NOT NULL REFERENCES applications_v2(application_id) ON DELETE CASCADE,
+  readiness_binding_sha256 TEXT NOT NULL,
+  aag_receipt_sha256 TEXT NOT NULL,
+  target_role TEXT NOT NULL,
+  vacancy_source_url TEXT NOT NULL,
+  selected_asset_manifest_id TEXT NOT NULL,
+  selected_channel_id TEXT NOT NULL,
+  supplemental_asset_count INTEGER NOT NULL CHECK(supplemental_asset_count >= 0),
+  state TEXT NOT NULL CHECK(state IN ('PACKET_COMPILED_NO_SEND','SUPERSEDED')),
+  created_at TEXT NOT NULL,
+  UNIQUE(application_id, readiness_binding_sha256, selected_asset_manifest_id, selected_channel_id)
+);
+
 CREATE TABLE IF NOT EXISTS responses_v2 (
   response_id TEXT PRIMARY KEY, application_id TEXT NOT NULL REFERENCES applications_v2(application_id) ON DELETE CASCADE,
   outcome_type TEXT NOT NULL CHECK(outcome_type IN ('ACKNOWLEDGED','NO_VACANCY','REJECTED','MORE_INFO','INTERVIEW','OFFER','WITHDRAWN','OTHER')),

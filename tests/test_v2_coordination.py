@@ -41,19 +41,30 @@ class T(unittest.TestCase):
         projected,errs=project_claim_lifecycle([superseded,acquired],[c])
         self.assertEqual(errs,())
         self.assertEqual(projected[0]["state"],"SUPERSEDED")
-    def test_legacy_terminal_event_without_explicit_ref_is_uniquely_inferred(self):
+    def test_legacy_event_requires_explicit_compensating_binding(self):
         c=claim(state="RELEASED")
-        released=event("E-R","i-r","CLAIM_RELEASED",None,"2026-08-29T21:43:00Z")
-        projected,errs=project_claim_lifecycle([released],[c])
+        legacy=event("LEGACY","legacy","CLAIM_RELEASED",None,"2026-08-29T21:43:00Z")
+        bound=event("BOUND","bound","CLAIM_RELEASED",["legacy_event:LEGACY","claim:CL-1"],"2026-08-29T21:43:00Z")
+        projected,errs=project_claim_lifecycle([legacy,bound],[c])
         self.assertEqual(errs,())
         self.assertEqual(projected[0]["state"],"RELEASED")
-        self.assertNotIn("INVALID_CLAIM_LIFECYCLE_REFERENCE_COUNT",validate_event(released))
-    def test_legacy_missing_ref_fails_when_claim_identity_is_ambiguous(self):
-        first=claim("CL-1",state="RELEASED")
-        second=claim("CL-2",token=2,state="RELEASED")
-        released=event("E-R","i-r","CLAIM_RELEASED",None,"2026-08-29T21:43:00Z")
-        _,errs=project_claim_lifecycle([released],[first,second])
-        self.assertIn("CLAIM_LIFECYCLE_REFERENCE_COUNT:E-R:0",errs)
+    def test_unbound_legacy_event_fails_closed(self):
+        c=claim(state="RELEASED")
+        legacy=event("LEGACY","legacy","CLAIM_RELEASED",None,"2026-08-29T21:43:00Z")
+        _,errs=project_claim_lifecycle([legacy],[c])
+        self.assertIn("CLAIM_LIFECYCLE_REFERENCE_COUNT:LEGACY:0",errs)
+    def test_legacy_binding_must_reference_existing_event(self):
+        c=claim(state="RELEASED")
+        bound=event("BOUND","bound","CLAIM_RELEASED",["legacy_event:MISSING","claim:CL-1"],"2026-08-29T21:43:00Z")
+        _,errs=project_claim_lifecycle([bound],[c])
+        self.assertIn("LEGACY_BINDING_UNKNOWN_EVENT:BOUND:MISSING",errs)
+    def test_legacy_event_cannot_be_bound_twice(self):
+        c=claim(state="RELEASED")
+        legacy=event("LEGACY","legacy","CLAIM_RELEASED",None,"2026-08-29T21:43:00Z")
+        first=event("B1","b1","CLAIM_RELEASED",["legacy_event:LEGACY","claim:CL-1"],"2026-08-29T21:43:00Z")
+        second=event("B2","b2","CLAIM_RELEASED",["legacy_event:LEGACY","claim:CL-1"],"2026-08-29T21:43:00Z")
+        _,errs=project_claim_lifecycle([legacy,first,second],[c])
+        self.assertIn("LEGACY_EVENT_BOUND_MORE_THAN_ONCE:LEGACY",errs)
     def test_new_lifecycle_event_requires_exact_claim_reference(self):
         c=claim()
         bad=event("E-R","i-r","CLAIM_RELEASED",[],"2026-09-01T00:00:00Z")

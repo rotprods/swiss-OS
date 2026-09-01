@@ -34,6 +34,8 @@ class PacketCompileRequest:
     assets: tuple[AssetManifest, ...]
     channel_id: str
     readiness: TargetBoundReadinessReceipt
+    candidate_truth_sha256: str
+    vacancy_evidence_sha256: str
     opportunity_id: str | None = None
 
     def validate(self) -> None:
@@ -54,6 +56,8 @@ class PacketCompileRequest:
             opportunity_id=self.opportunity_id,
             lane=self.lane,
             channel_id=self.channel_id,
+            candidate_truth_sha256=self.candidate_truth_sha256,
+            vacancy_evidence_sha256=self.vacancy_evidence_sha256,
         )
 
 
@@ -66,6 +70,9 @@ class CompiledApplicationPacket:
     lane: str
     target_role: str
     vacancy_source_url: str
+    candidate_truth_sha256: str
+    vacancy_evidence_sha256: str
+    evaluated_asset_set_sha256: str
     selected_asset_manifest_id: str
     selected_asset_version: str
     selected_asset_sha256: str
@@ -86,6 +93,9 @@ class CompiledApplicationPacket:
             "lane": self.lane,
             "target_role": self.target_role,
             "vacancy_source_url": self.vacancy_source_url,
+            "candidate_truth_sha256": self.candidate_truth_sha256,
+            "vacancy_evidence_sha256": self.vacancy_evidence_sha256,
+            "evaluated_asset_set_sha256": self.evaluated_asset_set_sha256,
             "selected_asset_manifest_id": self.selected_asset_manifest_id,
             "selected_asset_version": self.selected_asset_version,
             "selected_asset_sha256": self.selected_asset_sha256,
@@ -180,6 +190,9 @@ def compile_packet(request: PacketCompileRequest) -> CompiledApplicationPacket:
 
     primary = _select_primary_asset(request.lane, request.assets)
     supplements = _supplemental_assets(request.lane, request.assets)
+    selected_assets = (primary, *supplements)
+    request.readiness.validate_asset_set(selected_assets)
+
     primary_identity = _asset_identity(primary)
     supplement_identities = [_asset_identity(a) for a in supplements]
     application_hash = _application_identity(request)
@@ -198,6 +211,9 @@ def compile_packet(request: PacketCompileRequest) -> CompiledApplicationPacket:
         lane=request.lane,
         target_role=request.readiness.target_role,
         vacancy_source_url=request.readiness.vacancy_source_url,
+        candidate_truth_sha256=request.readiness.candidate_truth_sha256,
+        vacancy_evidence_sha256=request.readiness.vacancy_evidence_sha256,
+        evaluated_asset_set_sha256=request.readiness.evaluated_asset_set_sha256,
         selected_asset_manifest_id=primary.asset_id,
         selected_asset_version=primary.version,
         selected_asset_sha256=primary.content_sha256 or "",
@@ -272,15 +288,19 @@ def persist_packet_receipt(
     conn.execute(
         """INSERT INTO application_packet_receipts_v1(
              packet_id, application_id, readiness_binding_sha256, aag_receipt_sha256,
+             candidate_truth_sha256, vacancy_evidence_sha256, evaluated_asset_set_sha256,
              target_role, vacancy_source_url, selected_asset_manifest_id,
              selected_asset_version, selected_asset_sha256, selected_channel_id,
              supplemental_assets_json, state, created_at
-           ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+           ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
         (
             packet.packet_id,
             packet.application_id,
             packet.readiness_binding_sha256,
             packet.aag_receipt_sha256,
+            packet.candidate_truth_sha256,
+            packet.vacancy_evidence_sha256,
+            packet.evaluated_asset_set_sha256,
             packet.target_role,
             packet.vacancy_source_url,
             packet.selected_asset_manifest_id,

@@ -45,8 +45,11 @@ def main() -> int:
         if not (ROOT / path).exists():
             fail(f"missing required path {path}")
 
-    require_text("AGENTS.md", "SESSION_RUNTIME_PROTOCOL.md")
-    require_text("AGENTS.md", "claim release is not work completion")
+    # SRP implements the existing mandatory GRAPH-REFACTOR-V2 death-safe heartbeat law;
+    # it does not define a second agent identity/ownership contract.
+    require_text("AGENTS.md", "death-safe heartbeat")
+    require_text("docs/operations/AGENT_AUTORESEARCH_PROGRAM.md", "Death-safe iteration boundary")
+    require_text("docs/operations/SESSION_RUNTIME_PROTOCOL.md", "claim release")
     require_text("docs/operations/SESSION_RUNTIME_PROTOCOL.md", "ORPHANED_CANDIDATE")
     require_text("docs/operations/SESSION_RUNTIME_PROTOCOL.md", "UNAVAILABLE_BY_HARNESS")
 
@@ -80,6 +83,7 @@ def main() -> int:
 
     active_claim_session_ids: set[str] = set()
     native_count = 0
+    session_ids = {str(row.get("session_id")) for row in sessions if isinstance(row, dict)}
     for runtime in sessions:
         if not isinstance(runtime, dict):
             fail("session row is not an object")
@@ -112,17 +116,7 @@ def main() -> int:
 
     if native_count < 1:
         fail("no native SRP session proves activation")
-
-    claim_dir = ROOT / "docs/state/v2/claims"
-    declared_active = {
-        str(row.get("session_id"))
-        for path in claim_dir.glob("*.json")
-        for row in [json.loads(path.read_text(encoding="utf-8"))]
-        if row.get("state") == "ACTIVE"
-    }
-    # Claim files can be stale assertions after event-derived release, so this check is
-    # only one-way: every projection-effective active claim must have a session bundle.
-    if not active_claim_session_ids.issubset({str(row.get("session_id")) for row in sessions}):
+    if not active_claim_session_ids.issubset(session_ids):
         fail("effective active claim missing session projection")
 
     token12 = [row for row in sessions if row.get("session_id") == "SES-20260901T221937Z-SRP-012"]
@@ -136,11 +130,17 @@ def main() -> int:
     if token12.get("progress", {}).get("completion_percent") is None:
         fail("token12 weighted progress missing")
 
+    for proposal in registry.get("unmerged_proposals") or []:
+        if proposal.get("authority_state") not in {None, "OBSERVABILITY_ONLY", "UNMERGED_PROPOSAL"}:
+            fail("unmerged proposal claims authority")
+    for lease in registry.get("live_leases") or []:
+        if lease.get("authority_state") not in {None, "OBSERVABILITY_ONLY"}:
+            fail("live lease claims Git ownership authority")
+
     print(
         "session_runtime_guard: PASS "
         f"sessions={len(sessions)} native={native_count} "
-        f"active_effective={len(active_claim_session_ids)} "
-        f"declared_active_files={len(declared_active)}"
+        f"active_effective={len(active_claim_session_ids)}"
     )
     return 0
 

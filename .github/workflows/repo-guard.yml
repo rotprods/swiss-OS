@@ -20,6 +20,14 @@ jobs:
         run: python scripts/repo_guard.py
       - name: Stable contract drift guard
         run: python scripts/system_contract_guard.py
+      - name: Build coordination recovery artifact
+        run: python scripts/rebuild_v2_coordination.py --config docs/refactor-v2/coordination_recovery_token8_config.json --output-dir /tmp/v2-coordination-rebuild
+      - name: Upload coordination recovery artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: v2-coordination-rebuild-token8
+          path: /tmp/v2-coordination-rebuild
+          if-no-files-found: error
       - name: V2 coordination contract guard
         run: python scripts/v2_contract_guard.py
       - name: Context survival / compaction checkpoint guard

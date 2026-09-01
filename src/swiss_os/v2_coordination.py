@@ -211,21 +211,29 @@ def _legacy_claim_candidates(event, claims):
 
 
 def derive_claim_lifecycle(events, claims):
-    """Return effective claim states plus lifecycle binding violations.
+    """Replay lifecycle events and use claim-file state only as the final assertion.
 
-    New lifecycle events should bind through `causation: ["claim:<id>"]`.
-    Historical events without causation may use the unique legacy identity tuple.
-    Terminal events override stale file projections. File state must still agree with
-    the replayed result so projection drift remains observable instead of hidden.
+    New lifecycle events bind through `causation: ["claim:<id>"]`. Historical
+    events without causation may use the unique legacy session/workstream/objective
+    identity. A final file state never seeds replay: otherwise an old ACQUIRED event
+    would look like reactivation merely because the current file is RELEASED.
+    Claims with no lifecycle events retain their declared file state for backward
+    compatibility. Any replay/file disagreement remains an explicit drift violation.
     """
     claims = list(claims)
-    by_id = {_text(claim, "claim_id"): claim for claim in claims if _text(claim, "claim_id")}
-    states = {claim_id: _text(claim, "state") for claim_id, claim in by_id.items()}
+    by_id = {
+        _text(claim, "claim_id"): claim
+        for claim in claims
+        if _text(claim, "claim_id")
+    }
+    states: dict[str, str] = {}
+    seen_claims: set[str] = set()
     bindings = []
     errors = []
 
     ordered_events = sorted(
-        list(events), key=lambda event: (_text(event, "occurred_at"), _text(event, "event_id"))
+        list(events),
+        key=lambda event: (_text(event, "occurred_at"), _text(event, "event_id")),
     )
     for event in ordered_events:
         event_type = _text(event, "event_type")
@@ -255,22 +263,29 @@ def derive_claim_lifecycle(events, claims):
             claim_id = _text(candidates[0], "claim_id")
             binding_mode = "LEGACY_UNIQUE_IDENTITY"
 
-        previous_state = states.get(claim_id, "")
-        if event_type == "CLAIM_ACQUIRED" and previous_state in TERMINAL_CLAIM_STATES:
-            errors.append(
-                f"INVALID_CLAIM_REACTIVATION:{claim_id}:{previous_state}->{target_state}"
-            )
-            continue
-        if event_type in ("CLAIM_RELEASED", "CLAIM_SUPERSEDED") and previous_state not in (
-            "ACTIVE",
-            target_state,
-        ):
-            errors.append(
-                f"INVALID_CLAIM_TRANSITION:{claim_id}:{previous_state}->{target_state}"
-            )
-            continue
+        previous_state = states.get(claim_id, "UNSEEN")
+        if event_type == "CLAIM_ACQUIRED":
+            if previous_state in TERMINAL_CLAIM_STATES:
+                errors.append(
+                    f"INVALID_CLAIM_REACTIVATION:{claim_id}:{previous_state}->{target_state}"
+                )
+                continue
+            if previous_state not in ("UNSEEN", "ACTIVE"):
+                errors.append(
+                    f"INVALID_CLAIM_TRANSITION:{claim_id}:{previous_state}->{target_state}"
+                )
+                continue
+        elif event_type in ("CLAIM_RELEASED", "CLAIM_SUPERSEDED"):
+            # Legacy corpora may have a terminal event without a persisted acquire event.
+            # That is accepted only from UNSEEN; conflicting terminal transitions fail.
+            if previous_state not in ("UNSEEN", "ACTIVE", target_state):
+                errors.append(
+                    f"INVALID_CLAIM_TRANSITION:{claim_id}:{previous_state}->{target_state}"
+                )
+                continue
 
         states[claim_id] = target_state
+        seen_claims.add(claim_id)
         bindings.append(
             {
                 "event_id": _text(event, "event_id"),
@@ -283,7 +298,10 @@ def derive_claim_lifecycle(events, claims):
 
     for claim_id, claim in by_id.items():
         declared = _text(claim, "state")
-        effective = states.get(claim_id, declared)
+        if claim_id not in seen_claims:
+            states[claim_id] = declared
+            continue
+        effective = states[claim_id]
         if declared != effective:
             errors.append(f"CLAIM_STATE_DRIFT:{claim_id}:{declared}!={effective}")
 

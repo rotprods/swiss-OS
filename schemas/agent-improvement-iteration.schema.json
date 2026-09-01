@@ -1,0 +1,21 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://swiss-os.local/schemas/agent-improvement-iteration.schema.json",
+  "title":"Agent Improvement Iteration Receipt",
+  "type":"object",
+  "required":["schema_version","iteration_id","decision","reason","metric_results","tests_passed","invariant_violations","security_violations","complexity_delta","graph_nodes","graph_edges"],
+  "properties":{
+    "schema_version":{"const":"AGENT-IMPROVEMENT-ITERATION-1.0"},
+    "iteration_id":{"type":"string","pattern":"^ITER-[0-9a-f]{20}$"},
+    "decision":{"enum":["KEEP","DISCARD","CRASH","BLOCKED"]},
+    "reason":{"type":"string","minLength":1},
+    "tests_passed":{"type":"boolean"},
+    "complexity_delta":{"type":"integer"},
+    "invariant_violations":{"type":"array","items":{"type":"string"}},
+    "security_violations":{"type":"array","items":{"type":"string"}},
+    "metric_results":{"type":"array","items":{"type":"object"}},
+    "graph_nodes":{"type":"array","items":{"type":"object","required":["id","type"]}},
+    "graph_edges":{"type":"array","items":{"type":"object","required":["from","to","type"]}}
+  },
+  "additionalProperties":true
+}

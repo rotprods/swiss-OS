@@ -1,0 +1,25 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://swiss-os.local/schemas/agent-runtime-heartbeat.schema.json",
+  "title":"Agent Runtime Heartbeat",
+  "type":"object",
+  "required":["heartbeat_id","project_id","agent_id","session_id","workstream_id","objective_id","task_id","claim_id","fencing_token","observed_at","state","branch","worktree"],
+  "properties":{
+    "heartbeat_id":{"type":"string","minLength":1},
+    "project_id":{"type":"string","minLength":1},
+    "agent_id":{"type":"string","minLength":1},
+    "session_id":{"type":"string","minLength":1},
+    "workstream_id":{"type":"string","minLength":1},
+    "objective_id":{"type":"string","minLength":1},
+    "task_id":{"type":"string","minLength":1},
+    "claim_id":{"type":"string","minLength":1},
+    "fencing_token":{"type":"integer","minimum":1},
+    "observed_at":{"type":"string","format":"date-time"},
+    "state":{"enum":["ACTIVE","BLOCKED","COMPLETE","SUPERSEDED"]},
+    "branch":{"type":"string","minLength":1},
+    "worktree":{"type":"string","minLength":1},
+    "current_iteration_id":{"type":["string","null"]},
+    "next_safe_action":{"type":["string","null"]}
+  },
+  "additionalProperties":true
+}

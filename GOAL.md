@@ -12,71 +12,90 @@ The project optimizes:
 P(verified viable Swiss offer × Roberto accepts × relocation succeeds)
 ```
 
-Hotel counts, scraping volume, outreach volume and dashboards are infrastructure, not the mission.
+Hotel counts, scraping volume, outreach volume, architecture maturity and dashboards are infrastructure, not the mission.
 
-## Goal tree contract
+## Goal tree contract — V2.2 compatibility model
+
+Existing durable IDs are preserved. V2.2 changes semantics by **specialization**, not destructive renumbering.
 
 ```text
 G-0001  Verified viable Swiss offer + sustainable relocation
-├── G-0500  Canonical Swiss hotel universe / CRM parity
-├── G-0600  Candidate readiness and truthful lane assets
-├── G-0700  Full Swiss Hotel Intelligence / outreach-readiness OS
-└── G-0800  Maximum Swiss Employment Acquisition OS
+├── G-0500  NICHE-001 Hotels: canonical universe / CRM parity
+├── G-0600  Candidate truth + lane readiness + approved assets
+├── G-0700  Employment intelligence core
+│   ├── G-0710  Generic organization/opportunity intelligence
+│   ├── G-0720  Niche adapter coverage
+│   └── G-0730  Evidence / people / channel / benefit intelligence
+└── G-0800  Swiss Employment Acquisition OS
+    ├── G-0810  Application packet + adversarial authorization gates
+    ├── G-0820  Response / outcome learning
+    ├── G-0830  Interview pipeline
+    ├── G-0840  Offer verification
+    ├── G-0850  Financial viability
+    └── G-0860  Relocation readiness
 ```
 
-The live state, active checkpoint, counts, current entity epoch, constrained parent and next scheduler task are mutable operational state and MUST be read from the live control plane, latest authority-eligible constrained manifest and `STATE.md`.
+`G-0500` remains hotel-specific for backward compatibility and becomes the first niche implementation, not the system boundary. Additional niches attach through G-0720 and the generic employment core.
 
-This document deliberately does not duplicate mutable frontier counters.
+Mutable frontier counts, current claim/fencing token, active checkpoint, entity epoch and next safe task MUST be read from live state (`STATE.md`, `docs/state/NEXT.json`, `docs/state/v2/*` and operational authority), never inferred from this stable goal contract.
 
-## G-0500 — Canonical market + CRM universe system
+## G-0500 — NICHE-001 Hotels
 
 Purpose:
 
 - freeze/version the target hotel-directory snapshot;
-- represent 100% of its source records in the CRM;
-- maintain a deduplicated, provenance-backed Swiss hotel/entity universe;
-- preserve immutable canonical IDs and alias lineage;
-- distinguish source-record coverage from active canonical entity count;
-- synchronize constrained DB, Sheets/CRM mirror, Graph/Intelligence and checkpoint observability.
+- represent its source records in the CRM with explicit unresolved states;
+- maintain deduplicated, provenance-backed hotel/entity identity;
+- preserve immutable H-IDs and alias lineage;
+- synchronize constrained DB, control-plane mirror, Graph/Intelligence and checkpoint observability;
+- prove compatibility with the generic organization/niche model before any authority migration.
 
-The governing contract is `docs/operations/CRM_UNIVERSE_PROTOCOL.md`.
+`CRM_UNIVERSE_COMPLETE = TRUE` requires the full frozen verified snapshot to be terminally partitioned with zero unresolved source records and exact affected-plane reconciliation.
 
-`CRM_UNIVERSE_COMPLETE = TRUE` requires every source record in the frozen verified snapshot to be deterministically mapped as canonical, alias or explicit exclusion, with zero unresolved/unmapped source records and exact affected-plane reconciliation.
+Intermediate hotel count checkpoints are niche scale milestones only. They do not satisfy G-0001.
 
-Intermediate count checkpoints are scale milestones only. They do not satisfy the CRM-universe goal.
+## G-0600 — Candidate truth and readiness
 
-Canonical promotion follows the Wave Operating Protocol:
+Maintain truthful candidate state for ENTRY / HYBRID / CREATIVE / PORTAL.
+
+Candidate technical QA and human approval are independent. No asset becomes externally approved merely because it renders correctly or passes ATS checks.
+
+Never fabricate contact data, CEFR levels, availability, work history, metrics, equipment, employers, degrees or case-study outcomes. ENTRY must not be blocked by CREATIVE/HYBRID-only assets where irrelevant.
+
+## G-0700 — Employment intelligence core
+
+Build reusable intelligence across niches:
+
+- organization identity/group/location;
+- opportunities and role families;
+- people/recruiters;
+- channels/policies;
+- evidence/search proof/freshness;
+- housing/benefits/compensation where observable;
+- fit and routing signals.
+
+Unknown remains unknown unless search-proof semantics justify `UNKNOWN_AFTER_SEARCH`. Scoring is a priority signal, never hiring probability.
+
+## G-0800 — Swiss Employment Acquisition OS
+
+Convert truthful candidate + market intelligence into safe measurable acquisition:
 
 ```text
-DISCOVER
-→ NORMALIZE
-→ DEDUPE / ALIAS / GROUP RESOLUTION
-→ RECONCILE EVIDENCE SCOPE
-→ STAGE
-→ CANARY
-→ VALIDATE
-→ DB COMMIT
-→ SHEETS / CRM PK MIRROR
-→ GRAPH / INTELLIGENCE
-→ QA / INVARIANTS / SLO
-→ OBSERVABILITY / HANDOFF / RECOVERY
+truth
+→ approved assets
+→ opportunity/target binding
+→ packet compilation
+→ adversarial gates
+→ explicit authorization
+→ application/outreach
+→ response
+→ interview
+→ offer
+→ financial viability
+→ relocation
 ```
 
-## G-0600 — Candidate readiness
-
-Maintain truthful, lane-specific candidate readiness for ENTRY / HYBRID / CREATIVE / PORTAL.
-
-Do not fabricate phone, language CEFR, availability, LinkedIn, portfolio URLs, metrics, employment or case-study claims. ENTRY must not be blocked by CREATIVE/HYBRID-only assets where irrelevant.
-
-## G-0700 — Intelligence system
-
-Progressively resolve hotel intelligence with evidence-aware semantics across identity, web/careers, vacancies, housing, people, channels, social/digital/creative/tech, proposition and routing dimensions.
-
-L1/L4/L9 counts are operational metrics and therefore live in the control plane/STATE pointer, not in this stable goal contract.
-
-## G-0800 — Maximum acquisition readiness
-
-Bring market, candidate, evidence, routing, asset, graph, scheduler and governance systems to maximum truthful pre-outbound readiness while keeping irreversible external action independently gated.
+`PACKET_COMPILED` is never equivalent to `SEND_AUTHORIZED`.
 
 ## Outbound hard lock
 
@@ -87,18 +106,14 @@ OUTBOUND = CLOSED
 send_allowed = 0
 ```
 
-Before the outbound stack may even be evaluated:
+Any irreversible action requires all applicable independent gates: target/evidence freshness, candidate assets, claims, channel policy, suppression, idempotency, group/duplicate logic and explicit user authorization.
 
-```text
-CRM_UNIVERSE_COMPLETE = TRUE
-```
-
-After that prerequisite, no email, portal submission, DM, WhatsApp or follow-up may execute without all applicable evidence, freshness, channel, suppression, idempotency, candidate-asset and explicit-user-authorization gates.
+Legacy hotel-universe prerequisites remain binding where the active campaign contract says so; V2.2 does not weaken an existing gate by rewording the architecture.
 
 ## Checkpoint semantics
 
-A checkpoint is never complete because a counter reaches target. Completion requires all applicable integrity, QA, restore/replay, DB↔Sheets, Graph/Intelligence, scheduler, observability, persistence and governance gates in `docs/operations/WAVE_OPERATING_PROTOCOL.md`.
+A checkpoint is never complete because a counter reaches target or a document exists. Completion requires applicable implementation, executed tests, security review, state/graph/evidence updates, recovery/handoff and no unresolved blocking regression.
 
 ## Definition of success
 
-G-0001 closes only after a real offer is verified, economically assessed and accepted. Every other goal is a supporting system.
+G-0001 closes only after a real offer is verified, economically assessed, accepted and relocation is operationally ready. Every other goal is supporting infrastructure.

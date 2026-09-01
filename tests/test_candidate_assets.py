@@ -26,6 +26,13 @@ class CandidateAssetManifestTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             asset.validate()
 
+    def test_approved_asset_without_hash_fails(self):
+        asset = AssetManifest(
+            "ASSET-X", "CV_ENTRY", "2.0.0", "APPROVED", "Drive:PRIVATE", (), None
+        )
+        with self.assertRaisesRegex(ValueError, "approved asset requires content_sha256"):
+            asset.validate()
+
     def test_manifest_hash_is_deterministic(self):
         asset = AssetManifest(
             "ASSET-X", "CV_MASTER", "2.0.0", "QA_PENDING", "Drive:PRIVATE", ("CF01",)

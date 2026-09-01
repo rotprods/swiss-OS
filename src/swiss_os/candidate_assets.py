@@ -27,6 +27,8 @@ class AssetManifest:
             raise ValueError("asset_id and version are required")
         if not self.private_storage_ref.strip():
             raise ValueError("private storage reference required")
+        if self.state == "APPROVED" and self.content_sha256 is None:
+            raise ValueError("approved asset requires content_sha256")
         if self.content_sha256 is not None:
             if len(self.content_sha256) != 64 or any(c not in "0123456789abcdef" for c in self.content_sha256.lower()):
                 raise ValueError("content_sha256 must be a hex SHA-256")

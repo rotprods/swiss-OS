@@ -6,6 +6,7 @@ import json
 import sqlite3
 from typing import Iterable
 
+from .application_readiness import TargetBoundReadinessReceipt
 from .candidate_assets import AssetManifest
 from .candidate_truth import CandidateField, LaneGateResult, evaluate_lane
 
@@ -32,6 +33,9 @@ class PacketCompileRequest:
     candidate_fields: tuple[CandidateField, ...]
     assets: tuple[AssetManifest, ...]
     channel_id: str
+    readiness: TargetBoundReadinessReceipt
+    candidate_truth_sha256: str
+    vacancy_evidence_sha256: str
     opportunity_id: str | None = None
 
     def validate(self) -> None:
@@ -41,10 +45,20 @@ class PacketCompileRequest:
             raise ValueError("organization_id required")
         if not self.channel_id.strip():
             raise ValueError("channel_id required")
+        if not self.opportunity_id:
+            raise ValueError("W5.1 packet compilation requires an exact opportunity_id")
         for field in self.candidate_fields:
             field.validate()
         for asset in self.assets:
             asset.validate()
+        self.readiness.validate_for_target(
+            organization_id=self.organization_id,
+            opportunity_id=self.opportunity_id,
+            lane=self.lane,
+            channel_id=self.channel_id,
+            candidate_truth_sha256=self.candidate_truth_sha256,
+            vacancy_evidence_sha256=self.vacancy_evidence_sha256,
+        )
 
 
 @dataclass(frozen=True)
@@ -52,12 +66,22 @@ class CompiledApplicationPacket:
     packet_id: str
     application_id: str
     organization_id: str
-    opportunity_id: str | None
+    opportunity_id: str
     lane: str
+    target_role: str
+    vacancy_source_url: str
+    candidate_truth_sha256: str
+    vacancy_evidence_sha256: str
+    evaluated_asset_set_sha256: str
     selected_asset_manifest_id: str
+    selected_asset_version: str
+    selected_asset_sha256: str
     selected_channel_id: str
     supplemental_asset_ids: tuple[str, ...]
+    supplemental_assets_json: str
     idempotency_key: str
+    readiness_binding_sha256: str
+    aag_receipt_sha256: str
     gate: LaneGateResult
 
     def public_safe_receipt(self) -> dict[str, object]:
@@ -65,19 +89,36 @@ class CompiledApplicationPacket:
             "packet_id": self.packet_id,
             "application_id": self.application_id,
             "organization_id": self.organization_id,
-            "opportunity_present": self.opportunity_id is not None,
+            "opportunity_present": True,
             "lane": self.lane,
+            "target_role": self.target_role,
+            "vacancy_source_url": self.vacancy_source_url,
+            "candidate_truth_sha256": self.candidate_truth_sha256,
+            "vacancy_evidence_sha256": self.vacancy_evidence_sha256,
+            "evaluated_asset_set_sha256": self.evaluated_asset_set_sha256,
             "selected_asset_manifest_id": self.selected_asset_manifest_id,
+            "selected_asset_version": self.selected_asset_version,
+            "selected_asset_sha256": self.selected_asset_sha256,
             "selected_channel_id": self.selected_channel_id,
             "supplemental_asset_count": len(self.supplemental_asset_ids),
+            "supplemental_assets": json.loads(self.supplemental_assets_json),
             "idempotency_key": self.idempotency_key,
+            "readiness_binding_sha256": self.readiness_binding_sha256,
+            "aag_receipt_sha256": self.aag_receipt_sha256,
             "gate_ready": self.gate.ready,
+            "state": "PACKET_COMPILED_NO_SEND",
+            "outbound": "CLOSED",
+            "send_allowed": 0,
         }
 
 
 def _hash(payload: dict[str, object]) -> str:
     raw = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
     return hashlib.sha256(raw).hexdigest()
+
+
+def _canonical_json(value: object) -> str:
+    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
 
 
 def _synthesized_asset_fields(assets: Iterable[AssetManifest]) -> tuple[CandidateField, ...]:
@@ -122,7 +163,8 @@ def _supplemental_assets(lane: str, assets: Iterable[AssetManifest]) -> tuple[As
 
 
 def _application_identity(request: PacketCompileRequest) -> str:
-    # Stable across asset revisions: replacing a CV must never authorize a duplicate application.
+    # Stable across asset/readiness revisions: neither a new CV nor a refreshed AAG
+    # may authorize a duplicate application to the same target.
     return _hash({
         "organization_id": request.organization_id,
         "opportunity_id": request.opportunity_id or "",
@@ -148,23 +190,39 @@ def compile_packet(request: PacketCompileRequest) -> CompiledApplicationPacket:
 
     primary = _select_primary_asset(request.lane, request.assets)
     supplements = _supplemental_assets(request.lane, request.assets)
+    selected_assets = (primary, *supplements)
+    request.readiness.validate_asset_set(selected_assets)
+
+    primary_identity = _asset_identity(primary)
+    supplement_identities = [_asset_identity(a) for a in supplements]
     application_hash = _application_identity(request)
     packet_hash = _hash({
         "application_key": application_hash,
-        "primary": _asset_identity(primary),
-        "supplements": [_asset_identity(a) for a in supplements],
+        "readiness_binding_sha256": request.readiness.binding_sha256,
+        "primary": primary_identity,
+        "supplements": supplement_identities,
     })
 
     return CompiledApplicationPacket(
         packet_id=f"PKT-{packet_hash[:20]}",
         application_id=f"APP-{application_hash[:20]}",
         organization_id=request.organization_id,
-        opportunity_id=request.opportunity_id,
+        opportunity_id=str(request.opportunity_id),
         lane=request.lane,
+        target_role=request.readiness.target_role,
+        vacancy_source_url=request.readiness.vacancy_source_url,
+        candidate_truth_sha256=request.readiness.candidate_truth_sha256,
+        vacancy_evidence_sha256=request.readiness.vacancy_evidence_sha256,
+        evaluated_asset_set_sha256=request.readiness.evaluated_asset_set_sha256,
         selected_asset_manifest_id=primary.asset_id,
+        selected_asset_version=primary.version,
+        selected_asset_sha256=primary.content_sha256 or "",
         selected_channel_id=request.channel_id,
         supplemental_asset_ids=tuple(a.asset_id for a in supplements),
+        supplemental_assets_json=_canonical_json(supplement_identities),
         idempotency_key=application_hash,
+        readiness_binding_sha256=request.readiness.binding_sha256,
+        aag_receipt_sha256=request.readiness.aag_receipt_sha256,
         gate=gate,
     )
 
@@ -174,9 +232,9 @@ def persist_application(
     packet: CompiledApplicationPacket,
     *,
     created_at: str,
-    state: str = "PACKET_COMPILED",
+    state: str = "PACKET_COMPILED_NO_SEND",
 ) -> bool:
-    """Persist application metadata only; this function never sends or renders content."""
+    """Persist stable application identity only; this function never sends or renders content."""
     existing = conn.execute(
         "SELECT application_id FROM applications_v2 WHERE idempotency_key=?",
         (packet.idempotency_key,),
@@ -204,3 +262,67 @@ def persist_application(
         ),
     )
     return True
+
+
+def persist_packet_receipt(
+    conn: sqlite3.Connection,
+    packet: CompiledApplicationPacket,
+    *,
+    created_at: str,
+) -> bool:
+    """Persist one exact version-specific packet/readiness receipt; no outbound action exists here."""
+    application = conn.execute(
+        "SELECT application_id FROM applications_v2 WHERE application_id=?",
+        (packet.application_id,),
+    ).fetchone()
+    if not application:
+        raise ValueError("application metadata must exist before packet receipt")
+
+    existing = conn.execute(
+        "SELECT packet_id FROM application_packet_receipts_v1 WHERE packet_id=?",
+        (packet.packet_id,),
+    ).fetchone()
+    if existing:
+        return False
+
+    conn.execute(
+        """INSERT INTO application_packet_receipts_v1(
+             packet_id, application_id, readiness_binding_sha256, aag_receipt_sha256,
+             candidate_truth_sha256, vacancy_evidence_sha256, evaluated_asset_set_sha256,
+             target_role, vacancy_source_url, selected_asset_manifest_id,
+             selected_asset_version, selected_asset_sha256, selected_channel_id,
+             supplemental_assets_json, state, created_at
+           ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+        (
+            packet.packet_id,
+            packet.application_id,
+            packet.readiness_binding_sha256,
+            packet.aag_receipt_sha256,
+            packet.candidate_truth_sha256,
+            packet.vacancy_evidence_sha256,
+            packet.evaluated_asset_set_sha256,
+            packet.target_role,
+            packet.vacancy_source_url,
+            packet.selected_asset_manifest_id,
+            packet.selected_asset_version,
+            packet.selected_asset_sha256,
+            packet.selected_channel_id,
+            packet.supplemental_assets_json,
+            "PACKET_COMPILED_NO_SEND",
+            created_at,
+        ),
+    )
+    return True
+
+
+def persist_compiled_packet(
+    conn: sqlite3.Connection,
+    packet: CompiledApplicationPacket,
+    *,
+    created_at: str,
+) -> tuple[bool, bool]:
+    """Persist stable application + exact packet receipt in one transaction boundary."""
+    with conn:
+        application_inserted = persist_application(conn, packet, created_at=created_at)
+        packet_inserted = persist_packet_receipt(conn, packet, created_at=created_at)
+    return application_inserted, packet_inserted

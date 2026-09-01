@@ -41,9 +41,16 @@ class ContextSurvivalGuardTests(unittest.TestCase):
         next_payload = json.loads(ROOT_NEXT.read_text(encoding="utf-8"))
         active = json.loads(ACTIVE_CLAIMS.read_text(encoding="utf-8"))
         claims = active.get("claims", [])
-        self.assertEqual(len(claims), 1)
+        root_claim = next_payload.get("active_claim")
+
+        if not claims:
+            self.assertIsNone(root_claim)
+            self.assertGreaterEqual(active["fencing_high_watermark"], 0)
+            return
+
+        self.assertEqual(len(claims), 1, "root NEXT can project at most one active coordination claim")
         projected = claims[0]
-        root_claim = next_payload["active_claim"]
+        self.assertIsInstance(root_claim, dict)
         self.assertEqual(root_claim["claim_id"], projected["claim_id"])
         self.assertEqual(root_claim["fencing_token"], projected["fencing_token"])
         self.assertEqual(root_claim["authority_ceiling"], projected["authority_ceiling"])

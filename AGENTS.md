@@ -213,6 +213,24 @@ Material reasoning that changes execution becomes a durable contract, decision, 
 - Never treat page number as stable source-record identity across member-directory cache/locale epochs.
 - Never overwrite concurrent shared progress without ancestry reconciliation.
 
+## Mandatory outreach email identity
+
+Every email sent for Swiss employment outreach, prospecting, recruiter or employer follow-up, direct application, networking, interview coordination, or opportunity verification **MUST** include the canonical professional signature from:
+
+`docs/candidate-assets/email-signature.html`
+
+Rules:
+
+- Use only the HTML inside `#signature`; never include the preview toolbar, copy button, page shell, or script.
+- Preserve the table structure, inline styles, portrait, icons, verified contact details, and canonical links.
+- Do not replace it with plain text unless the sending channel technically cannot send HTML. Record that fallback and retain the same verified name, role, email, and phone.
+- Do not rewrite URLs, add tracking parameters, substitute another profile, or use the Erasmus+ signature.
+- Before sending, verify the rendered MIME contains `Roberto Gil Ortega`, the canonical LinkedIn profile, and no broken image.
+- After sending, retain the provider message receipt in the private operational ledger.
+- Non-email channels such as forms, portals, LinkedIn messages, or WhatsApp use their native identity format; never paste the HTML block into an unsupported field.
+
+This applies to agents, automations, and human-assisted sends. A qualifying outbound email without this signature is `OUTREACH_SIGNATURE_GATE_FAIL` and **must not be sent**.
+
 ## Closure
 
 Every material wave closes as exactly one:

@@ -4,7 +4,10 @@ import hashlib
 import json
 from typing import Mapping, Sequence
 
-EVENT_SCHEMA = "COS-V2-EVENT-1.0"
+LEGACY_EVENT_SCHEMA = "COS-V2-EVENT-1.0"
+FORWARD_EVENT_SCHEMA = "COS-V2-EVENT-1.1"
+EVENT_SCHEMA = LEGACY_EVENT_SCHEMA
+EVENT_SCHEMAS = frozenset({LEGACY_EVENT_SCHEMA, FORWARD_EVENT_SCHEMA})
 CLAIM_SCHEMA = "COS-V2-CLAIM-1.0"
 CONTEXT_SCHEMA = "COS-V2-CONTEXT-PACK-1.1"
 PROJECT_STATE_SCHEMA = "COS-V2-PROJECT-STATE-1.0"
@@ -15,6 +18,7 @@ CLAIM_EVENT_TO_STATE = {
     "CLAIM_RELEASED": "RELEASED",
     "CLAIM_SUPERSEDED": "SUPERSEDED",
 }
+LIFECYCLE_EVENT_TYPES = frozenset(CLAIM_EVENT_TO_STATE)
 CLAIM_EVENT_TIMESTAMP_FIELD = {
     "CLAIM_ACQUIRED": "claimed_at",
     "CLAIM_RELEASED": "released_at",
@@ -71,9 +75,19 @@ def _is_sha256(value: str) -> bool:
     return len(value) == 64 and all(c in "0123456789abcdef" for c in value)
 
 
+def _causation_claim_ids(event: Mapping[str, object]) -> list[str]:
+    value = event.get("causation")
+    if isinstance(value, str):
+        value = [value]
+    if not isinstance(value, list):
+        return []
+    return [item.split(":", 1)[1] for item in value if isinstance(item, str) and item.startswith("claim:") and len(item) > 6]
+
+
 def validate_event(event):
     errors = []
-    if event.get("schema_version") != EVENT_SCHEMA:
+    schema = event.get("schema_version")
+    if schema not in EVENT_SCHEMAS:
         errors.append("INVALID_EVENT_SCHEMA")
     for key in (
         "event_id", "event_type", "occurred_at", "project_id", "agent_id",
@@ -92,7 +106,29 @@ def validate_event(event):
     for key in ("canonical_hotel_mutation_allowed", "h_id_allocation_allowed", "outbound_allowed"):
         if not isinstance(event.get(key), bool):
             errors.append(f"INVALID_{key.upper()}_BOOLEAN")
+    if schema == FORWARD_EVENT_SCHEMA and event_type in LIFECYCLE_EVENT_TYPES:
+        if not isinstance(event.get("causation"), list):
+            errors.append("INVALID_CAUSATION_ARRAY")
+        claim_ids = _causation_claim_ids(event)
+        if len(claim_ids) == 0:
+            errors.append("MISSING_EXPLICIT_CLAIM_CAUSATION")
+        elif len(claim_ids) > 1:
+            errors.append("AMBIGUOUS_CLAIM_CAUSATION")
     return tuple(dict.fromkeys(errors))
+
+
+def build_forward_event(payload: Mapping[str, object]) -> dict[str, object]:
+    """Canonical writer boundary for new V2 events.
+
+    All newly produced events use 1.1. Lifecycle events cannot be built without
+    exactly one explicit `claim:<id>` causation. Legacy 1.0 has no writer path.
+    """
+    event = dict(payload)
+    event["schema_version"] = FORWARD_EVENT_SCHEMA
+    errors = validate_event(event)
+    if errors:
+        raise CoordinationError("invalid forward event: " + ",".join(errors))
+    return event
 
 
 def validate_claim(claim):
@@ -145,15 +181,6 @@ def detect_claim_collisions(claims):
                     "semantic_overlap": semantic_overlap,
                 })
     return output
-
-
-def _causation_claim_ids(event: Mapping[str, object]) -> list[str]:
-    value = event.get("causation")
-    if isinstance(value, str):
-        value = [value]
-    if not isinstance(value, list):
-        return []
-    return [item.split(":", 1)[1] for item in value if isinstance(item, str) and item.startswith("claim:") and len(item) > 6]
 
 
 def _scope_set(payload: Mapping[str, object], key: str) -> set[str]:

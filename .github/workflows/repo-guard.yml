@@ -24,6 +24,27 @@ jobs:
         run: python scripts/rebuild_v2_coordination.py --config docs/refactor-v2/coordination_current_config.json --output-dir /tmp/v2-coordination-rebuild --check
       - name: V2 coordination contract guard
         run: python scripts/v2_contract_guard.py
+      - name: Materialize task DAG repair on guard failure
+        if: failure()
+        run: |
+          mkdir -p /tmp/v2-task-dag-repair
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          source=Path('docs/state/v2/tasks.json')
+          payload=json.loads(source.read_text(encoding='utf-8'))
+          target=next(task for task in payload['tasks'] if task.get('task_id')=='V2-T011')
+          deps=target.setdefault('dependencies',[])
+          if 'V2-T010' not in deps: deps.append('V2-T010')
+          Path('/tmp/v2-task-dag-repair/tasks.json').write_text(json.dumps(payload,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf-8')
+          PY
+      - name: Capture task DAG repair artifact
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v2-task-dag-repair-${{ github.run_id }}
+          path: /tmp/v2-task-dag-repair/tasks.json
+          if-no-files-found: error
       - name: Context survival / compaction checkpoint guard
         run: python scripts/context_survival_guard.py
       - name: V2 empirical recovery and death drill

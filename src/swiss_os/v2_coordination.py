@@ -7,7 +7,7 @@ ACTIVE_CLAIM_STATES=frozenset({"ACTIVE"})
 TERMINAL_CLAIM_STATES=frozenset({"RELEASED","SUPERSEDED","EXPIRED"})
 KNOWN_EVENT_TYPES=frozenset({"HELLO","WORK_STARTED","WORK_PROGRESS","WORK_BLOCKED","WORK_COMPLETED","CLAIM_ACQUIRED","CLAIM_RELEASED","CLAIM_SUPERSEDED","CHECKPOINT_REACHED","DECISION_RECORDED","EVIDENCE_RECORDED","CONTEXT_PACK_EMITTED","HEARTBEAT"})
 CLAIM_LIFECYCLE_EVENTS=frozenset({"CLAIM_ACQUIRED","CLAIM_RELEASED","CLAIM_SUPERSEDED"})
-LEGACY_LIFECYCLE_REF_INFERENCE_BEFORE="2026-09-01T00:00:00Z"
+LIFECYCLE_EXPLICIT_REF_REQUIRED_FROM="2026-09-01T00:00:00Z"
 class CoordinationError(ValueError): pass
 def canonical_json(value:object)->str: return json.dumps(value,ensure_ascii=False,sort_keys=True,separators=(",",":"))
 def sha256_json(value:object)->str: return hashlib.sha256(canonical_json(value).encode()).hexdigest()
@@ -19,13 +19,15 @@ def _require_text(payload,key,errors):
     return v
 def _is_git_sha(v:str)->bool: return len(v)==40 and all(c in "0123456789abcdef" for c in v)
 def _is_sha256(v:str)->bool: return len(v)==64 and all(c in "0123456789abcdef" for c in v)
-def _claim_refs(event:Mapping[str,object])->tuple[str,...]:
+def _causation_refs(event:Mapping[str,object],prefix:str)->tuple[str,...]:
     values=event.get("causation",[])
     if not isinstance(values,list): return ()
     refs=[]
     for value in values:
-        if isinstance(value,str) and value.startswith("claim:") and value[6:].strip(): refs.append(value[6:].strip())
+        if isinstance(value,str) and value.startswith(prefix) and value[len(prefix):].strip(): refs.append(value[len(prefix):].strip())
     return tuple(dict.fromkeys(refs))
+def _claim_refs(event:Mapping[str,object])->tuple[str,...]: return _causation_refs(event,"claim:")
+def _legacy_event_refs(event:Mapping[str,object])->tuple[str,...]: return _causation_refs(event,"legacy_event:")
 def validate_event(event):
     errors=[]
     if event.get("schema_version")!=EVENT_SCHEMA: errors.append("INVALID_EVENT_SCHEMA")
@@ -37,7 +39,7 @@ def validate_event(event):
         if v and not _is_git_sha(v): errors.append(f"INVALID_{key.upper()}")
     for key in ("canonical_hotel_mutation_allowed","h_id_allocation_allowed","outbound_allowed"):
         if not isinstance(event.get(key),bool): errors.append(f"INVALID_{key.upper()}_BOOLEAN")
-    if et in CLAIM_LIFECYCLE_EVENTS and _text(event,"occurred_at")>=LEGACY_LIFECYCLE_REF_INFERENCE_BEFORE and len(_claim_refs(event))!=1:
+    if et in CLAIM_LIFECYCLE_EVENTS and _text(event,"occurred_at")>=LIFECYCLE_EXPLICIT_REF_REQUIRED_FROM and len(_claim_refs(event))!=1:
         errors.append("INVALID_CLAIM_LIFECYCLE_REFERENCE_COUNT")
     return tuple(dict.fromkeys(errors))
 def validate_claim(claim):
@@ -62,26 +64,14 @@ def detect_claim_collisions(claims):
             ss=scopes_overlap(left.get("semantic_scopes",[]) if isinstance(left.get("semantic_scopes"),list) else [],right.get("semantic_scopes",[]) if isinstance(right.get("semantic_scopes"),list) else [])
             if rs or ss: out.append({"left_claim_id":_text(left,"claim_id"),"right_claim_id":_text(right,"claim_id"),"resource_overlap":rs,"semantic_overlap":ss})
     return out
-def _infer_legacy_claim_ref(event:Mapping[str,object],by_id:Mapping[str,Mapping[str,object]])->str:
-    """Resolve pre-V2.1 lifecycle events without mutating append-only history.
-
-    Only events before the explicit-reference migration boundary are eligible, and
-    only when session/agent/workstream/objective/correlation identity resolves to
-    exactly one durable claim. Ambiguity remains a hard failure.
-    """
-    if _text(event,"occurred_at")>=LEGACY_LIFECYCLE_REF_INFERENCE_BEFORE: return ""
-    keys=("session_id","agent_id","workstream_id","objective_id","correlation_id")
-    matches=[]
-    for cid,claim in by_id.items():
-        if all(_text(event,key) and _text(event,key)==_text(claim,key) for key in keys): matches.append(cid)
-    return matches[0] if len(matches)==1 else ""
 def project_claim_lifecycle(events,claims):
-    """Derive current claim state from durable lifecycle events, not mutable claim prose alone.
+    """Derive claim state from the append-only lifecycle ledger.
 
-    V2.1+ lifecycle events require one explicit ``claim:<id>`` causation reference.
-    Historical pre-boundary events are not rewritten: a missing reference may be
-    inferred only from a unique exact session/agent/workstream/objective/correlation
-    match. If that identity is not unique, replay fails closed.
+    Historical lifecycle events are never rewritten or heuristically rebound. A legacy
+    event without `claim:<id>` may be shadowed only by a compensating lifecycle event
+    that explicitly references that exact `legacy_event:<event_id>` and exactly one
+    claim. This keeps historical bytes immutable while making the correction itself
+    durable, reviewable and replayable.
     """
     events=list(events); claims=list(claims); errors=[]; by_id={}; projected={}
     for claim in claims:
@@ -89,14 +79,23 @@ def project_claim_lifecycle(events,claims):
         if not cid: continue
         if cid in by_id: errors.append(f"DUPLICATE_CLAIM_ID:{cid}")
         by_id[cid]=claim
+    event_ids={_text(e,"event_id") for e in events if _text(e,"event_id")}
+    shadowed=set()
+    for event in events:
+        if _text(event,"event_type") not in CLAIM_LIFECYCLE_EVENTS: continue
+        refs=_claim_refs(event); legacy_refs=_legacy_event_refs(event); eid=_text(event,"event_id") or "<unknown>"
+        if legacy_refs:
+            if len(refs)!=1: errors.append(f"LEGACY_BINDING_REQUIRES_ONE_CLAIM:{eid}")
+            for legacy_id in legacy_refs:
+                if legacy_id not in event_ids: errors.append(f"LEGACY_BINDING_UNKNOWN_EVENT:{eid}:{legacy_id}")
+                elif legacy_id in shadowed: errors.append(f"LEGACY_EVENT_BOUND_MORE_THAN_ONCE:{legacy_id}")
+                else: shadowed.add(legacy_id)
     lifecycle=[]; acquired=set(); terminal=set()
     for event in events:
         et=_text(event,"event_type")
         if et not in CLAIM_LIFECYCLE_EVENTS: continue
         refs=_claim_refs(event); eid=_text(event,"event_id") or "<unknown>"
-        if not refs:
-            inferred=_infer_legacy_claim_ref(event,by_id)
-            if inferred: refs=(inferred,)
+        if not refs and eid in shadowed: continue
         if len(refs)!=1:
             errors.append(f"CLAIM_LIFECYCLE_REFERENCE_COUNT:{eid}:{len(refs)}"); continue
         cid=refs[0]

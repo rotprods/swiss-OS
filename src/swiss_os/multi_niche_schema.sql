@@ -91,6 +91,7 @@ CREATE TABLE IF NOT EXISTS applications_v2 (
 
 -- Version-specific packet/readiness provenance. applications_v2 remains the stable
 -- target/idempotency identity; re-rendering or re-validating cannot authorize a duplicate application.
+-- packet_id is the sole version identity and content-addresses readiness + all exact asset versions/hashes.
 CREATE TABLE IF NOT EXISTS application_packet_receipts_v1 (
   packet_id TEXT PRIMARY KEY,
   application_id TEXT NOT NULL REFERENCES applications_v2(application_id) ON DELETE CASCADE,
@@ -99,11 +100,12 @@ CREATE TABLE IF NOT EXISTS application_packet_receipts_v1 (
   target_role TEXT NOT NULL,
   vacancy_source_url TEXT NOT NULL,
   selected_asset_manifest_id TEXT NOT NULL,
+  selected_asset_version TEXT NOT NULL,
+  selected_asset_sha256 TEXT NOT NULL,
   selected_channel_id TEXT NOT NULL,
-  supplemental_asset_count INTEGER NOT NULL CHECK(supplemental_asset_count >= 0),
+  supplemental_assets_json TEXT NOT NULL,
   state TEXT NOT NULL CHECK(state IN ('PACKET_COMPILED_NO_SEND','SUPERSEDED')),
-  created_at TEXT NOT NULL,
-  UNIQUE(application_id, readiness_binding_sha256, selected_asset_manifest_id, selected_channel_id)
+  created_at TEXT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS responses_v2 (

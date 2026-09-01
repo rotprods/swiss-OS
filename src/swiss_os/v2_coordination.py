@@ -164,7 +164,16 @@ def _scope_set(payload: Mapping[str, object], key: str) -> set[str]:
 
 
 def _legacy_claim_candidates(event, claims):
-    """Resolve pre-causation lifecycle records from durable evidence, fail closed on ties."""
+    """Resolve pre-causation lifecycle records from durable evidence, fail closed on ties.
+
+    Order of evidence strength:
+    1. exact lifecycle timestamp (claimed_at/released_at/superseded_at),
+    2. exact branch,
+    3. exact session identity,
+    4. highest fencing token among temporally and semantically compatible claims.
+
+    The final fallback is only accepted when the highest fencing token is unique.
+    """
     occurred_at = _text(event, "occurred_at")
     event_scopes = _scope_set(event, "semantic_scopes")
     candidates = []
@@ -186,14 +195,35 @@ def _legacy_claim_candidates(event, claims):
     timestamp_field = CLAIM_EVENT_TIMESTAMP_FIELD.get(_text(event, "event_type"))
     if timestamp_field and occurred_at:
         exact = [claim for claim in candidates if _text(claim, timestamp_field) == occurred_at]
-        if exact:
+        if len(exact) == 1:
             return exact, "LEGACY_LIFECYCLE_TIMESTAMP"
+        if len(exact) > 1:
+            return exact, "LEGACY_LIFECYCLE_TIMESTAMP_AMBIGUOUS"
+
+    branch = _text(event, "branch")
+    if branch:
+        exact = [claim for claim in candidates if _text(claim, "branch") == branch]
+        if len(exact) == 1:
+            return exact, "LEGACY_BRANCH_IDENTITY"
+        if len(exact) > 1:
+            return exact, "LEGACY_BRANCH_IDENTITY_AMBIGUOUS"
 
     session_id = _text(event, "session_id")
     if session_id:
         exact = [claim for claim in candidates if _text(claim, "session_id") == session_id]
-        if exact:
+        if len(exact) == 1:
             return exact, "LEGACY_SESSION_IDENTITY"
+        if len(exact) > 1:
+            return exact, "LEGACY_SESSION_IDENTITY_AMBIGUOUS"
+
+    tokens = [claim.get("fencing_token") for claim in candidates if isinstance(claim.get("fencing_token"), int) and not isinstance(claim.get("fencing_token"), bool)]
+    if tokens:
+        high = max(tokens)
+        highest = [claim for claim in candidates if claim.get("fencing_token") == high]
+        if len(highest) == 1:
+            return highest, "LEGACY_HIGHEST_FENCING_TOKEN"
+        if len(highest) > 1:
+            return highest, "LEGACY_HIGHEST_FENCING_TOKEN_AMBIGUOUS"
 
     return candidates, "LEGACY_UNIQUE_SEMANTIC"
 

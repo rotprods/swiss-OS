@@ -1,0 +1,43 @@
+{
+  "schema_version": "GRAPH-V2-RECONSOLIDATION-SESSION-1.0",
+  "event_type": "HELLO_WORK_STARTED",
+  "event_id": "EVT-20260901T150500Z-GRAPHV2-001-WORK-STARTED",
+  "project_id": "SWITZERLAND_JOB_OS",
+  "agent_id": "AGENT-GPT56SOL-GRAPHV2-001",
+  "session_id": "SES-20260901T150500Z-GRAPHV2-001",
+  "workstream_id": "WS-GRAPH-V2-RECONSOLIDATION",
+  "objective_id": "OBJ-GRAPH-V2-CURRENT-TRUTH",
+  "correlation_id": "CORR-20260901T150500Z-GRAPH-V2",
+  "observed_main_sha": "3f96e510fc22246ec69ca22e8f10cf750c7e97cf",
+  "base_sha": "3f96e510fc22246ec69ca22e8f10cf750c7e97cf",
+  "branch": "refactor/graph-v2-reconsolidation-20260901",
+  "pr": null,
+  "resource_scopes": [
+    "docs/refactor-v2/**"
+  ],
+  "semantic_scopes": [
+    "ARCHITECTURE_RECONSTRUCTION",
+    "GRAPH_RECONSOLIDATION",
+    "CONTINUITY_AUDIT",
+    "GAP_CLASSIFICATION",
+    "IMPLEMENTATION_COMPILATION"
+  ],
+  "dependencies": [
+    "GOAL.md#G-0001",
+    "AGENTS.md",
+    "docs/architecture/V2_ARCHITECTURE.md",
+    "docs/state/v2/project-state.json",
+    "docs/state/v2/active-claims.json",
+    "docs/state/NEXT.json",
+    "live GitHub main",
+    "live Drive operational authority before any operational promotion"
+  ],
+  "causation": "User invoked /GRAPH-REFACTOR-V2 after prior chats/context were considered unavailable and requested project-survivable reconsolidation.",
+  "authority_ceiling": "PUBLIC_SAFE_ARCHITECTURE_READ_ONLY_NO_OPERATIONAL_AUTHORITY_NO_STATE_V2_MUTATION",
+  "collision_status": {
+    "detected": true,
+    "details": "CLAIM-CRM-SRR-SPECIAL-006 owns docs/state/v2/** and STATE.md; this session therefore isolates writes under docs/refactor-v2/** until stale-claim/state reconciliation is explicitly resolved."
+  },
+  "summary": "Reconstruct current live topology, compare historical GRAPH-V2 foundation against post-V2 multi-niche/candidate/application changes, identify stale coordination state and compile a bounded V2 reconsolidation path without creating a competing authority plane.",
+  "next_action": "Complete live-truth/continuity/SSOT audit; classify material defects; generate current V2 delta, graph and implementation frontier."
+}

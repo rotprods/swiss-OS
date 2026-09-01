@@ -1,5 +1,10 @@
 {
-  "active_claim": null,
+  "active_claim": {
+    "claim_id":"CLAIM-GRAPHV2-FORWARD-LIFECYCLE-011",
+    "fencing_token":11,
+    "state":"ACTIVE_UNTIL_EXPLICIT_RELEASE_OR_SUPERSESSION",
+    "authority_ceiling":"COORDINATION_SCHEMA_WRITER_TESTS_ONLY_NO_DOMAIN_OR_EXTERNAL_MUTATION"
+  },
   "artifacts": [
     "docs/state/CRM_CURRENT_SOURCE_MAPPING_PROJECTION_33339392661.json",
     "docs/state/CRM_CURRENT_GONTEN_ECV_SRR_LINEAGE_33339392661.json",

@@ -131,8 +131,12 @@ class T(unittest.TestCase):
         )
 
     def test_supersession_removes_claim_from_collision_set(self):
-        old = claim("OLD", scopes=["same"], semantics=["SAME"], token=1, state="SUPERSEDED")
-        new = claim("NEW", scopes=["same"], semantics=["SAME"], token=2, state="ACTIVE")
+        old = claim(
+            "OLD", scopes=["same"], semantics=["SAME"], token=1, state="SUPERSEDED"
+        )
+        new = claim(
+            "NEW", scopes=["same"], semantics=["SAME"], token=2, state="ACTIVE"
+        )
         supersede = event(
             "E-SUP",
             "sup",
@@ -151,7 +155,95 @@ class T(unittest.TestCase):
         self.assertEqual(projection["violations"], [])
         self.assertEqual(
             projection["claim_lifecycle"][0]["binding_mode"],
-            "LEGACY_UNIQUE_IDENTITY",
+            "LEGACY_SESSION_IDENTITY",
+        )
+
+    def test_legacy_acquire_prefers_exact_claimed_at(self):
+        old = claim(
+            "OLD",
+            scopes=["same"],
+            semantics=["SAME"],
+            token=3,
+            state="SUPERSEDED",
+        )
+        old["claimed_at"] = "2026-08-29T21:00:00Z"
+        old["session_id"] = "OLD-SESSION"
+
+        current = claim(
+            "CURRENT",
+            scopes=["same"],
+            semantics=["SAME"],
+            token=4,
+            state="ACTIVE",
+        )
+        current["claimed_at"] = "2026-08-29T21:42:00Z"
+        current["session_id"] = "CURRENT-SESSION"
+
+        lifecycle_event = event("E-ACQ", "acq", "CLAIM_ACQUIRED")
+        lifecycle_event["semantic_scopes"] = ["SAME"]
+        lifecycle_event["session_id"] = "CURRENT-SESSION"
+
+        states, bindings, errors = derive_claim_lifecycle(
+            [lifecycle_event], [old, current]
+        )
+        self.assertEqual(errors, [])
+        self.assertEqual(states["CURRENT"], "ACTIVE")
+        self.assertEqual(bindings[0]["claim_id"], "CURRENT")
+        self.assertEqual(
+            bindings[0]["binding_mode"], "LEGACY_LIFECYCLE_TIMESTAMP"
+        )
+
+    def test_legacy_release_can_target_predecessor_from_successor_session(self):
+        predecessor = claim(
+            "PREDECESSOR",
+            scopes=["same"],
+            semantics=["SAME"],
+            token=4,
+            state="RELEASED",
+        )
+        predecessor["claimed_at"] = "2026-08-29T21:00:00Z"
+        predecessor["released_at"] = "2026-08-29T21:42:00Z"
+        predecessor["session_id"] = "PREDECESSOR-SESSION"
+
+        successor = claim(
+            "SUCCESSOR",
+            scopes=["same"],
+            semantics=["SAME"],
+            token=5,
+            state="ACTIVE",
+        )
+        successor["claimed_at"] = "2026-08-29T21:41:00Z"
+        successor["session_id"] = "SUCCESSOR-SESSION"
+
+        lifecycle_event = event("E-REL", "release", "CLAIM_RELEASED")
+        lifecycle_event["semantic_scopes"] = ["SAME"]
+        lifecycle_event["session_id"] = "SUCCESSOR-SESSION"
+
+        states, bindings, errors = derive_claim_lifecycle(
+            [lifecycle_event], [predecessor, successor]
+        )
+        self.assertEqual(errors, [])
+        self.assertEqual(states["PREDECESSOR"], "RELEASED")
+        self.assertEqual(bindings[0]["claim_id"], "PREDECESSOR")
+        self.assertEqual(
+            bindings[0]["binding_mode"], "LEGACY_LIFECYCLE_TIMESTAMP"
+        )
+
+    def test_legacy_exact_timestamp_tie_fails_closed(self):
+        one = claim("ONE", semantics=["SAME"], state="RELEASED")
+        two = claim("TWO", semantics=["SAME"], token=2, state="RELEASED")
+        one["released_at"] = "2026-08-29T21:42:00Z"
+        two["released_at"] = "2026-08-29T21:42:00Z"
+        one["session_id"] = "ONE"
+        two["session_id"] = "TWO"
+
+        lifecycle_event = event("E-TIE", "tie", "CLAIM_RELEASED")
+        lifecycle_event["semantic_scopes"] = ["SAME"]
+        lifecycle_event["session_id"] = "THIRD"
+
+        projection = reduce_coordination([lifecycle_event], [one, two])
+        self.assertIn(
+            "UNBOUND_CLAIM_LIFECYCLE_EVENT:E-TIE:2", projection["violations"]
         )
 
     def test_legacy_ambiguous_lifecycle_fails_closed(self):

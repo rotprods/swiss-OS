@@ -3,7 +3,7 @@ from __future__ import annotations
 import hashlib, json, subprocess
 from pathlib import Path
 import sys
-from swiss_os.v2_coordination import ACTIVE_CLAIM_STATES, death_drill, reduce_coordination, validate_claim, validate_context_pack, validate_event, validate_project_state
+from swiss_os.v2_coordination import death_drill, reduce_coordination, validate_claim, validate_context_pack, validate_event, validate_project_state
 
 ROOT=Path(__file__).resolve().parents[1]
 REQUIRED=("ARCHITECTURE.md","HANDOFF.md","TASKS.md","LEXICON.md","docs/architecture/V2_ARCHITECTURE.md","docs/architecture/V2_GRAPH_MODEL.md","docs/architecture/V2_GAP_RISK_MATRIX.md","docs/architecture/V2_DECISION_LEDGER.md","docs/operations/V2_IMPLEMENTATION_PROGRAM.md","docs/operations/V2_TEST_SECURITY_RECOVERY.md","docs/state/v2/project-state.json","docs/state/v2/goal-state.json","docs/state/v2/tasks.json","docs/state/v2/checkpoint.json","docs/state/v2/active-claims.json","docs/state/v2/context-pack.json","docs/state/v2/graph-snapshot.json","schemas/v2/event.schema.json","schemas/v2/claim.schema.json","schemas/v2/context-pack.schema.json")
@@ -44,8 +44,8 @@ def main():
     if context.get("event_watermark")!=projection.get("event_watermark"): errors.append("CONTEXT_EVENT_WATERMARK_MISMATCH")
     active=load("docs/state/v2/active-claims.json")
     projected_ids=sorted(str(i.get("claim_id","")) for i in active.get("claims",[]) if isinstance(i,dict))
-    durable_ids=sorted(str(i.get("claim_id","")) for i in claims if i.get("state") in ACTIVE_CLAIM_STATES)
-    if projected_ids!=durable_ids: errors.append("ACTIVE_CLAIMS_ID_PROJECTION_MISMATCH")
+    effective_ids=sorted(str(i) for i in projection.get("active_claim_ids",[]))
+    if projected_ids!=effective_ids: errors.append("ACTIVE_CLAIMS_ID_PROJECTION_MISMATCH")
     if active.get("collisions")!=projection.get("claim_collisions"): errors.append("ACTIVE_CLAIMS_COLLISION_PROJECTION_MISMATCH")
     graph=load("docs/state/v2/graph-snapshot.json")
     for key,expected in (("authority_advanced",False),("h_id_allocations",0),("outbound","CLOSED"),("send_allowed",0)):

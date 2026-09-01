@@ -34,7 +34,7 @@ organization + opportunity + lane + channel
 
 They intentionally do NOT include CV revision, AAG refresh or packet assets. Revalidating AAG or replacing a CV therefore cannot authorize a duplicate application.
 
-`packet_id` is version-specific over:
+`packet_id` is the sole version identity and is content-addressed over:
 
 ```text
 stable application key
@@ -43,24 +43,27 @@ stable application key
 + exact supplemental asset identities/version/hashes
 ```
 
-A new AAG evaluation or asset revision may produce a new packet version while preserving the same application identity.
+A new AAG evaluation, CV revision, portfolio revision or case-study revision may produce a new packet version while preserving the same application identity. No secondary uniqueness constraint is allowed to collapse distinct packet versions.
 
 ## Persistence
 
-`applications_v2` remains the stable target/idempotency ledger.
+`applications_v2` remains the stable target/idempotency ledger. Its selected-asset fields are compatibility summary metadata; the exact packet version is reconstructed from the packet receipt ledger.
 
-`application_packet_receipts_v1` is additive and stores version-specific packet/readiness provenance:
+`application_packet_receipts_v1` is additive and stores exact version-specific packet/readiness provenance:
 
 - packet ID;
 - application ID;
 - readiness binding SHA;
 - AAG receipt SHA;
 - target role / vacancy URL;
-- selected primary/channel metadata;
-- supplemental asset count;
+- primary asset manifest ID + version + SHA-256;
+- selected channel;
+- deterministic public-safe JSON of supplemental asset IDs/types/versions/SHA-256 values;
 - `PACKET_COMPILED_NO_SEND` state.
 
-No message body, PII, Gmail mutation or outbound action is persisted by this module.
+`packet_id` is the table primary key and the only packet-version uniqueness boundary. This permits a refreshed AAG, portfolio or case-study to produce a new auditable packet without changing the stable application or authorizing a second outbound action.
+
+No private storage refs, message body, PII, Gmail mutation or outbound action is persisted by this module.
 
 ## Safety
 
@@ -75,7 +78,7 @@ H-ID allocation/reservation = 0
 
 ## NEXT after merge
 
-1. Reconcile the private Candidate Asset Manifest state against final QA receipts; do not assume approval from prose.
+1. Candidate Asset Manifest approval drift has been reconciled from final QA receipts: `CV_ENTRY_V2` and `CV_HYBRID_V2` are now explicitly `APPROVED_ASSET_V2` on the private control plane.
 2. Recompile the recovered 436-hotel vacancy evidence through Wave 3.1/3.2 and select a real ENTRY target after first-party ownership/requirements/channel recheck.
 3. Build AAG-3.1 for that exact target.
 4. Perform one private ENTRY dry-run through W5.1, persisting only public-safe receipt metadata and no outbound.

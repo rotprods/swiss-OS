@@ -1,14 +1,40 @@
 {
-  "schema_version":"V2-COORDINATION-REBUILD-CONFIG-1.1","project_id":"SWITZERLAND_JOB_OS","primary_program":"GRAPH_REFACTOR_V2_2_CANONICAL_SYNTHESIS","base_main_sha":"7a610cd8c6ec96930983471b80112c667be9aeaf","generated_at":"2026-09-01T15:50:30Z","state":"GRAPH_V22_CANONICAL_SYNTHESIS_ACTIVE","current_objective_id":"OBJ-GRAPH-V22-CANONICAL-ARCHITECTURE","branch":"arch/v22-canonical-synthesis-token9","open_prs":[415,414,406,320,319,318,317,314,287,275,139,137,135],"latest_domain_next":"docs/state/NEXT_CURRENT_UNRESOLVED_LT350_B06.json",
-  "state_refs":["GOAL.md","STATE.md","ARCHITECTURE.md","HANDOFF.md","TASKS.md","LEXICON.md","docs/architecture/V2_2_CANONICAL_ARCHITECTURE.md","docs/refactor-v2/v22_goal_compatibility_graph.json","docs/state/v2/project-state.json","docs/state/v2/active-claims.json"],
-  "relevant_paths":["GOAL.md","STATE.md","ARCHITECTURE.md","HANDOFF.md","TASKS.md","docs/state/NEXT.json","docs/architecture/V2_2_CANONICAL_ARCHITECTURE.md","docs/refactor-v2/v22_goal_compatibility_graph.json","docs/state/v2/project-state.json","docs/state/v2/active-claims.json"],
-  "source_refs":["GOAL.md","docs/architecture/V2_ARCHITECTURE.md","docs/architecture/MULTI_NICHE_EMPLOYMENT_OS_V1.md","docs/architecture/V2_2_CANONICAL_ARCHITECTURE.md","docs/refactor-v2/v22_goal_compatibility_graph.json","issue:#422","main:7a610cd8c6ec96930983471b80112c667be9aeaf"],
-  "blockers":["V2.2 remains CANDIDATE until coordination projections, TASKS/checkpoints and exact-main post-merge qualification pass.","RECONCILE_REQUIRED=1403 remains domain work outside token9.","Candidate CV_ENTRY_V2 and CV_HYBRID_V2 remain QA_PENDING until explicit human approval.","PR #415 remains blocked pending application SSOT/asset-state corrections."],
-  "verified_work":["P0 issue #416 is closed after exact-main deterministic rebuild, Context Survival and death drill qualification.","G-0001 remains unchanged.","Hotels are modeled as NICHE-001 without destructive authority migration.","V2.2 candidate architecture and goal compatibility graph preserve legacy goal IDs while integrating the horizontal employment core."],
-  "unverified_work":["TASKS/checkpoints still require V2.2 recompilation.","Older architecture surfaces are not yet marked superseded by an accepted V2.2 release.","Remaining open PRs still require semantic classification against V2.2.","W6-W10 response/interview/offer/finance/relocation implementation remains incomplete."],
-  "risks":["A generic coordination rebuild that hardcodes a historical workstream can manufacture stale graph semantics.","Goal renumbering would break historical references and recovery.","Candidate technical QA may be mistaken for approval.","Application summary fields may become a second source of truth for versioned packet provenance.","Architecture documents can compete as current authority unless supersession is explicit."],
-  "next_safe_actions":["Rebuild token9 coordination projections from events/claims and current generic config.","Compile V2.2 TASKS/checkpoints and gap/decision ledger.","Run full CI plus zero-context death drill.","Merge only after fresh-main overlap review, then repeat exact-main qualification.","Keep E4/690 unchanged, H-0691 unallocated, CRM_UNIVERSE_COMPLETE=false, OUTBOUND=CLOSED and send_allowed=0."],
-  "liveness_findings":["CSP is recovery integrity metadata, never operational or candidate authority.","Token9 is architecture/coordination-only and cannot execute CRM, candidate-private or external actions.","Legacy goal IDs remain durable while V2.2 capability nodes provide a compatibility projection."],
-  "resume_contract":["verify live main and ancestry","verify pinned survival-file Git blob OIDs","replay events/claims and verify fencing high watermark","load V2.2 architecture plus goal compatibility graph","re-read private candidate authority before candidate readiness mutation","re-read operational authority before domain mutation","reject stale ContextPack/CSP","resume only a non-colliding task within current claim ceiling"],
-  "graph":{"nodes":[{"id":"P:SWITZERLAND_JOB_OS","type":"Project","state":"ACTIVE"},{"id":"G:G-0001","type":"NorthStar","state":"ACTIVE"},{"id":"O:OBJ-GRAPH-V22-CANONICAL-ARCHITECTURE","type":"Objective","state":"ACTIVE"},{"id":"C:CLAIM-GRAPHV2-RECOVERY-008","type":"Claim","state":"SUPERSEDED_TOKEN_8"},{"id":"C:CLAIM-GRAPHV22-ARCH-009","type":"Claim","state":"ACTIVE_TOKEN_9"},{"id":"ISSUE:416","type":"Bug","state":"CLOSED_COMPLETED"},{"id":"ISSUE:422","type":"ObjectiveIssue","state":"ACTIVE"},{"id":"ARCH:V2.2","type":"Architecture","state":"CANDIDATE"}],"edges":[{"from":"O:OBJ-GRAPH-V22-CANONICAL-ARCHITECTURE","to":"P:SWITZERLAND_JOB_OS","type":"PART_OF"},{"from":"C:CLAIM-GRAPHV22-ARCH-009","to":"C:CLAIM-GRAPHV2-RECOVERY-008","type":"SUPERSEDES"},{"from":"ARCH:V2.2","to":"G:G-0001","type":"SERVES"},{"from":"ISSUE:422","to":"ARCH:V2.2","type":"TRACKS"},{"from":"ISSUE:416","to":"C:CLAIM-GRAPHV2-RECOVERY-008","type":"RESOLVED_BY"}],"hyperrelations":[{"id":"HR:GRAPHV22-ARCH-009","type":"FENCED_ARCHITECTURE_SYNTHESIS","members":["O:OBJ-GRAPH-V22-CANONICAL-ARCHITECTURE","C:CLAIM-GRAPHV2-RECOVERY-008","C:CLAIM-GRAPHV22-ARCH-009","ISSUE:422","ARCH:V2.2"],"semantics":"Token9 compiles V2.2 architecture from exact main with historical fencing lineage preserved."}]}
+  "schema_version":"V2-COORDINATION-REBUILD-CONFIG-1.2",
+  "project_id":"SWITZERLAND_JOB_OS",
+  "primary_program":"GRAPH_REFACTOR_V2_CLAIM_LIFECYCLE_FINAL_GAUNTLET",
+  "base_main_sha":"f74d79716cf251948be6e4e49db2ab0f5f41351f",
+  "generated_at":"2026-09-01T16:05:20Z",
+  "state":"GRAPH_V2_CLAIM_LIFECYCLE_REPAIR_ACTIVE",
+  "current_objective_id":"OBJ-V2-CLAIM-LIFECYCLE-REPLAY",
+  "branch":"fix/v2-claim-lifecycle-token10",
+  "open_prs":[415,414,406,320,319,318,317,314,287,275,139,137,135],
+  "latest_domain_next":"docs/state/NEXT_CURRENT_UNRESOLVED_LT350_B06.json",
+  "state_refs":["GOAL.md","STATE.md","ARCHITECTURE.md","HANDOFF.md","TASKS.md","LEXICON.md","docs/architecture/V2_2_CANONICAL_ARCHITECTURE.md","docs/state/v2/project-state.json","docs/state/v2/active-claims.json","issue:#417"],
+  "relevant_paths":["GOAL.md","STATE.md","ARCHITECTURE.md","HANDOFF.md","TASKS.md","docs/state/NEXT.json","docs/architecture/V2_2_CANONICAL_ARCHITECTURE.md","src/swiss_os/v2_coordination.py","scripts/rebuild_v2_coordination.py","docs/state/v2/project-state.json","docs/state/v2/active-claims.json"],
+  "source_refs":["main:f74d79716cf251948be6e4e49db2ab0f5f41351f","pr:#423:MERGED","issue:#422:CLOSED_COMPLETED","issue:#417:OPEN","claim:CLAIM-GRAPHV22-ARCH-009:SUPERSEDED","claim:CLAIM-GRAPHV2-LIFECYCLE-010:ACTIVE"],
+  "blockers":["Issue #417 claim lifecycle replay must pass against the full historical event/claim corpus before final coordination qualification.","RECONCILE_REQUIRED=1403 remains domain work outside token10.","H-0580 remains a separate hotel authority blocker.","Candidate external assets remain subject to private human approval.","PR #415 remains blocked pending application provenance/asset-state corrections."],
+  "verified_work":["P0 issue #416 is closed with deterministic projection rebuild and death drill.","V2.2 canonical architecture is merged in PR #423 at f74d79716cf251948be6e4e49db2ab0f5f41351f.","Issue #422 is closed completed.","Token9 architecture work is complete and explicitly superseded by token10 for claim-lifecycle repair only.","E4/690, H-0691 unallocated, CRM_UNIVERSE_COMPLETE=false and OUTBOUND=CLOSED remain unchanged."],
+  "unverified_work":["Claim lifecycle must be replayed from durable events with explicit causation or strict unique legacy binding.","Active-claims projection must consume event-derived effective states.","Full historical corpus may expose additional state drift requiring explicit migration.","Open PR governance and final architecture attestation remain after issue #417."],
+  "risks":["A terminal claim event ignored by projections can leave a phantom writer active.","Permissive legacy lifecycle binding could close the wrong claim; fallback therefore requires an exact unique session/workstream/objective match.","Claim-file state and event-derived state can drift unless CI compares them.","Coordination repair must not leak into CRM, hotel authority, candidate private truth or outbound."],
+  "next_safe_actions":["Run event-derived claim lifecycle tests against the full repository corpus.","Repair any historical claim/event drift explicitly; do not suppress violations.","Rebuild active-claims/project-state/ContextPack/Context Survival from the reducer.","Run full repo guard plus zero-context death drill.","Merge only after fresh-main overlap review; then release token10 and perform final post-merge qualification."],
+  "liveness_findings":["CSP is recovery integrity metadata, never operational authority.","Token10 is coordination-kernel/test/recovery only.","V2.2 architecture is already merged; this wave repairs lifecycle semantics rather than redesigning architecture."],
+  "resume_contract":["verify live main and ancestry","replay event/claim lifecycle","verify fencing high watermark and zero collisions","verify issue #417 status","re-read operational authority before any domain mutation","reject stale ContextPack/CSP","keep outbound closed","resume only non-colliding work within token10 ceiling"],
+  "graph":{
+    "nodes":[
+      {"id":"P:SWITZERLAND_JOB_OS","type":"Project","state":"ACTIVE"},
+      {"id":"G:G-0001","type":"NorthStar","state":"ACTIVE"},
+      {"id":"C:CLAIM-GRAPHV22-ARCH-009","type":"Claim","state":"SUPERSEDED_TOKEN_9"},
+      {"id":"C:CLAIM-GRAPHV2-LIFECYCLE-010","type":"Claim","state":"ACTIVE_TOKEN_10"},
+      {"id":"ISSUE:417","type":"Bug","state":"REPAIR_IN_PROGRESS"},
+      {"id":"ARCH:V2.2","type":"Architecture","state":"MERGED_CANONICAL"}
+    ],
+    "edges":[
+      {"from":"C:CLAIM-GRAPHV2-LIFECYCLE-010","to":"C:CLAIM-GRAPHV22-ARCH-009","type":"SUPERSEDES"},
+      {"from":"ISSUE:417","to":"C:CLAIM-GRAPHV2-LIFECYCLE-010","type":"MITIGATED_BY"},
+      {"from":"ARCH:V2.2","to":"G:G-0001","type":"SERVES"}
+    ],
+    "hyperrelations":[
+      {"id":"HR:CLAIM-LIFECYCLE-010","type":"FENCED_COORDINATION_REPAIR","members":["C:CLAIM-GRAPHV22-ARCH-009","C:CLAIM-GRAPHV2-LIFECYCLE-010","ISSUE:417","ARCH:V2.2"],"semantics":"Token10 repairs event-derived claim lifecycle after V2.2 merge without domain authority effect."}
+    ]
+  }
 }

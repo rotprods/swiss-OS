@@ -41,23 +41,31 @@ class T(unittest.TestCase):
         projected,errs=project_claim_lifecycle([superseded,acquired],[c])
         self.assertEqual(errs,())
         self.assertEqual(projected[0]["state"],"SUPERSEDED")
-    def test_legacy_terminal_event_without_acquire_replays(self):
+    def test_legacy_terminal_event_without_explicit_ref_is_uniquely_inferred(self):
         c=claim(state="RELEASED")
-        released=event("E-R","i-r","CLAIM_RELEASED",["claim:CL-1"])
+        released=event("E-R","i-r","CLAIM_RELEASED",None,"2026-08-29T21:43:00Z")
         projected,errs=project_claim_lifecycle([released],[c])
         self.assertEqual(errs,())
         self.assertEqual(projected[0]["state"],"RELEASED")
+        self.assertNotIn("INVALID_CLAIM_LIFECYCLE_REFERENCE_COUNT",validate_event(released))
+    def test_legacy_missing_ref_fails_when_claim_identity_is_ambiguous(self):
+        first=claim("CL-1",state="RELEASED")
+        second=claim("CL-2",token=2,state="RELEASED")
+        released=event("E-R","i-r","CLAIM_RELEASED",None,"2026-08-29T21:43:00Z")
+        _,errs=project_claim_lifecycle([released],[first,second])
+        self.assertIn("CLAIM_LIFECYCLE_REFERENCE_COUNT:E-R:0",errs)
+    def test_new_lifecycle_event_requires_exact_claim_reference(self):
+        c=claim()
+        bad=event("E-R","i-r","CLAIM_RELEASED",[],"2026-09-01T00:00:00Z")
+        self.assertIn("INVALID_CLAIM_LIFECYCLE_REFERENCE_COUNT",validate_event(bad))
+        _,errs=project_claim_lifecycle([bad],[c])
+        self.assertIn("CLAIM_LIFECYCLE_REFERENCE_COUNT:E-R:0",errs)
     def test_stale_mutable_claim_state_is_detected(self):
         c=claim(state="ACTIVE")
         acquired=event("E-A","i-a","CLAIM_ACQUIRED",["claim:CL-1"],"2026-08-29T21:42:00Z")
         released=event("E-R","i-r","CLAIM_RELEASED",["claim:CL-1"],"2026-08-29T21:43:00Z")
         _,errs=project_claim_lifecycle([acquired,released],[c])
         self.assertIn("CLAIM_DECLARED_STATE_DRIFT:CL-1:ACTIVE->RELEASED",errs)
-    def test_claim_lifecycle_requires_exact_claim_reference(self):
-        c=claim()
-        bad=event("E-R","i-r","CLAIM_RELEASED",[])
-        _,errs=project_claim_lifecycle([bad],[c])
-        self.assertIn("CLAIM_LIFECYCLE_REFERENCE_COUNT:E-R:0",errs)
     def test_context_descendant_head_without_scope_drift_is_valid(self):
         p=reduce_coordination([event()],[claim()])
         pack=build_context_pack(project_id="P",base_main_sha=GIT_SHA,authority_revision="A",projection=p,state_refs=[],relevant_paths=["ARCHITECTURE.md"],relevant_scope_revision=SCOPE_REV,blockers=[],next_safe_actions=[])

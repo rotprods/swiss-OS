@@ -1,6 +1,7 @@
 {
   "schema_version": "V2-COORDINATION-REBUILD-CONFIG-1.0",
   "project_id": "SWITZERLAND_JOB_OS",
+  "primary_program": "GRAPH_REFACTOR_V2_RECONSOLIDATION",
   "base_main_sha": "302981981017af1191c305db4f0734b44149d504",
   "generated_at": "2026-09-01T15:20:10Z",
   "state": "GRAPH_V2_COORDINATION_RECOVERY_ACTIVE",

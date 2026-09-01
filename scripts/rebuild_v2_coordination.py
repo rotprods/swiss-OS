@@ -48,8 +48,52 @@ def domain_route(payload: dict[str, Any]) -> str:
     raise ValueError("domain NEXT has no route")
 
 
+def _string_list(config: dict[str, Any], key: str, default: list[str] | None = None) -> list[str]:
+    value = config.get(key, default if default is not None else [])
+    if not isinstance(value, list) or not all(isinstance(item, str) and item.strip() for item in value):
+        raise ValueError(f"config.{key} must be a list of non-empty strings")
+    return list(value)
+
+
+def _graph_payload(config: dict[str, Any], projection_revision: str) -> dict[str, Any]:
+    spec = config.get("graph")
+    if not isinstance(spec, dict):
+        raise ValueError("config.graph is required; coordination rebuild must not hardcode a historical workstream graph")
+    for key in ("nodes", "edges", "hyperrelations"):
+        if not isinstance(spec.get(key), list):
+            raise ValueError(f"config.graph.{key} must be a list")
+    return {
+        "schema_version": "COS-V2-HYPERGRAPH-SNAPSHOT-1.0",
+        "project_id": config["project_id"],
+        "main_sha_observed": config["base_main_sha"],
+        "projection_revision": projection_revision,
+        "context_pack_revision": "PENDING_CONTEXT_BUILD",
+        "authority_advanced": False,
+        "h_id_allocations": 0,
+        "outbound": "CLOSED",
+        "send_allowed": 0,
+        "nodes": spec["nodes"],
+        "edges": spec["edges"],
+        "hyperrelations": spec["hyperrelations"],
+    }
+
+
 def build_outputs(config_path: Path) -> dict[str, dict[str, Any]]:
     config = load_json(config_path)
+    for key in (
+        "project_id",
+        "base_main_sha",
+        "generated_at",
+        "state",
+        "current_objective_id",
+        "branch",
+        "primary_program",
+        "latest_domain_next",
+    ):
+        value = config.get(key)
+        if not isinstance(value, str) or not value.strip():
+            raise ValueError(f"config.{key} required")
+
     events = [load_json(p) for p in sorted((ROOT / "docs/state/v2/events").glob("*.json"))]
     claims = [load_json(p) for p in sorted((ROOT / "docs/state/v2/claims").glob("*.json"))]
     projection = reduce_coordination(events, claims)
@@ -80,69 +124,17 @@ def build_outputs(config_path: Path) -> dict[str, dict[str, Any]]:
             "projection_revision": projection["projection_revision"],
             "event_watermark": projection["event_watermark"],
             "active_claim_ids": projection["active_claim_ids"],
-            "open_prs": config["open_prs"],
-            "blockers": config["blockers"],
-            "verified_work": config["verified_work"],
-            "unverified_work": config["unverified_work"],
-            "risks": config["risks"],
-            "next_safe_actions": config["next_safe_actions"],
-            "source_refs": [
-                "GOAL.md",
-                "STATE.md",
-                "docs/state/NEXT.json",
-                "docs/refactor-v2/GRAPH_REFACTOR_V2_RECONSOLIDATION_2026-09-01.md",
-                "docs/refactor-v2/implementation_program_2026-09-01.json",
-                "issue:#416",
-                "pr:#404:SUPERSEDED_UNMERGED",
-                f"main:{config['base_main_sha']}",
-            ],
+            "open_prs": config.get("open_prs", []),
+            "blockers": _string_list(config, "blockers"),
+            "verified_work": _string_list(config, "verified_work"),
+            "unverified_work": _string_list(config, "unverified_work"),
+            "risks": _string_list(config, "risks"),
+            "next_safe_actions": _string_list(config, "next_safe_actions"),
+            "source_refs": _string_list(config, "source_refs"),
         }
     )
 
-    graph = {
-        "schema_version": "COS-V2-HYPERGRAPH-SNAPSHOT-1.0",
-        "project_id": config["project_id"],
-        "main_sha_observed": config["base_main_sha"],
-        "projection_revision": projection["projection_revision"],
-        "context_pack_revision": "PENDING_CONTEXT_BUILD",
-        "authority_advanced": False,
-        "h_id_allocations": 0,
-        "outbound": "CLOSED",
-        "send_allowed": 0,
-        "nodes": [
-            {"id": "P:SWITZERLAND_JOB_OS", "type": "Project", "state": "ACTIVE"},
-            {"id": "G:G-0001", "type": "NorthStar", "state": "ACTIVE"},
-            {"id": "O:OBJ-GRAPH-V2-CURRENT-TRUTH", "type": "Objective", "state": "ACTIVE"},
-            {"id": "A:HOTEL_AUTHORITY", "type": "Authority", "state": "LOCKED_E4_690"},
-            {"id": "C:CLAIM-CRM-SRR-SPECIAL-006", "type": "Claim", "state": "SUPERSEDED_TOKEN_6"},
-            {"id": "C:CLAIM-GRAPHV2-RECOVERY-008", "type": "Claim", "state": "ACTIVE_TOKEN_8"},
-            {"id": "ISSUE:416", "type": "Bug", "state": "REPAIR_IN_PROGRESS"},
-            {"id": "PR:404", "type": "PullRequest", "state": "SUPERSEDED_UNMERGED_EVIDENCE"},
-            {"id": "ARCH:GRAPH_V2_RECONSOLIDATION", "type": "Architecture", "state": "CURRENT_RECONSOLIDATION"},
-        ],
-        "edges": [
-            {"from": "O:OBJ-GRAPH-V2-CURRENT-TRUTH", "to": "P:SWITZERLAND_JOB_OS", "type": "PART_OF"},
-            {"from": "C:CLAIM-GRAPHV2-RECOVERY-008", "to": "C:CLAIM-CRM-SRR-SPECIAL-006", "type": "SUPERSEDES"},
-            {"from": "C:CLAIM-GRAPHV2-RECOVERY-008", "to": "A:HOTEL_AUTHORITY", "type": "ISOLATES"},
-            {"from": "ISSUE:416", "to": "C:CLAIM-GRAPHV2-RECOVERY-008", "type": "MITIGATED_BY"},
-            {"from": "PR:404", "to": "C:CLAIM-GRAPHV2-RECOVERY-008", "type": "EVIDENCE_FOR"},
-        ],
-        "hyperrelations": [
-            {
-                "id": "HR:GRAPHV2-RECOVERY-008",
-                "type": "FENCED_COORDINATION_RECOVERY",
-                "members": [
-                    "O:OBJ-GRAPH-V2-CURRENT-TRUTH",
-                    "C:CLAIM-CRM-SRR-SPECIAL-006",
-                    "C:CLAIM-GRAPHV2-RECOVERY-008",
-                    "ISSUE:416",
-                    "A:HOTEL_AUTHORITY",
-                ],
-                "semantics": "Token8 repairs stale coordination state while explicitly isolating operational hotel authority and external action.",
-            }
-        ],
-    }
-
+    graph = _graph_payload(config, str(projection["projection_revision"]))
     generated: dict[str, dict[str, Any]] = {
         "active-claims.json": active_claims,
         "project-state.json": state,
@@ -155,7 +147,7 @@ def build_outputs(config_path: Path) -> dict[str, dict[str, Any]]:
             return git_blob_oid_bytes(canonical_bytes(generated[mapped]))
         return git_blob_oid_existing(rel)
 
-    relevant_paths = list(config["relevant_paths"])
+    relevant_paths = _string_list(config, "relevant_paths")
     entries = [f"{rel}:{oid_for_rel(rel)}" for rel in relevant_paths]
     scope_revision = hashlib.sha256("\n".join(entries).encode("utf-8")).hexdigest()
     context = build_context_pack(
@@ -163,11 +155,11 @@ def build_outputs(config_path: Path) -> dict[str, dict[str, Any]]:
         base_main_sha=config["base_main_sha"],
         authority_revision=str(state["authority_revision"]),
         projection=projection,
-        state_refs=list(config["state_refs"]),
+        state_refs=_string_list(config, "state_refs"),
         relevant_paths=relevant_paths,
         relevant_scope_revision=scope_revision,
-        blockers=list(config["blockers"]),
-        next_safe_actions=list(config["next_safe_actions"]),
+        blockers=_string_list(config, "blockers"),
+        next_safe_actions=_string_list(config, "next_safe_actions"),
     )
     generated["context-pack.json"] = context
     graph["context_pack_revision"] = context["context_pack_revision"]
@@ -175,19 +167,23 @@ def build_outputs(config_path: Path) -> dict[str, dict[str, Any]]:
 
     latest_domain_next = str(config["latest_domain_next"])
     domain = load_json(ROOT / latest_domain_next)
-    survival_paths = [
-        "GOAL.md",
-        "STATE.md",
-        "HANDOFF.md",
-        "TASKS.md",
-        "docs/state/NEXT.json",
-        "docs/state/v2/project-state.json",
-        "docs/state/v2/context-pack.json",
-        "docs/state/v2/active-claims.json",
-        "docs/operations/CONTEXT_SURVIVAL_PROTOCOL.md",
-        "docs/handoffs/NEXT_ITERATION_METAPROMPT_V3.md",
-        latest_domain_next,
-    ]
+    survival_paths = _string_list(
+        config,
+        "survival_paths",
+        [
+            "GOAL.md",
+            "STATE.md",
+            "HANDOFF.md",
+            "TASKS.md",
+            "docs/state/NEXT.json",
+            "docs/state/v2/project-state.json",
+            "docs/state/v2/context-pack.json",
+            "docs/state/v2/active-claims.json",
+            "docs/operations/CONTEXT_SURVIVAL_PROTOCOL.md",
+            "docs/handoffs/NEXT_ITERATION_METAPROMPT_V3.md",
+            latest_domain_next,
+        ],
+    )
     file_oids = {rel: oid_for_rel(rel) for rel in survival_paths}
     next_root = load_json(ROOT / "docs/state/NEXT.json")
     safety = next_root.get("safety") if isinstance(next_root.get("safety"), dict) else {}
@@ -203,25 +199,13 @@ def build_outputs(config_path: Path) -> dict[str, dict[str, Any]]:
         "context_pack_revision": str(context["context_pack_revision"]),
         "event_watermark": context["event_watermark"],
         "active_claim_ids": list(projection["active_claim_ids"]),
-        "primary_program": "GRAPH_REFACTOR_V2_RECONSOLIDATION",
+        "primary_program": config["primary_program"],
         "production_route": domain_route(domain),
         "latest_domain_next": latest_domain_next,
         "survival_paths": survival_paths,
         "git_blob_oid": file_oids,
-        "liveness_findings": [
-            "CSP is recovery integrity metadata, never operational hotel authority.",
-            "Token8 is coordination-recovery-only; domain decisions and external actions are excluded.",
-            "Historical token7 B07 work is preserved on superseded PR #404 but is not current-main state.",
-        ],
-        "resume_contract": [
-            "verify live main and ancestry",
-            "verify pinned survival-file Git blob OIDs",
-            "re-read active claims and fencing high watermark",
-            "re-read private candidate asset authority before candidate readiness",
-            "re-read external operational authority before any material domain mutation",
-            "reject stale ContextPack/CSP and rebuild from durable events/claims",
-            "resume the highest-value safe task; never infer state from chat memory",
-        ],
+        "liveness_findings": _string_list(config, "liveness_findings"),
+        "resume_contract": _string_list(config, "resume_contract"),
         "safety": {
             "authority_advance_allowed": False,
             "canonical_id_allocation_allowed": False,

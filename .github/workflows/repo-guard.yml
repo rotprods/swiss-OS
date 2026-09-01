@@ -22,6 +22,13 @@ jobs:
         run: python scripts/system_contract_guard.py
       - name: Deterministic V2 coordination rebuild guard
         run: python scripts/rebuild_v2_coordination.py --config docs/refactor-v2/coordination_current_config.json --output-dir /tmp/v2-coordination-rebuild --check
+      - name: Capture OMEGA token11 coordination rebuild on drift
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: omega-token11-coordination-rebuild-${{ github.run_id }}
+          path: /tmp/v2-coordination-rebuild
+          if-no-files-found: error
       - name: V2 coordination contract guard
         run: python scripts/v2_contract_guard.py
       - name: Context survival / compaction checkpoint guard

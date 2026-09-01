@@ -10,7 +10,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from swiss_os.session_runtime import build_registry, canonical_json, derive_session_runtime, sha256_json
+from swiss_os.session_runtime import build_registry, canonical_json, derive_session_runtime
 from swiss_os.session_runtime_views import build_session_bundle
 from swiss_os.v2_coordination import derive_claim_lifecycle
 
@@ -89,11 +89,9 @@ def build_runtime_tree(
 
     runtimes: list[dict[str, Any]] = []
     files: dict[str, str] = {}
-    legacy_session_ids: list[str] = []
     for session_id in sorted(by_session):
         session_events = by_session[session_id]
         if not is_native_srp_session(session_events):
-            legacy_session_ids.append(session_id)
             continue
         runtime = derive_session_runtime(session_events, claims, observed_at=observed_at)
         runtimes.append(runtime)
@@ -107,12 +105,6 @@ def build_runtime_tree(
         unmerged_proposals=proposals,
         live_leases=live_leases,
     )
-    registry["legacy_session_count"] = len(legacy_session_ids)
-    registry["legacy_session_ids"] = legacy_session_ids
-    registry["summary"]["native_session_count"] = len(runtimes)
-    registry["summary"]["legacy_session_count"] = len(legacy_session_ids)
-    registry.pop("registry_revision", None)
-    registry["registry_revision"] = sha256_json(registry)
     files["registry.json"] = canonical_json(registry) + "\n"
     return files, registry
 
@@ -186,8 +178,7 @@ def main() -> int:
             return 1
         print(
             "session_runtime: PASS "
-            f"native={registry['summary']['native_session_count']} "
-            f"legacy={registry['summary']['legacy_session_count']} "
+            f"sessions={registry['summary']['session_count']} "
             f"live={registry['summary']['live']} "
             f"stale={registry['summary']['stale']} "
             f"orphaned={registry['summary']['orphaned_candidate']}"

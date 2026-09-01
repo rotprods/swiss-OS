@@ -1,42 +1,34 @@
 {
+  "schema_version": "COS-V2-GOAL-STATE-2.2",
+  "project_id": "SWITZERLAND_JOB_OS",
   "authority_advanced": false,
-  "current_objective_id": "OBJ-GRAPH-REFACTOR-V2",
+  "outbound_allowed": false,
+  "current_objective_id": "OBJ-GRAPH-REFACTOR-V2-2",
   "north_star": {
-    "definition": "Verified viable Swiss offer accepted with sustainable relocation.",
     "goal_id": "G-0001",
+    "definition": "Verified viable Swiss offer accepted with sustainable relocation.",
     "ref": "GOAL.md#G-0001",
     "state": "ACTIVE"
   },
-  "objective": {
-    "issue": 281,
-    "objective_id": "OBJ-GRAPH-REFACTOR-V2",
-    "state": "IMPLEMENTING",
-    "why": "Remove continuity/coordination ambiguity without moving hotel authority."
-  },
-  "outbound_allowed": false,
   "programs": [
-    {
-      "blocking": "CRM_UNIVERSE_COMPLETE=FALSE",
-      "goal_id": "G-0500",
-      "role": "Canonical CRM/source-universe parity",
-      "state": "ACTIVE"
-    },
-    {
-      "goal_id": "G-0600",
-      "role": "Truthful candidate readiness",
-      "state": "BLOCKED_USER_INPUT_OR_LANE_ASSETS"
-    },
-    {
-      "goal_id": "G-0700",
-      "role": "Hotel intelligence/outreach-readiness OS",
-      "state": "ACTIVE_PARALLEL"
-    },
-    {
-      "goal_id": "G-0800",
-      "role": "Maximum acquisition readiness",
-      "state": "ACTIVE_MAXIMUM"
-    }
+    {"goal_id":"G-0500","role":"NICHE-001 Hotels canonical universe / CRM parity","state":"ACTIVE_BLOCKED_PARTIAL","blockers":["RECONCILE_REQUIRED_NONZERO","H-0580 cross-plane drift"]},
+    {"goal_id":"G-0600","role":"Candidate truth + lane readiness + approved assets","state":"BLOCKED_HUMAN_ASSET_APPROVAL"},
+    {"goal_id":"G-0700","role":"Generic employment intelligence core","state":"ACTIVE_PARTIAL","children":["G-0710","G-0720","G-0730"]},
+    {"goal_id":"G-0800","role":"Swiss Employment Acquisition OS","state":"ACTIVE_PARTIAL","children":["G-0810","G-0820","G-0830","G-0840","G-0850","G-0860"]}
   ],
-  "project_id": "SWITZERLAND_JOB_OS",
-  "schema_version": "COS-V2-GOAL-STATE-1.0"
+  "architecture": {
+    "canonical": "docs/architecture/V2_ARCHITECTURE.md",
+    "version": "V2.2",
+    "hotels_role": "NICHE-001",
+    "coordination_kernel": "EMPIRICALLY_QUALIFIED",
+    "multi_niche_core": "IMPLEMENTED_ADDITIVE",
+    "application_packet_compiler": "IMPLEMENTED",
+    "target_bound_send_authorization": "NOT_PRODUCTION_QUALIFIED"
+  },
+  "safety": {
+    "authority_advance_allowed": false,
+    "h_id_allocation_allowed": false,
+    "outbound": "CLOSED",
+    "send_allowed": 0
+  }
 }

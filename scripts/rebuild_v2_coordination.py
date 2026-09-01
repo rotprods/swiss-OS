@@ -94,15 +94,16 @@ def build_outputs(config_path: Path) -> dict[str, dict[str, Any]]:
         if not isinstance(value, str) or not value.strip():
             raise ValueError(f"config.{key} required")
 
-    events = [load_json(p) for p in sorted((ROOT / "docs/state/v2/events").glob("*.json"))]
-    claims = [load_json(p) for p in sorted((ROOT / "docs/state/v2/claims").glob("*.json"))]
+    events = [load_json(path) for path in sorted((ROOT / "docs/state/v2/events").glob("*.json"))]
+    claims = [load_json(path) for path in sorted((ROOT / "docs/state/v2/claims").glob("*.json"))]
     projection = reduce_coordination(events, claims)
     if projection.get("violations"):
         raise ValueError(f"coordination projection violations: {projection['violations']}")
 
+    active_ids = set(projection.get("active_claim_ids", []))
     active = sorted(
-        (c for c in claims if c.get("state") == "ACTIVE"),
-        key=lambda c: (int(c.get("fencing_token", 0)), str(c.get("claim_id", ""))),
+        (claim for claim in claims if str(claim.get("claim_id", "")) in active_ids),
+        key=lambda claim: (int(claim.get("fencing_token", 0)), str(claim.get("claim_id", ""))),
     )
     active_claims = {
         "schema_version": "COS-V2-ACTIVE-CLAIMS-1.0",
@@ -110,7 +111,8 @@ def build_outputs(config_path: Path) -> dict[str, dict[str, Any]]:
         "as_of_main_sha": config["base_main_sha"],
         "claims": active,
         "collisions": projection.get("claim_collisions", []),
-        "fencing_high_watermark": max((int(c.get("fencing_token", 0)) for c in claims), default=0),
+        "fencing_high_watermark": max((int(claim.get("fencing_token", 0)) for claim in claims), default=0),
+        "lifecycle_projection_revision": projection["projection_revision"],
     }
 
     prior_state = load_json(ROOT / "docs/state/v2/project-state.json")
@@ -221,12 +223,14 @@ def build_outputs(config_path: Path) -> dict[str, dict[str, Any]]:
     generated["CONTEXT_SURVIVAL.json"] = csp
 
     manifest = {
-        "schema_version": "V2-COORDINATION-REBUILD-RECEIPT-1.0",
+        "schema_version": "V2-COORDINATION-REBUILD-RECEIPT-1.1",
         "base_main_sha": config["base_main_sha"],
         "projection_revision": projection["projection_revision"],
         "context_pack_revision": context["context_pack_revision"],
         "event_watermark": projection["event_watermark"],
         "active_claim_ids": projection["active_claim_ids"],
+        "claim_states": projection.get("claim_states", {}),
+        "claim_lifecycle": projection.get("claim_lifecycle", []),
         "fencing_high_watermark": active_claims["fencing_high_watermark"],
         "claim_collisions": projection["claim_collisions"],
         "generated_files": {

@@ -22,13 +22,6 @@ jobs:
         run: python scripts/system_contract_guard.py
       - name: Deterministic V2 coordination rebuild guard
         run: python scripts/rebuild_v2_coordination.py --config docs/refactor-v2/coordination_current_config.json --output-dir /tmp/v2-coordination-rebuild --check
-      - name: Capture V2 rebuild drift
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: v2-forward-token11-rematerialize-${{ github.run_id }}
-          path: /tmp/v2-coordination-rebuild
-          if-no-files-found: error
       - name: V2 coordination contract guard
         run: python scripts/v2_contract_guard.py
       - name: V2 forward event contract guard

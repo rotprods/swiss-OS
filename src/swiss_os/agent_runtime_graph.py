@@ -3,7 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 from datetime import datetime, timezone
-from typing import Iterable, Mapping, Sequence
+from typing import Mapping, Sequence
 
 ACTIVE_HEARTBEAT_STATES = frozenset({"ACTIVE", "BLOCKED"})
 HEARTBEAT_STATES = frozenset({"ACTIVE", "BLOCKED", "COMPLETE", "SUPERSEDED"})
@@ -32,10 +32,22 @@ def _parse_time(value: str) -> datetime:
 
 def validate_heartbeat(heartbeat: Mapping[str, object]) -> list[str]:
     errors: list[str] = []
-    required = ("heartbeat_id", "project_id", "agent_id", "session_id", "workstream_id", "objective_id", "task_id", "claim_id", "observed_at", "state", "branch", "worktree")
+    required = (
+        "heartbeat_id", "project_id", "agent_id", "session_id", "workstream_id", "objective_id",
+        "plan_id", "task_id", "claim_id", "observed_at", "state", "branch", "worktree",
+        "base_main_sha", "authority_ceiling", "graph_program", "next_safe_action",
+    )
     for key in required:
         if not _text(heartbeat.get(key)):
             errors.append(f"MISSING_{key.upper()}")
+    goals = heartbeat.get("goal_ids")
+    if not isinstance(goals, list) or not goals or any(not _text(goal) for goal in goals):
+        errors.append("INVALID_GOAL_IDS")
+    if heartbeat.get("graph_program") != "GRAPH-REFACTOR-V2":
+        errors.append("NON_GRAPH_V2_HEARTBEAT")
+    sha = _text(heartbeat.get("base_main_sha"))
+    if len(sha) != 40 or any(c not in "0123456789abcdef" for c in sha):
+        errors.append("INVALID_BASE_MAIN_SHA")
     if heartbeat.get("state") not in HEARTBEAT_STATES:
         errors.append("INVALID_HEARTBEAT_STATE")
     token = heartbeat.get("fencing_token")
@@ -55,10 +67,7 @@ def reduce_agent_runtime_graph(
     as_of: str,
     heartbeat_ttl_seconds: int = 1800,
 ) -> dict[str, object]:
-    """Derive a queryable runtime graph from immutable iteration receipts + heartbeats.
-
-    This is a projection. Claim/event ledgers remain ownership authority.
-    """
+    """Derive a runtime/recovery projection. Claim/event ledgers remain ownership authority."""
     if heartbeat_ttl_seconds <= 0:
         raise ValueError("heartbeat_ttl_seconds must be positive")
     now = _parse_time(as_of)
@@ -75,17 +84,16 @@ def reduce_agent_runtime_graph(
             return
         candidate = dict(node)
         prior = nodes_by_id.get(node_id)
-        if prior is not None and prior != candidate:
-            # Same durable entity may accumulate non-conflicting attributes only if values agree.
-            merged = dict(prior)
-            for key, value in candidate.items():
-                if key in merged and merged[key] != value:
-                    violations.append(f"NODE_SEMANTIC_CONFLICT:{node_id}:{key}")
-                    return
-                merged[key] = value
-            nodes_by_id[node_id] = merged
-        else:
+        if prior is None:
             nodes_by_id[node_id] = candidate
+            return
+        merged = dict(prior)
+        for key, value in candidate.items():
+            if key in merged and merged[key] != value:
+                violations.append(f"NODE_SEMANTIC_CONFLICT:{node_id}:{key}")
+                return
+            merged[key] = value
+        nodes_by_id[node_id] = merged
 
     def add_edge(edge: Mapping[str, object]) -> None:
         source, target, edge_type = _text(edge.get("from")), _text(edge.get("to")), _text(edge.get("type"))
@@ -93,8 +101,7 @@ def reduce_agent_runtime_graph(
             violations.append("INVALID_EDGE")
             return
         candidate = dict(edge)
-        key = canonical_json(candidate)
-        edges_by_key[key] = candidate
+        edges_by_key[canonical_json(candidate)] = candidate
 
     for receipt in receipts:
         iteration_id = _text(receipt.get("iteration_id"))
@@ -107,8 +114,7 @@ def reduce_agent_runtime_graph(
         iteration_ids.add(iteration_id)
         if receipt.get("schema_version") != "AGENT-IMPROVEMENT-ITERATION-1.1":
             violations.append(f"UNSUPPORTED_ITERATION_SCHEMA:{iteration_id}")
-        context = receipt.get("context")
-        proposal = receipt.get("proposal")
+        context, proposal = receipt.get("context"), receipt.get("proposal")
         if not isinstance(context, Mapping) or not isinstance(proposal, Mapping):
             violations.append(f"INCOMPLETE_ITERATION_RECEIPT:{iteration_id}")
             continue
@@ -126,7 +132,6 @@ def reduce_agent_runtime_graph(
             session_identity[session_id] = identity
         else:
             violations.append(f"RECEIPT_WITHOUT_SESSION_ID:{iteration_id}")
-
         for node in receipt.get("graph_nodes", []):
             if isinstance(node, Mapping):
                 add_node(node)
@@ -137,10 +142,12 @@ def reduce_agent_runtime_graph(
         hypothesis_id = f"HYPOTHESIS:{iteration_id}"
         add_node({"id": hypothesis_id, "type": "Hypothesis", "text": proposal.get("hypothesis", "")})
         add_edge({"from": f"ITERATION:{iteration_id}", "to": hypothesis_id, "type": "TESTS"})
-        for suite in proposal.get("evaluation_suite", []) if isinstance(proposal.get("evaluation_suite"), list) else []:
-            evaluator_id = f"EVALUATOR:{suite}"
-            add_node({"id": evaluator_id, "type": "TestSuite"})
-            add_edge({"from": f"ITERATION:{iteration_id}", "to": evaluator_id, "type": "EVALUATED_BY"})
+        suites = proposal.get("evaluation_suite", [])
+        if isinstance(suites, (list, tuple)):
+            for suite in suites:
+                evaluator_id = f"EVALUATOR:{suite}"
+                add_node({"id": evaluator_id, "type": "TestSuite"})
+                add_edge({"from": f"ITERATION:{iteration_id}", "to": evaluator_id, "type": "EVALUATED_BY"})
 
     latest_heartbeat: dict[str, Mapping[str, object]] = {}
     heartbeat_ids: set[str] = set()
@@ -156,9 +163,40 @@ def reduce_agent_runtime_graph(
         prior = latest_heartbeat.get(session_id)
         if prior is None or _parse_time(_text(heartbeat.get("observed_at"))) > _parse_time(_text(prior.get("observed_at"))):
             latest_heartbeat[session_id] = heartbeat
+
+        agent_id, workstream_id, objective_id = (_text(heartbeat.get(k)) for k in ("agent_id", "workstream_id", "objective_id"))
+        plan_id, task_id, claim_id = (_text(heartbeat.get(k)) for k in ("plan_id", "task_id", "claim_id"))
+        worktree, branch = _text(heartbeat.get("worktree")), _text(heartbeat.get("branch"))
+        add_node({"id": f"PROJECT:{heartbeat.get('project_id')}", "type": "Project"})
+        add_node({"id": f"AGENT:{agent_id}", "type": "Agent"})
+        add_node({"id": f"SESSION:{session_id}", "type": "Session"})
+        add_node({"id": f"WORKSTREAM:{workstream_id}", "type": "Workstream"})
+        add_node({"id": f"OBJECTIVE:{objective_id}", "type": "Objective"})
+        add_node({"id": f"PLAN:{plan_id}", "type": "Plan"})
+        add_node({"id": f"TASK:{task_id}", "type": "Task"})
+        add_node({"id": f"CLAIM:{claim_id}", "type": "Claim", "fencing_token": heartbeat.get("fencing_token")})
+        add_node({"id": f"WORKTREE:{worktree}", "type": "Worktree"})
+        add_node({"id": f"BRANCH:{branch}", "type": "Branch"})
+        for goal_id in heartbeat.get("goal_ids", []) if isinstance(heartbeat.get("goal_ids"), list) else []:
+            add_node({"id": f"GOAL:{goal_id}", "type": "Goal"})
+            add_edge({"from": f"TASK:{task_id}", "to": f"GOAL:{goal_id}", "type": "CONTRIBUTES_TO"})
+        pr_number = heartbeat.get("pr_number")
+        if isinstance(pr_number, int) and not isinstance(pr_number, bool):
+            add_node({"id": f"PR:{pr_number}", "type": "PullRequest"})
+            add_edge({"from": f"BRANCH:{branch}", "to": f"PR:{pr_number}", "type": "PROPOSED_BY"})
+        add_edge({"from": f"AGENT:{agent_id}", "to": f"SESSION:{session_id}", "type": "EXECUTES"})
+        add_edge({"from": f"SESSION:{session_id}", "to": f"CLAIM:{claim_id}", "type": "OWNS"})
+        add_edge({"from": f"CLAIM:{claim_id}", "to": f"TASK:{task_id}", "type": "CLAIMS"})
+        add_edge({"from": f"PLAN:{plan_id}", "to": f"TASK:{task_id}", "type": "CONTAINS"})
+        add_edge({"from": f"WORKTREE:{worktree}", "to": f"BRANCH:{branch}", "type": "CHECKS_OUT"})
+        add_edge({"from": f"SESSION:{session_id}", "to": f"WORKTREE:{worktree}", "type": "OPERATES_IN"})
         node_id = f"HEARTBEAT:{heartbeat_id}"
-        add_node({"id": node_id, "type": "Heartbeat", "state": heartbeat.get("state"), "observed_at": heartbeat.get("observed_at")})
+        add_node({"id": node_id, "type": "Heartbeat", "state": heartbeat.get("state"), "observed_at": heartbeat.get("observed_at"), "next_safe_action": heartbeat.get("next_safe_action")})
         add_edge({"from": f"SESSION:{session_id}", "to": node_id, "type": "HEARTBEATS_WITH"})
+        current_iteration = _text(heartbeat.get("current_iteration_id"))
+        if current_iteration:
+            add_node({"id": f"ITERATION:{current_iteration}", "type": "Experiment", "state": "IN_PROGRESS"})
+            add_edge({"from": f"SESSION:{session_id}", "to": f"ITERATION:{current_iteration}", "type": "EXECUTES"})
 
     active_sessions: list[dict[str, object]] = []
     stale_sessions: list[dict[str, object]] = []
@@ -170,16 +208,10 @@ def reduce_agent_runtime_graph(
             violations.append(f"FUTURE_HEARTBEAT:{session_id}")
             continue
         entry = {
-            "session_id": session_id,
-            "agent_id": heartbeat.get("agent_id"),
-            "claim_id": heartbeat.get("claim_id"),
-            "fencing_token": heartbeat.get("fencing_token"),
-            "task_id": heartbeat.get("task_id"),
-            "branch": heartbeat.get("branch"),
-            "worktree": heartbeat.get("worktree"),
-            "observed_at": heartbeat.get("observed_at"),
-            "age_seconds": int(age_seconds),
-            "state": state,
+            "session_id": session_id, "agent_id": heartbeat.get("agent_id"), "claim_id": heartbeat.get("claim_id"),
+            "fencing_token": heartbeat.get("fencing_token"), "task_id": heartbeat.get("task_id"), "branch": heartbeat.get("branch"),
+            "worktree": heartbeat.get("worktree"), "observed_at": heartbeat.get("observed_at"), "age_seconds": int(age_seconds), "state": state,
+            "next_safe_action": heartbeat.get("next_safe_action"),
         }
         if state in ACTIVE_HEARTBEAT_STATES and age_seconds > heartbeat_ttl_seconds:
             stale_sessions.append(entry)
@@ -200,17 +232,18 @@ def reduce_agent_runtime_graph(
             if int(owner["fencing_token"]) < max_token:
                 violations.append(f"STALE_ACTIVE_WRITER:{owner['session_id']}:{owner['fencing_token']}<{max_token}")
 
+    node_ids = set(nodes_by_id)
+    for edge in edges_by_key.values():
+        if edge["from"] not in node_ids or edge["to"] not in node_ids:
+            violations.append(f"DANGLING_EDGE:{edge['from']}->{edge['to']}:{edge['type']}")
+
     graph = {
-        "schema_version": "AGENT-RUNTIME-GRAPH-1.0",
-        "as_of": as_of,
-        "heartbeat_ttl_seconds": heartbeat_ttl_seconds,
-        "iteration_count": len(iteration_ids),
-        "heartbeat_count": len(heartbeat_ids),
+        "schema_version": "AGENT-RUNTIME-GRAPH-1.0", "as_of": as_of, "heartbeat_ttl_seconds": heartbeat_ttl_seconds,
+        "iteration_count": len(iteration_ids), "heartbeat_count": len(heartbeat_ids),
         "active_sessions": sorted(active_sessions, key=lambda x: str(x["session_id"])),
         "stale_sessions": sorted(stale_sessions, key=lambda x: str(x["session_id"])),
         "nodes": sorted(nodes_by_id.values(), key=lambda x: str(x.get("id", ""))),
-        "edges": sorted(edges_by_key.values(), key=canonical_json),
-        "violations": sorted(set(violations)),
+        "edges": sorted(edges_by_key.values(), key=canonical_json), "violations": sorted(set(violations)),
     }
     graph["projection_revision"] = sha256_json(graph)
     return graph
@@ -223,8 +256,7 @@ def assert_takeover_safe(graph: Mapping[str, object], *, predecessor_session_id:
         raise ValueError("predecessor must be stale before takeover")
     if successor_session_id not in active:
         raise ValueError("successor must have a fresh active heartbeat")
-    predecessor = stale[predecessor_session_id]
-    successor = active[successor_session_id]
+    predecessor, successor = stale[predecessor_session_id], active[successor_session_id]
     if int(successor["fencing_token"]) <= int(predecessor["fencing_token"]):
         raise ValueError("successor fencing token must strictly exceed predecessor")
     if successor_session_id == predecessor_session_id:

@@ -10,7 +10,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from swiss_os.session_runtime import build_registry, canonical_json, derive_session_runtime
+from swiss_os.session_runtime import build_registry, canonical_json, derive_session_runtime, sha256_json
 from swiss_os.session_runtime_views import build_session_bundle
 from swiss_os.v2_coordination import derive_claim_lifecycle
 
@@ -58,6 +58,20 @@ def effective_claims(events: list[dict[str, Any]], claims: list[dict[str, Any]])
     return output
 
 
+def is_native_srp_session(events: list[dict[str, Any]]) -> bool:
+    """Only post-activation SRP sessions receive full bundles.
+
+    Historical sessions remain durable in the V2 event graph. Generating modern progress/
+    heartbeat views for incomplete legacy history would create false precision and state sprawl.
+    """
+    return any(
+        event.get("progress_snapshot") is not None
+        or event.get("runtime_identity_required") is True
+        or event.get("runtime_identity") is not None
+        for event in events
+    )
+
+
 def build_runtime_tree(
     *,
     observed_at: str,
@@ -75,8 +89,13 @@ def build_runtime_tree(
 
     runtimes: list[dict[str, Any]] = []
     files: dict[str, str] = {}
+    legacy_session_ids: list[str] = []
     for session_id in sorted(by_session):
-        runtime = derive_session_runtime(by_session[session_id], claims, observed_at=observed_at)
+        session_events = by_session[session_id]
+        if not is_native_srp_session(session_events):
+            legacy_session_ids.append(session_id)
+            continue
+        runtime = derive_session_runtime(session_events, claims, observed_at=observed_at)
         runtimes.append(runtime)
         bundle = build_session_bundle(runtime)
         for name, content in bundle.items():
@@ -88,6 +107,12 @@ def build_runtime_tree(
         unmerged_proposals=proposals,
         live_leases=live_leases,
     )
+    registry["legacy_session_count"] = len(legacy_session_ids)
+    registry["legacy_session_ids"] = legacy_session_ids
+    registry["summary"]["native_session_count"] = len(runtimes)
+    registry["summary"]["legacy_session_count"] = len(legacy_session_ids)
+    registry.pop("registry_revision", None)
+    registry["registry_revision"] = sha256_json(registry)
     files["registry.json"] = canonical_json(registry) + "\n"
     return files, registry
 
@@ -161,7 +186,8 @@ def main() -> int:
             return 1
         print(
             "session_runtime: PASS "
-            f"sessions={registry['summary']['session_count']} "
+            f"native={registry['summary']['native_session_count']} "
+            f"legacy={registry['summary']['legacy_session_count']} "
             f"live={registry['summary']['live']} "
             f"stale={registry['summary']['stale']} "
             f"orphaned={registry['summary']['orphaned_candidate']}"

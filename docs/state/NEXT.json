@@ -1,8 +1,8 @@
 {
   "active_claim": {
-    "authority_ceiling": "PREAUTH_SRR_DECISION_ONLY_NO_CANONICAL_MUTATION",
-    "claim_id": "CLAIM-CRM-SRR-SPECIAL-006",
-    "fencing_token": 6,
+    "authority_ceiling": "COORDINATION_RECOVERY_ONLY_NO_DOMAIN_OR_EXTERNAL_MUTATION",
+    "claim_id": "CLAIM-GRAPHV2-RECOVERY-008",
+    "fencing_token": 8,
     "state": "ACTIVE_UNTIL_EXPLICIT_RELEASE_OR_SUPERSESSION"
   },
   "artifacts": [
@@ -96,11 +96,11 @@
   "recovery_route": [
     "Verify current GitHub main is the recorded parent SHA or a descendant.",
     "Re-read Drive HOTELS_V2 and confirm 690 canonical rows with H-0691 absent/unallocated.",
-    "Verify E4 authority epoch/materialized SHA and token6 ceiling are unchanged.",
+    "Verify E4 authority epoch/materialized SHA and the current fencing claim/ceiling from docs/state/v2/active-claims.json; never trust a historical token literal.",
     "Use HS-MEMBER-DE-33339392661 / artifact 9740219406 as the coherent current member-directory source.",
     "Use CRM_EXACT_CURRENT_CANDIDATE_LINEAGE_33339392661.json only for lineage transfer; it grants no authority.",
     "Preserve completed historical SRR/RAGR frontiers monotonically; do not regress or reopen completed batches unless new exact-current contradictory evidence exists.",
-    "Continue CURRENT_UNRESOLVED_1403_ENTITY_RESOLUTION in bounded evidence-backed batches.",
+    "Continue CURRENT_UNRESOLVED_1403_ENTITY_RESOLUTION in bounded evidence-backed batches only under a separately eligible domain claim; token8 cannot execute CRM decisions.",
     "If discover.swiss becomes available, capture a valid structured manifest and run SSR-1.0 as an additional evidence plane.",
     "Keep OUTBOUND=CLOSED and send_allowed=0."
   ],

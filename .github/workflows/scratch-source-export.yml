@@ -1,0 +1,24 @@
+name: scratch-source-export
+
+on:
+  push:
+    branches:
+      - scratch/token14-source-export
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+      - name: Package exact checkout
+        run: |
+          rm -rf .git
+          tar -czf /tmp/swiss-os-source.tgz .
+      - name: Upload source artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: swiss-os-source-${{ github.sha }}
+          path: /tmp/swiss-os-source.tgz
+          retention-days: 1

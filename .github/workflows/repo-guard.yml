@@ -22,6 +22,8 @@ jobs:
         run: python scripts/system_contract_guard.py
       - name: Agent improvement / GRAPH-REFACTOR-V2 guard
         run: python scripts/agent_improvement_guard.py
+      - name: Material mutation lineage guard
+        run: python scripts/material_mutation_lineage_guard.py
       - name: Deterministic Agent Runtime Graph guard
         run: python scripts/rebuild_agent_runtime_graph.py --check
       - name: Deterministic V2 coordination rebuild guard

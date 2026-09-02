@@ -66,11 +66,34 @@ jobs:
             sha256sum /tmp/semantic-runtime/bin/ollama /tmp/semantic-runtime/bin/qdrant
           } > /tmp/semantic-runtime/RUNTIME_MANIFEST.txt
           tar -C /tmp/semantic-runtime -czf /tmp/semantic-runtime-linux-x86_64.tar.gz .
-      - name: Upload Virtual PC semantic runtime (temporary)
+          sha256sum /tmp/semantic-runtime-linux-x86_64.tar.gz > /tmp/semantic-runtime-linux-x86_64.tar.gz.sha256
+          split -b 230M -d -a 1 /tmp/semantic-runtime-linux-x86_64.tar.gz /tmp/semantic-runtime.tar.gz.part-
+          test -f /tmp/semantic-runtime.tar.gz.part-0
+          test -f /tmp/semantic-runtime.tar.gz.part-1
+          test -f /tmp/semantic-runtime.tar.gz.part-2
+      - name: Upload Virtual PC semantic runtime part 0 (temporary)
         uses: actions/upload-artifact@v4
         with:
-          name: virtual-pc-semantic-runtime
-          path: /tmp/semantic-runtime-linux-x86_64.tar.gz
+          name: virtual-pc-semantic-runtime-part-0
+          path: /tmp/semantic-runtime.tar.gz.part-0
+          retention-days: 1
+      - name: Upload Virtual PC semantic runtime part 1 (temporary)
+        uses: actions/upload-artifact@v4
+        with:
+          name: virtual-pc-semantic-runtime-part-1
+          path: /tmp/semantic-runtime.tar.gz.part-1
+          retention-days: 1
+      - name: Upload Virtual PC semantic runtime part 2 (temporary)
+        uses: actions/upload-artifact@v4
+        with:
+          name: virtual-pc-semantic-runtime-part-2
+          path: /tmp/semantic-runtime.tar.gz.part-2
+          retention-days: 1
+      - name: Upload Virtual PC semantic runtime checksum (temporary)
+        uses: actions/upload-artifact@v4
+        with:
+          name: virtual-pc-semantic-runtime-checksum
+          path: /tmp/semantic-runtime-linux-x86_64.tar.gz.sha256
           retention-days: 1
       - uses: actions/setup-python@v7
         with:

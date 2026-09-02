@@ -17,10 +17,13 @@ BASE_SURVIVAL_PATHS = (
     "STATE.md",
     "HANDOFF.md",
     "TASKS.md",
+    "AGENTS.md",
     "docs/state/NEXT.json",
     "docs/state/v2/project-state.json",
     "docs/state/v2/context-pack.json",
     "docs/state/v2/active-claims.json",
+    "docs/state/agent-runtime/runtime-graph.json",
+    "docs/operations/AGENT_AUTORESEARCH_PROGRAM.md",
     "docs/operations/CONTEXT_SURVIVAL_PROTOCOL.md",
     "docs/handoffs/NEXT_ITERATION_METAPROMPT_V3.md",
 )
@@ -120,12 +123,14 @@ def build_checkpoint(
         "git_blob_oid": file_oids,
         "liveness_findings": [
             "CSP sidecar is authoritative only for recovery integrity, never hotel authority.",
+            "The Agent Runtime Graph is a derived recovery projection; claim/event ledgers remain ownership authority.",
             "The COS event watermark may lag live main; zero-context bootstrap MUST verify live ancestry and pinned files rather than infer freshness from event time alone.",
         ],
         "resume_contract": [
             "verify live main and ancestry",
             "verify every pinned survival-file Git blob OID",
             "re-read active claims/fencing",
+            "re-read Agent Runtime Graph active/stale sessions and next_safe_action",
             "re-read external authority before material mutation",
             "rebuild checkpoint on any survival-file drift",
             "resume highest-value safe route; never resume from chat memory alone",
@@ -166,6 +171,9 @@ def validate_checkpoint(checkpoint: dict[str, Any]) -> list[str]:
     if not isinstance(digests, dict):
         errors.append("INVALID_FILE_OIDS")
         digests = {}
+    for required in ("AGENTS.md", "docs/operations/AGENT_AUTORESEARCH_PROGRAM.md", "docs/state/agent-runtime/runtime-graph.json"):
+        if required not in paths:
+            errors.append(f"AGENT_RUNTIME_SURVIVAL_PATH_MISSING:{required}")
     for rel in paths:
         if not isinstance(rel, str) or not rel.strip():
             errors.append("INVALID_SURVIVAL_PATH")
@@ -181,6 +189,7 @@ def validate_checkpoint(checkpoint: dict[str, Any]) -> list[str]:
     project = load_json("docs/state/v2/project-state.json")
     context = load_json("docs/state/v2/context-pack.json")
     active_claims = load_json("docs/state/v2/active-claims.json")
+    runtime_graph = load_json("docs/state/agent-runtime/runtime-graph.json")
     latest_domain_next = checkpoint.get("latest_domain_next")
     if not isinstance(latest_domain_next, str) or not latest_domain_next.strip():
         errors.append("INVALID_LATEST_DOMAIN_NEXT")
@@ -192,6 +201,8 @@ def validate_checkpoint(checkpoint: dict[str, Any]) -> list[str]:
             domain = {}
             errors.append("INVALID_LATEST_DOMAIN_NEXT")
 
+    if runtime_graph.get("violations"):
+        errors.append("AGENT_RUNTIME_GRAPH_HAS_VIOLATIONS")
     if checkpoint.get("authority_epoch") != project.get("authority_epoch"):
         errors.append("STALE_AUTHORITY_EPOCH")
     if checkpoint.get("authority_revision") != project.get("authority_revision"):
@@ -276,11 +287,7 @@ def main(argv: list[str] | None = None) -> int:
             raise SystemExit("--generated-at is required with --write for deterministic checkpoints")
         if not args.latest_domain_next:
             raise SystemExit("--latest-domain-next is required with --write; never infer a historical production pointer")
-        checkpoint = build_checkpoint(
-            base_main_sha=base,
-            generated_at=args.generated_at,
-            latest_domain_next=args.latest_domain_next,
-        )
+        checkpoint = build_checkpoint(base_main_sha=base, generated_at=args.generated_at, latest_domain_next=args.latest_domain_next)
         CHECKPOINT.parent.mkdir(parents=True, exist_ok=True)
         CHECKPOINT.write_text(json.dumps(checkpoint, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         print(f"context_survival_guard: WROTE {CHECKPOINT.relative_to(ROOT)} {checkpoint['payload_sha256']}")

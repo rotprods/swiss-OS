@@ -38,81 +38,60 @@ class AgentImprovementRuntimeTests(unittest.TestCase):
             complexity_delta=complexity_delta,
         )
 
-    def test_material_improvement_is_kept(self):
-        result = evaluate_iteration(
-            self.context(),
-            self.proposal(),
-            (MetricSpec("recovery_seconds", "MIN", 300, 240, min_meaningful_delta=10, protected=True),),
-            tests_passed=True,
+    def result(self, *, metrics=None, tests_passed=True, complexity_delta=0, **kwargs):
+        return evaluate_iteration(
+            self.context(), self.proposal(complexity_delta=complexity_delta),
+            tuple(metrics or (MetricSpec("quality", "MAX", 1, 2, min_meaningful_delta=0.1),)),
+            tests_passed=tests_passed, **kwargs,
         )
+
+    def test_material_improvement_is_kept(self):
+        result = self.result(metrics=(MetricSpec("recovery_seconds", "MIN", 300, 240, min_meaningful_delta=10, protected=True),))
         self.assertEqual(result.decision, "KEEP")
 
     def test_no_improvement_is_discarded(self):
-        result = evaluate_iteration(
-            self.context(),
-            self.proposal(),
-            (MetricSpec("recovery_seconds", "MIN", 300, 299, min_meaningful_delta=10, protected=True),),
-            tests_passed=True,
-        )
+        result = self.result(metrics=(MetricSpec("recovery_seconds", "MIN", 300, 299, min_meaningful_delta=10, protected=True),))
         self.assertEqual(result.decision, "DISCARD")
 
     def test_simplification_win_is_kept(self):
-        result = evaluate_iteration(
-            self.context(),
-            self.proposal(complexity_delta=-20),
-            (MetricSpec("failure_rate", "MIN", 0.01, 0.01, protected=True),),
-            tests_passed=True,
-        )
+        result = self.result(metrics=(MetricSpec("failure_rate", "MIN", 0.01, 0.01, protected=True),), complexity_delta=-20)
         self.assertEqual(result.decision, "KEEP")
 
     def test_hard_gate_failure_discards_even_if_metric_improves(self):
-        result = evaluate_iteration(
-            self.context(),
-            self.proposal(),
-            (MetricSpec("recovery_seconds", "MIN", 300, 100, min_meaningful_delta=10),),
-            tests_passed=False,
-        )
+        result = self.result(metrics=(MetricSpec("recovery_seconds", "MIN", 300, 100, min_meaningful_delta=10),), tests_passed=False)
         self.assertEqual(result.decision, "DISCARD")
 
     def test_protected_metric_regression_discards(self):
-        result = evaluate_iteration(
-            self.context(),
-            self.proposal(),
-            (
-                MetricSpec("speed", "MAX", 10, 20, min_meaningful_delta=1),
-                MetricSpec("integrity_errors", "MIN", 0, 1, protected=True),
-            ),
-            tests_passed=True,
-        )
+        result = self.result(metrics=(MetricSpec("speed", "MAX", 10, 20, min_meaningful_delta=1), MetricSpec("integrity_errors", "MIN", 0, 1, protected=True)))
         self.assertEqual(result.decision, "DISCARD")
 
     def test_graph_contains_agent_session_goal_claim_worktree_pr(self):
-        result = evaluate_iteration(
-            self.context(),
-            self.proposal(),
-            (MetricSpec("quality", "MAX", 1, 2, min_meaningful_delta=0.1),),
-            tests_passed=True,
-        )
+        result = self.result()
         types = {node["type"] for node in result.graph_nodes}
         for expected in {"Agent", "Session", "Goal", "Claim", "Worktree", "PullRequest", "Experiment"}:
             self.assertIn(expected, types)
+
+    def test_receipt_contains_context_hypothesis_and_evaluator(self):
+        record = self.result().as_record()
+        self.assertEqual(record["schema_version"], "AGENT-IMPROVEMENT-ITERATION-1.1")
+        self.assertEqual(record["context"]["agent_id"], "AGENT-TEST-001")
+        self.assertEqual(record["context"]["goal_ids"], ["G-0001"])
+        self.assertEqual(record["proposal"]["hypothesis"], "reduce recovery ambiguity")
+        self.assertEqual(record["proposal"]["evaluation_suite"], ["unit", "death_drill"])
+        self.assertEqual(record["metric_results"][0]["baseline"], 1)
 
     def test_graph_refactor_v2_is_mandatory(self):
         ctx = self.context()
         bad = AgentRunContext(**{**ctx.__dict__, "graph_program": "OTHER"})
         with self.assertRaises(ValueError):
-            evaluate_iteration(
-                bad,
-                self.proposal(),
-                (MetricSpec("quality", "MAX", 1, 2),),
-                tests_passed=True,
-            )
+            evaluate_iteration(bad, self.proposal(), (MetricSpec("quality", "MAX", 1, 2),), tests_passed=True)
 
     def test_crash_and_blocked_are_persistable_decisions(self):
         crash = evaluate_iteration(self.context(), self.proposal(), (), tests_passed=False, crashed=True)
         blocked = evaluate_iteration(self.context(), self.proposal(), (), tests_passed=False, blocked_reason="AUTHORITY_BLOCK")
         self.assertEqual(crash.decision, "CRASH")
         self.assertEqual(blocked.decision, "BLOCKED")
+        self.assertEqual(crash.as_record()["proposal"]["hypothesis"], "reduce recovery ambiguity")
 
 
 if __name__ == "__main__":

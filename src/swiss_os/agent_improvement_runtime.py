@@ -124,6 +124,8 @@ class IterationProposal:
 @dataclass(frozen=True)
 class IterationResult:
     iteration_id: str
+    context: Mapping[str, object]
+    proposal: Mapping[str, object]
     decision: str
     reason: str
     metric_results: tuple[MetricSpec, ...]
@@ -139,10 +141,14 @@ class IterationResult:
             raise ValueError(f"invalid decision {self.decision}")
         if not self.iteration_id.strip() or not self.reason.strip():
             raise ValueError("iteration_id and reason required")
+        if not self.context or not self.proposal:
+            raise ValueError("complete context and proposal are required for durable learning")
 
     def as_record(self) -> dict[str, object]:
-        value = asdict(self)
-        value["schema_version"] = "AGENT-IMPROVEMENT-ITERATION-1.0"
+        # Round-trip through JSON so durable receipts never leak Python-only
+        # container types (for example tuples) into their public contract.
+        value = json.loads(json.dumps(asdict(self), ensure_ascii=False))
+        value["schema_version"] = "AGENT-IMPROVEMENT-ITERATION-1.1"
         return value
 
 
@@ -157,13 +163,7 @@ def evaluate_iteration(
     crashed: bool = False,
     blocked_reason: str | None = None,
 ) -> IterationResult:
-    """Autoresearch-style keep/discard with hard graph/safety gates.
-
-    Unlike a single-metric research loop, a software/agentic iteration is kept only
-    when all hard gates pass, at least one declared metric materially improves (or
-    complexity is reduced without a protected regression), and no protected metric
-    regresses beyond its declared tolerance.
-    """
+    """Autoresearch-style keep/discard with hard graph/safety gates."""
     context.validate()
     proposal.validate()
     for metric in metrics:
@@ -205,6 +205,8 @@ def evaluate_iteration(
     graph_nodes, graph_edges = build_iteration_graph(context, proposal, iteration_id, decision)
     result = IterationResult(
         iteration_id=iteration_id,
+        context=asdict(context),
+        proposal=asdict(proposal),
         decision=decision,
         reason=reason,
         metric_results=tuple(metrics),
@@ -219,13 +221,7 @@ def evaluate_iteration(
     return result
 
 
-def build_iteration_graph(
-    context: AgentRunContext,
-    proposal: IterationProposal,
-    iteration_id: str,
-    decision: str,
-) -> tuple[list[dict[str, object]], list[dict[str, object]]]:
-    """Create the runtime graph slice needed for zero-context recovery."""
+def build_iteration_graph(context: AgentRunContext, proposal: IterationProposal, iteration_id: str, decision: str) -> tuple[list[dict[str, object]], list[dict[str, object]]]:
     context.validate()
     proposal.validate()
     nodes: list[dict[str, object]] = [
@@ -269,6 +265,5 @@ def build_iteration_graph(
 
 
 def append_jsonl_record(path: str, record: Mapping[str, object]) -> None:
-    """Append a public-safe durable experiment record; caller owns path/PII policy."""
     with open(path, "a", encoding="utf-8") as handle:
         handle.write(_canonical_json(record) + "\n")

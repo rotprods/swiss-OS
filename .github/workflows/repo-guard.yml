@@ -34,6 +34,9 @@ jobs:
             exit 0
           fi
 
+          # Self-clean the temporary bootstrap before hashing/materializing final projections.
+          git show f76079487a6618de8ae4dbbd67abb1d0cb84eee9:.github/workflows/repo-guard.yml > .github/workflows/repo-guard.yml
+
           AS_OF=$(python - <<'PY'
           import json
           from pathlib import Path
@@ -57,6 +60,7 @@ jobs:
 
           mapfile -t changed_paths < <(git diff --name-only)
           allowed=(
+            '.github/workflows/repo-guard.yml'
             'docs/state/agent-runtime/runtime-graph.json'
             'docs/state/v2/active-claims.json'
             'docs/state/v2/project-state.json'

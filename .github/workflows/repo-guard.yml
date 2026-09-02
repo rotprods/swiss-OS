@@ -36,6 +36,8 @@ jobs:
         run: python -m swiss_os.cwp_lineage_guard
       - name: Durable handoff frontier guard
         run: python scripts/handoff_frontier_guard.py
+      - name: Semantic graph static benchmark
+        run: python -m swiss_os.semantic_graph_cli graphify scan --repo . --graph-out /tmp/swiss-os-graph.jsonl --manifest-out /tmp/swiss-os-graph-manifest.json
       - name: Unit tests
         run: python -m unittest discover -s tests -v
       - name: Manifest semantics canary

@@ -11,6 +11,8 @@ dependencies = []
 
 [project.scripts]
 swiss-os = "swiss_os.cli:main"
+graphify = "swiss_os.semantic_graph_cli:graphify_main"
+cos-graph-engine = "swiss_os.semantic_graph_cli:cos_graph_main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

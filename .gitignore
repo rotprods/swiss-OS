@@ -35,6 +35,9 @@ media_private/
 *.zip
 *.bundle
 
+# Derived local semantic index / benchmarks
+.swiss-os/
+
 # Python
 __pycache__/
 *.py[cod]

@@ -17,6 +17,8 @@ run "Public repository guard" "$PYTHON_BIN" scripts/repo_guard.py
 run "Stable contract drift guard" "$PYTHON_BIN" scripts/system_contract_guard.py
 run "Agent improvement / GRAPH-REFACTOR-V2 guard" "$PYTHON_BIN" scripts/agent_improvement_guard.py
 run "Material mutation lineage guard" "$PYTHON_BIN" scripts/material_mutation_lineage_guard.py
+run "Stale branch fencing guard" "$PYTHON_BIN" scripts/stale_branch_fencing_guard.py --receipt "$RECEIPT_DIR/stale-branch-fencing.json"
+run "Heartbeat liveness guard" "$PYTHON_BIN" scripts/heartbeat_liveness_guard.py --receipt "$RECEIPT_DIR/heartbeat-liveness.json"
 run "GitHub platform enforcement truth guard" "$PYTHON_BIN" scripts/platform_enforcement_guard.py --receipt "$RECEIPT_DIR/platform-enforcement-readback.json"
 run "Deterministic Agent Runtime Graph guard" "$PYTHON_BIN" scripts/rebuild_agent_runtime_graph.py --check
 run "V2 coordination contract guard" "$PYTHON_BIN" scripts/v2_contract_guard.py

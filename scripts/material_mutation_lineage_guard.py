@@ -11,13 +11,10 @@ from typing import Any
 from swiss_os.v2_coordination import reduce_coordination
 
 ROOT = Path(__file__).resolve().parents[1]
-NON_MATERIAL_PREFIXES = (
-    ".github/ISSUE_TEMPLATE/",
-    "docs/reports/",
-)
-NON_MATERIAL_EXACT = {
-    "README.md",
-}
+NON_MATERIAL_PREFIXES = (".github/ISSUE_TEMPLATE/", "docs/reports/")
+NON_MATERIAL_EXACT = {"README.md"}
+TERMINAL_CLAIM_STATES = {"RELEASED", "SUPERSEDED"}
+TERMINAL_HEARTBEAT_STATES = {"COMPLETE", "SUPERSEDED"}
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -50,9 +47,7 @@ def changed_paths() -> list[str]:
 
 
 def is_material(path: str) -> bool:
-    if path in NON_MATERIAL_EXACT or any(path.startswith(prefix) for prefix in NON_MATERIAL_PREFIXES):
-        return False
-    return True
+    return not (path in NON_MATERIAL_EXACT or any(path.startswith(prefix) for prefix in NON_MATERIAL_PREFIXES))
 
 
 def path_allowed(path: str, scopes: list[str]) -> bool:
@@ -95,15 +90,47 @@ def receipt_sessions() -> set[str]:
     return sessions
 
 
-def active_claims() -> list[dict[str, Any]]:
+def all_claims_and_projection() -> tuple[list[dict[str, Any]], dict[str, Any]]:
     events = [load_json(p) for p in sorted((ROOT / "docs/state/v2/events").glob("*.json"))]
     claims = [load_json(p) for p in sorted((ROOT / "docs/state/v2/claims").glob("*.json"))]
     projection = reduce_coordination(events, claims)
-    violations = projection.get("violations", [])
-    if violations:
-        raise ValueError(f"coordination violations: {violations}")
+    if projection.get("violations"):
+        raise ValueError(f"coordination violations: {projection['violations']}")
+    return claims, projection
+
+
+def active_claims() -> list[dict[str, Any]]:
+    claims, projection = all_claims_and_projection()
     active_ids = set(projection.get("active_claim_ids", []))
     return [claim for claim in claims if str(claim.get("claim_id", "")) in active_ids]
+
+
+def terminal_claims_from_change(paths: list[str]) -> list[dict[str, Any]]:
+    claims, projection = all_claims_and_projection()
+    states = projection.get("claim_states", {}) if isinstance(projection.get("claim_states"), dict) else {}
+    changed = set(paths)
+    result: list[dict[str, Any]] = []
+    for claim in claims:
+        cid = str(claim.get("claim_id", ""))
+        if not cid or states.get(cid) not in TERMINAL_CLAIM_STATES:
+            continue
+        claim_path = f"docs/state/v2/claims/{cid}.json"
+        if claim_path not in changed:
+            continue
+        has_terminal_event = False
+        for event_path in changed:
+            if not event_path.startswith("docs/state/v2/events/") or not event_path.endswith(".json"):
+                continue
+            payload = load_json(ROOT / event_path)
+            if payload.get("event_type") not in {"CLAIM_RELEASED", "CLAIM_SUPERSEDED"}:
+                continue
+            causation = payload.get("causation", [])
+            if isinstance(causation, list) and f"claim:{cid}" in causation:
+                has_terminal_event = True
+                break
+        if has_terminal_event:
+            result.append(claim)
+    return result
 
 
 def validate(paths: list[str], *, require_receipt: bool) -> list[str]:
@@ -111,18 +138,30 @@ def validate(paths: list[str], *, require_receipt: bool) -> list[str]:
     if not material:
         return []
     errors: list[str] = []
-    claims = active_claims()
-    if len(claims) != 1:
-        return [f"MATERIAL_CHANGE_REQUIRES_EXACTLY_ONE_ACTIVE_CLAIM:{len(claims)}"]
-    claim = claims[0]
+    active = active_claims()
+    terminal_mode = False
+    if len(active) == 1:
+        claim = active[0]
+    elif len(active) == 0:
+        terminal = terminal_claims_from_change(paths)
+        if len(terminal) != 1:
+            return [f"MATERIAL_CHANGE_REQUIRES_ONE_ACTIVE_OR_TERMINALIZED_CLAIM:{len(terminal)}"]
+        claim = terminal[0]
+        terminal_mode = True
+        require_receipt = True
+    else:
+        return [f"MATERIAL_CHANGE_REQUIRES_EXACTLY_ONE_ACTIVE_CLAIM:{len(active)}"]
+
     branch = os.environ.get("GITHUB_HEAD_REF") or os.environ.get("GITHUB_REF_NAME") or git("branch", "--show-current")
     expected_branch = str(claim.get("branch", ""))
-    if branch and branch not in {expected_branch, "main"}:
+    if not terminal_mode and branch and branch not in {expected_branch, "main"}:
         errors.append(f"CLAIM_BRANCH_MISMATCH:{branch}!={expected_branch}")
+
     scopes = [str(x) for x in claim.get("resource_scopes", []) if isinstance(x, str)]
     for path in material:
         if not path_allowed(path, scopes):
             errors.append(f"MATERIAL_PATH_OUTSIDE_CLAIM_SCOPE:{path}")
+
     session_id = str(claim.get("session_id", ""))
     heartbeat = latest_heartbeats().get(session_id)
     if not heartbeat:
@@ -134,8 +173,10 @@ def validate(paths: list[str], *, require_receipt: bool) -> list[str]:
             errors.append("HEARTBEAT_CLAIM_MISMATCH")
         if heartbeat.get("fencing_token") != claim.get("fencing_token"):
             errors.append("HEARTBEAT_FENCING_MISMATCH")
-        if heartbeat.get("state") not in {"ACTIVE", "BLOCKED"} and not require_receipt:
-            errors.append(f"MATERIAL_WORK_HEARTBEAT_NOT_ACTIVE:{heartbeat.get('state')}")
+        allowed_hb_states = TERMINAL_HEARTBEAT_STATES if terminal_mode else {"ACTIVE", "BLOCKED"}
+        if heartbeat.get("state") not in allowed_hb_states:
+            errors.append(f"MATERIAL_WORK_HEARTBEAT_STATE_INVALID:{heartbeat.get('state')}")
+
     if require_receipt and session_id not in receipt_sessions():
         errors.append(f"MATERIAL_CHANGE_MISSING_ITERATION_RECEIPT:{session_id}")
     return sorted(set(errors))
@@ -144,9 +185,7 @@ def validate(paths: list[str], *, require_receipt: bool) -> list[str]:
 def main() -> int:
     paths = changed_paths()
     event = os.environ.get("GITHUB_EVENT_NAME", "")
-    # PRs are in-flight and may be guarded by claim+heartbeat before their final receipt.
-    # Main/direct-push qualification is stricter: a completed durable receipt is mandatory.
-    require_receipt = event == "push" and (os.environ.get("GITHUB_REF_NAME") == "main")
+    require_receipt = event == "push" and os.environ.get("GITHUB_REF_NAME") == "main"
     errors = validate(paths, require_receipt=require_receipt)
     if errors:
         print("material_mutation_lineage_guard: FAIL")

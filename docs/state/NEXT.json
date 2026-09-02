@@ -1,5 +1,5 @@
 {
-  "active_claim": null,
+  "active_claim": {"claim_id":"CLAIM-GRAPHV2-PLATFORM-TRUTH-014","fencing_token":14,"authority_ceiling":"REPO_PLATFORM_GUARDS_CONTINUITY_ONLY_NO_DOMAIN_OR_EXTERNAL_MUTATION"},
   "artifacts": [
     "docs/state/CRM_CURRENT_SOURCE_MAPPING_PROJECTION_33339392661.json",
     "docs/state/CRM_CURRENT_GONTEN_ECV_SRR_LINEAGE_33339392661.json",

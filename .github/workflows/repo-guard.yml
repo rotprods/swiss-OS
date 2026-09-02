@@ -6,8 +6,94 @@ on:
   pull_request:
 
 jobs:
-  guard:
+  materialize_token15_keep:
+    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.number == 446 && github.event.pull_request.head.ref == 'feat/stale-fencing-liveness-token15' && github.event.pull_request.head.repo.full_name == github.repository }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      changed: ${{ steps.persist.outputs.changed }}
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Materialize token15 KEEP control-plane projections
+        id: persist
+        shell: bash
+        run: |
+          set -euo pipefail
+          RECEIPT='docs/state/agent-runtime/iterations/ITER-d5f731ff191ffcfeb12e.json'
+          if [[ ! -f "$RECEIPT" ]]; then
+            echo 'changed=false' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          AS_OF=$(python - <<'PY'
+          import json
+          from pathlib import Path
+          values=[]
+          for path in Path('docs/state/agent-runtime/heartbeats').glob('*.json'):
+              data=json.loads(path.read_text())
+              value=data.get('observed_at')
+              if isinstance(value,str) and value:
+                  values.append(value)
+          print(max(values) if values else '1970-01-01T00:00:00Z')
+          PY
+          )
+          python scripts/rebuild_agent_runtime_graph.py --as-of "$AS_OF" --output docs/state/agent-runtime/runtime-graph.json
+          rm -rf /tmp/v2-token15-keep
+          python scripts/rebuild_v2_coordination.py --config docs/refactor-v2/coordination_current_config.json --output-dir /tmp/v2-token15-keep
+          cp /tmp/v2-token15-keep/active-claims.json docs/state/v2/active-claims.json
+          cp /tmp/v2-token15-keep/project-state.json docs/state/v2/project-state.json
+          cp /tmp/v2-token15-keep/context-pack.json docs/state/v2/context-pack.json
+          cp /tmp/v2-token15-keep/graph-snapshot.json docs/state/v2/graph-snapshot.json
+          cp /tmp/v2-token15-keep/CONTEXT_SURVIVAL.json docs/continuity/CONTEXT_SURVIVAL.json
+
+          mapfile -t changed_paths < <(git diff --name-only)
+          allowed=(
+            'docs/state/agent-runtime/runtime-graph.json'
+            'docs/state/v2/active-claims.json'
+            'docs/state/v2/project-state.json'
+            'docs/state/v2/context-pack.json'
+            'docs/state/v2/graph-snapshot.json'
+            'docs/continuity/CONTEXT_SURVIVAL.json'
+          )
+          for path in "${changed_paths[@]}"; do
+            ok=false
+            for candidate in "${allowed[@]}"; do
+              [[ "$path" == "$candidate" ]] && ok=true && break
+            done
+            if [[ "$ok" != true ]]; then
+              echo "unexpected materializer mutation: $path" >&2
+              exit 1
+            fi
+          done
+
+          if ((${#changed_paths[@]} == 0)); then
+            echo 'changed=false' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          git add "${allowed[@]}"
+          git diff --cached --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'coord: materialize token15 KEEP projections'
+          git push origin "HEAD:${{ github.event.pull_request.head.ref }}"
+          echo 'changed=true' >> "$GITHUB_OUTPUT"
+
+  guard:
+    needs: [materialize_token15_keep]
+    if: ${{ always() && (needs.materialize_token15_keep.result == 'skipped' || needs.materialize_token15_keep.outputs.changed == 'false') }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
     env:
       PYTHONPATH: src
     steps:

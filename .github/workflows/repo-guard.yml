@@ -1,141 +1,104 @@
 name: repo-guard
 
 on:
+  push:
+    branches: [main]
   pull_request:
 
 jobs:
-  materialize_token15_release:
-    if: ${{ github.event.pull_request.head.ref == 'fix/token15-postmerge-release' && github.event.pull_request.head.repo.full_name == github.repository }}
+  guard:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     env:
       PYTHONPATH: src
     steps:
       - uses: actions/checkout@v7
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
       - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
-      - name: Materialize token15 post-merge release
-        shell: bash
+      - name: Public repository guard
+        run: python scripts/repo_guard.py
+      - name: Stable contract drift guard
+        run: python scripts/system_contract_guard.py
+      - name: Agent improvement / GRAPH-REFACTOR-V2 guard
+        run: python scripts/agent_improvement_guard.py
+      - name: Material mutation lineage guard
+        run: python scripts/material_mutation_lineage_guard.py
+      - name: Stale branch fencing guard
+        run: python scripts/stale_branch_fencing_guard.py --receipt /tmp/stale-branch-fencing.json
+      - name: Heartbeat liveness guard
+        run: python scripts/heartbeat_liveness_guard.py --receipt /tmp/heartbeat-liveness.json
+      - name: Preserve concurrency/liveness receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: graph-v2-concurrency-liveness-${{ github.run_id }}
+          path: |
+            /tmp/stale-branch-fencing.json
+            /tmp/heartbeat-liveness.json
+          if-no-files-found: ignore
+          retention-days: 14
+      - name: GitHub platform enforcement truth guard
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python scripts/platform_enforcement_guard.py --receipt /tmp/platform-enforcement-readback.json
+      - name: Preserve platform readback
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: platform-enforcement-readback-${{ github.run_id }}
+          path: /tmp/platform-enforcement-readback.json
+          if-no-files-found: ignore
+          retention-days: 14
+      - name: Build Agent Runtime Graph recovery candidate
         run: |
-          set -euo pipefail
-          RELEASE_AT=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
-          RELEASE_STAMP=$(date -u +'%Y%m%dT%H%M%SZ')
-          HB_SUFFIX=$(date -u +'%H%M%S')
-          EVENT_PATH="docs/state/v2/events/EVT-${RELEASE_STAMP}-GRAPHV2-TOKEN15-CLAIM-RELEASED.json"
-          HB_PATH="docs/state/agent-runtime/heartbeats/HB-AGENT-GPT56SOL-GRAPHV2-001-SES-015-${HB_SUFFIX}-COMPLETE.json"
-          export RELEASE_AT RELEASE_STAMP EVENT_PATH HB_PATH
-
-          python - <<'PY'
-          import json, os
+          AS_OF=$(python - <<'PY'
+          import json
           from pathlib import Path
-
-          release_at=os.environ['RELEASE_AT']
-          event_path=Path(os.environ['EVENT_PATH'])
-          hb_path=Path(os.environ['HB_PATH'])
-          claim_path=Path('docs/state/v2/claims/CLAIM-GRAPHV2-FENCING-LIVENESS-015.json')
-          claim=json.loads(claim_path.read_text())
-          claim['state']='RELEASED'
-          claim['released_at']=release_at
-          claim['lease_semantics']='RELEASED_AFTER_PR_446_MERGE_AND_FULL_FENCING_LIVENESS_GAUNTLET'
-          claim['release_reason']='PR #446 merged the KEEP-qualified stale-fencing and heartbeat-liveness guards as main 71010e0c8d983a2641253455e97777c25f65e887 after final repo-guard run 33647102850 succeeded; token15 must not remain a phantom writer.'
-          claim['release_evidence']=[
-            'pr:#446:MERGED',
-            'main:71010e0c8d983a2641253455e97777c25f65e887',
-            'iteration:ITER-d5f731ff191ffcfeb12e:KEEP',
-            'actions:33647102850:SUCCESS'
-          ]
-          claim_path.write_text(json.dumps(claim,separators=(',',':'))+'\n')
-
-          event={
-            'schema_version':'COS-V2-EVENT-1.1',
-            'event_id':event_path.stem,
-            'event_type':'CLAIM_RELEASED',
-            'occurred_at':release_at,
-            'project_id':'SWITZERLAND_JOB_OS',
-            'agent_id':'AGENT-GPT56SOL-GRAPHV2-001',
-            'session_id':'SES-20260902T112000Z-GRAPHV2-FENCING-LIVENESS-015',
-            'workstream_id':'WS-GRAPHV2-FENCING-LIVENESS',
-            'objective_id':'OBJ-STALE-FENCING-LIVE-HEARTBEAT-GUARDS',
-            'correlation_id':'CORR-20260902T112000Z-FENCING-LIVENESS-015',
-            'repo':'rotprods/swiss-OS',
-            'main_sha_observed':'71010e0c8d983a2641253455e97777c25f65e887',
-            'base_sha':'71010e0c8d983a2641253455e97777c25f65e887',
-            'authority_ceiling':'REPO_CONCURRENCY_LIVENESS_GUARDS_ONLY_NO_DOMAIN_OR_EXTERNAL_MUTATION',
-            'summary':'Release fencing token15 after PR #446 merged the KEEP-qualified stale-branch fencing and live-heartbeat watchdog capability and the final runtime/death/unit/canary gauntlet passed.',
-            'next_action':'Rebuild runtime and coordination projections to zero active token15 work, qualify the bounded release PR, merge it, and require any successor material wave to acquire fencing token >15 with a new session_id.',
-            'idempotency_key':'SWITZERLAND_JOB_OS|CLAIM-GRAPHV2-FENCING-LIVENESS-015|RELEASED|POSTMERGE',
-            'canonical_hotel_mutation_allowed':False,
-            'h_id_allocation_allowed':False,
-            'outbound_allowed':False,
-            'causation':[
-              'claim:CLAIM-GRAPHV2-FENCING-LIVENESS-015',
-              'pr:446:MERGED',
-              'iteration:ITER-d5f731ff191ffcfeb12e:KEEP',
-              'run:33647102850:SUCCESS',
-              'main:71010e0c8d983a2641253455e97777c25f65e887'
-            ]
-          }
-          event_path.write_text(json.dumps(event,separators=(',',':'))+'\n')
-
-          heartbeat={
-            'heartbeat_id':hb_path.stem,
-            'project_id':'SWITZERLAND_JOB_OS',
-            'agent_id':'AGENT-GPT56SOL-GRAPHV2-001',
-            'session_id':'SES-20260902T112000Z-GRAPHV2-FENCING-LIVENESS-015',
-            'workstream_id':'WS-GRAPHV2-FENCING-LIVENESS',
-            'objective_id':'OBJ-STALE-FENCING-LIVE-HEARTBEAT-GUARDS',
-            'goal_ids':['G-0001'],
-            'plan_id':'PLAN-GRAPHV2-FENCING-LIVENESS-001',
-            'task_id':'TASK-FENCING-LIVENESS-GUARDS-001',
-            'claim_id':'CLAIM-GRAPHV2-FENCING-LIVENESS-015',
-            'fencing_token':15,
-            'observed_at':release_at,
-            'state':'COMPLETE',
-            'branch':'feat/stale-fencing-liveness-token15',
-            'worktree':'.worktrees/stale-fencing-liveness-token15',
-            'base_main_sha':'f85694b16b31fe1014373d0bb10b8ec94c8c82b1',
-            'authority_ceiling':'REPO_CONCURRENCY_LIVENESS_GUARDS_ONLY_NO_DOMAIN_OR_EXTERNAL_MUTATION',
-            'graph_program':'GRAPH-REFACTOR-V2',
-            'pr_number':446,
-            'current_iteration_id':'ITER-d5f731ff191ffcfeb12e',
-            'next_safe_action':'Token15 fencing/liveness work is complete and released after PR #446 merge. Rebuild Runtime Graph and coordination state to zero active writers; any successor material work must use a new session_id and fencing token >15. Platform protection remains independently fail-closed until #441 is resolved by live GitHub readback.'
-          }
-          hb_path.write_text(json.dumps(heartbeat,separators=(',',':'))+'\n')
-
-          next_path=Path('docs/state/NEXT.json')
-          text=next_path.read_text()
-          needle='  "active_claim": {"claim_id":"CLAIM-GRAPHV2-FENCING-LIVENESS-015","fencing_token":15,"authority_ceiling":"REPO_CONCURRENCY_LIVENESS_GUARDS_ONLY_NO_DOMAIN_OR_EXTERNAL_MUTATION"},'
-          replacement='  "active_claim": null,'
-          if needle not in text:
-            raise SystemExit('expected token15 active_claim not found in NEXT.json')
-          next_path.write_text(text.replace(needle,replacement,1))
+          values=[]
+          for path in Path('docs/state/agent-runtime/heartbeats').glob('*.json'):
+              data=json.loads(path.read_text())
+              value=data.get('observed_at')
+              if isinstance(value,str) and value:
+                  values.append(value)
+          print(max(values) if values else '1970-01-01T00:00:00Z')
           PY
-
-          python scripts/rebuild_agent_runtime_graph.py --as-of "$RELEASE_AT" --output docs/state/agent-runtime/runtime-graph.json
-
-          # Hash final projections against canonical main workflow, not this temporary materializer.
-          git show 71010e0c8d983a2641253455e97777c25f65e887:.github/workflows/repo-guard.yml > .github/workflows/repo-guard.yml
-          rm -rf /tmp/v2-token15-release
-          python scripts/rebuild_v2_coordination.py --config docs/refactor-v2/coordination_current_config.json --output-dir /tmp/v2-token15-release
-          cp /tmp/v2-token15-release/active-claims.json docs/state/v2/active-claims.json
-          cp /tmp/v2-token15-release/project-state.json docs/state/v2/project-state.json
-          cp /tmp/v2-token15-release/context-pack.json docs/state/v2/context-pack.json
-          cp /tmp/v2-token15-release/graph-snapshot.json docs/state/v2/graph-snapshot.json
-          cp /tmp/v2-token15-release/CONTEXT_SURVIVAL.json docs/continuity/CONTEXT_SURVIVAL.json
-
-          git add "$EVENT_PATH" "$HB_PATH" \
-            docs/state/v2/claims/CLAIM-GRAPHV2-FENCING-LIVENESS-015.json \
-            docs/state/NEXT.json docs/state/agent-runtime/runtime-graph.json \
-            docs/state/v2/active-claims.json docs/state/v2/project-state.json \
-            docs/state/v2/context-pack.json docs/state/v2/graph-snapshot.json \
-            docs/continuity/CONTEXT_SURVIVAL.json
-          git diff --cached --check
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m 'coord: release token15 post-merge [skip ci]'
-          git push origin "HEAD:${{ github.event.pull_request.head.ref }}"
+          )
+          python scripts/rebuild_agent_runtime_graph.py --as-of "$AS_OF" --output /tmp/agent-runtime-graph.json
+      - name: Preserve Agent Runtime Graph candidate
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: agent-runtime-graph-${{ github.run_id }}
+          path: /tmp/agent-runtime-graph.json
+          if-no-files-found: ignore
+          retention-days: 14
+      - name: Deterministic Agent Runtime Graph guard
+        run: python scripts/rebuild_agent_runtime_graph.py --check
+      - name: Deterministic V2 coordination rebuild guard
+        run: python scripts/rebuild_v2_coordination.py --config docs/refactor-v2/coordination_current_config.json --output-dir /tmp/v2-coordination-rebuild --check
+      - name: Preserve coordination rebuild candidate
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v2-coordination-rebuild-${{ github.run_id }}
+          path: /tmp/v2-coordination-rebuild
+          if-no-files-found: ignore
+          retention-days: 14
+      - name: V2 coordination contract guard
+        run: python scripts/v2_contract_guard.py
+      - name: V2 forward event contract guard
+        run: python scripts/v2_forward_event_guard.py
+      - name: Context survival / compaction checkpoint guard
+        run: python scripts/context_survival_guard.py
+      - name: V2 empirical recovery and death drill
+        run: python scripts/v2_empirical_drill.py --receipt /tmp/v2-empirical-receipt.json
+      - name: CWP candidate lineage guard
+        run: python -m swiss_os.cwp_lineage_guard
+      - name: Durable handoff frontier guard
+        run: python scripts/handoff_frontier_guard.py
+      - name: Unit tests
+        run: python -m unittest discover -s tests -v
+      - name: Manifest semantics canary
+        run: python -m swiss_os.cli manifest validate tests/fixtures/manifest_superseded.json

@@ -45,55 +45,78 @@ jobs:
           done
           curl -fsS http://127.0.0.1:11434/api/tags >/dev/null
           ollama pull qwen3-embedding:0.6b
-          mkdir -p /tmp/semantic-runtime/bin /tmp/semantic-runtime/share
-          cp "$(command -v ollama)" /tmp/semantic-runtime/bin/ollama
+
+          mkdir -p /tmp/semantic-core/bin /tmp/semantic-core/lib
+          cp "$(command -v ollama)" /tmp/semantic-core/bin/ollama
+          for LIBDIR in /usr/local/lib/ollama /usr/lib/ollama; do
+            if [ -d "$LIBDIR" ]; then
+              cp -a "$LIBDIR" /tmp/semantic-core/lib/ollama
+              break
+            fi
+          done
+
+          curl -fL "https://github.com/qdrant/qdrant/releases/download/v1.19.0/qdrant-x86_64-unknown-linux-gnu.tar.gz" -o /tmp/qdrant.tgz
+          tar -xzf /tmp/qdrant.tgz -C /tmp/semantic-core/bin qdrant
+          chmod +x /tmp/semantic-core/bin/ollama /tmp/semantic-core/bin/qdrant
+
           MODELS_DIR="$(sudo find /usr/share /var/lib "$HOME" -type d -path '*/.ollama/models' -print -quit 2>/dev/null || true)"
           if [ -z "$MODELS_DIR" ]; then
             MODELS_DIR="$(sudo find / -type d -path '*/.ollama/models' -print -quit 2>/dev/null || true)"
           fi
           test -n "$MODELS_DIR"
           echo "ollama_models_dir=$MODELS_DIR"
-          sudo cp -a "$MODELS_DIR" /tmp/semantic-runtime/share/ollama-models
-          sudo chown -R "$(id -u):$(id -g)" /tmp/semantic-runtime/share/ollama-models
-          curl -fL "https://github.com/qdrant/qdrant/releases/download/v1.19.0/qdrant-x86_64-unknown-linux-gnu.tar.gz" -o /tmp/qdrant.tgz
-          tar -xzf /tmp/qdrant.tgz -C /tmp/semantic-runtime/bin qdrant
-          chmod +x /tmp/semantic-runtime/bin/ollama /tmp/semantic-runtime/bin/qdrant
+
           {
             echo "ollama_model=qwen3-embedding:0.6b"
             echo "qdrant_version=v1.19.0"
             echo "runner_arch=$(uname -m)"
             echo "source_models_dir=$MODELS_DIR"
-            sha256sum /tmp/semantic-runtime/bin/ollama /tmp/semantic-runtime/bin/qdrant
-          } > /tmp/semantic-runtime/RUNTIME_MANIFEST.txt
-          tar -C /tmp/semantic-runtime -czf /tmp/semantic-runtime-linux-x86_64.tar.gz .
-          sha256sum /tmp/semantic-runtime-linux-x86_64.tar.gz > /tmp/semantic-runtime-linux-x86_64.tar.gz.sha256
-          split -b 230M -d -a 1 /tmp/semantic-runtime-linux-x86_64.tar.gz /tmp/semantic-runtime.tar.gz.part-
-          test -f /tmp/semantic-runtime.tar.gz.part-0
-          test -f /tmp/semantic-runtime.tar.gz.part-1
-          test -f /tmp/semantic-runtime.tar.gz.part-2
-      - name: Upload Virtual PC semantic runtime part 0 (temporary)
+            echo "ollama_version=$(ollama --version 2>&1 | tail -1)"
+            /tmp/semantic-core/bin/qdrant --version || true
+            find /tmp/semantic-core -type f -print0 | sort -z | xargs -0 sha256sum
+          } > /tmp/semantic-core/RUNTIME_MANIFEST.txt
+
+          tar -C /tmp/semantic-core -czf /tmp/semantic-runtime-core-linux-x86_64.tar.gz .
+          sudo tar -C "$(dirname "$MODELS_DIR")" -czf /tmp/semantic-model-store.tar.gz "$(basename "$MODELS_DIR")"
+          sudo chown "$(id -u):$(id -g)" /tmp/semantic-model-store.tar.gz
+          sha256sum /tmp/semantic-runtime-core-linux-x86_64.tar.gz > /tmp/semantic-runtime-core-linux-x86_64.tar.gz.sha256
+          sha256sum /tmp/semantic-model-store.tar.gz > /tmp/semantic-model-store.tar.gz.sha256
+          split -b 230M -d -a 1 /tmp/semantic-model-store.tar.gz /tmp/semantic-model-store.tar.gz.part-
+          test -f /tmp/semantic-model-store.tar.gz.part-0
+          test -f /tmp/semantic-model-store.tar.gz.part-1
+          test -f /tmp/semantic-model-store.tar.gz.part-2
+          test ! -f /tmp/semantic-model-store.tar.gz.part-3
+      - name: Upload Virtual PC semantic runtime core (temporary)
         uses: actions/upload-artifact@v4
         with:
-          name: virtual-pc-semantic-runtime-part-0
-          path: /tmp/semantic-runtime.tar.gz.part-0
+          name: virtual-pc-semantic-runtime-core
+          path: /tmp/semantic-runtime-core-linux-x86_64.tar.gz
           retention-days: 1
-      - name: Upload Virtual PC semantic runtime part 1 (temporary)
+      - name: Upload Virtual PC semantic model part 0 (temporary)
         uses: actions/upload-artifact@v4
         with:
-          name: virtual-pc-semantic-runtime-part-1
-          path: /tmp/semantic-runtime.tar.gz.part-1
+          name: virtual-pc-semantic-model-part-0
+          path: /tmp/semantic-model-store.tar.gz.part-0
           retention-days: 1
-      - name: Upload Virtual PC semantic runtime part 2 (temporary)
+      - name: Upload Virtual PC semantic model part 1 (temporary)
         uses: actions/upload-artifact@v4
         with:
-          name: virtual-pc-semantic-runtime-part-2
-          path: /tmp/semantic-runtime.tar.gz.part-2
+          name: virtual-pc-semantic-model-part-1
+          path: /tmp/semantic-model-store.tar.gz.part-1
           retention-days: 1
-      - name: Upload Virtual PC semantic runtime checksum (temporary)
+      - name: Upload Virtual PC semantic model part 2 (temporary)
         uses: actions/upload-artifact@v4
         with:
-          name: virtual-pc-semantic-runtime-checksum
-          path: /tmp/semantic-runtime-linux-x86_64.tar.gz.sha256
+          name: virtual-pc-semantic-model-part-2
+          path: /tmp/semantic-model-store.tar.gz.part-2
+          retention-days: 1
+      - name: Upload Virtual PC semantic runtime checksums (temporary)
+        uses: actions/upload-artifact@v4
+        with:
+          name: virtual-pc-semantic-runtime-checksums
+          path: |
+            /tmp/semantic-runtime-core-linux-x86_64.tar.gz.sha256
+            /tmp/semantic-model-store.tar.gz.sha256
           retention-days: 1
       - uses: actions/setup-python@v7
         with:

@@ -145,7 +145,9 @@ class IterationResult:
             raise ValueError("complete context and proposal are required for durable learning")
 
     def as_record(self) -> dict[str, object]:
-        value = asdict(self)
+        # Round-trip through JSON so durable receipts never leak Python-only
+        # container types (for example tuples) into their public contract.
+        value = json.loads(json.dumps(asdict(self), ensure_ascii=False))
         value["schema_version"] = "AGENT-IMPROVEMENT-ITERATION-1.1"
         return value
 

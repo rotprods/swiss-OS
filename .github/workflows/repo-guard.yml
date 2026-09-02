@@ -25,6 +25,20 @@ jobs:
         run: python scripts/agent_improvement_guard.py
       - name: Material mutation lineage guard
         run: python scripts/material_mutation_lineage_guard.py
+      - name: Stale branch fencing guard
+        run: python scripts/stale_branch_fencing_guard.py --receipt /tmp/stale-branch-fencing.json
+      - name: Heartbeat liveness guard
+        run: python scripts/heartbeat_liveness_guard.py --receipt /tmp/heartbeat-liveness.json
+      - name: Preserve concurrency/liveness receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: graph-v2-concurrency-liveness-${{ github.run_id }}
+          path: |
+            /tmp/stale-branch-fencing.json
+            /tmp/heartbeat-liveness.json
+          if-no-files-found: ignore
+          retention-days: 14
       - name: GitHub platform enforcement truth guard
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

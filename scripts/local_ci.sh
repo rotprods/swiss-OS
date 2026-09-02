@@ -16,6 +16,7 @@ run "Python version" "$PYTHON_BIN" --version
 run "Public repository guard" "$PYTHON_BIN" scripts/repo_guard.py
 run "Stable contract drift guard" "$PYTHON_BIN" scripts/system_contract_guard.py
 run "Agent improvement / GRAPH-REFACTOR-V2 guard" "$PYTHON_BIN" scripts/agent_improvement_guard.py
+run "Material mutation lineage guard" "$PYTHON_BIN" scripts/material_mutation_lineage_guard.py
 run "Deterministic Agent Runtime Graph guard" "$PYTHON_BIN" scripts/rebuild_agent_runtime_graph.py --check
 run "V2 coordination contract guard" "$PYTHON_BIN" scripts/v2_contract_guard.py
 run "V2 forward event contract guard" "$PYTHON_BIN" scripts/v2_forward_event_guard.py

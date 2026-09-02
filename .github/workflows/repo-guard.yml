@@ -22,20 +22,39 @@ jobs:
             !**/.git/**
           include-hidden-files: true
           retention-days: 1
+      - name: Pack Virtual PC git metadata (temporary)
+        shell: bash
+        run: tar -C "$GITHUB_WORKSPACE" -czf /tmp/virtual-pc-git-metadata.tar.gz .git
+      - name: Upload Virtual PC git metadata (temporary)
+        uses: actions/upload-artifact@v4
+        with:
+          name: virtual-pc-git-metadata
+          path: /tmp/virtual-pc-git-metadata.tar.gz
+          retention-days: 1
       - name: Build Virtual PC native semantic runtime (temporary)
         shell: bash
         run: |
           set -euo pipefail
           curl -fsSL https://ollama.com/install.sh | sh
-          nohup ollama serve >/tmp/ollama.log 2>&1 &
+          if ! curl -fsS http://127.0.0.1:11434/api/tags >/dev/null 2>&1; then
+            nohup ollama serve >/tmp/ollama.log 2>&1 &
+          fi
           for i in $(seq 1 30); do
             if curl -fsS http://127.0.0.1:11434/api/tags >/dev/null; then break; fi
             sleep 1
           done
+          curl -fsS http://127.0.0.1:11434/api/tags >/dev/null
           ollama pull qwen3-embedding:0.6b
           mkdir -p /tmp/semantic-runtime/bin /tmp/semantic-runtime/share
           cp "$(command -v ollama)" /tmp/semantic-runtime/bin/ollama
-          cp -a "$HOME/.ollama/models" /tmp/semantic-runtime/share/ollama-models
+          MODELS_DIR="$(sudo find /usr/share /var/lib "$HOME" -type d -path '*/.ollama/models' -print -quit 2>/dev/null || true)"
+          if [ -z "$MODELS_DIR" ]; then
+            MODELS_DIR="$(sudo find / -type d -path '*/.ollama/models' -print -quit 2>/dev/null || true)"
+          fi
+          test -n "$MODELS_DIR"
+          echo "ollama_models_dir=$MODELS_DIR"
+          sudo cp -a "$MODELS_DIR" /tmp/semantic-runtime/share/ollama-models
+          sudo chown -R "$(id -u):$(id -g)" /tmp/semantic-runtime/share/ollama-models
           curl -fL "https://github.com/qdrant/qdrant/releases/download/v1.19.0/qdrant-x86_64-unknown-linux-gnu.tar.gz" -o /tmp/qdrant.tgz
           tar -xzf /tmp/qdrant.tgz -C /tmp/semantic-runtime/bin qdrant
           chmod +x /tmp/semantic-runtime/bin/ollama /tmp/semantic-runtime/bin/qdrant
@@ -43,6 +62,7 @@ jobs:
             echo "ollama_model=qwen3-embedding:0.6b"
             echo "qdrant_version=v1.19.0"
             echo "runner_arch=$(uname -m)"
+            echo "source_models_dir=$MODELS_DIR"
             sha256sum /tmp/semantic-runtime/bin/ollama /tmp/semantic-runtime/bin/qdrant
           } > /tmp/semantic-runtime/RUNTIME_MANIFEST.txt
           tar -C /tmp/semantic-runtime -czf /tmp/semantic-runtime-linux-x86_64.tar.gz .

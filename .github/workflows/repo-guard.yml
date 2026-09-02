@@ -24,6 +24,29 @@ jobs:
         run: python scripts/agent_improvement_guard.py
       - name: Material mutation lineage guard
         run: python scripts/material_mutation_lineage_guard.py
+      - name: Build Agent Runtime Graph recovery candidate
+        run: |
+          AS_OF=$(python - <<'PY'
+          import json
+          from pathlib import Path
+          values=[]
+          for path in Path('docs/state/agent-runtime/heartbeats').glob('*.json'):
+              data=json.loads(path.read_text())
+              value=data.get('observed_at')
+              if isinstance(value,str) and value:
+                  values.append(value)
+          print(max(values) if values else '1970-01-01T00:00:00Z')
+          PY
+          )
+          python scripts/rebuild_agent_runtime_graph.py --as-of "$AS_OF" --output /tmp/agent-runtime-graph.json
+      - name: Preserve Agent Runtime Graph candidate
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: agent-runtime-graph-${{ github.run_id }}
+          path: /tmp/agent-runtime-graph.json
+          if-no-files-found: ignore
+          retention-days: 14
       - name: Deterministic Agent Runtime Graph guard
         run: python scripts/rebuild_agent_runtime_graph.py --check
       - name: Deterministic V2 coordination rebuild guard

@@ -31,7 +31,7 @@ jobs:
           name: virtual-pc-git-metadata
           path: /tmp/virtual-pc-git-metadata.tar.gz
           retention-days: 1
-      - name: Build Virtual PC native semantic runtime (temporary)
+      - name: Build CPU-only Ollama + Qdrant transport (temporary)
         shell: bash
         run: |
           set -euo pipefail
@@ -40,83 +40,107 @@ jobs:
             nohup ollama serve >/tmp/ollama.log 2>&1 &
           fi
           for i in $(seq 1 30); do
-            if curl -fsS http://127.0.0.1:11434/api/tags >/dev/null; then break; fi
+            curl -fsS http://127.0.0.1:11434/api/tags >/dev/null 2>&1 && break
             sleep 1
           done
           curl -fsS http://127.0.0.1:11434/api/tags >/dev/null
           ollama pull qwen3-embedding:0.6b
+          curl -fsS http://127.0.0.1:11434/api/embed \
+            -H 'Content-Type: application/json' \
+            -d '{"model":"qwen3-embedding:0.6b","input":["SWISS-OS portable CPU runtime qualification"],"truncate":false}' \
+            >/tmp/embed-smoke.json
+          python - <<'PY'
+          import json
+          p=json.load(open('/tmp/embed-smoke.json'))
+          v=p['embeddings'][0]
+          assert len(v) > 0
+          print('embedding_dimension=',len(v))
+          PY
 
-          mkdir -p /tmp/semantic-core/bin /tmp/semantic-core/lib
-          cp "$(command -v ollama)" /tmp/semantic-core/bin/ollama
-          for LIBDIR in /usr/local/lib/ollama /usr/lib/ollama; do
-            if [ -d "$LIBDIR" ]; then
-              cp -a "$LIBDIR" /tmp/semantic-core/lib/ollama
-              break
-            fi
+          OLLAMA_BIN="$(command -v ollama)"
+          OLLAMA_LIB=""
+          for d in /usr/local/lib/ollama /usr/lib/ollama; do
+            if [ -d "$d" ]; then OLLAMA_LIB="$d"; break; fi
           done
+          test -n "$OLLAMA_LIB"
+          echo "ollama_bin=$OLLAMA_BIN"
+          echo "ollama_lib=$OLLAMA_LIB"
+          echo '== installed ollama library inventory =='
+          find "$OLLAMA_LIB" -type f -printf '%P %s\n' | sort -k2nr | head -100
+
+          rm -rf /tmp/ollama-cpu-root
+          mkdir -p /tmp/ollama-cpu-root/usr/local/bin /tmp/ollama-cpu-root/usr/local/lib/ollama
+          cp "$OLLAMA_BIN" /tmp/ollama-cpu-root/usr/local/bin/ollama
+          python - "$OLLAMA_LIB" <<'PY'
+          import os, pathlib, shutil, sys
+          src=pathlib.Path(sys.argv[1])
+          dst=pathlib.Path('/tmp/ollama-cpu-root/usr/local/lib/ollama')
+          deny=('cuda','rocm','hip','vulkan','metal','mlx','jetpack','sycl','oneapi')
+          copied=[]
+          for p in src.rglob('*'):
+              if not p.is_file():
+                  continue
+              rel=p.relative_to(src)
+              low='/'.join(rel.parts).lower()
+              if any(x in low for x in deny):
+                  continue
+              out=dst/rel
+              out.parent.mkdir(parents=True,exist_ok=True)
+              shutil.copy2(p,out)
+              copied.append((str(rel),p.stat().st_size))
+          assert copied
+          print('cpu_files=',len(copied),'cpu_bytes=',sum(s for _,s in copied))
+          for rel,size in sorted(copied,key=lambda x:x[1],reverse=True)[:80]:
+              print(rel,size)
+          PY
 
           curl -fL "https://github.com/qdrant/qdrant/releases/download/v1.19.0/qdrant-x86_64-unknown-linux-gnu.tar.gz" -o /tmp/qdrant.tgz
-          tar -xzf /tmp/qdrant.tgz -C /tmp/semantic-core/bin qdrant
-          chmod +x /tmp/semantic-core/bin/ollama /tmp/semantic-core/bin/qdrant
+          mkdir -p /tmp/qdrant-root/usr/local/bin
+          tar -xzf /tmp/qdrant.tgz -C /tmp/qdrant-root/usr/local/bin qdrant
+          chmod +x /tmp/qdrant-root/usr/local/bin/qdrant
 
-          MODELS_DIR="$(sudo find /usr/share /var/lib "$HOME" -type d -path '*/.ollama/models' -print -quit 2>/dev/null || true)"
-          if [ -z "$MODELS_DIR" ]; then
-            MODELS_DIR="$(sudo find / -type d -path '*/.ollama/models' -print -quit 2>/dev/null || true)"
-          fi
-          test -n "$MODELS_DIR"
-          echo "ollama_models_dir=$MODELS_DIR"
-
-          {
-            echo "ollama_model=qwen3-embedding:0.6b"
-            echo "qdrant_version=v1.19.0"
-            echo "runner_arch=$(uname -m)"
-            echo "source_models_dir=$MODELS_DIR"
-            echo "ollama_version=$(ollama --version 2>&1 | tail -1)"
-            /tmp/semantic-core/bin/qdrant --version || true
-            find /tmp/semantic-core -type f -print0 | sort -z | xargs -0 sha256sum
-          } > /tmp/semantic-core/RUNTIME_MANIFEST.txt
-
-          tar -C /tmp/semantic-core -czf /tmp/semantic-runtime-core-linux-x86_64.tar.gz .
-          sudo tar -C "$(dirname "$MODELS_DIR")" -czf /tmp/semantic-model-store.tar.gz "$(basename "$MODELS_DIR")"
-          sudo chown "$(id -u):$(id -g)" /tmp/semantic-model-store.tar.gz
-          sha256sum /tmp/semantic-runtime-core-linux-x86_64.tar.gz > /tmp/semantic-runtime-core-linux-x86_64.tar.gz.sha256
-          sha256sum /tmp/semantic-model-store.tar.gz > /tmp/semantic-model-store.tar.gz.sha256
-          split -b 230M -d -a 1 /tmp/semantic-model-store.tar.gz /tmp/semantic-model-store.tar.gz.part-
-          test -f /tmp/semantic-model-store.tar.gz.part-0
-          test -f /tmp/semantic-model-store.tar.gz.part-1
-          test -f /tmp/semantic-model-store.tar.gz.part-2
-          test ! -f /tmp/semantic-model-store.tar.gz.part-3
-      - name: Upload Virtual PC semantic runtime core (temporary)
+          tar -C /tmp/ollama-cpu-root -czf /tmp/ollama-cpu-root.tar.gz .
+          tar -C /tmp/qdrant-root -czf /tmp/qdrant-root.tar.gz .
+          sha256sum /tmp/ollama-cpu-root.tar.gz /tmp/qdrant-root.tar.gz > /tmp/virtual-pc-runtime.sha256
+          split -b 230M -d -a 1 /tmp/ollama-cpu-root.tar.gz /tmp/ollama-cpu-root.tar.gz.part-
+          for n in 0 1 2 3; do test -f "/tmp/ollama-cpu-root.tar.gz.part-$n" || : > "/tmp/ollama-cpu-root.tar.gz.part-$n"; done
+          test ! -f /tmp/ollama-cpu-root.tar.gz.part-4
+          ls -lh /tmp/ollama-cpu-root.tar.gz /tmp/ollama-cpu-root.tar.gz.part-* /tmp/qdrant-root.tar.gz
+      - name: Upload Ollama CPU part 0 (temporary)
         uses: actions/upload-artifact@v4
         with:
-          name: virtual-pc-semantic-runtime-core
-          path: /tmp/semantic-runtime-core-linux-x86_64.tar.gz
+          name: virtual-pc-ollama-cpu-part-0
+          path: /tmp/ollama-cpu-root.tar.gz.part-0
           retention-days: 1
-      - name: Upload Virtual PC semantic model part 0 (temporary)
+      - name: Upload Ollama CPU part 1 (temporary)
         uses: actions/upload-artifact@v4
         with:
-          name: virtual-pc-semantic-model-part-0
-          path: /tmp/semantic-model-store.tar.gz.part-0
+          name: virtual-pc-ollama-cpu-part-1
+          path: /tmp/ollama-cpu-root.tar.gz.part-1
           retention-days: 1
-      - name: Upload Virtual PC semantic model part 1 (temporary)
+      - name: Upload Ollama CPU part 2 (temporary)
         uses: actions/upload-artifact@v4
         with:
-          name: virtual-pc-semantic-model-part-1
-          path: /tmp/semantic-model-store.tar.gz.part-1
+          name: virtual-pc-ollama-cpu-part-2
+          path: /tmp/ollama-cpu-root.tar.gz.part-2
           retention-days: 1
-      - name: Upload Virtual PC semantic model part 2 (temporary)
+      - name: Upload Ollama CPU part 3 (temporary)
         uses: actions/upload-artifact@v4
         with:
-          name: virtual-pc-semantic-model-part-2
-          path: /tmp/semantic-model-store.tar.gz.part-2
+          name: virtual-pc-ollama-cpu-part-3
+          path: /tmp/ollama-cpu-root.tar.gz.part-3
           retention-days: 1
-      - name: Upload Virtual PC semantic runtime checksums (temporary)
+      - name: Upload Qdrant runtime (temporary)
         uses: actions/upload-artifact@v4
         with:
-          name: virtual-pc-semantic-runtime-checksums
-          path: |
-            /tmp/semantic-runtime-core-linux-x86_64.tar.gz.sha256
-            /tmp/semantic-model-store.tar.gz.sha256
+          name: virtual-pc-qdrant-runtime
+          path: /tmp/qdrant-root.tar.gz
+          retention-days: 1
+      - name: Upload runtime checksums (temporary)
+        uses: actions/upload-artifact@v4
+        with:
+          name: virtual-pc-runtime-checksums
+          path: /tmp/virtual-pc-runtime.sha256
           retention-days: 1
       - uses: actions/setup-python@v7
         with:

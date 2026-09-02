@@ -24,6 +24,18 @@ jobs:
         run: python scripts/agent_improvement_guard.py
       - name: Material mutation lineage guard
         run: python scripts/material_mutation_lineage_guard.py
+      - name: GitHub platform enforcement truth guard
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python scripts/platform_enforcement_guard.py --receipt /tmp/platform-enforcement-readback.json
+      - name: Preserve platform readback
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: platform-enforcement-readback-${{ github.run_id }}
+          path: /tmp/platform-enforcement-readback.json
+          if-no-files-found: ignore
+          retention-days: 14
       - name: Build Agent Runtime Graph recovery candidate
         run: |
           AS_OF=$(python - <<'PY'

@@ -45,18 +45,17 @@ jobs:
                   if allow_404 and e.code == 404: return None
                   raise RuntimeError(f'{method} {path} -> {e.code}: {e.read().decode()}') from e
 
-          # Materialize only the three authoritative terminal inputs into the exact main-derived checkout.
           inputs = [
-              ('docs/state/v2/claims/CLAIM-GRAPHV2-PLATFORM-TRUTH-014.json','8e96d8b0ac813313cdac62e17b3e23785df309a9'),
-              ('docs/state/v2/events/EVT-20260902T085500Z-GRAPHV2-TOKEN14-CLAIM-RELEASED.json','da2114bbe3e74c86007421df59e556be16d8428b'),
-              ('docs/state/agent-runtime/heartbeats/HB-AGENT-GPT56SOL-GRAPHV2-001-SES-014-085500-COMPLETE.json','d633793afc746bf7f46f5a1a34f0e23896767992'),
+              ('docs/state/v2/claims/CLAIM-GRAPHV2-PLATFORM-TRUTH-014.json','.scratch/token14-claim-release.b64','8e96d8b0ac813313cdac62e17b3e23785df309a9'),
+              ('docs/state/v2/events/EVT-20260902T085500Z-GRAPHV2-TOKEN14-CLAIM-RELEASED.json','.scratch/token14-release-event.b64','da2114bbe3e74c86007421df59e556be16d8428b'),
+              ('docs/state/agent-runtime/heartbeats/HB-AGENT-GPT56SOL-GRAPHV2-001-SES-014-085500-COMPLETE.json','.scratch/token14-complete-heartbeat.b64','d633793afc746bf7f46f5a1a34f0e23896767992'),
           ]
-          for path, sha in inputs:
-              obj = request('GET', f'/repos/{repo}/git/blobs/{sha}')
-              raw = base64.b64decode(obj['content'])
+          for path, source, expected_sha in inputs:
+              raw = base64.b64decode(Path(source).read_text().strip(), validate=True)
+              computed = hashlib.sha1(f'blob {len(raw)}\0'.encode() + raw).hexdigest()
+              if computed != expected_sha: raise SystemExit(f'{source} blob mismatch: {computed} != {expected_sha}')
               p = Path(path); p.parent.mkdir(parents=True, exist_ok=True); p.write_bytes(raw)
 
-          # Re-run the repository's canonical reducer; do not trust a transported projection.
           subprocess.run(['python','scripts/rebuild_agent_runtime_graph.py','--as-of','2026-09-02T08:55:00Z','--output','/tmp/runtime-graph.json'], check=True)
           raw = Path('/tmp/runtime-graph.json').read_bytes()
           computed_blob = hashlib.sha1(f'blob {len(raw)}\0'.encode() + raw).hexdigest()
@@ -82,7 +81,6 @@ jobs:
           existing = request('GET', f'/repos/{repo}/git/ref/heads/{branch}', allow_404=True)
           if existing:
               if existing['object']['sha'] != commit['sha']: raise SystemExit(f'{branch} exists at unexpected {existing["object"]["sha"]}')
-          else:
-              request('POST', f'/repos/{repo}/git/refs', {'ref':f'refs/heads/{branch}','sha':commit['sha']})
+          else: request('POST', f'/repos/{repo}/git/refs', {'ref':f'refs/heads/{branch}','sha':commit['sha']})
           print(json.dumps({'runtime_blob':blob['sha'],'tree':tree['sha'],'commit':commit['sha'],'branch':branch},sort_keys=True))
           PY

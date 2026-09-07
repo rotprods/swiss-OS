@@ -1,0 +1,114 @@
+name: semantic-runtime-qualification
+on:
+  push:
+    branches: [feat/semantic-runtime-v2-token16]
+    paths: [.github/workflows/semantic-runtime-qualification.yml, scripts/semantic_runtime_v2.py]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: swiss-semantic-qualification-${{ github.ref }}
+  cancel-in-progress: true
+env:
+  PYTHONPATH: src
+  SOURCE_SHA: 1072d5cfb33beee3f2afcd31a59ba00c514df170
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Test salvaged deterministic components
+        run: python -m unittest discover -s tests -p 'test_*semantic*.py' -v
+      - name: Compile pinned public source without domain mutations
+        run: |
+          git worktree add --detach "$RUNNER_TEMP/swiss-source" "$SOURCE_SHA"
+          python scripts/semantic_runtime_v2.py scan --repo "$RUNNER_TEMP/swiss-source" --out /tmp/swiss-semantic-package
+          git archive --format=tar.gz "$SOURCE_SHA" -o /tmp/swiss-semantic-package/source.tar.gz
+          git bundle create /tmp/swiss-semantic-package/source.bundle refs/remotes/origin/main
+          cp scripts/semantic_runtime_v2.py /tmp/swiss-semantic-package/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: swiss-semantic-package
+          path: /tmp/swiss-semantic-package
+          retention-days: 14
+          if-no-files-found: error
+  embed:
+    needs: compile
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      max-parallel: 8
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5, 6, 7]
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          name: swiss-semantic-package
+          path: /tmp/swiss-semantic-package
+      - name: Install pinned local inference runtime on runner
+        env:
+          OLLAMA_HOST: 127.0.0.1:11435
+          OLLAMA_MODELS: /tmp/swiss-models
+          OLLAMA_NO_CLOUD: '1'
+        run: |
+          set -euo pipefail
+          curl -fsSL https://ollama.com/install.sh -o /tmp/ollama-install.sh
+          OLLAMA_VERSION=0.33.2 sh /tmp/ollama-install.sh
+          nohup ollama serve > /tmp/swiss-ollama.log 2>&1 &
+          for i in $(seq 1 60); do
+            curl -fsS http://127.0.0.1:11435/api/version >/dev/null 2>&1 && break
+            sleep 1
+          done
+          curl -fsS http://127.0.0.1:11435/api/version
+          ollama pull qwen3-embedding:0.6b
+      - name: Produce bounded shard with exact model and input provenance
+        env:
+          OLLAMA_BASE_URL: http://127.0.0.1:11435
+        run: python scripts/semantic_runtime_v2.py embed --chunks /tmp/swiss-semantic-package/chunks.jsonl --out /tmp/swiss-semantic-shard --shard ${{ matrix.shard }} --shards 8
+      - uses: actions/upload-artifact@v4
+        with:
+          name: swiss-semantic-shard-${{ matrix.shard }}
+          path: /tmp/swiss-semantic-shard
+          retention-days: 14
+          if-no-files-found: error
+  merge:
+    needs: embed
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          name: swiss-semantic-package
+          path: /tmp/swiss-semantic-package
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: swiss-semantic-shard-*
+          path: /tmp/swiss-semantic-shards
+      - name: Fail closed on any missing point, duplicate or provenance mismatch
+        run: python scripts/semantic_runtime_v2.py merge --package /tmp/swiss-semantic-package --parts /tmp/swiss-semantic-shards --out /tmp/swiss-semantic-merged --shards 8
+      - uses: actions/upload-artifact@v4
+        with:
+          name: swiss-semantic-vectors-validated
+          path: /tmp/swiss-semantic-merged
+          retention-days: 14
+          if-no-files-found: error

@@ -1,6 +1,6 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest reconstructed frontier: **2026-08-31 current-source entity-resolution B06**. Verified bootstrap main parent: **`1bbabe457d8ec561249b2bb52b862096df900d42`**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Authority materialized SHA: **`70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`**.
+Latest reconstructed frontier: **2026-09-10 current-source entity-resolution B07**. Coordination claim: **`CLAIM-CRM-ENTITY-RESOLUTION-016`**, fencing token **16**, PREAUTH SRR decision scope only. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Authority materialized SHA: **`70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`**.
 
 ## Authority — unchanged / locked
 
@@ -14,9 +14,7 @@ OUTBOUND                        CLOSED
 send_allowed                      0
 ```
 
-The **authoritative** operational ceiling is E4/690 only. Every current source-review, staging, cache, CI and **canary** artifact is non-authoritative until a separately eligible cross-plane authority transaction passes all gates.
-
-Live Drive `HOTELS_V2` was re-read after B05: `H-0690` remains the last physical/canonical row and `H-0691` is absent/unallocated. No staging/cache/canary/source-review result may reserve an ID or advance authority.
+The **authoritative** operational ceiling is E4/690 only. Every current source-review, staging, cache, CI, preauthority decision and canary artifact is non-authoritative until a separately eligible cross-plane authority transaction passes all gates. No source-review result may reserve an H-ID or advance hotel authority.
 
 ## Current coherent source universe
 
@@ -46,22 +44,24 @@ lower49 typed SRR materialized                   47 / 47
 RAGR evidence-classified                         34 / 34
 historical <0.35 previously unreviewed tail     1289
 zero-exact-city conservative lane                485
-current <0.35 reviewed cumulative                 60
-cumulative NEW_CANONICAL preauthority             174
-historical <0.35 tail remaining                 1229
-zero-exact-city lane remaining                   425
+current <0.35 reviewed cumulative                 70
+cumulative NEW_CANONICAL preauthority             183
+historical <0.35 tail remaining                 1219
+zero-exact-city lane remaining                   415
 H-ID allocations                                   0
 canonical ID reservations                          0
 ```
 
-B06 is persisted in `docs/state/CRM_CURRENT_UNRESOLVED_LT350_B06_2026-08-31.json`. It explicitly reconciles `Montreux-Territet` against the current Montreux cluster before preserving Jugendherberge Montreux as a distinct preauthority entity; Chante-Joux is preserved under EGR-1.0 as a group-accommodation facility rather than being coerced into a conventional hotel identity; generic name/token collisions for Gasthof Bären, Hotel & Restaurant Promenade and Hotel Restaurant Badhof remain non-binding. All ten B06 rows remain `RECONCILE_REQUIRED`; terminal mapping delta is zero.
+B07 is persisted in `docs/state/CRM_CURRENT_UNRESOLVED_LT350_B07_2026-09-10.json`. It consumes `docs/operations/CRM_CURRENT_UNRESOLVED_LT350_B07_EVIDENCE_PACKET_2026-09-01.json` plus `docs/reports/CRM_B07_PREAUTH_COMPARATOR_REVIEW_2026-09-02.md`. Nine rows are typed `NEW_CANONICAL_PREAUTH`; Ô Pied-à-Terre is typed `NEW_ACCOMMODATION_PREAUTH_EGR_REQUIRED`; Mövenpick Genève and Hotel Nessi preserve group/operator relationships separately from property identity. All ten remain `RECONCILE_REQUIRED`; terminal mapping delta remains zero.
 
-## Continuity / capability
+## Coordination / capability
 
-CSP-1.0 is active and must validate before zero-context resumption. GitHub/CI, Drive Sheets and current-source research are available. File Library is read-only. Structured discover.swiss remains blocked by the absent runtime subscription key/capture-valid manifest, but that is not a global blocker. Exact E4 generated-file egress remains `BLOCKED_FILE_REFERENCE_DO_NOT_REPEAT`.
+`CLAIM-CRM-SRR-SPECIAL-006` is superseded. The active bounded writer for this wave is token16 and is explicitly excluded from hotel authority mutation, H-ID allocation/reservation and outbound. GitHub/Actions/current-source research are available. Drive became unavailable during the latest E4 comparator reread, so B08 keys must not be guessed from lexical source ordering alone. The frozen source artifact remains durable and recoverable.
 
 ## NEXT
 
-Execute **`CURRENT_UNRESOLVED_LT350000_ZERO_CANONICAL_CITY_B07`** over the exact keys in `docs/state/NEXT_CURRENT_UNRESOLVED_LT350_B06.json` after live main, CSP and E4 reconstruction. Similarity is review-space reduction only; re-check locality variants, generic collisions, accommodation type and EGR relationships before any preauthority disposition. Never reserve/allocate H-IDs here. Keep `OUTBOUND=CLOSED` / `send_allowed=0`.
+Execute **`RECOMPUTE_CURRENT_UNRESOLVED_LT350000_ZERO_CANONICAL_CITY_B08_FROM_FROZEN_SNAPSHOT_AND_E4_CATALOG`**. Reconstruct the remaining zero-exact-city lane deterministically from the frozen 2061-record snapshot anti-joined against the E4/690 canonical catalog, subtract B01..B07, select the next 10 keys, capture current evidence, perform comparator/locality/EGR review and persist PREAUTH decisions only. Never reserve/allocate H-IDs. Keep `OUTBOUND=CLOSED` / `send_allowed=0`.
+
+If Drive remains unavailable, recover an exact E4 catalog from a durable recovery/export artifact; do not infer B08 keys from source-key ordering alone.
 
 **VERIFY LIVE TRUTH BEFORE EXECUTION.**

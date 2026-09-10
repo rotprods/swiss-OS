@@ -1,6 +1,6 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest reconstructed frontier: **2026-09-10 current-source entity-resolution B09**. Coordination claim used for this bounded wave: **`CLAIM-CRM-ENTITY-RESOLUTION-016`**, fencing token **16**, PREAUTH SRR decision scope only. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Authority materialized SHA: **`70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`**.
+Latest reconstructed frontier: **2026-09-10 current-source entity-resolution B10**. B10 executed under **`CLAIM-CRM-ENTITY-RESOLUTION-017`**, fencing token **17**, PREAUTH locality/SRR decision scope only; token17 is now **RELEASED**. Authority epoch: **`HS_ENTITY_EPOCH_2026-08-25_E4`**. Authority materialized SHA: **`70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`**.
 
 ## Authority — unchanged / locked
 
@@ -14,7 +14,7 @@ OUTBOUND                        CLOSED
 send_allowed                      0
 ```
 
-The authoritative operational ceiling remains E4/690. Every current source-review, staging, cache, CI, preauthority decision and canary artifact is non-authoritative until a separately eligible cross-plane authority transaction passes all gates. No source-review result may reserve an H-ID or advance hotel authority.
+The authoritative operational ceiling remains E4/690. Current-source review, locality normalization, evidence packets, PREAUTH decisions, staging, cache and CI are non-authoritative. They may not allocate/reserve H-IDs or advance hotel authority.
 
 ## Current coherent source universe
 
@@ -36,34 +36,33 @@ reverse authority/source gaps      34
 ```text
 candidate lineage accounted                    1438 / 1438
 ECV verified frontier                           1438 / 1438
-ECV remaining never verified                    0
 prior >=0.60 review                              20 / 20
 prior 0.50–0.599999 review                       46 / 46
 prior lower49 ordinary review                    47 / 47
 lower49 typed SRR materialized                   47 / 47
 RAGR evidence-classified                         34 / 34
 historical <0.35 previously unreviewed tail     1289
-zero-exact-city conservative lane                485
-current <0.35 reviewed cumulative                 90
-cumulative NEW_CANONICAL preauthority             199
-historical <0.35 tail remaining                 1199
-zero-exact-city lane remaining                   395
+operational zero-exact-city lane                 485
+current <0.35 reviewed cumulative                100
+cumulative NEW_CANONICAL preauthority             208
+historical <0.35 tail remaining                 1189
+zero-exact-city lane remaining                   385
 H-ID allocations                                   0
 canonical ID reservations                          0
 ```
 
-B07 and B08 both resolved ten zero-city candidates each as preauthority-only decisions. B09 is persisted in `docs/state/CRM_CURRENT_UNRESOLVED_LT350_B09_2026-09-10.json` and adds a critical locality-normalization finding: source `Seehotel Wilerbad` / `Wilen (Sarnen)` is the same-property candidate as canonical `H-0681 Seehotel Wilerbad Seminar & Spa` / `Wilen`, so the zero-city anti-join false negative is not treated as a new hotel. B09 otherwise yields seven `NEW_CANONICAL_PREAUTH` and two `NEW_ACCOMMODATION_PREAUTH_EGR_REQUIRED` records. All ten remain `RECONCILE_REQUIRED`; terminal mapping delta remains zero.
+B10 is persisted in `docs/state/CRM_CURRENT_UNRESOLVED_LT350_B10_2026-09-10.json`; evidence is in `docs/operations/CRM_CURRENT_UNRESOLVED_LT350_B10_EVIDENCE_PACKET_2026-09-10.json`. It yields nine `NEW_CANONICAL_PREAUTH` and one `NEW_ACCOMMODATION_PREAUTH_EGR_REQUIRED` (Vallombrosa). All ten remain `RECONCILE_REQUIRED`; terminal mapping delta remains zero.
 
-## Coordination / capability
+## Locality normalization guard
 
-The bounded token16 writer is excluded from hotel authority mutation, H-ID allocation/reservation and outbound. Drive became unavailable during comparator reread; this wave therefore used the frozen 2061-record Actions artifact plus the Library recovery workbook `CRM_UNIVERSE_STAGING_2026-08-28_v10.xlsx/Canonical_Current` containing all 690 E4 hotel identities. The recovery algorithm reproduced the exact B01..B08 ordered selection before deriving B09, providing a deterministic regression check on the lane reconstruction.
+The Wilerbad false-zero failure family is generalized in `src/swiss_os/locality_normalization_guard.py`. Deterministic recovery reconstructs `1438 candidates → 488 literal zero-city → minus 3 exact-global-name cross-locality conflicts → 485 operational zero-city`. Five of the 385 rows remaining after B10 require locality-expanded comparator review. Locality equivalence is review-space only and never auto-binds property identity.
 
 ## NEXT
 
-Execute **`CURRENT_UNRESOLVED_LT350000_ZERO_CANONICAL_CITY_B10`** from the validated recovery lane: select the next 10 sorted source keys after the first 90, capture exact-current evidence, explicitly test locality aliases before interpreting `same_city=0`, perform generic-name/brand/operator/EGR comparison, and persist PREAUTH decisions only.
+Consume `docs/state/NEXT_CURRENT_UNRESOLVED_LT350_B10.json` exactly for **B11**. It contains ten deterministic source keys and excludes `MD-37df0d95a87f101c1916 Hotel Du Lac / Därligen`, which belongs to the separate exact-global-name locality-conflict lane.
 
-Before any new authority transaction, first materialize any reviewed `MATCH_EXISTING_PREAUTH` decisions (including B09 Wilerbad→H-0681) through the separately governed source-mapping terminalization path; do not silently treat a PREAUTH match as a terminal source mapping.
+Before B11 begins, deterministic V2 coordination projections must show token17 released, zero token17 active writers, and fencing high-watermark at least 17. Any successor material writer must use a new globally unique session and fencing token >17.
 
-Never reserve/allocate H-IDs here. Keep `OUTBOUND=CLOSED` / `send_allowed=0`.
+Run locality guard → exact-current evidence → canonical comparator/locality review → operator/group/EGR review → PREAUTH disposition. Before any authority transaction, terminalize reviewed `MATCH_EXISTING_PREAUTH` records only through the separately governed source-mapping transaction. Never reserve/allocate H-IDs here. Keep `OUTBOUND=CLOSED` / `send_allowed=0`.
 
 **VERIFY LIVE TRUTH BEFORE EXECUTION.**

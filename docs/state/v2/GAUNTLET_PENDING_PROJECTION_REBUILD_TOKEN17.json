@@ -1,0 +1,1 @@
+{"schema_version":"COS-V2-GAUNTLET-PENDING-1.0","project_id":"SWITZERLAND_JOB_OS","claim_id":"CLAIM-CRM-ENTITY-RESOLUTION-017","fencing_token":17,"claim_file_state":"RELEASED","required_projection":{"active_claims_contains_token17":false,"fencing_high_watermark_min":17},"status":"PENDING_DETERMINISTIC_REBUILD_AND_CI","authority_effect":"NONE","outbound":"CLOSED"}

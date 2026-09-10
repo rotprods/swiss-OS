@@ -5,8 +5,11 @@ ROOT=Path(__file__).resolve().parents[1]
 STATE=ROOT/'docs/state/CRM_CURRENT_UNRESOLVED_LT350_B10_2026-09-10.json'
 SCAN=ROOT/'docs/state/LOCALITY_NORMALIZATION_SCAN_LT350_REMAINING_2026-09-10.json'
 EVIDENCE=ROOT/'docs/operations/CRM_CURRENT_UNRESOLVED_LT350_B10_EVIDENCE_PACKET_2026-09-10.json'
+NEXT=ROOT/'docs/state/NEXT_CURRENT_UNRESOLVED_LT350_B10.json'
 EXPECTED=[
 'MD-315c01eaa157e5b3602f','MD-323db50ea273aa998ca6','MD-339cb8d3f38f76b192dd','MD-34f61a1d95ba700cfe94','MD-350bcd0642995b5b2d89','MD-35ea8c63b3b3459e39b7','MD-36743f6ab6fb963fb3a3','MD-36c39d2fd2a2f49a5855','MD-36de2d991c8ba24a7a94','MD-377dc48ee075aa309eab']
+EXPECTED_B11=[
+'MD-37c920c06fa392c578aa','MD-39077c13b83ef6775c58','MD-39f0f1ccfbfb59438afc','MD-39fdd00ab3bb208620ff','MD-3a55671a2c16fbf26f50','MD-3adb4257b579fae1525e','MD-3b41390ad96ab8bbf7ce','MD-3be208b823a531c6bcc1','MD-3c473d1649021c1b6b5b','MD-3d333fe34a8cbe815fa1']
 
 def load(p): return json.loads(p.read_text(encoding='utf-8'))
 
@@ -46,8 +49,12 @@ def test_b10_preserves_egr_and_never_autobinds():
     assert d['qa']['fuzzy_autobind'] is False and d['qa']['authority_advanced'] is False
     assert d['qa']['outbound']=='CLOSED' and d['qa']['send_allowed']==0
 
-def test_b11_skips_exact_global_name_conflict_hotel_du_lac():
-    d=load(STATE)
-    nxt=d['next']['selected_source_record_keys']
-    assert len(nxt)==10 and len(set(nxt))==10
-    assert 'MD-37df0d95a87f101c1916' not in nxt
+def test_standalone_b11_frontier_is_exact_and_skips_locality_conflict():
+    nxt=load(NEXT)
+    assert nxt['route']=='CURRENT_UNRESOLVED_LT350000_ZERO_CANONICAL_CITY_B11'
+    assert nxt['selected_source_record_keys']==EXPECTED_B11
+    assert len(set(EXPECTED_B11))==10
+    assert 'MD-37df0d95a87f101c1916' not in EXPECTED_B11
+    assert nxt['safety']['locality_guard_required'] is True
+    assert nxt['safety']['authority_advance_allowed'] is False
+    assert nxt['safety']['outbound']=='CLOSED' and nxt['safety']['send_allowed']==0

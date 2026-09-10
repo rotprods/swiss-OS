@@ -14,7 +14,7 @@ OUTBOUND                        CLOSED
 send_allowed                      0
 ```
 
-The authoritative operational ceiling remains E4/690. Current-source review, locality normalization, evidence packets, PREAUTH decisions, staging, cache and CI are non-authoritative. They may not allocate/reserve H-IDs or advance hotel authority.
+The authoritative operational ceiling remains E4/690. Current-source review, locality normalization, evidence packets, PREAUTH decisions, staging, cache, CI and any canary are non-authoritative. **A canary PASS never promotes operational authority.** They may not allocate/reserve H-IDs or advance hotel authority outside a separately eligible cross-plane authority transaction.
 
 ## Current coherent source universe
 

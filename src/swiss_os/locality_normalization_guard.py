@@ -12,6 +12,10 @@ CANTON_CODES = frozenset({
 AIRPORT_QUALIFIERS = frozenset({"airport", "aeroport"})
 
 
+class LocalityGuardError(ValueError):
+    pass
+
+
 def _text(value: object) -> str:
     return str(value or "").strip()
 
@@ -27,7 +31,7 @@ def _ascii(value: object) -> str:
 def locality_keys(value: object) -> tuple[str, ...]:
     """Return conservative locality-equivalence keys for review-space expansion only.
 
-    The keys can expose false literal zero-city negatives but never prove property identity.
+    These keys may expose literal zero-city false negatives but never prove property identity.
     Presentation-only qualifiers handled here include accents/punctuation, parentheticals,
     canton suffixes, numeric district suffixes and a final airport/aeroport token.
     """
@@ -60,6 +64,29 @@ def _source_key(item: Mapping[str, object]) -> str:
     return _text(item.get("record_id") or item.get("source_record_key"))
 
 
+def _validate_identity_sets(
+    source_records: Sequence[Mapping[str, object]],
+    canonical_records: Sequence[Mapping[str, object]],
+) -> None:
+    source_seen: set[str] = set()
+    for item in source_records:
+        key = _source_key(item)
+        if not key:
+            raise LocalityGuardError("SOURCE_RECORD_KEY_REQUIRED")
+        if key in source_seen:
+            raise LocalityGuardError(f"DUPLICATE_SOURCE_RECORD_KEY:{key}")
+        source_seen.add(key)
+
+    canonical_seen: set[str] = set()
+    for item in canonical_records:
+        hotel_id = _text(item.get("hotel_id"))
+        if not hotel_id:
+            raise LocalityGuardError("CANONICAL_HOTEL_ID_REQUIRED")
+        if hotel_id in canonical_seen:
+            raise LocalityGuardError(f"DUPLICATE_CANONICAL_HOTEL_ID:{hotel_id}")
+        canonical_seen.add(hotel_id)
+
+
 def rebuild_zero_city_lane(
     source_records: Sequence[Mapping[str, object]],
     canonical_records: Sequence[Mapping[str, object]],
@@ -67,9 +94,10 @@ def rebuild_zero_city_lane(
     """Rebuild the conservative zero-exact-city lane without granting authority.
 
     Exact normalized name+city rows are outside the candidate universe. Rows with no exact
-    canonical city form the raw zero-city pool. Exact global-name/locality conflicts are
-    excluded because they require a different identity-conflict review lane.
+    canonical city form the raw zero-city pool. Exact global-name/cross-locality conflicts are
+    excluded because they require a separate identity-conflict review lane.
     """
+    _validate_identity_sets(source_records, canonical_records)
     by_name_city: dict[tuple[str, str], list[Mapping[str, object]]] = defaultdict(list)
     by_city: dict[str, list[Mapping[str, object]]] = defaultdict(list)
     by_name: dict[str, list[Mapping[str, object]]] = defaultdict(list)
@@ -123,8 +151,10 @@ def locality_variant_review(
     """Find literal zero-city rows whose locality normalizes onto canonical localities.
 
     Every result remains review-only. A locality match narrows comparator space but cannot
-    establish same-property identity or create a canonical/terminal mapping.
+    establish same-property identity or create a canonical/terminal mapping. Multiple locality
+    candidates are surfaced as explicit ambiguity rather than collapsed by ordering.
     """
+    _validate_identity_sets(source_records, canonical_records)
     canonical_by_literal_city: dict[str, list[Mapping[str, object]]] = defaultdict(list)
     canonical_by_locality_key: dict[str, list[Mapping[str, object]]] = defaultdict(list)
     for item in canonical_records:
@@ -149,19 +179,22 @@ def locality_variant_review(
                     matched_keys.add(key)
         if not hits:
             continue
+        candidates = [
+            {
+                "hotel_id": hotel_id,
+                "canonical_name": _canonical_name(item),
+                "canonical_city": _text(item.get("city")),
+            }
+            for hotel_id, item in sorted(hits.items())
+        ]
         findings.append({
             "source_record_key": _source_key(source),
             "source_name": _text(source.get("name")),
             "source_city": _text(source.get("city")),
             "normalized_locality_keys": sorted(matched_keys),
-            "canonical_candidates": [
-                {
-                    "hotel_id": hotel_id,
-                    "canonical_name": _canonical_name(item),
-                    "canonical_city": _text(item.get("city")),
-                }
-                for hotel_id, item in sorted(hits.items())
-            ],
+            "canonical_candidates": candidates,
+            "candidate_count": len(candidates),
+            "ambiguity": "MULTIPLE_CANONICAL_LOCALITY_CANDIDATES" if len(candidates) > 1 else "SINGLE_LOCALITY_COMPARATOR",
             "disposition": "LOCALITY_VARIANT_REVIEW_REQUIRED",
             "auto_bind_allowed": False,
             "authority_action": "NONE",

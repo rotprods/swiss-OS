@@ -1,0 +1,1 @@
+B10 locality-guard candidate is complete at source level but NOT production-merged. Token17 is RELEASED. Promotion remains blocked until deterministic coordination rebuild, full repository CI and fresh-main drift checks pass. Authority remains E4/690; H-0691 unallocated; outbound closed.

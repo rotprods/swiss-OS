@@ -65,7 +65,7 @@ jobs:
               unzip -q /tmp/baseline.zip -d /tmp/baseline
               VECTORS="$(find /tmp/baseline -type f -name vectors.jsonl.gz -print -quit)"
               if [ -n "$VECTORS" ]; then
-                cp "$VECTORS" /tmp/baseline/vectors.jsonl.gz.resolved
+                cp "$VECTORS" /tmp/baseline/baseline-vectors.jsonl.gz
                 echo "BASELINE_ARTIFACT_ID=$ID" >> "$GITHUB_ENV"
                 echo "BASELINE_MODE=INCREMENTAL" >> "$GITHUB_ENV"
                 FOUND=1
@@ -76,7 +76,7 @@ jobs:
           if [ "$FOUND" -eq 0 ]; then
             python - <<'PY'
           import gzip
-          with gzip.GzipFile('/tmp/baseline/vectors.jsonl.gz.resolved','wb',mtime=0) as f:
+          with gzip.GzipFile('/tmp/baseline/baseline-vectors.jsonl.gz','wb',mtime=0) as f:
               pass
           PY
             echo "BASELINE_ARTIFACT_ID=NONE" >> "$GITHUB_ENV"
@@ -86,7 +86,7 @@ jobs:
         run: |
           python scripts/semantic_delta_v3.py plan \
             --chunks /tmp/swiss-semantic-v3/chunks.jsonl \
-            --baseline /tmp/baseline/vectors.jsonl.gz.resolved \
+            --baseline /tmp/baseline/baseline-vectors.jsonl.gz \
             --out /tmp/swiss-semantic-v3/delta
           cat /tmp/swiss-semantic-v3/delta/delta-receipt.json
           cp scripts/semantic_runtime_v2.py scripts/semantic_delta_v3.py /tmp/swiss-semantic-v3/

@@ -30,6 +30,7 @@ env:
 
 jobs:
   compile-delta:
+    if: github.event.head_commit.message != 'chore: install deterministic projection sync' && github.event.head_commit.message != 'chore: sync token18 deterministic projections'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -180,3 +181,61 @@ jobs:
           path: /tmp/swiss-semantic-v3-merged
           retention-days: 30
           if-no-files-found: error
+
+  projection-sync:
+    if: github.event_name == 'push' && github.event.head_commit.message == 'chore: install deterministic projection sync'
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Rebuild exact terminal projections
+        run: |
+          set -euo pipefail
+          AS_OF=$(python - <<'PY'
+          import json
+          from pathlib import Path
+          values=[]
+          for path in Path('docs/state/agent-runtime/heartbeats').glob('*.json'):
+              data=json.loads(path.read_text())
+              value=data.get('observed_at')
+              if isinstance(value,str) and value:
+                  values.append(value)
+          print(max(values) if values else '1970-01-01T00:00:00Z')
+          PY
+          )
+          python scripts/rebuild_agent_runtime_graph.py --as-of "$AS_OF" --output docs/state/agent-runtime/runtime-graph.json
+          rm -rf /tmp/v2-coordination-sync /tmp/v2-coordination-check
+          python scripts/rebuild_v2_coordination.py --config docs/refactor-v2/coordination_current_config.json --output-dir /tmp/v2-coordination-sync
+          cp /tmp/v2-coordination-sync/active-claims.json docs/state/v2/active-claims.json
+          cp /tmp/v2-coordination-sync/project-state.json docs/state/v2/project-state.json
+          cp /tmp/v2-coordination-sync/context-pack.json docs/state/v2/context-pack.json
+          cp /tmp/v2-coordination-sync/graph-snapshot.json docs/state/v2/graph-snapshot.json
+          cp /tmp/v2-coordination-sync/CONTEXT_SURVIVAL.json docs/continuity/CONTEXT_SURVIVAL.json
+          python scripts/rebuild_agent_runtime_graph.py --check
+          python scripts/rebuild_v2_coordination.py --config docs/refactor-v2/coordination_current_config.json --output-dir /tmp/v2-coordination-check --check
+          git diff --check
+      - name: Commit only deterministic generated state
+        run: |
+          set -euo pipefail
+          git config user.name 'swiss-os-projection-bot'
+          git config user.email '261643698+rotprods@users.noreply.github.com'
+          git add docs/state/agent-runtime/runtime-graph.json \
+                  docs/state/v2/active-claims.json \
+                  docs/state/v2/project-state.json \
+                  docs/state/v2/context-pack.json \
+                  docs/state/v2/graph-snapshot.json \
+                  docs/continuity/CONTEXT_SURVIVAL.json
+          if git diff --cached --quiet; then
+            echo 'No projection drift to commit.'
+            exit 0
+          fi
+          git commit -m 'chore: sync token18 deterministic projections'
+          git push origin HEAD:${GITHUB_REF_NAME}

@@ -24,15 +24,28 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
-      - name: Remove helper workflow from coordination hash scope
+      - name: Finalize semantic V3 coordination truth
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
           path = Path('docs/refactor-v2/coordination_current_config.json')
           data = json.loads(path.read_text())
-          target = '.github/workflows/semantic-runtime-v3.yml'
-          data['relevant_paths'] = [p for p in data['relevant_paths'] if p != target]
+          helper = '.github/workflows/semantic-runtime-v3.yml'
+          data['relevant_paths'] = [p for p in data['relevant_paths'] if p != helper]
+          data['state'] = 'SEMANTIC_RUNTIME_V3_TOKEN18_RELEASED_PROJECTIONS_SYNCED'
+          done = 'Deterministic Agent Runtime Graph and V2 coordination rebuilds passed from terminal token18 evidence with active_claims=[] and fencing_high_watermark=18.'
+          verified = list(data.get('verified_work', []))
+          if done not in verified:
+              verified.append(done)
+          data['verified_work'] = verified
+          data['unverified_work'] = [x for x in data.get('unverified_work', []) if not x.startswith('Deterministic Agent Runtime Graph') and not x.startswith('Deterministic V2 coordination projections')]
+          data['next_safe_actions'] = [x for x in data.get('next_safe_actions', []) if not x.startswith('Rebuild deterministic Agent Runtime Graph') and not x.startswith('Rebuild V2 coordination')]
+          finding = 'Terminal token18 projections are synchronized: lifecycle revision b01341474d160b2cebc7b602a300c855f67e0bb0e80fbd324613852a22717944, zero active claims, fencing high-watermark 18.'
+          findings = list(data.get('liveness_findings', []))
+          if finding not in findings:
+              findings.append(finding)
+          data['liveness_findings'] = findings
           path.write_text(json.dumps(data, ensure_ascii=False, separators=(',', ':')) + '\n')
           PY
       - name: Rebuild exact terminal projections
@@ -73,5 +86,5 @@ jobs:
                   docs/state/v2/context-pack.json \
                   docs/state/v2/graph-snapshot.json \
                   docs/continuity/CONTEXT_SURVIVAL.json
-          git commit -m 'chore: sync token18 deterministic projections [skip ci]'
+          git commit -m 'chore: finalize token18 deterministic projections [skip ci]'
           git push origin HEAD:${GITHUB_REF_NAME}

@@ -1,90 +1,182 @@
-name: semantic-runtime-v3-projection-sync
+name: semantic-runtime-v3
 
 on:
   push:
-    branches:
-      - feat/semantic-runtime-v3-token18
+    branches: [feat/semantic-runtime-v3-token18]
     paths:
-      - .github/workflows/semantic-runtime-v3.yml
+      - '.github/workflows/semantic-runtime-v3.yml'
+      - 'scripts/semantic_runtime_v2.py'
+      - 'scripts/semantic_delta_v3.py'
+      - 'scripts/semantic_qdrant_v3.py'
+      - 'src/swiss_os/repo_semantics.py'
+      - 'src/swiss_os/cos_graph.py'
+      - 'tests/test_semantic_delta_v3.py'
+      - 'tests/test_semantic_qdrant_v3.py'
+  workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
+  actions: read
+
+concurrency:
+  group: swiss-semantic-v3-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHONPATH: ${{ github.workspace }}/src
+  SOURCE_SHA: dcf70473e1daa8a26cb9d9d3395aa897acad356d
+  SEED_BASELINE_ARTIFACT_ID: '10029531324'
+  SHARDS: '8'
 
 jobs:
-  sync:
+  compile-delta:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
-    env:
-      PYTHONPATH: src
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
-          persist-credentials: true
+          persist-credentials: false
       - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
-      - name: Finalize semantic V3 coordination truth
+      - name: Semantic V3 tests
         run: |
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          path = Path('docs/refactor-v2/coordination_current_config.json')
-          data = json.loads(path.read_text())
-          helper = '.github/workflows/semantic-runtime-v3.yml'
-          data['relevant_paths'] = [p for p in data['relevant_paths'] if p != helper]
-          data['state'] = 'SEMANTIC_RUNTIME_V3_TOKEN18_RELEASED_PROJECTIONS_SYNCED'
-          done = 'Deterministic Agent Runtime Graph and V2 coordination rebuilds passed from terminal token18 evidence with active_claims=[] and fencing_high_watermark=18.'
-          verified = list(data.get('verified_work', []))
-          if done not in verified:
-              verified.append(done)
-          data['verified_work'] = verified
-          data['unverified_work'] = [x for x in data.get('unverified_work', []) if not x.startswith('Deterministic Agent Runtime Graph') and not x.startswith('Deterministic V2 coordination projections')]
-          data['next_safe_actions'] = [x for x in data.get('next_safe_actions', []) if not x.startswith('Rebuild deterministic Agent Runtime Graph') and not x.startswith('Rebuild V2 coordination')]
-          finding = 'Terminal token18 projections are synchronized: lifecycle revision b01341474d160b2cebc7b602a300c855f67e0bb0e80fbd324613852a22717944, zero active claims, fencing high-watermark 18.'
-          findings = list(data.get('liveness_findings', []))
-          if finding not in findings:
-              findings.append(finding)
-          data['liveness_findings'] = findings
-          path.write_text(json.dumps(data, ensure_ascii=False, separators=(',', ':')) + '\n')
-          PY
-      - name: Rebuild exact terminal projections
+          python -m unittest tests.test_semantic_delta_v3 tests.test_semantic_qdrant_v3 -v
+          python -m unittest discover -s tests -p 'test_*semantic*.py' -v
+      - name: Compile immutable current-main corpus
         run: |
           set -euo pipefail
-          AS_OF=$(python - <<'PY'
-          import json
-          from pathlib import Path
-          values=[]
-          for path in Path('docs/state/agent-runtime/heartbeats').glob('*.json'):
-              data=json.loads(path.read_text())
-              value=data.get('observed_at')
-              if isinstance(value,str) and value:
-                  values.append(value)
-          print(max(values) if values else '1970-01-01T00:00:00Z')
-          PY
-          )
-          python scripts/rebuild_agent_runtime_graph.py --as-of "$AS_OF" --output docs/state/agent-runtime/runtime-graph.json
-          rm -rf /tmp/v2-coordination-sync /tmp/v2-coordination-check
-          python scripts/rebuild_v2_coordination.py --config docs/refactor-v2/coordination_current_config.json --output-dir /tmp/v2-coordination-sync
-          cp /tmp/v2-coordination-sync/active-claims.json docs/state/v2/active-claims.json
-          cp /tmp/v2-coordination-sync/project-state.json docs/state/v2/project-state.json
-          cp /tmp/v2-coordination-sync/context-pack.json docs/state/v2/context-pack.json
-          cp /tmp/v2-coordination-sync/graph-snapshot.json docs/state/v2/graph-snapshot.json
-          cp /tmp/v2-coordination-sync/CONTEXT_SURVIVAL.json docs/continuity/CONTEXT_SURVIVAL.json
-          python scripts/rebuild_agent_runtime_graph.py --check
-          python scripts/rebuild_v2_coordination.py --config docs/refactor-v2/coordination_current_config.json --output-dir /tmp/v2-coordination-check --check
-          git diff --check
-      - name: Commit only config and deterministic generated state
+          git worktree add --detach "$RUNNER_TEMP/swiss-source" "$SOURCE_SHA"
+          python scripts/semantic_runtime_v2.py scan --repo "$RUNNER_TEMP/swiss-source" --out /tmp/swiss-semantic-v3
+      - name: Resolve latest reusable baseline or fail over to full rebuild
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          git config user.name 'swiss-os-projection-bot'
-          git config user.email '261643698+rotprods@users.noreply.github.com'
-          git add docs/refactor-v2/coordination_current_config.json \
-                  docs/state/agent-runtime/runtime-graph.json \
-                  docs/state/v2/active-claims.json \
-                  docs/state/v2/project-state.json \
-                  docs/state/v2/context-pack.json \
-                  docs/state/v2/graph-snapshot.json \
-                  docs/continuity/CONTEXT_SURVIVAL.json
-          git commit -m 'chore: finalize token18 deterministic projections [skip ci]'
-          git push origin HEAD:${GITHUB_REF_NAME}
+          mkdir -p /tmp/baseline
+          LATEST_ID="$(gh api "repos/$GITHUB_REPOSITORY/actions/artifacts?name=swiss-semantic-v3-vectors-validated&per_page=100" --jq '.artifacts | map(select(.expired == false)) | sort_by(.created_at) | reverse | .[0].id // empty')"
+          CANDIDATES="$LATEST_ID $SEED_BASELINE_ARTIFACT_ID"
+          FOUND=0
+          for ID in $CANDIDATES; do
+            [ -n "$ID" ] || continue
+            rm -rf /tmp/baseline/* /tmp/baseline.zip
+            if gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$ID/zip" > /tmp/baseline.zip 2>/dev/null; then
+              unzip -q /tmp/baseline.zip -d /tmp/baseline
+              VECTORS="$(find /tmp/baseline -type f -name vectors.jsonl.gz -print -quit)"
+              if [ -n "$VECTORS" ]; then
+                cp "$VECTORS" /tmp/baseline/baseline-vectors.jsonl.gz
+                echo "BASELINE_ARTIFACT_ID=$ID" >> "$GITHUB_ENV"
+                echo "BASELINE_MODE=INCREMENTAL" >> "$GITHUB_ENV"
+                FOUND=1
+                break
+              fi
+            fi
+          done
+          if [ "$FOUND" -eq 0 ]; then
+            python - <<'PY'
+          import gzip
+          with gzip.GzipFile('/tmp/baseline/baseline-vectors.jsonl.gz','wb',mtime=0) as f:
+              pass
+          PY
+            echo "BASELINE_ARTIFACT_ID=NONE" >> "$GITHUB_ENV"
+            echo "BASELINE_MODE=FULL_REBUILD" >> "$GITHUB_ENV"
+          fi
+      - name: Plan exact content-addressed delta
+        run: |
+          python scripts/semantic_delta_v3.py plan \
+            --chunks /tmp/swiss-semantic-v3/chunks.jsonl \
+            --baseline /tmp/baseline/baseline-vectors.jsonl.gz \
+            --out /tmp/swiss-semantic-v3/delta
+          cat /tmp/swiss-semantic-v3/delta/delta-receipt.json
+          cp scripts/semantic_runtime_v2.py scripts/semantic_delta_v3.py /tmp/swiss-semantic-v3/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: swiss-semantic-v3-package
+          path: /tmp/swiss-semantic-v3
+          retention-days: 30
+          if-no-files-found: error
+
+  embed-delta:
+    needs: compile-delta
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      max-parallel: 8
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5, 6, 7]
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          name: swiss-semantic-v3-package
+          path: /tmp/swiss-semantic-v3
+      - name: Install exact local inference runtime
+        env:
+          OLLAMA_HOST: 127.0.0.1:11435
+          OLLAMA_MODELS: /tmp/swiss-models
+          OLLAMA_NO_CLOUD: '1'
+        run: |
+          set -euo pipefail
+          curl -fsSL https://ollama.com/install.sh -o /tmp/ollama-install.sh
+          OLLAMA_VERSION=0.33.2 sh /tmp/ollama-install.sh
+          nohup ollama serve > /tmp/swiss-ollama.log 2>&1 &
+          for i in $(seq 1 60); do
+            curl -fsS http://127.0.0.1:11435/api/version >/dev/null 2>&1 && break
+            sleep 1
+          done
+          curl -fsS http://127.0.0.1:11435/api/version
+          ollama pull qwen3-embedding:0.6b
+      - name: Produce exact delta shard
+        env:
+          OLLAMA_BASE_URL: http://127.0.0.1:11435
+        run: |
+          python scripts/semantic_runtime_v2.py embed \
+            --chunks /tmp/swiss-semantic-v3/delta/todo.jsonl \
+            --out /tmp/swiss-semantic-v3-shard \
+            --shard ${{ matrix.shard }} --shards 8
+      - uses: actions/upload-artifact@v4
+        with:
+          name: swiss-semantic-v3-shard-${{ matrix.shard }}
+          path: /tmp/swiss-semantic-v3-shard
+          retention-days: 30
+          if-no-files-found: error
+
+  merge-delta:
+    needs: embed-delta
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          name: swiss-semantic-v3-package
+          path: /tmp/swiss-semantic-v3
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: swiss-semantic-v3-shard-*
+          path: /tmp/swiss-semantic-v3-shards
+      - name: Fail closed on missing, duplicate, stale or misrouted vectors
+        run: |
+          python scripts/semantic_delta_v3.py merge \
+            --package /tmp/swiss-semantic-v3 \
+            --parts /tmp/swiss-semantic-v3-shards \
+            --out /tmp/swiss-semantic-v3-merged --shards 8
+          cat /tmp/swiss-semantic-v3-merged/merge-receipt.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: swiss-semantic-v3-vectors-validated
+          path: /tmp/swiss-semantic-v3-merged
+          retention-days: 30
+          if-no-files-found: error

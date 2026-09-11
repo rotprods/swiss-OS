@@ -24,8 +24,17 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
-      - name: Restore permanent V3 workflow in worktree
-        run: git show HEAD~2:.github/workflows/semantic-runtime-v3.yml > .github/workflows/semantic-runtime-v3.yml
+      - name: Remove helper workflow from coordination hash scope
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          path = Path('docs/refactor-v2/coordination_current_config.json')
+          data = json.loads(path.read_text())
+          target = '.github/workflows/semantic-runtime-v3.yml'
+          data['relevant_paths'] = [p for p in data['relevant_paths'] if p != target]
+          path.write_text(json.dumps(data, ensure_ascii=False, separators=(',', ':')) + '\n')
+          PY
       - name: Rebuild exact terminal projections
         run: |
           set -euo pipefail
@@ -52,12 +61,12 @@ jobs:
           python scripts/rebuild_agent_runtime_graph.py --check
           python scripts/rebuild_v2_coordination.py --config docs/refactor-v2/coordination_current_config.json --output-dir /tmp/v2-coordination-check --check
           git diff --check
-      - name: Commit deterministic generated state and restore workflow
+      - name: Commit only config and deterministic generated state
         run: |
           set -euo pipefail
           git config user.name 'swiss-os-projection-bot'
           git config user.email '261643698+rotprods@users.noreply.github.com'
-          git add .github/workflows/semantic-runtime-v3.yml \
+          git add docs/refactor-v2/coordination_current_config.json \
                   docs/state/agent-runtime/runtime-graph.json \
                   docs/state/v2/active-claims.json \
                   docs/state/v2/project-state.json \

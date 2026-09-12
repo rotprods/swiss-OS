@@ -33,13 +33,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python scripts/execution_lease_live_guard.py
-      - name: Refresh root NEXT semantics without losing durable source lineage
+      - name: Refresh root NEXT and inherited project frontier semantics
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
-          path=Path('docs/state/NEXT.json')
-          data=json.loads(path.read_text())
+
+          next_path=Path('docs/state/NEXT.json')
+          data=json.loads(next_path.read_text())
           data['generated_at']='2026-09-12T20:04:42Z'
           data['parent_git_sha']='3c902a791be0e8df1db564034e211ea90c41f1b3'
           data['parent_sha_semantics']='Resume only if current main is this SHA or an ancestry-safe descendant with no relevant-scope drift and the E4 authority tuple is unchanged.'
@@ -67,9 +68,27 @@ jobs:
             'Persist KEEP/BLOCKED receipt and terminal heartbeat only after objective evidence.',
             'Do not merge PR #463 without explicit owner instruction.'
           ]
+          review=data.setdefault('review_frontier',{})
+          review['cumulative_new_canonical_preauth']=214
+          review['current_lt350_reviewed_cumulative']=110
+          review['zero_same_city_lane_remaining']=375
+          review['historical_lt350_tail_remaining']=1179
+          required=data.get('required_inputs')
+          if isinstance(required,list) and required:
+              required[0]='GitHub current main 3c902a791be0e8df1db564034e211ea90c41f1b3 or ancestry-safe descendant'
+          data['required_inputs']=required
           safety=data.setdefault('safety',{})
           safety.update({'authority_advanced':False,'h_id_allocations':0,'canonical_id_reservations':0,'crm_universe_complete':False,'outbound':'CLOSED','send_allowed':0,'irreversible_external_actions':0})
-          path.write_text(json.dumps(data,ensure_ascii=False,sort_keys=True,indent=2)+'\n')
+          next_path.write_text(json.dumps(data,ensure_ascii=False,sort_keys=True,indent=2)+'\n')
+
+          project_path=Path('docs/state/v2/project-state.json')
+          project=json.loads(project_path.read_text())
+          live=project.setdefault('live_frontier',{})
+          live['total_new_canonical_preauth']=214
+          live['current_lt350_reviewed_cumulative']=110
+          live['zero_same_city_lane_remaining']=375
+          live['historical_lt350_tail_remaining']=1179
+          project_path.write_text(json.dumps(project,ensure_ascii=False,sort_keys=True,separators=(',',':'))+'\n')
           PY
       - name: Materialize deterministic Runtime Graph
         run: |
@@ -104,6 +123,21 @@ jobs:
             --config docs/refactor-v2/coordination_current_config.json \
             --output-dir /tmp/v2-convergence-check \
             --check
+      - name: Assert post-B11 semantic frontier
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          next_state=json.loads(Path('docs/state/NEXT.json').read_text())
+          project=json.loads(Path('docs/state/v2/project-state.json').read_text())
+          assert next_state['selected_route']=='CONVERGENCE_ONLY'
+          assert next_state['review_frontier']['cumulative_new_canonical_preauth']==214
+          assert next_state['review_frontier']['current_lt350_reviewed_cumulative']==110
+          assert project['live_frontier']['total_new_canonical_preauth']==214
+          assert project['live_frontier']['current_lt350_reviewed_cumulative']==110
+          assert project['live_frontier']['zero_same_city_lane_remaining']==375
+          assert project['active_claim_ids']==['CLAIM-CONVERGENCE-LEASE-020']
+          PY
       - name: Commit exact generated projections
         run: |
           set -euo pipefail
@@ -121,5 +155,5 @@ jobs:
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m 'coordination: materialize convergence projections token20'
+          git commit -m 'coordination: eliminate stale post-B11 frontier residues'
           git push origin HEAD:convergence/main-singularity

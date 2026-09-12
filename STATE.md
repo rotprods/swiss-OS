@@ -18,16 +18,18 @@ send_allowed                      0
 
 Authority epoch remains `HS_ENTITY_EPOCH_2026-08-25_E4`; materialized authority SHA remains `70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`. Convergence/CI/research/semantic indexes are non-authoritative and may not allocate or reserve H-IDs, terminalize source mappings, mutate candidate-private truth or execute outbound actions.
 
-## ECV handoff frontier — machine-readable contract
+## Historical monotonic evidence frontiers — machine-readable compatibility
 
-The exact-current verification lineage remains fully accounted. These two lines are intentionally machine-readable inputs to `handoff_frontier_guard.py`:
+These completed evidence frontiers remain monotonic historical facts. Preserving them in the live handoff prevents a later convergence pointer from appearing to regress already-completed work:
 
 ```text
 ECV verified frontier                           1438 / 1438
 ECV remaining never verified                    0
+lower49 typed SRR materialized                   47 / 47
+RAGR evidence-classified                         34 / 34
 ```
 
-`pending_requeue=0` remains represented in the durable `NEXT.json` ECV frontier. This ECV completion is evidence lineage only; it does not imply `CRM_UNIVERSE_COMPLETE`, which remains FALSE while `RECONCILE_REQUIRED=1403`.
+`pending_requeue=0` remains represented in the durable `NEXT.json` ECV frontier. These completed evidence frontiers do **not** imply `CRM_UNIVERSE_COMPLETE`; operational reconciliation remains incomplete at `RECONCILE_REQUIRED=1403`.
 
 ## B11 — merged PREAUTH evidence, no authority mutation
 
@@ -47,6 +49,20 @@ historical <0.35 tail remaining            1179
 The four accommodation-granularity cases preserve EGR semantics and forbid conventional-hotel coercion. Erlebnisland Grizzlybär preserves the announced end-2026 temporal risk. Brand/operator/group relationships remain non-identity evidence unless independently proven.
 
 B12 positions 111–120 are durably preserved as **backlog/provenance only** in `docs/state/NEXT_CURRENT_UNRESOLVED_LT350_B11.json`. GOAL-DRAIN forbids automatic execution of B12 while convergence mode is active.
+
+## Dual-plane NEXT semantics
+
+`docs/state/NEXT.json` remains the **domain monotonicity pointer** and therefore continues to expose the unresolved CRM domain route `CURRENT_UNRESOLVED_1403_ENTITY_RESOLUTION` for legacy/data-contract consumers.
+
+`docs/state/NEXT_CONVERGENCE_ONLY_2026-09-12.json` is the **control-plane execution pointer** used by Context Survival during this convergence. It says `route=CONVERGENCE_ONLY` and explicitly sets the B12 backlog to `execution_allowed=false`.
+
+This separation is intentional:
+
+```text
+domain still incomplete  !=  permission to execute next CRM batch
+CURRENT_UNRESOLVED_1403_ENTITY_RESOLUTION  !=  B12 authorized now
+control plane route = CONVERGENCE_ONLY
+```
 
 ## Convergence / global writer serialization
 
@@ -86,19 +102,19 @@ lease expires   2026-09-12T22:05:00Z
 - `EXECUTION_STOP_RULES_V1.md` has been harvested into #463;
 - Runtime Graph token20 materialization is deterministic and green;
 - global execution-lease live parity passes against the real GitHub CAS lease slot;
-- deterministic V2 coordination, V2 contract, forward-event contract, Context Survival, empirical death drill and CWP lineage all pass on the stable convergence tree;
-- current exact-head qualification gate is the durable ECV handoff frontier, now restored here as `1438 / 1438` and `0` remaining.
+- deterministic V2 coordination, V2 contract, forward-event contract, Context Survival, empirical death drill, CWP lineage and durable handoff all pass on the stable convergence tree;
+- current exact-head qualification has reached unit tests; compatibility repair preserves historical monotonic domain contracts without reauthorizing B12.
 
 ## NEXT
 
-Use `docs/state/v2/NEXT_CONVERGENCE_ONLY_2026-09-12.json` as the current route pointer.
+Use `docs/state/NEXT_CONVERGENCE_ONLY_2026-09-12.json` as the current **execution/control-plane** route pointer. Keep `docs/state/NEXT.json` as the durable domain-monotonic pointer.
 
 The next safe sequence is:
 
 ```text
-reseal Runtime Graph + V2/Context Survival after this STATE change
-→ require durable handoff frontier PASS
-→ run unit tests + manifest canary
+emit fresh token20 heartbeat
+→ reseal Runtime Graph + V2/Context Survival after compatibility repair
+→ run complete exact-head unit tests + manifest canary
 → persist KEEP/BLOCKED iteration receipt + fresh ACTIVE heartbeat/handoff
 → final deterministic reseal + exact-head gauntlet
 → re-read live main for drift

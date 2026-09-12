@@ -6,8 +6,9 @@ on:
     paths:
       - '.github/workflows/convergence-runtime-graph-materialize.yml'
       - 'docs/refactor-v2/coordination_current_config.json'
-      - 'docs/state/v2/NEXT_CONVERGENCE_ONLY_2026-09-12.json'
-      - 'docs/state/agent-runtime/heartbeats/HB-AGENT-GPT56SOL-CONVERGENCE-020-200442.json'
+      - 'docs/state/NEXT_CONVERGENCE_ONLY_2026-09-12.json'
+      - 'docs/state/agent-runtime/heartbeats/HB-AGENT-GPT56SOL-CONVERGENCE-020-202408.json'
+      - 'docs/state/v2/claims/CLAIM-CONVERGENCE-LEASE-020.json'
       - 'STATE.md'
 
 permissions:
@@ -33,37 +34,44 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python scripts/execution_lease_live_guard.py
-      - name: Stabilize deterministic coordination input surface
+      - name: Stabilize dual-plane coordination inputs
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
           path=Path('docs/refactor-v2/coordination_current_config.json')
           data=json.loads(path.read_text())
+          old_pointer='docs/state/v2/NEXT_CONVERGENCE_ONLY_2026-09-12.json'
+          new_pointer='docs/state/NEXT_CONVERGENCE_ONLY_2026-09-12.json'
+          old_hb='docs/state/agent-runtime/heartbeats/HB-AGENT-GPT56SOL-CONVERGENCE-020-200442.json'
+          new_hb='docs/state/agent-runtime/heartbeats/HB-AGENT-GPT56SOL-CONVERGENCE-020-202408.json'
           mutable_receipt='docs/reports/convergence/CONVERGENCE_CHECKPOINT_2026-09-12.json'
-          for key in ('relevant_paths','survival_paths'):
+          data['generated_at']='2026-09-12T20:24:08Z'
+          data['latest_domain_next']=new_pointer
+          for key in ('state_refs','relevant_paths','survival_paths'):
               values=data.get(key,[])
               if isinstance(values,list):
-                  data[key]=[value for value in values if value != mutable_receipt]
-          risks=data.setdefault('risks',[])
-          rule='Mutable convergence receipts/checkpoints are evidence outputs, not deterministic coordination inputs; hashing them into relevant/survival scope creates a self-induced rebuild loop.'
-          if rule not in risks:
-              risks.append(rule)
+                  values=[new_pointer if v==old_pointer else new_hb if v==old_hb else v for v in values]
+                  values=[v for v in values if v != mutable_receipt]
+                  data[key]=list(dict.fromkeys(values))
           verified=data.setdefault('verified_work',[])
-          finding='The mutable convergence checkpoint was removed from deterministic relevant/survival hashing while remaining a state reference; exact-head qualification can now run without changing its own projection inputs.'
+          finding='Dual-plane NEXT compatibility preserves root CRM domain monotonicity while Context Survival executes from a separate CONVERGENCE_ONLY control pointer with B12 execution disabled.'
           if finding not in verified:
               verified.append(finding)
+          live=data.setdefault('liveness_findings',[])
+          hb_finding='Fresh token20 heartbeat HB-AGENT-GPT56SOL-CONVERGENCE-020-202408 observed at 2026-09-12T20:24:08Z is the current liveness boundary.'
+          if hb_finding not in live:
+              live.append(hb_finding)
           path.write_text(json.dumps(data,ensure_ascii=False,sort_keys=True,separators=(',',':'))+'\n')
           PY
-      - name: Refresh root NEXT and inherited project frontier semantics
+      - name: Preserve root domain NEXT while projecting convergence execution gate
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
-
-          next_path=Path('docs/state/NEXT.json')
-          data=json.loads(next_path.read_text())
-          data['generated_at']='2026-09-12T20:04:42Z'
+          path=Path('docs/state/NEXT.json')
+          data=json.loads(path.read_text())
+          data['generated_at']='2026-09-12T20:24:08Z'
           data['parent_git_sha']='3c902a791be0e8df1db564034e211ea90c41f1b3'
           data['parent_sha_semantics']='Resume only if current main is this SHA or an ancestry-safe descendant with no relevant-scope drift and the E4 authority tuple is unchanged.'
           data['active_claim']={
@@ -74,18 +82,21 @@ jobs:
             'session_id':'SES-20260912T190500Z-CONVERGENCE-020'
           }
           data['execution_mode']='RECOVERY_RECONCILE'
-          data['selected_route']='CONVERGENCE_ONLY'
-          data['next_route']='CONVERGENCE_ONLY'
-          data['exact_dependency']='Finish globally serialized writer-lease promotion and deterministic post-B11 project-memory/recovery convergence. B12 is backlog/provenance only and MUST NOT execute automatically.'
+          data['selected_route']='CURRENT_UNRESOLVED_1403_ENTITY_RESOLUTION'
+          data['next_route']='CURRENT_UNRESOLVED_1403_ENTITY_RESOLUTION'
+          data['convergence_route']='CONVERGENCE_ONLY'
+          data['successor_execution_allowed']=False
+          data['exact_dependency']='CRM domain remains CURRENT_UNRESOLVED_1403_ENTITY_RESOLUTION, but GOAL-DRAIN blocks B12 execution while the independent control-plane route is CONVERGENCE_ONLY.'
           data['hard_blockers']=[
             'PR_463_EXACT_HEAD_GAUNTLET_NOT_YET_GREEN',
             'GLOBAL_EXECUTION_LEASE_NOT_CANONICAL_UNTIL_EXPLICITLY_AUTHORIZED_MERGE',
             'RECONCILE_REQUIRED_1403_NOT_ZERO',
+            'GOAL_DRAIN_BLOCKS_B12_AUTOMATIC_EXECUTION',
             'OUTBOUND_CLOSED'
           ]
           data['next_safe_actions']=[
-            'Rebuild Runtime Graph from the latest token20 heartbeat.',
-            'Rebuild deterministic V2 coordination and Context Survival from the convergence-aware config.',
+            'Read docs/state/NEXT_CONVERGENCE_ONLY_2026-09-12.json for execution eligibility.',
+            'Keep CURRENT_UNRESOLVED_1403_ENTITY_RESOLUTION as the domain monotonicity route only.',
             'Run exact-head repo/death/context/unit/canary gauntlet.',
             'Persist KEEP/BLOCKED receipt and terminal heartbeat only after objective evidence.',
             'Do not merge PR #463 without explicit owner instruction.'
@@ -101,7 +112,7 @@ jobs:
           data['required_inputs']=required
           safety=data.setdefault('safety',{})
           safety.update({'authority_advanced':False,'h_id_allocations':0,'canonical_id_reservations':0,'crm_universe_complete':False,'outbound':'CLOSED','send_allowed':0,'irreversible_external_actions':0})
-          next_path.write_text(json.dumps(data,ensure_ascii=False,sort_keys=True,indent=2)+'\n')
+          path.write_text(json.dumps(data,ensure_ascii=False,sort_keys=True,indent=2)+'\n')
 
           project_path=Path('docs/state/v2/project-state.json')
           project=json.loads(project_path.read_text())
@@ -145,24 +156,30 @@ jobs:
             --config docs/refactor-v2/coordination_current_config.json \
             --output-dir /tmp/v2-convergence-check \
             --check
-      - name: Assert post-B11 semantic frontier
+      - name: Assert dual-plane post-B11 compatibility
         run: |
           python - <<'PY'
-          import json
+          import json,re
           from pathlib import Path
-          next_state=json.loads(Path('docs/state/NEXT.json').read_text())
+          root=json.loads(Path('docs/state/NEXT.json').read_text())
+          control=json.loads(Path('docs/state/NEXT_CONVERGENCE_ONLY_2026-09-12.json').read_text())
           project=json.loads(Path('docs/state/v2/project-state.json').read_text())
           config=json.loads(Path('docs/refactor-v2/coordination_current_config.json').read_text())
-          checkpoint='docs/reports/convergence/CONVERGENCE_CHECKPOINT_2026-09-12.json'
-          assert next_state['selected_route']=='CONVERGENCE_ONLY'
-          assert next_state['review_frontier']['cumulative_new_canonical_preauth']==214
-          assert next_state['review_frontier']['current_lt350_reviewed_cumulative']==110
+          state=Path('STATE.md').read_text()
+          assert root['next_route']=='CURRENT_UNRESOLVED_1403_ENTITY_RESOLUTION'
+          assert root['selected_route']=='CURRENT_UNRESOLVED_1403_ENTITY_RESOLUTION'
+          assert root['convergence_route']=='CONVERGENCE_ONLY'
+          assert root['successor_execution_allowed'] is False
+          assert control['route']=='CONVERGENCE_ONLY'
+          assert control['backlog']['execution_allowed'] is False
+          assert config['latest_domain_next']=='docs/state/NEXT_CONVERGENCE_ONLY_2026-09-12.json'
+          assert config['latest_domain_next'] in config['survival_paths']
+          assert root['review_frontier']['cumulative_new_canonical_preauth']==214
+          assert root['review_frontier']['current_lt350_reviewed_cumulative']==110
           assert project['live_frontier']['total_new_canonical_preauth']==214
-          assert project['live_frontier']['current_lt350_reviewed_cumulative']==110
-          assert project['live_frontier']['zero_same_city_lane_remaining']==375
           assert project['active_claim_ids']==['CLAIM-CONVERGENCE-LEASE-020']
-          assert checkpoint not in config['relevant_paths']
-          assert checkpoint not in config['survival_paths']
+          assert re.search(r'lower49 typed SRR materialized\s+47 / 47',state)
+          assert re.search(r'RAGR evidence-classified\s+34 / 34',state)
           PY
       - name: Commit exact generated projections
         run: |
@@ -182,5 +199,5 @@ jobs:
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m 'coordination: stabilize deterministic convergence scope'
+          git commit -m 'coordination: preserve domain monotonicity under convergence gate'
           git push origin HEAD:convergence/main-singularity

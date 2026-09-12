@@ -33,6 +33,28 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python scripts/execution_lease_live_guard.py
+      - name: Stabilize deterministic coordination input surface
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          path=Path('docs/refactor-v2/coordination_current_config.json')
+          data=json.loads(path.read_text())
+          mutable_receipt='docs/reports/convergence/CONVERGENCE_CHECKPOINT_2026-09-12.json'
+          for key in ('relevant_paths','survival_paths'):
+              values=data.get(key,[])
+              if isinstance(values,list):
+                  data[key]=[value for value in values if value != mutable_receipt]
+          risks=data.setdefault('risks',[])
+          rule='Mutable convergence receipts/checkpoints are evidence outputs, not deterministic coordination inputs; hashing them into relevant/survival scope creates a self-induced rebuild loop.'
+          if rule not in risks:
+              risks.append(rule)
+          verified=data.setdefault('verified_work',[])
+          finding='The mutable convergence checkpoint was removed from deterministic relevant/survival hashing while remaining a state reference; exact-head qualification can now run without changing its own projection inputs.'
+          if finding not in verified:
+              verified.append(finding)
+          path.write_text(json.dumps(data,ensure_ascii=False,sort_keys=True,separators=(',',':'))+'\n')
+          PY
       - name: Refresh root NEXT and inherited project frontier semantics
         run: |
           python - <<'PY'
@@ -130,6 +152,8 @@ jobs:
           from pathlib import Path
           next_state=json.loads(Path('docs/state/NEXT.json').read_text())
           project=json.loads(Path('docs/state/v2/project-state.json').read_text())
+          config=json.loads(Path('docs/refactor-v2/coordination_current_config.json').read_text())
+          checkpoint='docs/reports/convergence/CONVERGENCE_CHECKPOINT_2026-09-12.json'
           assert next_state['selected_route']=='CONVERGENCE_ONLY'
           assert next_state['review_frontier']['cumulative_new_canonical_preauth']==214
           assert next_state['review_frontier']['current_lt350_reviewed_cumulative']==110
@@ -137,11 +161,14 @@ jobs:
           assert project['live_frontier']['current_lt350_reviewed_cumulative']==110
           assert project['live_frontier']['zero_same_city_lane_remaining']==375
           assert project['active_claim_ids']==['CLAIM-CONVERGENCE-LEASE-020']
+          assert checkpoint not in config['relevant_paths']
+          assert checkpoint not in config['survival_paths']
           PY
       - name: Commit exact generated projections
         run: |
           set -euo pipefail
           git add \
+            docs/refactor-v2/coordination_current_config.json \
             docs/state/NEXT.json \
             docs/state/agent-runtime/runtime-graph.json \
             docs/state/v2/active-claims.json \
@@ -155,5 +182,5 @@ jobs:
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m 'coordination: eliminate stale post-B11 frontier residues'
+          git commit -m 'coordination: stabilize deterministic convergence scope'
           git push origin HEAD:convergence/main-singularity

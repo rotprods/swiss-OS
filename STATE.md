@@ -1,6 +1,6 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest reconciled GitHub frontier: **main `3c902a791be0e8df1db564034e211ea90c41f1b3`**. B11 is merged and SWISS-OS is in **`CONVERGENCE_ONLY`**. The only live material convergence lane is draft PR **#463** on `convergence/main-singularity`, currently owned by `CLAIM-CONVERGENCE-LEASE-020` / global fencing token **20** under the bounded authority ceiling `CONVERGENCE_ORCHESTRATION_AND_LEASE_REPAIR_ONLY_NO_DOMAIN_OR_OUTBOUND_AUTHORITY`.
+Latest reconciled GitHub frontier: **main `3c902a791be0e8df1db564034e211ea90c41f1b3`**. B11 is merged and SWISS-OS remains in **`CONVERGENCE_ONLY`**. Draft PR **#463** is the single convergence candidate. Its bounded token20 wave is now **terminal KEEP / RELEASED** after exact-head qualification; there is no authorized successor writer.
 
 ## Authority — unchanged / locked
 
@@ -20,8 +20,6 @@ Authority epoch remains `HS_ENTITY_EPOCH_2026-08-25_E4`; materialized authority 
 
 ## Historical monotonic evidence frontiers — machine-readable compatibility
 
-These completed evidence frontiers remain monotonic historical facts. Preserving them in the live handoff prevents a later convergence pointer from appearing to regress already-completed work:
-
 ```text
 ECV verified frontier                           1438 / 1438
 ECV remaining never verified                    0
@@ -29,11 +27,9 @@ lower49 typed SRR materialized                   47 / 47
 RAGR evidence-classified                         34 / 34
 ```
 
-`pending_requeue=0` remains represented in the durable `NEXT.json` ECV frontier. These completed evidence frontiers do **not** imply `CRM_UNIVERSE_COMPLETE`; operational reconciliation remains incomplete at `RECONCILE_REQUIRED=1403`.
+These are completed evidence frontiers only. They do **not** imply `CRM_UNIVERSE_COMPLETE` while `RECONCILE_REQUIRED=1403`.
 
 ## B11 — merged PREAUTH evidence, no authority mutation
-
-B11 (`CURR-U1403-B11`) reviewed operational zero-city positions 101–110 with 10/10 current evidence:
 
 ```text
 NEW_CANONICAL_PREAUTH                         6
@@ -46,80 +42,67 @@ zero-same-city lane remaining               375
 historical <0.35 tail remaining            1179
 ```
 
-The four accommodation-granularity cases preserve EGR semantics and forbid conventional-hotel coercion. Erlebnisland Grizzlybär preserves the announced end-2026 temporal risk. Brand/operator/group relationships remain non-identity evidence unless independently proven.
-
-B12 positions 111–120 are durably preserved as **backlog/provenance only** in `docs/state/NEXT_CURRENT_UNRESOLVED_LT350_B11.json`. GOAL-DRAIN forbids automatic execution of B12 while convergence mode is active.
+B12 positions 111–120 remain **backlog/provenance only** in `docs/state/NEXT_CURRENT_UNRESOLVED_LT350_B11.json`. GOAL-DRAIN forbids automatic execution of B12 while convergence mode is active.
 
 ## Dual-plane NEXT semantics
 
-`docs/state/NEXT.json` remains the **domain monotonicity pointer** and therefore continues to expose the unresolved CRM domain route `CURRENT_UNRESOLVED_1403_ENTITY_RESOLUTION` for legacy/data-contract consumers.
+`docs/state/NEXT.json` remains the domain-monotonic pointer and preserves `CURRENT_UNRESOLVED_1403_ENTITY_RESOLUTION` because that domain backlog is real.
 
-`docs/state/NEXT_CONVERGENCE_ONLY_2026-09-12.json` is the **control-plane execution pointer** used by Context Survival during this convergence. It says `route=CONVERGENCE_ONLY` and explicitly sets the B12 backlog to `execution_allowed=false`.
+`docs/state/NEXT_CONVERGENCE_ONLY_2026-09-12.json` is the execution/control pointer. It is now `QUALIFIED_AWAITING_EXPLICIT_MERGE`, retains `route=CONVERGENCE_ONLY`, and keeps B12 `execution_allowed=false`.
 
-This separation is intentional:
+## Global writer serialization — qualified
 
-```text
-domain still incomplete  !=  permission to execute next CRM batch
-CURRENT_UNRESOLVED_1403_ENTITY_RESOLUTION  !=  B12 authorized now
-control plane route = CONVERGENCE_ONLY
-```
+The duplicate-token18 failure was reproduced and repaired in PR #463 with a GitHub Contents SHA compare-and-swap lease.
 
-## Convergence / global writer serialization
+Empirical evidence:
 
-The `/aprende` cycle reproduced a real duplicate-token acquisition race: two independent branches read watermark17 and both selected token18. The corrective contract is now being qualified in PR #463.
-
-Global mutable lease slot:
-
-```text
-branch: coordination/execution-lease
-path:   docs/state/execution-leases/current.json
-```
-
-The slot uses GitHub Contents SHA compare-and-swap. Empirical provider evidence already demonstrated:
-
-1. token19 acquired from one exact blob SHA;
+1. token19 acquired from an exact durable blob SHA;
 2. a second contender using the same stale SHA received HTTP 409;
-3. the winner remained intact;
-4. when main advanced, token19 was released fail-closed;
-5. token20/new session was acquired against fresh main with a higher durable watermark.
+3. winner state remained intact;
+4. main drift caused token19 fail-closed release;
+5. token20/new session acquired against fresh main with higher watermark;
+6. token20 live claim↔lease parity passed CI;
+7. token20 wave passed full exact-head qualification and is now terminal.
 
-Current holder:
+Token20 lifecycle:
 
 ```text
-claim/session   CLAIM-CONVERGENCE-LEASE-020 / SES-20260912T190500Z-CONVERGENCE-020
-fencing token   20
-parent main     3c902a791be0e8df1db564034e211ea90c41f1b3
-lease expires   2026-09-12T22:05:00Z
+claim          CLAIM-CONVERGENCE-LEASE-020
+session        SES-20260912T190500Z-CONVERGENCE-020
+fencing token  20
+state          RELEASED
+iteration      ITER-convergence-main-singularity-token20 = KEEP
+qualification  repo-guard 4440 / workflow 34717191274 = PASS
+unit tests     620 / 620 PASS
+manifest       PASS
 ```
+
+The external CAS lease must be released as part of terminalization and terminal projections must show zero active writers with fencing high-watermark 20.
 
 ## Convergence progress
 
-- historical semantic PRs #438/#455/#460 are closed as EVIDENCE_ONLY / DONOR_PORT / SALVAGE_REBASE;
+- historical semantic PRs #438/#455/#460 are EVIDENCE_ONLY / DONOR_PORT / SALVAGE_REBASE;
 - stale CRM #451 is SUPERSEDED;
-- research donors #448/#453 are classified and preserved;
-- candidate signature #425 and execution-stop policy #414 are classified SALVAGE_REBASE;
-- duplicate convergence PR #462 is closed as DONOR_PORT into #463;
-- `EXECUTION_STOP_RULES_V1.md` has been harvested into #463;
-- Runtime Graph token20 materialization is deterministic and green;
-- global execution-lease live parity passes against the real GitHub CAS lease slot;
-- deterministic V2 coordination, V2 contract, forward-event contract, Context Survival, empirical death drill, CWP lineage and durable handoff all pass on the stable convergence tree;
-- current exact-head qualification has reached unit tests; compatibility repair preserves historical monotonic domain contracts without reauthorizing B12.
+- research/candidate/policy donors are classified with loss-proof;
+- duplicate convergence PR #462 is closed DONOR_PORT into #463;
+- execution-stop rules are harvested;
+- Runtime Graph, V2 rebuild/contracts, Context Survival, death drill, CWP lineage and durable handoff pass;
+- dual-plane NEXT compatibility preserves historical monotonic contracts while B12 remains execution-blocked;
+- full active-state gauntlet 4440 passed every gate including 620/620 tests and manifest canary;
+- protected metrics remained zero: authority mutations, H-ID allocations and outbound actions.
 
 ## NEXT
 
-Use `docs/state/NEXT_CONVERGENCE_ONLY_2026-09-12.json` as the current **execution/control-plane** route pointer. Keep `docs/state/NEXT.json` as the durable domain-monotonic pointer.
-
-The next safe sequence is:
+Current control state is **qualified convergence candidate awaiting explicit owner merge instruction**.
 
 ```text
-emit fresh token20 heartbeat
-→ reseal Runtime Graph + V2/Context Survival after compatibility repair
-→ run complete exact-head unit tests + manifest canary
-→ persist KEEP/BLOCKED iteration receipt + fresh ACTIVE heartbeat/handoff
-→ final deterministic reseal + exact-head gauntlet
+release global CAS lease token20
+→ reseal Runtime Graph + V2/Context Survival to zero active writers
+→ final exact-head terminal-state gauntlet
 → re-read live main for drift
+→ await explicit owner merge instruction
 ```
 
-Do not open B12, Semantic V4 or any other feature wave. Do not merge PR #463 without explicit owner instruction. Keep `OUTBOUND=CLOSED` / `send_allowed=0`.
+Do not open B12, Semantic V4 or another feature wave. Do not merge PR #463 without explicit owner instruction. Keep `OUTBOUND=CLOSED` / `send_allowed=0`.
 
 **VERIFY LIVE TRUTH BEFORE EXECUTION.**

@@ -105,7 +105,7 @@ def active_claims() -> list[dict[str, Any]]:
     return [claim for claim in claims if str(claim.get("claim_id", "")) in active_ids]
 
 
-def terminal_claims_from_change(paths: list[str]) -> list[dict[str, Any]]:
+def raw_terminal_claims_from_change(paths: list[str]) -> list[dict[str, Any]]:
     claims, projection = all_claims_and_projection()
     states = projection.get("claim_states", {}) if isinstance(projection.get("claim_states"), dict) else {}
     changed = set(paths)
@@ -131,6 +131,82 @@ def terminal_claims_from_change(paths: list[str]) -> list[dict[str, Any]]:
         if has_terminal_event:
             result.append(claim)
     return result
+
+
+def _same_terminal_lineage(predecessor: dict[str, Any], successor: dict[str, Any]) -> bool:
+    for key in ("project_id", "workstream_id", "objective_id", "branch"):
+        if str(predecessor.get(key, "")) != str(successor.get(key, "")):
+            return False
+    p_token = predecessor.get("fencing_token")
+    s_token = successor.get("fencing_token")
+    if isinstance(p_token, bool) or isinstance(s_token, bool):
+        return False
+    if not isinstance(p_token, int) or not isinstance(s_token, int):
+        return False
+    return s_token > p_token
+
+
+def collapse_terminal_successions(
+    claims: list[dict[str, Any]], acquisition_events: list[dict[str, Any]]
+) -> list[dict[str, Any]]:
+    """Collapse only explicit, monotonic predecessor->successor chains.
+
+    Unrelated terminal claims remain separate and therefore fail closed in validate().
+    """
+    by_id = {str(c.get("claim_id", "")): c for c in claims if c.get("claim_id")}
+    edges: set[tuple[str, str]] = set()
+
+    def add_edge(predecessor_id: str, successor_id: str) -> None:
+        predecessor = by_id.get(predecessor_id)
+        successor = by_id.get(successor_id)
+        if predecessor and successor and _same_terminal_lineage(predecessor, successor):
+            edges.add((predecessor_id, successor_id))
+
+    for claim in claims:
+        cid = str(claim.get("claim_id", ""))
+        successor_id = claim.get("superseded_by")
+        if cid and isinstance(successor_id, str) and successor_id:
+            add_edge(cid, successor_id)
+
+    for event in acquisition_events:
+        if event.get("event_type") != "CLAIM_ACQUIRED":
+            continue
+        causation = event.get("causation", [])
+        if not isinstance(causation, list):
+            continue
+        successor_ids = [
+            x.split(":", 1)[1]
+            for x in causation
+            if isinstance(x, str) and x.startswith("claim:")
+        ]
+        predecessor_ids = [
+            x.split(":", 1)[1]
+            for x in causation
+            if isinstance(x, str) and (x.startswith("supersedes:") or x.startswith("predecessor:"))
+        ]
+        for predecessor_id in predecessor_ids:
+            for successor_id in successor_ids:
+                add_edge(predecessor_id, successor_id)
+
+    replaced = {predecessor for predecessor, _successor in edges}
+    return sorted(
+        [claim for claim in claims if str(claim.get("claim_id", "")) not in replaced],
+        key=lambda claim: (int(claim.get("fencing_token", 0)), str(claim.get("claim_id", ""))),
+    )
+
+
+def terminal_claims_from_change(paths: list[str]) -> list[dict[str, Any]]:
+    terminal = raw_terminal_claims_from_change(paths)
+    if len(terminal) <= 1:
+        return terminal
+    acquisition_events: list[dict[str, Any]] = []
+    for event_path in sorted(set(paths)):
+        if not event_path.startswith("docs/state/v2/events/") or not event_path.endswith(".json"):
+            continue
+        payload = load_json(ROOT / event_path)
+        if payload.get("event_type") == "CLAIM_ACQUIRED":
+            acquisition_events.append(payload)
+    return collapse_terminal_successions(terminal, acquisition_events)
 
 
 def validate(paths: list[str], *, require_receipt: bool) -> list[str]:

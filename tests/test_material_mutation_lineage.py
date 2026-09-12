@@ -56,5 +56,33 @@ class MaterialMutationLineageTests(unittest.TestCase):
             self.assertIn("MATERIAL_CHANGE_MISSING_ITERATION_RECEIPT:SES-1", guard.validate(paths, require_receipt=False))
 
 
+    def test_terminal_succession_chain_selects_unique_effective_owner(self):
+        base = {"project_id":"SWITZERLAND_JOB_OS","workstream_id":"WS-X","objective_id":"OBJ-X","branch":"feat/x"}
+        c19 = {**base,"claim_id":"CLAIM-19","fencing_token":19,"state":"SUPERSEDED","superseded_by":"CLAIM-20"}
+        c20 = {**base,"claim_id":"CLAIM-20","fencing_token":20,"state":"RELEASED"}
+        c21 = {**base,"claim_id":"CLAIM-21","fencing_token":21,"state":"RELEASED"}
+        events = [
+            {"event_type":"CLAIM_ACQUIRED","causation":["claim:CLAIM-20","supersedes:CLAIM-19"]},
+            {"event_type":"CLAIM_ACQUIRED","causation":["claim:CLAIM-21","predecessor:CLAIM-20"]},
+        ]
+        result = guard.collapse_terminal_successions([c19,c20,c21], events)
+        self.assertEqual([c["claim_id"] for c in result], ["CLAIM-21"])
+
+    def test_unrelated_terminal_claims_remain_ambiguous(self):
+        common = {"project_id":"SWITZERLAND_JOB_OS","objective_id":"OBJ-X","branch":"feat/x"}
+        c20 = {**common,"workstream_id":"WS-A","claim_id":"CLAIM-20","fencing_token":20,"state":"RELEASED"}
+        c21 = {**common,"workstream_id":"WS-B","claim_id":"CLAIM-21","fencing_token":21,"state":"RELEASED"}
+        result = guard.collapse_terminal_successions([c20,c21], [])
+        self.assertEqual({c["claim_id"] for c in result}, {"CLAIM-20","CLAIM-21"})
+
+    def test_invalid_cross_lineage_predecessor_edge_does_not_collapse(self):
+        common = {"project_id":"SWITZERLAND_JOB_OS","objective_id":"OBJ-X","branch":"feat/x"}
+        c20 = {**common,"workstream_id":"WS-A","claim_id":"CLAIM-20","fencing_token":20,"state":"RELEASED"}
+        c21 = {**common,"workstream_id":"WS-B","claim_id":"CLAIM-21","fencing_token":21,"state":"RELEASED"}
+        event = {"event_type":"CLAIM_ACQUIRED","causation":["claim:CLAIM-21","predecessor:CLAIM-20"]}
+        result = guard.collapse_terminal_successions([c20,c21], [event])
+        self.assertEqual({c["claim_id"] for c in result}, {"CLAIM-20","CLAIM-21"})
+
+
 if __name__ == "__main__":
     unittest.main()

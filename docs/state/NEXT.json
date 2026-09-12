@@ -1,5 +1,11 @@
 {
-  "active_claim": null,
+  "active_claim": {
+    "authority_ceiling": "CONVERGENCE_ORCHESTRATION_AND_LEASE_REPAIR_ONLY_NO_DOMAIN_OR_OUTBOUND_AUTHORITY",
+    "branch": "convergence/main-singularity",
+    "claim_id": "CLAIM-CONVERGENCE-LINEAGE-021",
+    "fencing_token": 21,
+    "session_id": "SES-20260912T203915Z-CONVERGENCE-021"
+  },
   "artifacts": [
     "docs/state/CRM_CURRENT_SOURCE_MAPPING_PROJECTION_33339392661.json",
     "docs/state/CRM_CURRENT_GONTEN_ECV_SRR_LINEAGE_33339392661.json",
@@ -38,7 +44,7 @@
     "web_current_first_party_research"
   ],
   "checkpoint_id": "CRM_UNIVERSE_COMPLETE",
-  "convergence_route": "CONVERGENCE_QUALIFIED_AWAITING_EXPLICIT_MERGE",
+  "convergence_route": "CONVERGENCE_LINEAGE_REPAIR_TOKEN21_ACTIVE",
   "cycle_id": "META-20260831-CRM-CURRENT-ENTITY-RESOLUTION",
   "done_when": [
     "The current 2061-record coherent source universe is fully partitioned into evidence-backed terminal mappings or explicitly typed non-authority dispositions.",
@@ -68,14 +74,14 @@
     "remaining_never_verified": 0,
     "remaining_unverified": 0
   },
-  "exact_dependency": "CRM domain remains unresolved at 1403 records, but no successor batch is authorized while the qualified convergence candidate awaits explicit owner merge instruction.",
+  "exact_dependency": "The sole convergence writer is token21 under global CAS, bounded to terminal lineage succession repair; CRM domain remains unresolved at 1403 and B12 is not authorized.",
   "execution_mode": "RECOVERY_RECONCILE",
-  "generated_at": "2026-09-12T20:30:18Z",
+  "generated_at": "2026-09-12T20:39:15Z",
   "goal_id": "G-0500",
   "graph_impact": "META",
   "hard_blockers": [
+    "TOKEN21_TERMINAL_LINEAGE_SUCCESSION_REPAIR_NOT_YET_QUALIFIED",
     "EXPLICIT_OWNER_MERGE_INSTRUCTION_REQUIRED_FOR_PR_463",
-    "GLOBAL_EXECUTION_LEASE_NOT_CANONICAL_UNTIL_EXPLICITLY_AUTHORIZED_MERGE",
     "RECONCILE_REQUIRED_1403_NOT_ZERO",
     "GOAL_DRAIN_BLOCKS_B12_AUTOMATIC_EXECUTION",
     "OUTBOUND_CLOSED"
@@ -91,9 +97,9 @@
   },
   "next_route": "CURRENT_UNRESOLVED_1403_ENTITY_RESOLUTION",
   "next_safe_actions": [
-    "Verify terminal projections show zero active writers and fencing high-watermark 20.",
-    "Run final exact-head terminal-state gauntlet.",
-    "Re-read live main for relevant-scope drift.",
+    "Run token21 lineage regression tests and deterministic active projection rebuild.",
+    "Run exact-head full gauntlet under live global lease token21.",
+    "Release and terminalize token21 only after green evidence, then re-certify terminal head.",
     "Await explicit owner merge instruction; do not start B12 or another feature wave."
   ],
   "outbound_allowed": false,

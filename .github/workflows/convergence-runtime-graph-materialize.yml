@@ -1,16 +1,20 @@
-name: convergence-runtime-graph-materialize
+name: convergence-projections-materialize
 
 on:
   push:
     branches: [convergence/main-singularity]
     paths:
       - '.github/workflows/convergence-runtime-graph-materialize.yml'
+      - 'docs/refactor-v2/coordination_current_config.json'
+      - 'docs/state/v2/NEXT_CONVERGENCE_ONLY_2026-09-12.json'
+      - 'docs/state/agent-runtime/heartbeats/HB-AGENT-GPT56SOL-CONVERGENCE-020-200442.json'
+      - 'STATE.md'
 
 permissions:
   contents: write
 
 concurrency:
-  group: convergence-runtime-graph-materialize
+  group: convergence-projections-materialize
   cancel-in-progress: false
 
 jobs:
@@ -29,6 +33,44 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python scripts/execution_lease_live_guard.py
+      - name: Refresh root NEXT semantics without losing durable source lineage
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          path=Path('docs/state/NEXT.json')
+          data=json.loads(path.read_text())
+          data['generated_at']='2026-09-12T20:04:42Z'
+          data['parent_git_sha']='3c902a791be0e8df1db564034e211ea90c41f1b3'
+          data['parent_sha_semantics']='Resume only if current main is this SHA or an ancestry-safe descendant with no relevant-scope drift and the E4 authority tuple is unchanged.'
+          data['active_claim']={
+            'claim_id':'CLAIM-CONVERGENCE-LEASE-020',
+            'fencing_token':20,
+            'authority_ceiling':'CONVERGENCE_ORCHESTRATION_AND_LEASE_REPAIR_ONLY_NO_DOMAIN_OR_OUTBOUND_AUTHORITY',
+            'branch':'convergence/main-singularity',
+            'session_id':'SES-20260912T190500Z-CONVERGENCE-020'
+          }
+          data['execution_mode']='RECOVERY_RECONCILE'
+          data['selected_route']='CONVERGENCE_ONLY'
+          data['next_route']='CONVERGENCE_ONLY'
+          data['exact_dependency']='Finish globally serialized writer-lease promotion and deterministic post-B11 project-memory/recovery convergence. B12 is backlog/provenance only and MUST NOT execute automatically.'
+          data['hard_blockers']=[
+            'PR_463_EXACT_HEAD_GAUNTLET_NOT_YET_GREEN',
+            'GLOBAL_EXECUTION_LEASE_NOT_CANONICAL_UNTIL_EXPLICITLY_AUTHORIZED_MERGE',
+            'RECONCILE_REQUIRED_1403_NOT_ZERO',
+            'OUTBOUND_CLOSED'
+          ]
+          data['next_safe_actions']=[
+            'Rebuild Runtime Graph from the latest token20 heartbeat.',
+            'Rebuild deterministic V2 coordination and Context Survival from the convergence-aware config.',
+            'Run exact-head repo/death/context/unit/canary gauntlet.',
+            'Persist KEEP/BLOCKED receipt and terminal heartbeat only after objective evidence.',
+            'Do not merge PR #463 without explicit owner instruction.'
+          ]
+          safety=data.setdefault('safety',{})
+          safety.update({'authority_advanced':False,'h_id_allocations':0,'canonical_id_reservations':0,'crm_universe_complete':False,'outbound':'CLOSED','send_allowed':0,'irreversible_external_actions':0})
+          path.write_text(json.dumps(data,ensure_ascii=False,sort_keys=True,indent=2)+'\n')
+          PY
       - name: Materialize deterministic Runtime Graph
         run: |
           set -euo pipefail
@@ -44,19 +86,40 @@ jobs:
           print(max(values) if values else '1970-01-01T00:00:00Z')
           PY
           )
-          python scripts/rebuild_agent_runtime_graph.py \
-            --as-of "$AS_OF" \
-            --output docs/state/agent-runtime/runtime-graph.json
+          python scripts/rebuild_agent_runtime_graph.py --as-of "$AS_OF" --output docs/state/agent-runtime/runtime-graph.json
           python scripts/rebuild_agent_runtime_graph.py --check
-      - name: Commit exact generated projection
+      - name: Materialize deterministic V2 coordination and Context Survival
         run: |
           set -euo pipefail
-          if git diff --quiet -- docs/state/agent-runtime/runtime-graph.json; then
-            echo 'Runtime Graph already canonical.'
+          rm -rf /tmp/v2-convergence
+          python scripts/rebuild_v2_coordination.py \
+            --config docs/refactor-v2/coordination_current_config.json \
+            --output-dir /tmp/v2-convergence
+          cp /tmp/v2-convergence/active-claims.json docs/state/v2/active-claims.json
+          cp /tmp/v2-convergence/project-state.json docs/state/v2/project-state.json
+          cp /tmp/v2-convergence/context-pack.json docs/state/v2/context-pack.json
+          cp /tmp/v2-convergence/graph-snapshot.json docs/state/v2/graph-snapshot.json
+          cp /tmp/v2-convergence/CONTEXT_SURVIVAL.json docs/continuity/CONTEXT_SURVIVAL.json
+          python scripts/rebuild_v2_coordination.py \
+            --config docs/refactor-v2/coordination_current_config.json \
+            --output-dir /tmp/v2-convergence-check \
+            --check
+      - name: Commit exact generated projections
+        run: |
+          set -euo pipefail
+          git add \
+            docs/state/NEXT.json \
+            docs/state/agent-runtime/runtime-graph.json \
+            docs/state/v2/active-claims.json \
+            docs/state/v2/project-state.json \
+            docs/state/v2/context-pack.json \
+            docs/state/v2/graph-snapshot.json \
+            docs/continuity/CONTEXT_SURVIVAL.json
+          if git diff --cached --quiet; then
+            echo 'All convergence projections already canonical.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add docs/state/agent-runtime/runtime-graph.json
-          git commit -m 'coordination: materialize deterministic Runtime Graph token20'
+          git commit -m 'coordination: materialize convergence projections token20'
           git push origin HEAD:convergence/main-singularity

@@ -18,6 +18,17 @@ send_allowed                      0
 
 Authority epoch remains `HS_ENTITY_EPOCH_2026-08-25_E4`; materialized authority SHA remains `70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`. Convergence/CI/research/semantic indexes are non-authoritative and may not allocate or reserve H-IDs, terminalize source mappings, mutate candidate-private truth or execute outbound actions.
 
+## ECV handoff frontier — machine-readable contract
+
+The exact-current verification lineage remains fully accounted. These two lines are intentionally machine-readable inputs to `handoff_frontier_guard.py`:
+
+```text
+ECV verified frontier                           1438 / 1438
+ECV remaining never verified                    0
+```
+
+`pending_requeue=0` remains represented in the durable `NEXT.json` ECV frontier. This ECV completion is evidence lineage only; it does not imply `CRM_UNIVERSE_COMPLETE`, which remains FALSE while `RECONCILE_REQUIRED=1403`.
+
 ## B11 — merged PREAUTH evidence, no authority mutation
 
 B11 (`CURR-U1403-B11`) reviewed operational zero-city positions 101–110 with 10/10 current evidence:
@@ -73,9 +84,10 @@ lease expires   2026-09-12T22:05:00Z
 - candidate signature #425 and execution-stop policy #414 are classified SALVAGE_REBASE;
 - duplicate convergence PR #462 is closed as DONOR_PORT into #463;
 - `EXECUTION_STOP_RULES_V1.md` has been harvested into #463;
-- Runtime Graph token20 materialization has passed deterministically;
-- global execution-lease live parity has passed CI with the real GitHub lease slot;
-- deterministic V2 coordination remains the current reconciliation gate.
+- Runtime Graph token20 materialization is deterministic and green;
+- global execution-lease live parity passes against the real GitHub CAS lease slot;
+- deterministic V2 coordination, V2 contract, forward-event contract, Context Survival, empirical death drill and CWP lineage all pass on the stable convergence tree;
+- current exact-head qualification gate is the durable ECV handoff frontier, now restored here as `1438 / 1438` and `0` remaining.
 
 ## NEXT
 
@@ -84,12 +96,11 @@ Use `docs/state/v2/NEXT_CONVERGENCE_ONLY_2026-09-12.json` as the current route p
 The next safe sequence is:
 
 ```text
-refresh token20 heartbeat
-→ rebuild Runtime Graph
-→ rebuild V2 active-claims/project-state/context-pack/graph-snapshot/Context Survival
-→ require exact deterministic equality
-→ run complete repo/death/context/unit/canary gauntlet
-→ persist KEEP/BLOCKED iteration receipt + terminal heartbeat/handoff
+reseal Runtime Graph + V2/Context Survival after this STATE change
+→ require durable handoff frontier PASS
+→ run unit tests + manifest canary
+→ persist KEEP/BLOCKED iteration receipt + fresh ACTIVE heartbeat/handoff
+→ final deterministic reseal + exact-head gauntlet
 → re-read live main for drift
 ```
 

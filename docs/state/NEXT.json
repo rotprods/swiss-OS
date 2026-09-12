@@ -44,6 +44,7 @@
     "web_current_first_party_research"
   ],
   "checkpoint_id": "CRM_UNIVERSE_COMPLETE",
+  "convergence_route": "CONVERGENCE_ONLY",
   "cycle_id": "META-20260831-CRM-CURRENT-ENTITY-RESOLUTION",
   "done_when": [
     "The current 2061-record coherent source universe is fully partitioned into evidence-backed terminal mappings or explicitly typed non-authority dispositions.",
@@ -73,15 +74,16 @@
     "remaining_never_verified": 0,
     "remaining_unverified": 0
   },
-  "exact_dependency": "Finish globally serialized writer-lease promotion and deterministic post-B11 project-memory/recovery convergence. B12 is backlog/provenance only and MUST NOT execute automatically.",
+  "exact_dependency": "CRM domain remains CURRENT_UNRESOLVED_1403_ENTITY_RESOLUTION, but GOAL-DRAIN blocks B12 execution while the independent control-plane route is CONVERGENCE_ONLY.",
   "execution_mode": "RECOVERY_RECONCILE",
-  "generated_at": "2026-09-12T20:04:42Z",
+  "generated_at": "2026-09-12T20:24:08Z",
   "goal_id": "G-0500",
   "graph_impact": "META",
   "hard_blockers": [
     "PR_463_EXACT_HEAD_GAUNTLET_NOT_YET_GREEN",
     "GLOBAL_EXECUTION_LEASE_NOT_CANONICAL_UNTIL_EXPLICITLY_AUTHORIZED_MERGE",
     "RECONCILE_REQUIRED_1403_NOT_ZERO",
+    "GOAL_DRAIN_BLOCKS_B12_AUTOMATIC_EXECUTION",
     "OUTBOUND_CLOSED"
   ],
   "mapping_frontier": {
@@ -93,10 +95,10 @@
     "terminal_source_mappings": 658,
     "unique_canonical_targets": 656
   },
-  "next_route": "CONVERGENCE_ONLY",
+  "next_route": "CURRENT_UNRESOLVED_1403_ENTITY_RESOLUTION",
   "next_safe_actions": [
-    "Rebuild Runtime Graph from the latest token20 heartbeat.",
-    "Rebuild deterministic V2 coordination and Context Survival from the convergence-aware config.",
+    "Read docs/state/NEXT_CONVERGENCE_ONLY_2026-09-12.json for execution eligibility.",
+    "Keep CURRENT_UNRESOLVED_1403_ENTITY_RESOLUTION as the domain monotonicity route only.",
     "Run exact-head repo/death/context/unit/canary gauntlet.",
     "Persist KEEP/BLOCKED receipt and terminal heartbeat only after objective evidence.",
     "Do not merge PR #463 without explicit owner instruction."
@@ -199,7 +201,7 @@
     "send_allowed": 0
   },
   "schema_version": "NPP-1.2",
-  "selected_route": "CONVERGENCE_ONLY",
+  "selected_route": "CURRENT_UNRESOLVED_1403_ENTITY_RESOLUTION",
   "source_frontier": {
     "capture_mode": "LIVE_COMPLETE_MATERIALIZED_COUNT",
     "capture_violations": [],
@@ -235,5 +237,6 @@
     "scope_state": "HISTORICAL_CANDIDATE_EXPORT_PRESERVED_FOR_CWP_LINEAGE_CURRENT_SOURCE_TRANSFER_ACCOUNTED_SEPARATELY",
     "snapshot_id": "HS-MEMBER-DE-33206402141",
     "source_artifact_id": 9700376482
-  }
+  },
+  "successor_execution_allowed": false
 }

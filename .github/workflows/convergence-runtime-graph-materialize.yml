@@ -1,0 +1,62 @@
+name: convergence-runtime-graph-materialize
+
+on:
+  push:
+    branches: [convergence/main-singularity]
+    paths:
+      - '.github/workflows/convergence-runtime-graph-materialize.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: convergence-runtime-graph-materialize
+  cancel-in-progress: false
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Require live token20 lease parity before mutation
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python scripts/execution_lease_live_guard.py
+      - name: Materialize deterministic Runtime Graph
+        run: |
+          set -euo pipefail
+          AS_OF=$(python - <<'PY'
+          import json
+          from pathlib import Path
+          values=[]
+          for path in Path('docs/state/agent-runtime/heartbeats').glob('*.json'):
+              data=json.loads(path.read_text())
+              value=data.get('observed_at')
+              if isinstance(value,str) and value:
+                  values.append(value)
+          print(max(values) if values else '1970-01-01T00:00:00Z')
+          PY
+          )
+          python scripts/rebuild_agent_runtime_graph.py \
+            --as-of "$AS_OF" \
+            --output docs/state/agent-runtime/runtime-graph.json
+          python scripts/rebuild_agent_runtime_graph.py --check
+      - name: Commit exact generated projection
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- docs/state/agent-runtime/runtime-graph.json; then
+            echo 'Runtime Graph already canonical.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/state/agent-runtime/runtime-graph.json
+          git commit -m 'coordination: materialize deterministic Runtime Graph token20'
+          git push origin HEAD:convergence/main-singularity

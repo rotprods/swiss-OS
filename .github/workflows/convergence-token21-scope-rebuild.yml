@@ -1,0 +1,76 @@
+name: convergence-token21-scope-rebuild
+
+on:
+  push:
+    branches:
+      - convergence/main-singularity
+    paths:
+      - .github/workflows/convergence-token21-scope-rebuild.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: convergence-token21-scope-rebuild
+  cancel-in-progress: false
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Verify token21 live lease
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          python scripts/wave_lease_guard.py status > /tmp/lease.json
+          python -c "import json; d=json.load(open('/tmp/lease.json')); a=d.get('active_lease') or {}; assert d['fencing_high_watermark']==21; assert d['expired'] is False; assert a['lease_id']=='LEASE-0479ab715ce626b5422f'; assert a['session_id']=='SES-20260912T203915Z-CONVERGENCE-021'; assert a['parent_main_sha']=='3c902a791be0e8df1db564034e211ea90c41f1b3'; assert a['state']=='ACTIVE' and a['mutation_allowed'] is True"
+      - name: Rebuild active projections after claim scope change
+        run: |
+          set -euo pipefail
+          AS_OF=$(python -c "import json,pathlib; v=[json.loads(p.read_text()).get('observed_at') for p in pathlib.Path('docs/state/agent-runtime/heartbeats').glob('*.json')]; print(max(x for x in v if isinstance(x,str) and x))")
+          python scripts/rebuild_agent_runtime_graph.py --as-of "$AS_OF" --output docs/state/agent-runtime/runtime-graph.json
+          rm -rf /tmp/v2-token21-scope
+          python scripts/rebuild_v2_coordination.py --config docs/refactor-v2/coordination_current_config.json --output-dir /tmp/v2-token21-scope
+          cp /tmp/v2-token21-scope/active-claims.json docs/state/v2/active-claims.json
+          cp /tmp/v2-token21-scope/project-state.json docs/state/v2/project-state.json
+          cp /tmp/v2-token21-scope/context-pack.json docs/state/v2/context-pack.json
+          cp /tmp/v2-token21-scope/graph-snapshot.json docs/state/v2/graph-snapshot.json
+          cp /tmp/v2-token21-scope/CONTEXT_SURVIVAL.json docs/continuity/CONTEXT_SURVIVAL.json
+      - name: Validate full cumulative PR surface
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_HEAD_REF: convergence/main-singularity
+          GITHUB_EVENT_NAME: pull_request
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin main:refs/remotes/origin/main
+          CHANGED=$({ git diff --name-only refs/remotes/origin/main...HEAD; git diff --name-only; git ls-files --others --exclude-standard; } | sort -u)
+          export GRAPH_V2_CHANGED_PATHS="$CHANGED"
+          printf '%s\n' "$CHANGED" > /tmp/token21-cumulative-paths.txt
+          python scripts/material_mutation_lineage_guard.py
+          python scripts/execution_lease_live_guard.py
+          python scripts/rebuild_agent_runtime_graph.py --check
+          rm -rf /tmp/v2-token21-check
+          python scripts/rebuild_v2_coordination.py --config docs/refactor-v2/coordination_current_config.json --output-dir /tmp/v2-token21-check --check
+          python -m unittest discover -s tests -p 'test_*.py'
+      - name: Commit deterministic scope projections
+        run: |
+          set -euo pipefail
+          git add docs/state/agent-runtime/runtime-graph.json docs/state/v2/active-claims.json docs/state/v2/project-state.json docs/state/v2/context-pack.json docs/state/v2/graph-snapshot.json docs/continuity/CONTEXT_SURVIVAL.json
+          if git diff --cached --quiet; then
+            echo 'No projection changes required.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'fix(coordination): rebuild token21 scope projections'
+          git push origin HEAD:convergence/main-singularity

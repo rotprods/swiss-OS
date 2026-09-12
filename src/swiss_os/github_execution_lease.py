@@ -96,12 +96,16 @@ class GitHubContentsLeaseStore:
                 "Authorization": f"Bearer {self.token}",
                 "X-GitHub-Api-Version": "2022-11-28",
                 "Content-Type": "application/json",
+                "User-Agent": "swiss-os-execution-lease/2.0",
             },
         )
         try:
             with urlopen(req, timeout=30) as response:
                 raw = response.read()
-                return json.loads(raw) if raw else {}
+                value = json.loads(raw) if raw else {}
+                if not isinstance(value, dict):
+                    raise LeaseStoreError("GitHub lease store returned non-object JSON")
+                return value
         except HTTPError as exc:
             body = exc.read().decode(errors="replace")
             if exc.code in {409, 422}:

@@ -1,6 +1,6 @@
 # EXECUTION LEASE PROTOCOL — GLOBAL WRITER SERIALIZATION
 
-Version: **ELP-2.0**  
+Version: **ELP-2.1**  
 Status: **CONVERGENCE CANDIDATE / TOKEN19+ ENFORCEMENT**  
 Authority effect: **ORCHESTRATION ONLY — NO DOMAIN OR OUTBOUND AUTHORITY**
 
@@ -123,7 +123,7 @@ preconditions.authority_epoch == authority_epoch
 
 The live lease must be unexpired and `ACTIVE`.
 
-## 6. Admission semantics
+## 6. Admission and terminalization semantics
 
 ### No active lease
 
@@ -172,6 +172,35 @@ Only the exact active holder may release. Release:
 - preserves/increases `fencing_high_watermark`;
 - prevents same-token resurrection.
 
+### Terminalization parity — mandatory
+
+Token21 exposed a second real defect during the 2026-09-13 cemetery sweep: the branch claim was committed as `RELEASED` and branch projections showed zero active writers, but the fixed global lease remained `ACTIVE / mutation_allowed=true` until TTL expiry because the terminalization workflow never called the external lease release.
+
+Therefore **claim terminalization is not lease terminalization**.
+
+A writer may be declared `COMPLETE` only after all of the following are durable and read back:
+
+```text
+claim.state = RELEASED (or other valid terminal state)
+latest heartbeat/session = terminal
+Runtime Graph / V2 active writer projection = zero for that session
+coordination/execution-lease.active_lease = null
+coordination/execution-lease.last_lease = released holder
+fencing_high_watermark >= released token
+last_transition.kind = RELEASE
+```
+
+The zero-claim state itself MUST read the fixed global lease slot. The following state is a P0 violation even when it is fail-closed:
+
+```text
+active_claims = []
+AND active_lease != null
+```
+
+A terminalization workflow may persist branch terminal state before calling `wave_lease_guard.py release`, but it MUST NOT report success/COMPLETE until release and post-release readback succeed. If the process dies in that window, recovery must classify the surviving lease as `ORPHAN_GLOBAL_LEASE`/terminalization-incomplete and fail closed. If the lease expires before recovery, only a new run/session with a strictly higher token may take over.
+
+A successful terminalization must allow a legitimate successor to acquire `token+1` immediately; waiting for the old TTL to expire is evidence of an incomplete terminalization.
+
 ## 7. CI enforcement
 
 `repo-guard` runs `scripts/execution_lease_live_guard.py`.
@@ -186,7 +215,12 @@ For active claims with `fencing_token >= 19`, CI reads the fixed live lease dire
 - lease high-watermark trailing the active claim;
 - unavailable live readback.
 
-Claims below token19 are historical/legacy and are not retroactively required to have used ELP-2.0.
+For **zero active claims**, CI still reads the fixed live lease and fails closed when:
+
+- live readback is unavailable; or
+- `active_lease` is non-null (`GLOBAL_LEASE_WITHOUT_ACTIVE_CLAIM`).
+
+Claims below token19 are historical/legacy and are not retroactively required to have used ELP-2.x.
 
 ## 8. Runtime interface
 
@@ -227,12 +261,14 @@ A zero-context agent must:
 
 1. read current `main`;
 2. replay claim/event lineage;
-3. read the fixed lease projection and its blob SHA;
-4. validate TTL, holder, parent, epoch and high-watermark;
+3. read the fixed lease projection and its blob SHA even when branch projections report zero active claims;
+4. validate TTL, holder, parent, epoch, high-watermark and claim↔lease terminalization parity;
 5. fail closed on contradiction;
 6. only then perform a material mutation.
 
 Deleting or bypassing the lease branch does not grant ownership. Missing/invalid lease state for token19+ is a typed P0 until reconstructed safely.
+
+A remote branch/ref is provenance only. It is never sufficient evidence that an agent is alive or owns writer authority.
 
 ## 11. Definition of Done
 
@@ -248,5 +284,10 @@ released token reuse = REJECTED
 stale parent = REJECTED
 stale authority epoch = REJECTED
 CI live claim↔lease parity = PASS
+zero active claims + active global lease = REJECTED
+zero active claims + active_lease null = PASS
+terminal workflow release readback = PASS
+successor token+1 immediately after release = PASS
+crash between branch terminalization and lease release = FAIL_CLOSED / RECOVERABLE
 claim_collisions = 0 for token19+ candidates
 ```

@@ -50,7 +50,7 @@ jobs:
           data['branch']=branch
           data['generated_at']='2026-09-13T18:03:30Z'
           data['state']='CONVERGENCE_TERMINALIZATION_PARITY_TOKEN23_ACTIVE'
-          data['open_prs']=[]
+          data['open_prs']=[464]
           data['liveness_findings']=[
             'Token21 branch claim was RELEASED while its external global lease remained ACTIVE until TTL; this is the reproduced terminalization-parity defect.',
             'Token23 is the sole active repair writer under global lease LEASE-54ccb9d796785154dee9.',
@@ -187,6 +187,18 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python scripts/execution_lease_live_guard.py --receipt /tmp/execution-lease-token23-rebuilt.json
+
+      - name: Validate full token23 material lineage scope
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin main:refs/remotes/origin/main
+          CHANGED=$({
+            git diff --name-only refs/remotes/origin/main...HEAD
+            git diff --name-only
+            git ls-files --others --exclude-standard
+          } | sort -u)
+          export GRAPH_V2_CHANGED_PATHS="$CHANGED"
+          python scripts/material_mutation_lineage_guard.py
 
       - name: Commit token23 coordination projections
         run: |

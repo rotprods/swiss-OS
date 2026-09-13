@@ -34,10 +34,17 @@ def active_claims() -> list[dict[str, Any]]:
     return [claim for claim in claims if claim.get("claim_id") in active_ids]
 
 
+def _read_live_lease(repo: str, token: str) -> tuple[Any, Any]:
+    if not token:
+        raise LeaseStoreError("LIVE_LEASE_READBACK_REQUIRES_GITHUB_TOKEN")
+    stored = GitHubContentsLeaseStore(repo, token).read()
+    return stored, stored.projection.active_lease
+
+
 def evaluate(now: datetime, *, repo: str, token: str) -> tuple[bool, dict[str, Any]]:
     active = active_claims()
     receipt: dict[str, Any] = {
-        "schema_version": "EXECUTION-LEASE-LIVE-GUARD-1.0",
+        "schema_version": "EXECUTION-LEASE-LIVE-GUARD-1.1",
         "observed_at": now.astimezone(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
         "token_floor": LEASE_ENFORCEMENT_TOKEN_FLOOR,
         "active_claim_ids": [str(c.get("claim_id")) for c in active],
@@ -47,11 +54,35 @@ def evaluate(now: datetime, *, repo: str, token: str) -> tuple[bool, dict[str, A
         receipt["violations"].append(f"MULTIPLE_ACTIVE_CLAIMS:{len(active)}")
         receipt["pass"] = False
         return False, receipt
+
+    # A zero-claim projection is not enough to prove the writer plane is free.
+    # The token21 cemetery incident proved that a claim can be terminalized while
+    # the external CAS lease remains ACTIVE. Therefore zero active claims MUST
+    # read the global lease slot and fail if any active lease remains persisted.
     if not active:
-        receipt.update(status="NO_ACTIVE_CLAIM", lease_required=False, pass_=True)
-        receipt["pass"] = True
-        receipt.pop("pass_", None)
-        return True, receipt
+        try:
+            stored, lease = _read_live_lease(repo, token)
+        except LeaseStoreError as exc:
+            receipt["status"] = "NO_ACTIVE_CLAIM_LEASE_UNVERIFIED"
+            receipt["lease_required"] = True
+            receipt["violations"].append(str(exc))
+            receipt["pass"] = False
+            return False, receipt
+        receipt.update(
+            status="NO_ACTIVE_CLAIM",
+            lease_required=True,
+            lease_blob_sha=stored.blob_sha,
+            lease_generation=stored.projection.generation,
+            lease_fencing_high_watermark=stored.projection.fencing_high_watermark,
+            lease=lease.as_dict() if lease else None,
+        )
+        if lease is not None:
+            receipt["violations"].append(
+                f"GLOBAL_LEASE_WITHOUT_ACTIVE_CLAIM:{lease.lease_id}:TOKEN={lease.fencing_token}"
+            )
+        ok = not receipt["violations"]
+        receipt["pass"] = ok
+        return ok, receipt
 
     claim = active[0]
     fencing = claim.get("fencing_token")
@@ -72,14 +103,13 @@ def evaluate(now: datetime, *, repo: str, token: str) -> tuple[bool, dict[str, A
         receipt["pass"] = True
         return True, receipt
 
-    if not token:
-        receipt["violations"].append("LIVE_LEASE_READBACK_REQUIRES_GITHUB_TOKEN")
+    try:
+        stored, lease = _read_live_lease(repo, token)
+    except LeaseStoreError as exc:
+        receipt["violations"].append(str(exc))
         receipt["pass"] = False
         return False, receipt
 
-    store = GitHubContentsLeaseStore(repo, token)
-    stored = store.read()
-    lease = stored.projection.active_lease
     receipt.update(
         status="LIVE_LEASE_REQUIRED",
         lease_required=True,
@@ -117,7 +147,7 @@ def evaluate(now: datetime, *, repo: str, token: str) -> tuple[bool, dict[str, A
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Require token19+ claims to match the globally serialized live execution lease.")
+    parser = argparse.ArgumentParser(description="Require token19+ claims to match the globally serialized live execution lease, including zero-claim terminal parity.")
     parser.add_argument("--repo", default=os.environ.get("GITHUB_REPOSITORY", "rotprods/swiss-OS"))
     parser.add_argument("--now", help="UTC Z timestamp; defaults to wall clock")
     parser.add_argument("--receipt")
@@ -128,7 +158,7 @@ def main() -> int:
     except (LeaseStoreError, ValueError, OSError, json.JSONDecodeError) as exc:
         ok = False
         receipt = {
-            "schema_version": "EXECUTION-LEASE-LIVE-GUARD-1.0",
+            "schema_version": "EXECUTION-LEASE-LIVE-GUARD-1.1",
             "observed_at": now.astimezone(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
             "pass": False,
             "violations": [f"LIVE_LEASE_GUARD_ERROR:{exc}"],

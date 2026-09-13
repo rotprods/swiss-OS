@@ -169,10 +169,10 @@ jobs:
           from pathlib import Path
           active=json.loads(Path('docs/state/v2/active-claims.json').read_text())
           runtime=json.loads(Path('docs/state/agent-runtime/runtime-graph.json').read_text())
-          assert active['claims']==['CLAIM-CONVERGENCE-TERMINALIZATION-023']
+          assert [c['claim_id'] for c in active['claims']]==['CLAIM-CONVERGENCE-TERMINALIZATION-023']
           assert active['collisions']==[]
           assert active['fencing_high_watermark']==23
-          assert runtime['active_sessions']==['SES-20260913T180300Z-CONVERGENCE-023']
+          assert [s['session_id'] for s in runtime['active_sessions']]==['SES-20260913T180300Z-CONVERGENCE-023']
           PY
 
       - name: Run bounded lease regression suite

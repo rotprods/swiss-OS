@@ -41,7 +41,6 @@ jobs:
           path=Path('docs/refactor-v2/coordination_current_config.json')
           data=json.loads(path.read_text())
           branch='convergence/terminalization-parity-token23-20260913'
-          claim='CLAIM-CONVERGENCE-TERMINALIZATION-023'
           hb='docs/state/agent-runtime/heartbeats/HB-AGENT-GPT56SOL-CONVERGENCE-023-INIT.json'
           event='docs/state/v2/events/EVT-20260913T180330Z-CONVERGENCE-TOKEN23-ACQUIRED.json'
           claim_path='docs/state/v2/claims/CLAIM-CONVERGENCE-TERMINALIZATION-023.json'
@@ -91,8 +90,8 @@ jobs:
               verified.append(fact)
 
           for key, values in (
-              ('relevant_paths',[claim_path,event,hb,test_path,'scripts/execution_lease_live_guard.py','docs/operations/EXECUTION_LEASE_PROTOCOL.md','.github/workflows/convergence-token23-bootstrap.yml']),
-              ('survival_paths',[claim_path,hb,'docs/operations/EXECUTION_LEASE_PROTOCOL.md']),
+              ('relevant_paths',[claim_path,event,hb,test_path,'scripts/execution_lease_live_guard.py','docs/operations/EXECUTION_LEASE_PROTOCOL.md','.github/workflows/convergence-token23-bootstrap.yml','docs/state/NEXT.json']),
+              ('survival_paths',[claim_path,hb,'docs/operations/EXECUTION_LEASE_PROTOCOL.md','docs/state/NEXT.json']),
           ):
               current=data.setdefault(key,[])
               for value in values:
@@ -134,6 +133,43 @@ jobs:
           path.write_text(json.dumps(data,ensure_ascii=False,sort_keys=True,separators=(',',':'))+'\n')
           PY
 
+      - name: Bind NEXT to token23 active claim
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path=Path('docs/state/NEXT.json')
+          data=json.loads(path.read_text())
+          data['active_claim']={
+            'authority_ceiling':'CONVERGENCE_ORCHESTRATION_AND_LEASE_REPAIR_ONLY_NO_DOMAIN_OR_OUTBOUND_AUTHORITY',
+            'branch':'convergence/terminalization-parity-token23-20260913',
+            'claim_id':'CLAIM-CONVERGENCE-TERMINALIZATION-023',
+            'fencing_token':23,
+            'session_id':'SES-20260913T180300Z-CONVERGENCE-023'
+          }
+          data['convergence_route']='CONVERGENCE_TERMINALIZATION_PARITY_TOKEN23_ACTIVE'
+          data['generated_at']='2026-09-13T18:03:30Z'
+          data['exact_dependency']='The sole convergence writer is token23 under the global CAS lease, bounded to claim↔lease terminalization parity repair; CRM domain remains unresolved at 1403 and B12 is not authorized.'
+          data['hard_blockers']=[
+            'TOKEN23_TERMINALIZATION_PARITY_NOT_YET_QUALIFIED',
+            'EXPLICIT_OWNER_MERGE_INSTRUCTION_REQUIRED_FOR_PR_464',
+            'RECONCILE_REQUIRED_1403_NOT_ZERO',
+            'GOAL_DRAIN_BLOCKS_B12_AUTOMATIC_EXECUTION',
+            'OUTBOUND_CLOSED'
+          ]
+          data['next_safe_actions']=[
+            'Run exact-head full gauntlet under live global lease token23.',
+            'Terminalize claim23 branch projections only after green qualification.',
+            'Release token23 CAS lease and require active_lease=null plus last_lease token23 RELEASED readback before COMPLETE.',
+            'Re-run zero-claim live lease guard after release.',
+            'Re-read live main for relevant-scope drift.',
+            'Await explicit owner merge instruction; do not start B12 or another feature wave.'
+          ]
+          data['successor_execution_allowed']=False
+          path.write_text(json.dumps(data,ensure_ascii=False,indent=2,sort_keys=True)+'\n')
+          PY
+
       - name: Rebuild Runtime Graph
         run: |
           set -euo pipefail
@@ -169,10 +205,13 @@ jobs:
           from pathlib import Path
           active=json.loads(Path('docs/state/v2/active-claims.json').read_text())
           runtime=json.loads(Path('docs/state/agent-runtime/runtime-graph.json').read_text())
+          nxt=json.loads(Path('docs/state/NEXT.json').read_text())
           assert [c['claim_id'] for c in active['claims']]==['CLAIM-CONVERGENCE-TERMINALIZATION-023']
           assert active['collisions']==[]
           assert active['fencing_high_watermark']==23
           assert [s['session_id'] for s in runtime['active_sessions']]==['SES-20260913T180300Z-CONVERGENCE-023']
+          assert nxt['active_claim']['claim_id']=='CLAIM-CONVERGENCE-TERMINALIZATION-023'
+          assert nxt['active_claim']['fencing_token']==23
           PY
 
       - name: Run bounded lease regression suite
@@ -205,6 +244,7 @@ jobs:
           set -euo pipefail
           git add \
             docs/refactor-v2/coordination_current_config.json \
+            docs/state/NEXT.json \
             docs/state/agent-runtime/runtime-graph.json \
             docs/state/v2/active-claims.json \
             docs/state/v2/project-state.json \

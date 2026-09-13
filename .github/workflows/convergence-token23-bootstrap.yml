@@ -1,0 +1,209 @@
+name: convergence-token23-bootstrap
+
+on:
+  push:
+    branches:
+      - convergence/terminalization-parity-token23-20260913
+    paths:
+      - .github/workflows/convergence-token23-bootstrap.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: convergence-token23-bootstrap
+  cancel-in-progress: false
+
+jobs:
+  bootstrap:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+
+      - name: Verify token23 raw claim matches live global lease
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python scripts/execution_lease_live_guard.py --receipt /tmp/execution-lease-token23-bootstrap.json
+
+      - name: Bind coordination config to token23 repair lineage
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path=Path('docs/refactor-v2/coordination_current_config.json')
+          data=json.loads(path.read_text())
+          branch='convergence/terminalization-parity-token23-20260913'
+          claim='CLAIM-CONVERGENCE-TERMINALIZATION-023'
+          hb='docs/state/agent-runtime/heartbeats/HB-AGENT-GPT56SOL-CONVERGENCE-023-INIT.json'
+          event='docs/state/v2/events/EVT-20260913T180330Z-CONVERGENCE-TOKEN23-ACQUIRED.json'
+          claim_path='docs/state/v2/claims/CLAIM-CONVERGENCE-TERMINALIZATION-023.json'
+          test_path='tests/test_execution_lease_live_guard.py'
+
+          data['branch']=branch
+          data['generated_at']='2026-09-13T18:03:30Z'
+          data['state']='CONVERGENCE_TERMINALIZATION_PARITY_TOKEN23_ACTIVE'
+          data['open_prs']=[]
+          data['liveness_findings']=[
+            'Token21 branch claim was RELEASED while its external global lease remained ACTIVE until TTL; this is the reproduced terminalization-parity defect.',
+            'Token23 is the sole active repair writer under global lease LEASE-54ccb9d796785154dee9.',
+            'This wave changes orchestration/continuity only; operational authority remains E4/690 with H-0691 unallocated and OUTBOUND CLOSED.'
+          ]
+          data['next_safe_actions']=[
+            'Require execution_lease_live_guard to reject zero active claims with a non-null global active_lease.',
+            'Run targeted regression tests plus exact-head repo-guard.',
+            'Terminalize claim23, release token23 via CAS, and require post-release active_lease=null readback.',
+            'Do not promote convergence implementation until issue #54 terminalization-parity acceptance passes.'
+          ]
+          data['resume_contract']=[
+            'verify live main remains 3c902a791be0e8df1db564034e211ea90c41f1b3 or an ancestry-safe descendant with no relevant-scope drift',
+            'read coordination/execution-lease current.json and require token23/session023/parent-main/E4 parity plus live TTL',
+            'replay claims/events and require CLAIM-CONVERGENCE-TERMINALIZATION-023 as the sole active claim with fencing token23',
+            'verify predecessor CLAIM-CONVERGENCE-LINEAGE-021 is RELEASED',
+            'verify E4/690, H-0691 unallocated, terminal mappings 658 and RECONCILE_REQUIRED 1403',
+            'keep B12 backlog-only and OUTBOUND=CLOSED/send_allowed=0',
+            'require exact Runtime Graph/V2/Context Survival equality before qualification',
+            'terminalization is incomplete until claim23 terminal state AND external token23 release/readback both pass'
+          ]
+          data['blockers']=[
+            'Issue #54 is not closable until zero-claim/orphan-lease regression and post-release readback pass.',
+            'The global execution-lease/CAS contract remains candidate-only until a separately authorized promotion.',
+            'CRM_UNIVERSE_COMPLETE remains false because RECONCILE_REQUIRED=1403; this repair does not authorize B12 execution or authority promotion.',
+            'OUTBOUND remains CLOSED and send_allowed=0.'
+          ]
+          data['unverified_work']=[
+            'Exact-head targeted token23 tests must pass.',
+            'Exact-head full repo-guard must pass.',
+            'Token23 claim/heartbeat must terminalize.',
+            'External token23 lease must release by CAS and read back active_lease=null.',
+            'Fresh-main relevant-scope drift must be checked before any promotion decision.'
+          ]
+          verified=data.setdefault('verified_work',[])
+          fact='Cemetery sweep 2026-09-13 reproduced claim21 RELEASED + global lease21 ACTIVE-until-expiry and recorded issue #54 regression evidence.'
+          if fact not in verified:
+              verified.append(fact)
+
+          for key, values in (
+              ('relevant_paths',[claim_path,event,hb,test_path,'scripts/execution_lease_live_guard.py','docs/operations/EXECUTION_LEASE_PROTOCOL.md','.github/workflows/convergence-token23-bootstrap.yml']),
+              ('survival_paths',[claim_path,hb,'docs/operations/EXECUTION_LEASE_PROTOCOL.md']),
+          ):
+              current=data.setdefault(key,[])
+              for value in values:
+                  if value not in current:
+                      current.append(value)
+
+          refs=data.setdefault('source_refs',[])
+          for value in [
+              'claim:CLAIM-CONVERGENCE-TERMINALIZATION-023:ACTIVE',
+              'lease:coordination/execution-lease:TOKEN23:ACTIVE_CAS',
+              'repair:TERMINALIZATION_PARITY',
+              'incident:TOKEN21_CLAIM_RELEASED_LEASE_ACTIVE_UNTIL_EXPIRY'
+          ]:
+              if value not in refs:
+                  refs.append(value)
+
+          graph=data.setdefault('graph',{})
+          nodes=graph.setdefault('nodes',[])
+          node_ids={n.get('id') for n in nodes}
+          for node in [
+              {'id':'C:CLAIM-CONVERGENCE-TERMINALIZATION-023','state':'ACTIVE_TOKEN_23','type':'Claim'},
+              {'id':'L:GLOBAL-EXECUTION-LEASE-023','state':'ACTIVE_CAS','type':'ExecutionLease'},
+          ]:
+              if node['id'] not in node_ids:
+                  nodes.append(node)
+          edges=graph.setdefault('edges',[])
+          candidates=[
+              {'from':'C:CLAIM-CONVERGENCE-LINEAGE-021','to':'C:CLAIM-CONVERGENCE-TERMINALIZATION-023','type':'PREDECESSOR_OF'},
+              {'from':'L:GLOBAL-EXECUTION-LEASE-023','to':'C:CLAIM-CONVERGENCE-TERMINALIZATION-023','type':'SERIALIZES_WRITER'},
+              {'from':'C:CLAIM-CONVERGENCE-TERMINALIZATION-023','to':'ISSUE:54','type':'REPAIRS'},
+          ]
+          for edge in candidates:
+              if edge not in edges:
+                  edges.append(edge)
+          for node in nodes:
+              if node.get('id')=='ISSUE:54':
+                  node['state']='TERMINALIZATION_PARITY_REPAIR_ACTIVE'
+
+          path.write_text(json.dumps(data,ensure_ascii=False,sort_keys=True,separators=(',',':'))+'\n')
+          PY
+
+      - name: Rebuild Runtime Graph
+        run: |
+          set -euo pipefail
+          AS_OF=$(python - <<'PY'
+          import json
+          from pathlib import Path
+          values=[]
+          for path in Path('docs/state/agent-runtime/heartbeats').glob('*.json'):
+              data=json.loads(path.read_text())
+              value=data.get('observed_at')
+              if isinstance(value,str) and value:
+                  values.append(value)
+          print(max(values) if values else '1970-01-01T00:00:00Z')
+          PY
+          )
+          python scripts/rebuild_agent_runtime_graph.py --as-of "$AS_OF" --output docs/state/agent-runtime/runtime-graph.json
+
+      - name: Rebuild V2 coordination and Context Survival
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/v2-token23
+          python scripts/rebuild_v2_coordination.py --config docs/refactor-v2/coordination_current_config.json --output-dir /tmp/v2-token23
+          cp /tmp/v2-token23/active-claims.json docs/state/v2/active-claims.json
+          cp /tmp/v2-token23/project-state.json docs/state/v2/project-state.json
+          cp /tmp/v2-token23/context-pack.json docs/state/v2/context-pack.json
+          cp /tmp/v2-token23/graph-snapshot.json docs/state/v2/graph-snapshot.json
+          cp /tmp/v2-token23/CONTEXT_SURVIVAL.json docs/continuity/CONTEXT_SURVIVAL.json
+
+      - name: Assert token23 derived state
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          active=json.loads(Path('docs/state/v2/active-claims.json').read_text())
+          runtime=json.loads(Path('docs/state/agent-runtime/runtime-graph.json').read_text())
+          assert active['claims']==['CLAIM-CONVERGENCE-TERMINALIZATION-023']
+          assert active['collisions']==[]
+          assert active['fencing_high_watermark']==23
+          assert runtime['active_sessions']==['SES-20260913T180300Z-CONVERGENCE-023']
+          PY
+
+      - name: Run bounded lease regression suite
+        run: |
+          python -m unittest \
+            tests.test_execution_lease \
+            tests.test_github_execution_lease \
+            tests.test_execution_lease_live_guard \
+            -v
+
+      - name: Re-run live lease guard against rebuilt state
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python scripts/execution_lease_live_guard.py --receipt /tmp/execution-lease-token23-rebuilt.json
+
+      - name: Commit token23 coordination projections
+        run: |
+          set -euo pipefail
+          git add \
+            docs/refactor-v2/coordination_current_config.json \
+            docs/state/agent-runtime/runtime-graph.json \
+            docs/state/v2/active-claims.json \
+            docs/state/v2/project-state.json \
+            docs/state/v2/context-pack.json \
+            docs/state/v2/graph-snapshot.json \
+            docs/continuity/CONTEXT_SURVIVAL.json
+          if git diff --cached --quiet; then
+            echo 'Token23 projections already materialized.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'coordination: materialize token23 terminalization parity state'
+          git push origin HEAD:convergence/terminalization-parity-token23-20260913

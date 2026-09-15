@@ -1,6 +1,7 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest reconciled GitHub frontier: **main `3c902a791be0e8df1db564034e211ea90c41f1b3`**. B11 is merged and SWISS-OS remains in **`CONVERGENCE_ONLY`**. Draft PR **#463** is the single convergence candidate. Its bounded token20 wave is now **terminal KEEP / RELEASED** after exact-head qualification; there is no authorized successor writer.
+Latest reconciled GitHub frontier: **main `3c902a791be0e8df1db564034e211ea90c41f1b3`**. B11 is merged and SWISS-OS remains in **`CONVERGENCE_ONLY`**. Draft PR **#464** is the single convergence candidate. Token25 repaired inherited terminal-lineage ambiguity, passed full active-state qualification, and is now **terminal KEEP / RELEASED** on both Git claim and external CAS lease surfaces. No successor writer is authorized.
+
 
 ## Authority — unchanged / locked
 
@@ -50,34 +51,24 @@ B12 positions 111–120 remain **backlog/provenance only** in `docs/state/NEXT_C
 
 `docs/state/NEXT_CONVERGENCE_ONLY_2026-09-12.json` is the execution/control pointer. It is now `QUALIFIED_AWAITING_EXPLICIT_MERGE`, retains `route=CONVERGENCE_ONLY`, and keeps B12 `execution_allowed=false`.
 
-## Global writer serialization — qualified
+## Global writer serialization — terminalization + lineage parity proven
 
-The duplicate-token18 failure was reproduced and repaired in PR #463 with a GitHub Contents SHA compare-and-swap lease.
+The duplicate-token18 collision is protected by the candidate GitHub blob-SHA CAS lease. The later orphan-lease defect was exercised through token24 two-surface terminalization. Token25 then repaired the final PR-wide lineage ambiguity without weakening same-branch fail-closed behavior.
 
-Empirical evidence:
-
-1. token19 acquired from an exact durable blob SHA;
-2. a second contender using the same stale SHA received HTTP 409;
-3. winner state remained intact;
-4. main drift caused token19 fail-closed release;
-5. token20/new session acquired against fresh main with higher watermark;
-6. token20 live claim↔lease parity passed CI;
-7. token20 wave passed full exact-head qualification and is now terminal.
-
-Token20 lifecycle:
+Token25 lifecycle:
 
 ```text
-claim          CLAIM-CONVERGENCE-LEASE-020
-session        SES-20260912T190500Z-CONVERGENCE-020
-fencing token  20
+claim          CLAIM-CONVERGENCE-TERMINALIZATION-025
+session        SES-20260915T082640Z-CONVERGENCE-025
+fencing token  25
 state          RELEASED
-iteration      ITER-convergence-main-singularity-token20 = KEEP
-qualification  repo-guard 4440 / workflow 34717191274 = PASS
-unit tests     620 / 620 PASS
-manifest       PASS
+iteration      ITER-convergence-terminal-lineage-token25 = KEEP
+active qualify repo-guard 4464 / workflow 34947621820 = PASS
+lease release  commit 742472a28bd593f7ff45096e3f3f92bee2d4fd37
+lease readback active_lease=null / last_lease=token25 RELEASED / watermark=25
 ```
 
-The external CAS lease must be released as part of terminalization and terminal projections must show zero active writers with fencing high-watermark 20.
+COMPLETE was withheld until external release readback. The material lineage guard now ignores inherited terminal provenance from another branch only when exactly one terminal owner belongs to the current PR branch; same-branch and no-match ambiguity remain fail-closed.
 
 ## Convergence progress
 
@@ -93,16 +84,15 @@ The external CAS lease must be released as part of terminalization and terminal 
 
 ## NEXT
 
-Current control state is **qualified convergence candidate awaiting explicit owner merge instruction**.
+Current control state is **terminal convergence candidate awaiting final zero-writer gauntlet and explicit owner merge instruction**.
 
 ```text
-release global CAS lease token20
-→ reseal Runtime Graph + V2/Context Survival to zero active writers
+reseal Runtime Graph + V2/Context Survival to zero active writers / watermark25
 → final exact-head terminal-state gauntlet
 → re-read live main for drift
-→ await explicit owner merge instruction
+→ await explicit owner merge instruction for PR #464
 ```
 
-Do not open B12, Semantic V4 or another feature wave. Do not merge PR #463 without explicit owner instruction. Keep `OUTBOUND=CLOSED` / `send_allowed=0`.
+Do not open B12, Semantic V4 or another feature wave. Do not merge PR #464 without explicit owner instruction. Keep `OUTBOUND=CLOSED` / `send_allowed=0`.
 
 **VERIFY LIVE TRUTH BEFORE EXECUTION.**

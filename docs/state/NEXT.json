@@ -1,11 +1,5 @@
 {
-  "active_claim": {
-    "authority_ceiling": "CONVERGENCE_ORCHESTRATION_AND_LEASE_REPAIR_ONLY_NO_DOMAIN_OR_OUTBOUND_AUTHORITY",
-    "branch": "convergence/terminalization-parity-token23-20260913",
-    "claim_id": "CLAIM-CONVERGENCE-TERMINALIZATION-025",
-    "fencing_token": 25,
-    "session_id": "SES-20260915T082640Z-CONVERGENCE-025"
-  },
+  "active_claim": null,
   "artifacts": [
     "docs/state/CRM_CURRENT_SOURCE_MAPPING_PROJECTION_33339392661.json",
     "docs/state/CRM_CURRENT_GONTEN_ECV_SRR_LINEAGE_33339392661.json",
@@ -44,7 +38,7 @@
     "web_current_first_party_research"
   ],
   "checkpoint_id": "CRM_UNIVERSE_COMPLETE",
-  "convergence_route": "CONVERGENCE_TERMINAL_LINEAGE_GUARD_TOKEN25_ACTIVE",
+  "convergence_route": "CONVERGENCE_TOKEN25_RELEASED_AWAITING_FINAL_ZERO_WRITER_GAUNTLET",
   "cycle_id": "META-20260831-CRM-CURRENT-ENTITY-RESOLUTION",
   "done_when": [
     "The current 2061-record coherent source universe is fully partitioned into evidence-backed terminal mappings or explicitly typed non-authority dispositions.",
@@ -74,14 +68,15 @@
     "remaining_never_verified": 0,
     "remaining_unverified": 0
   },
-  "exact_dependency": "Token25 is the sole live convergence writer for terminal-lineage guard repair after token24 terminalization parity physically passed.",
+  "exact_dependency": "Claim25 and its external CAS lease are both terminal RELEASED; no successor writer is authorized while the convergence candidate awaits final zero-writer qualification and explicit owner merge instruction.",
   "execution_mode": "RECOVERY_RECONCILE",
-  "generated_at": "2026-09-15T08:26:40Z",
+  "generated_at": "2026-09-15T08:36:03Z",
   "goal_id": "G-0500",
   "graph_impact": "META",
   "hard_blockers": [
-    "TOKEN25_TERMINAL_LINEAGE_GUARD_NOT_YET_QUALIFIED",
+    "FINAL_ZERO_WRITER_GAUNTLET_REQUIRED_FOR_PR_464",
     "EXPLICIT_OWNER_MERGE_INSTRUCTION_REQUIRED_FOR_PR_464",
+    "GLOBAL_EXECUTION_LEASE_NOT_CANONICAL_UNTIL_EXPLICITLY_AUTHORIZED_MERGE",
     "RECONCILE_REQUIRED_1403_NOT_ZERO",
     "GOAL_DRAIN_BLOCKS_B12_AUTOMATIC_EXECUTION",
     "OUTBOUND_CLOSED"
@@ -97,9 +92,9 @@
   },
   "next_route": "CURRENT_UNRESOLVED_1403_ENTITY_RESOLUTION",
   "next_safe_actions": [
-    "Run exact-head token25 active-state gauntlet.",
-    "Terminalize token25 through claim release -> CAS lease release -> readback -> COMPLETE.",
-    "Run final zero-writer gauntlet with inherited-other-branch lineage regression fixed.",
+    "Verify terminal projections show zero active writers and fencing high-watermark25.",
+    "Run final exact-head terminal-state gauntlet.",
+    "Re-read live main for relevant-scope drift.",
     "Await explicit owner merge instruction; do not start B12 or outbound."
   ],
   "outbound_allowed": false,

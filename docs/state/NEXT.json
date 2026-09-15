@@ -2,9 +2,9 @@
   "active_claim": {
     "authority_ceiling": "CONVERGENCE_ORCHESTRATION_AND_LEASE_REPAIR_ONLY_NO_DOMAIN_OR_OUTBOUND_AUTHORITY",
     "branch": "convergence/terminalization-parity-token23-20260913",
-    "claim_id": "CLAIM-CONVERGENCE-TERMINALIZATION-023",
-    "fencing_token": 23,
-    "session_id": "SES-20260913T180300Z-CONVERGENCE-023"
+    "claim_id": "CLAIM-CONVERGENCE-TERMINALIZATION-024",
+    "fencing_token": 24,
+    "session_id": "SES-20260915T080341Z-CONVERGENCE-024"
   },
   "artifacts": [
     "docs/state/CRM_CURRENT_SOURCE_MAPPING_PROJECTION_33339392661.json",
@@ -44,7 +44,7 @@
     "web_current_first_party_research"
   ],
   "checkpoint_id": "CRM_UNIVERSE_COMPLETE",
-  "convergence_route": "CONVERGENCE_TERMINALIZATION_PARITY_TOKEN23_ACTIVE",
+  "convergence_route": "CONVERGENCE_TERMINALIZATION_PARITY_TOKEN24_ACTIVE",
   "cycle_id": "META-20260831-CRM-CURRENT-ENTITY-RESOLUTION",
   "done_when": [
     "The current 2061-record coherent source universe is fully partitioned into evidence-backed terminal mappings or explicitly typed non-authority dispositions.",
@@ -74,13 +74,13 @@
     "remaining_never_verified": 0,
     "remaining_unverified": 0
   },
-  "exact_dependency": "The sole convergence writer is token23 under the global CAS lease, bounded to claim↔lease terminalization parity repair; CRM domain remains unresolved at 1403 and B12 is not authorized.",
+  "exact_dependency": "Token24 is the sole live convergence writer after stale token23 lease recovery; CRM remains unresolved at 1403 and B12 is not authorized.",
   "execution_mode": "RECOVERY_RECONCILE",
-  "generated_at": "2026-09-13T18:03:30Z",
+  "generated_at": "2026-09-15T08:03:41Z",
   "goal_id": "G-0500",
   "graph_impact": "META",
   "hard_blockers": [
-    "TOKEN23_TERMINALIZATION_PARITY_NOT_YET_QUALIFIED",
+    "TOKEN24_TERMINALIZATION_PARITY_NOT_YET_QUALIFIED",
     "EXPLICIT_OWNER_MERGE_INSTRUCTION_REQUIRED_FOR_PR_464",
     "RECONCILE_REQUIRED_1403_NOT_ZERO",
     "GOAL_DRAIN_BLOCKS_B12_AUTOMATIC_EXECUTION",
@@ -97,9 +97,9 @@
   },
   "next_route": "CURRENT_UNRESOLVED_1403_ENTITY_RESOLUTION",
   "next_safe_actions": [
-    "Run exact-head full gauntlet under live global lease token23.",
-    "Terminalize claim23 branch projections only after green qualification.",
-    "Release token23 CAS lease and require active_lease=null plus last_lease token23 RELEASED readback before COMPLETE.",
+    "Run exact-head full gauntlet under live global lease token24.",
+    "Terminalize claim24 branch projections only after green qualification.",
+    "Release token24 CAS lease and require active_lease=null plus last_lease token24 RELEASED readback before COMPLETE.",
     "Re-run zero-claim live lease guard after release.",
     "Re-read live main for relevant-scope drift.",
     "Await explicit owner merge instruction; do not start B12 or another feature wave."

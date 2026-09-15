@@ -5,6 +5,9 @@ on:
     branches: [main]
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   guard:
     runs-on: ubuntu-latest
@@ -29,6 +32,10 @@ jobs:
         run: python scripts/stale_branch_fencing_guard.py --receipt /tmp/stale-branch-fencing.json
       - name: Heartbeat liveness guard
         run: python scripts/heartbeat_liveness_guard.py --receipt /tmp/heartbeat-liveness.json
+      - name: Global execution lease live guard
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python scripts/execution_lease_live_guard.py --receipt /tmp/execution-lease-live.json
       - name: Preserve concurrency/liveness receipts
         if: always()
         uses: actions/upload-artifact@v4
@@ -37,6 +44,7 @@ jobs:
           path: |
             /tmp/stale-branch-fencing.json
             /tmp/heartbeat-liveness.json
+            /tmp/execution-lease-live.json
           if-no-files-found: ignore
           retention-days: 14
       - name: GitHub platform enforcement truth guard

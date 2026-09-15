@@ -1,0 +1,79 @@
+name: convergence-token28-projections-once
+
+on:
+  push:
+    branches: [convergence/postmerge-recovery-token28-20260915]
+    paths:
+      - '.github/workflows/convergence-runtime-graph-materialize.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: convergence-token28-projections-once
+  cancel-in-progress: false
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Prove token28 live ownership and exact branch
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF_NAME" = 'convergence/postmerge-recovery-token28-20260915'
+          python scripts/execution_lease_live_guard.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('docs/state/v2/claims/CLAIM-CONVERGENCE-POSTMERGE-028.json').read_text())
+          h=json.loads(Path('docs/state/agent-runtime/heartbeats/HB-AGENT-GPT56SOL-CONVERGENCE-028-INIT.json').read_text())
+          assert c['state']=='ACTIVE' and c['fencing_token']==28
+          assert h['state']=='ACTIVE' and h['claim_id']==c['claim_id']
+          PY
+      - name: Materialize deterministic Runtime Graph
+        run: |
+          set -euo pipefail
+          AS_OF=$(python - <<'PY'
+          import json
+          from pathlib import Path
+          values=[]
+          for path in Path('docs/state/agent-runtime/heartbeats').glob('*.json'):
+              data=json.loads(path.read_text())
+              value=data.get('observed_at')
+              if isinstance(value,str) and value:
+                  values.append(value)
+          print(max(values) if values else '1970-01-01T00:00:00Z')
+          PY
+          )
+          python scripts/rebuild_agent_runtime_graph.py --as-of "$AS_OF" --output docs/state/agent-runtime/runtime-graph.json
+          python scripts/rebuild_agent_runtime_graph.py --check
+      - name: Materialize deterministic V2 and Context Survival
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/v2-token28 /tmp/v2-token28-check
+          python scripts/rebuild_v2_coordination.py --config docs/refactor-v2/coordination_current_config.json --output-dir /tmp/v2-token28
+          cp /tmp/v2-token28/active-claims.json docs/state/v2/active-claims.json
+          cp /tmp/v2-token28/project-state.json docs/state/v2/project-state.json
+          cp /tmp/v2-token28/context-pack.json docs/state/v2/context-pack.json
+          cp /tmp/v2-token28/graph-snapshot.json docs/state/v2/graph-snapshot.json
+          cp /tmp/v2-token28/CONTEXT_SURVIVAL.json docs/continuity/CONTEXT_SURVIVAL.json
+          python scripts/rebuild_v2_coordination.py --config docs/refactor-v2/coordination_current_config.json --output-dir /tmp/v2-token28-check --check
+      - name: Commit projections and self-delete one-shot
+        run: |
+          set -euo pipefail
+          git rm .github/workflows/convergence-runtime-graph-materialize.yml
+          git add docs/state/agent-runtime/runtime-graph.json docs/state/v2/active-claims.json docs/state/v2/project-state.json docs/state/v2/context-pack.json docs/state/v2/graph-snapshot.json docs/continuity/CONTEXT_SURVIVAL.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'coordination: materialize token28 active projections'
+          git push origin HEAD:convergence/postmerge-recovery-token28-20260915

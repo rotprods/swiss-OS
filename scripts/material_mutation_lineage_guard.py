@@ -195,6 +195,26 @@ def collapse_terminal_successions(
     )
 
 
+def prefer_current_branch_terminal_claims(
+    claims: list[dict[str, Any]], branch: str
+) -> list[dict[str, Any]]:
+    """Resolve inherited terminal provenance without weakening same-branch ambiguity.
+
+    A long-lived PR may carry terminal claim files from a predecessor branch. After
+    explicit succession chains are collapsed, exactly one terminal claim owned by
+    the current branch is the effective owner for this PR. Multiple current-branch
+    terminal candidates remain ambiguous and fail closed. If no candidate belongs
+    to the current branch, preserve the original set so cleanup/recovery branches
+    are not silently rebound.
+    """
+    if len(claims) <= 1 or not branch:
+        return claims
+    current = [claim for claim in claims if str(claim.get("branch", "")) == branch]
+    if len(current) == 1:
+        return current
+    return claims
+
+
 def terminal_claims_from_change(paths: list[str]) -> list[dict[str, Any]]:
     terminal = raw_terminal_claims_from_change(paths)
     if len(terminal) <= 1:
@@ -206,7 +226,14 @@ def terminal_claims_from_change(paths: list[str]) -> list[dict[str, Any]]:
         payload = load_json(ROOT / event_path)
         if payload.get("event_type") == "CLAIM_ACQUIRED":
             acquisition_events.append(payload)
-    return collapse_terminal_successions(terminal, acquisition_events)
+    collapsed = collapse_terminal_successions(terminal, acquisition_events)
+    branch = os.environ.get("GITHUB_HEAD_REF") or os.environ.get("GITHUB_REF_NAME")
+    if not branch:
+        try:
+            branch = git("branch", "--show-current")
+        except subprocess.CalledProcessError:
+            branch = ""
+    return prefer_current_branch_terminal_claims(collapsed, branch)
 
 
 def validate(paths: list[str], *, require_receipt: bool) -> list[str]:

@@ -55,7 +55,6 @@ class MaterialMutationLineageTests(unittest.TestCase):
         with patch.object(guard, "active_claims", return_value=[]), patch.object(guard, "terminal_claims_from_change", return_value=[claim]), patch.object(guard, "latest_heartbeats", return_value={"SES-1": hb}), patch.object(guard, "receipt_sessions", return_value=set()):
             self.assertIn("MATERIAL_CHANGE_MISSING_ITERATION_RECEIPT:SES-1", guard.validate(paths, require_receipt=False))
 
-
     def test_terminal_succession_chain_selects_unique_effective_owner(self):
         base = {"project_id":"SWITZERLAND_JOB_OS","workstream_id":"WS-X","objective_id":"OBJ-X","branch":"feat/x"}
         c19 = {**base,"claim_id":"CLAIM-19","fencing_token":19,"state":"SUPERSEDED","superseded_by":"CLAIM-20"}
@@ -82,6 +81,24 @@ class MaterialMutationLineageTests(unittest.TestCase):
         event = {"event_type":"CLAIM_ACQUIRED","causation":["claim:CLAIM-21","predecessor:CLAIM-20"]}
         result = guard.collapse_terminal_successions([c20,c21], [event])
         self.assertEqual({c["claim_id"] for c in result}, {"CLAIM-20","CLAIM-21"})
+
+    def test_unique_current_branch_terminal_claim_beats_inherited_other_branch_provenance(self):
+        inherited = {"branch":"convergence/main-singularity","claim_id":"CLAIM-21","fencing_token":21,"state":"RELEASED"}
+        current = {"branch":"convergence/terminalization-parity","claim_id":"CLAIM-25","fencing_token":25,"state":"RELEASED"}
+        result = guard.prefer_current_branch_terminal_claims([inherited,current], "convergence/terminalization-parity")
+        self.assertEqual([c["claim_id"] for c in result], ["CLAIM-25"])
+
+    def test_two_unrelated_terminal_claims_on_current_branch_stay_ambiguous(self):
+        c24 = {"branch":"feat/current","claim_id":"CLAIM-24","fencing_token":24,"state":"RELEASED"}
+        c25 = {"branch":"feat/current","claim_id":"CLAIM-25","fencing_token":25,"state":"RELEASED"}
+        result = guard.prefer_current_branch_terminal_claims([c24,c25], "feat/current")
+        self.assertEqual({c["claim_id"] for c in result}, {"CLAIM-24","CLAIM-25"})
+
+    def test_no_current_branch_terminal_match_preserves_ambiguity(self):
+        c21 = {"branch":"feat/a","claim_id":"CLAIM-21","fencing_token":21,"state":"RELEASED"}
+        c22 = {"branch":"feat/b","claim_id":"CLAIM-22","fencing_token":22,"state":"RELEASED"}
+        result = guard.prefer_current_branch_terminal_claims([c21,c22], "feat/cleanup")
+        self.assertEqual({c["claim_id"] for c in result}, {"CLAIM-21","CLAIM-22"})
 
 
 if __name__ == "__main__":

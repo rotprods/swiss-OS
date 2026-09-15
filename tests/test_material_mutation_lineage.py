@@ -74,6 +74,42 @@ class MaterialMutationLineageTests(unittest.TestCase):
         result = guard.collapse_terminal_successions([c20,c21], [])
         self.assertEqual({c["claim_id"] for c in result}, {"CLAIM-20","CLAIM-21"})
 
+    def _cross_context_pair(self):
+        predecessor = {"project_id":"SWITZERLAND_JOB_OS","workstream_id":"WS-A","objective_id":"OBJ-X","branch":"convergence/a","claim_id":"CLAIM-21","fencing_token":21,"state":"RELEASED","authority_ceiling":"CONVERGENCE_ONLY"}
+        successor = {"project_id":"SWITZERLAND_JOB_OS","workstream_id":"WS-B","objective_id":"OBJ-X","branch":"convergence/b","claim_id":"CLAIM-23","fencing_token":23,"state":"SUPERSEDED","authority_ceiling":"CONVERGENCE_ONLY","preconditions":{"predecessor_claim":"CLAIM-21","predecessor_claim_state":"RELEASED"}}
+        event = {"event_type":"CLAIM_ACQUIRED","causation":["claim:CLAIM-23","predecessor:CLAIM-21"]}
+        return predecessor, successor, event
+
+    def test_explicit_cross_context_predecessor_collapses_without_branch_tiebreak(self):
+        predecessor, successor, event = self._cross_context_pair()
+        result = guard.collapse_terminal_successions([predecessor, successor], [event])
+        self.assertEqual([c["claim_id"] for c in result], ["CLAIM-23"])
+        self.assertEqual(guard.prefer_current_branch_terminal_claims(result, "main"), result)
+
+    def test_cross_context_requires_successor_preconditions(self):
+        predecessor, successor, event = self._cross_context_pair()
+        successor = {**successor, "preconditions":{}}
+        result = guard.collapse_terminal_successions([predecessor, successor], [event])
+        self.assertEqual({c["claim_id"] for c in result}, {"CLAIM-21","CLAIM-23"})
+
+    def test_cross_context_rejects_predecessor_state_mismatch(self):
+        predecessor, successor, event = self._cross_context_pair()
+        successor = {**successor, "preconditions":{"predecessor_claim":"CLAIM-21","predecessor_claim_state":"ACTIVE"}}
+        result = guard.collapse_terminal_successions([predecessor, successor], [event])
+        self.assertEqual({c["claim_id"] for c in result}, {"CLAIM-21","CLAIM-23"})
+
+    def test_cross_context_rejects_authority_mismatch(self):
+        predecessor, successor, event = self._cross_context_pair()
+        successor = {**successor, "authority_ceiling":"WIDER"}
+        result = guard.collapse_terminal_successions([predecessor, successor], [event])
+        self.assertEqual({c["claim_id"] for c in result}, {"CLAIM-21","CLAIM-23"})
+
+    def test_cross_context_rejects_token_regression(self):
+        predecessor, successor, event = self._cross_context_pair()
+        successor = {**successor, "fencing_token":20}
+        result = guard.collapse_terminal_successions([predecessor, successor], [event])
+        self.assertEqual({c["claim_id"] for c in result}, {"CLAIM-21","CLAIM-23"})
+
     def test_invalid_cross_lineage_predecessor_edge_does_not_collapse(self):
         common = {"project_id":"SWITZERLAND_JOB_OS","objective_id":"OBJ-X","branch":"feat/x"}
         c20 = {**common,"workstream_id":"WS-A","claim_id":"CLAIM-20","fencing_token":20,"state":"RELEASED"}
@@ -87,6 +123,12 @@ class MaterialMutationLineageTests(unittest.TestCase):
         current = {"branch":"convergence/terminalization-parity","claim_id":"CLAIM-25","fencing_token":25,"state":"RELEASED"}
         result = guard.prefer_current_branch_terminal_claims([inherited,current], "convergence/terminalization-parity")
         self.assertEqual([c["claim_id"] for c in result], ["CLAIM-25"])
+
+    def test_main_never_uses_branch_name_tiebreak(self):
+        c21 = {"branch":"feat/a","claim_id":"CLAIM-21","fencing_token":21,"state":"RELEASED"}
+        c25 = {"branch":"feat/b","claim_id":"CLAIM-25","fencing_token":25,"state":"RELEASED"}
+        result = guard.prefer_current_branch_terminal_claims([c21,c25], "main")
+        self.assertEqual({c["claim_id"] for c in result}, {"CLAIM-21","CLAIM-25"})
 
     def test_two_unrelated_terminal_claims_on_current_branch_stay_ambiguous(self):
         c24 = {"branch":"feat/current","claim_id":"CLAIM-24","fencing_token":24,"state":"RELEASED"}

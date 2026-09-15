@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -41,12 +42,34 @@ def _read_live_lease(repo: str, token: str) -> tuple[Any, Any]:
     return stored, stored.projection.active_lease
 
 
-def evaluate(now: datetime, *, repo: str, token: str) -> tuple[bool, dict[str, Any]]:
+def canonical_main_sha() -> str:
+    try:
+        value = subprocess.check_output(
+            ["git", "rev-parse", "refs/remotes/origin/main"],
+            cwd=ROOT,
+            text=True,
+            stderr=subprocess.PIPE,
+        ).strip()
+    except subprocess.CalledProcessError as exc:
+        raise ValueError(f"cannot resolve canonical origin/main: {exc.stderr.strip()}") from exc
+    if len(value) != 40:
+        raise ValueError("canonical origin/main did not resolve to a 40-char SHA")
+    return value
+
+
+def evaluate(
+    now: datetime,
+    *,
+    repo: str,
+    token: str,
+    canonical_main: str | None = None,
+) -> tuple[bool, dict[str, Any]]:
     active = active_claims()
     receipt: dict[str, Any] = {
-        "schema_version": "EXECUTION-LEASE-LIVE-GUARD-1.1",
+        "schema_version": "EXECUTION-LEASE-LIVE-GUARD-1.2",
         "observed_at": now.astimezone(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
         "token_floor": LEASE_ENFORCEMENT_TOKEN_FLOOR,
+        "canonical_main_sha": canonical_main,
         "active_claim_ids": [str(c.get("claim_id")) for c in active],
         "violations": [],
     }
@@ -55,10 +78,6 @@ def evaluate(now: datetime, *, repo: str, token: str) -> tuple[bool, dict[str, A
         receipt["pass"] = False
         return False, receipt
 
-    # A zero-claim projection is not enough to prove the writer plane is free.
-    # The token21 cemetery incident proved that a claim can be terminalized while
-    # the external CAS lease remains ACTIVE. Therefore zero active claims MUST
-    # read the global lease slot and fail if any active lease remains persisted.
     if not active:
         try:
             stored, lease = _read_live_lease(repo, token)
@@ -103,6 +122,13 @@ def evaluate(now: datetime, *, repo: str, token: str) -> tuple[bool, dict[str, A
         receipt["pass"] = True
         return True, receipt
 
+    if not canonical_main:
+        receipt["violations"].append("CANONICAL_MAIN_SHA_REQUIRED_FOR_TOKEN19_PLUS")
+    elif claim.get("base_sha") != canonical_main:
+        receipt["violations"].append(
+            f"ACTIVE_CLAIM_PARENT_STALE:{claim.get('base_sha')}!={canonical_main}"
+        )
+
     try:
         stored, lease = _read_live_lease(repo, token)
     except LeaseStoreError as exc:
@@ -138,6 +164,10 @@ def evaluate(now: datetime, *, repo: str, token: str) -> tuple[bool, dict[str, A
         for code, (observed, expected) in checks.items():
             if observed != expected:
                 receipt["violations"].append(f"{code}:{observed}!={expected}")
+        if canonical_main and lease.parent_main_sha != canonical_main:
+            receipt["violations"].append(
+                f"GLOBAL_LEASE_PARENT_STALE:{lease.parent_main_sha}!={canonical_main}"
+            )
         if stored.projection.fencing_high_watermark < fencing:
             receipt["violations"].append("LEASE_WATERMARK_BEHIND_ACTIVE_CLAIM")
 
@@ -147,18 +177,25 @@ def evaluate(now: datetime, *, repo: str, token: str) -> tuple[bool, dict[str, A
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Require token19+ claims to match the globally serialized live execution lease, including zero-claim terminal parity.")
+    parser = argparse.ArgumentParser(
+        description="Require token19+ claims to match the globally serialized live execution lease and current canonical main."
+    )
     parser.add_argument("--repo", default=os.environ.get("GITHUB_REPOSITORY", "rotprods/swiss-OS"))
     parser.add_argument("--now", help="UTC Z timestamp; defaults to wall clock")
     parser.add_argument("--receipt")
     args = parser.parse_args()
     now = parse_utc(args.now) if args.now else datetime.now(timezone.utc)
     try:
-        ok, receipt = evaluate(now, repo=args.repo, token=os.environ.get("GITHUB_TOKEN", ""))
+        ok, receipt = evaluate(
+            now,
+            repo=args.repo,
+            token=os.environ.get("GITHUB_TOKEN", ""),
+            canonical_main=canonical_main_sha(),
+        )
     except (LeaseStoreError, ValueError, OSError, json.JSONDecodeError) as exc:
         ok = False
         receipt = {
-            "schema_version": "EXECUTION-LEASE-LIVE-GUARD-1.1",
+            "schema_version": "EXECUTION-LEASE-LIVE-GUARD-1.2",
             "observed_at": now.astimezone(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
             "pass": False,
             "violations": [f"LIVE_LEASE_GUARD_ERROR:{exc}"],

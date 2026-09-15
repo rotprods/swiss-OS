@@ -1,4 +1,4 @@
-name: convergence-token25-bootstrap
+name: convergence-token25-terminalize
 
 on:
   push:
@@ -6,22 +6,21 @@ on:
       - convergence/terminalization-parity-token23-20260913
     paths:
       - .github/workflows/convergence-token23-bootstrap.yml
-      - scripts/material_mutation_lineage_guard.py
-      - tests/test_material_mutation_lineage.py
       - docs/state/v2/claims/CLAIM-CONVERGENCE-TERMINALIZATION-025.json
-      - docs/state/v2/events/EVT-20260915T082640Z-CONVERGENCE-TOKEN25-ACQUIRED.json
-      - docs/state/agent-runtime/heartbeats/HB-AGENT-GPT56SOL-CONVERGENCE-025-INIT.json
-      - docs/reports/convergence/TOKEN25_TERMINAL_LINEAGE_GUARD_REPAIR_2026-09-15.json
+      - docs/state/v2/events/EVT-20260915T083603Z-CONVERGENCE-TOKEN25-WORK-COMPLETED.json
+      - docs/state/agent-runtime/heartbeats/HB-AGENT-GPT56SOL-CONVERGENCE-025-COMPLETE.json
+      - docs/state/agent-runtime/iterations/ITER-convergence-terminal-lineage-token25.json
+      - docs/reports/convergence/TOKEN25_TERMINAL_LINEAGE_RELEASE_READBACK_2026-09-15.json
 
 permissions:
   contents: write
 
 concurrency:
-  group: convergence-token25-bootstrap
+  group: convergence-token25-terminalize
   cancel-in-progress: false
 
 jobs:
-  bootstrap:
+  terminalize:
     runs-on: ubuntu-latest
     env:
       PYTHONPATH: src
@@ -33,148 +32,166 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Require live token25 claim lease parity
+      - name: Require zero-claim plus released external lease parity
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: python scripts/execution_lease_live_guard.py --receipt /tmp/execution-lease-token25-bootstrap.json
+        run: python scripts/execution_lease_live_guard.py --receipt /tmp/execution-lease-token25-terminal.json
 
-      - name: Bind coordination config to token25 lineage guard repair
+      - name: Finalize token25 convergence semantics
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
 
+          main='3c902a791be0e8df1db564034e211ea90c41f1b3'
+          claim='CLAIM-CONVERGENCE-TERMINALIZATION-025'
+          session='SES-20260915T082640Z-CONVERGENCE-025'
+          complete_hb='docs/state/agent-runtime/heartbeats/HB-AGENT-GPT56SOL-CONVERGENCE-025-COMPLETE.json'
+          init_hb='docs/state/agent-runtime/heartbeats/HB-AGENT-GPT56SOL-CONVERGENCE-025-INIT.json'
+          iteration='docs/state/agent-runtime/iterations/ITER-convergence-terminal-lineage-token25.json'
+          readback='docs/reports/convergence/TOKEN25_TERMINAL_LINEAGE_RELEASE_READBACK_2026-09-15.json'
+
           path=Path('docs/refactor-v2/coordination_current_config.json')
           data=json.loads(path.read_text())
-          branch='convergence/terminalization-parity-token23-20260913'
-          claim_path='docs/state/v2/claims/CLAIM-CONVERGENCE-TERMINALIZATION-025.json'
-          event='docs/state/v2/events/EVT-20260915T082640Z-CONVERGENCE-TOKEN25-ACQUIRED.json'
-          hb='docs/state/agent-runtime/heartbeats/HB-AGENT-GPT56SOL-CONVERGENCE-025-INIT.json'
-          report='docs/reports/convergence/TOKEN25_TERMINAL_LINEAGE_GUARD_REPAIR_2026-09-15.json'
-          data['branch']=branch
-          data['generated_at']='2026-09-15T08:26:40Z'
-          data['state']='CONVERGENCE_TERMINAL_LINEAGE_GUARD_TOKEN25_ACTIVE'
+          data['generated_at']='2026-09-15T08:36:03Z'
+          data['state']='CONVERGENCE_TOKEN25_RELEASED_AWAITING_FINAL_ZERO_WRITER_GAUNTLET'
+          data['branch']='convergence/terminalization-parity-token23-20260913'
           data['open_prs']=[464]
-          data['liveness_findings']=[
-            'Token24 completed two-surface terminalization: branch claim RELEASED, external lease CAS-released, active_lease=null, watermark24.',
-            'Token25 was immediately acquired through the same global CAS slot, physically proving successor admission without TTL waiting.',
-            'Token25 is bounded to terminal lineage guard repair and convergence reseal only; domain and outbound authority remain unchanged.'
-          ]
-          data['next_safe_actions']=[
-            'Qualify branch-aware inherited-terminal-claim filtering while preserving same-branch ambiguity fail-closed behavior.',
-            'Run exact-head token25 active-state repo gauntlet.',
-            'Terminalize claim25, release lease25 by CAS, require external release readback, then run final zero-writer gauntlet.',
-            'Await explicit owner merge instruction; do not start B12 or outbound.'
-          ]
-          data['blockers']=[
-            'Token25 guard repair and final zero-writer qualification are not yet complete.',
-            'Explicit owner merge instruction is required before PR #464 promotion.',
-            'CRM_UNIVERSE_COMPLETE remains false because RECONCILE_REQUIRED=1403.',
-            'OUTBOUND remains CLOSED and send_allowed=0.'
-          ]
-          data['unverified_work']=[
-            'Token25 active-state material lineage guard must pass end-to-end.',
-            'Full exact-head repo gauntlet must pass with token25.',
-            'Token25 must repeat two-surface terminalization and final zero-writer guard.',
-            'Fresh-main relevant-scope drift must be checked before promotion.'
-          ]
-          verified=data.setdefault('verified_work',[])
-          for fact in [
-            'Token24 active-state repo-guard 4459 / workflow 34945752258 passed every declared gate.',
-            'Token24 external lease release readback proved active_lease=null, last_lease token24 RELEASED and watermark24 before COMPLETE.',
-            'Token25 was physically admitted immediately after token24 release through CAS generation14/watermark25.'
-          ]:
-              if fact not in verified:
-                  verified.append(fact)
-          for key, values in (
-              ('relevant_paths',[claim_path,event,hb,report,'scripts/material_mutation_lineage_guard.py','tests/test_material_mutation_lineage.py','.github/workflows/convergence-token23-bootstrap.yml','docs/state/NEXT.json']),
-              ('survival_paths',[claim_path,hb,report,'scripts/material_mutation_lineage_guard.py','docs/state/NEXT.json']),
-          ):
-              current=data.setdefault(key,[])
-              for value in values:
-                  if value not in current:
-                      current.append(value)
+          for key in ('state_refs','relevant_paths','survival_paths'):
+              values=data.get(key,[])
+              if isinstance(values,list):
+                  values=[complete_hb if v==init_hb else v for v in values]
+                  for value in (complete_hb,iteration,readback,'scripts/material_mutation_lineage_guard.py','tests/test_material_mutation_lineage.py'):
+                      if value not in values and (key!='survival_paths' or value in (complete_hb,readback,'scripts/material_mutation_lineage_guard.py')):
+                          values.append(value)
+                  data[key]=list(dict.fromkeys(values))
           refs=[]
           for value in data.get('source_refs',[]):
-              if value in {'claim:CLAIM-CONVERGENCE-TERMINALIZATION-024:ACTIVE','lease:coordination/execution-lease:TOKEN24:ACTIVE_CAS'}:
+              if value in {
+                  'claim:CLAIM-CONVERGENCE-TERMINALIZATION-025:ACTIVE',
+                  'lease:coordination/execution-lease:TOKEN25:ACTIVE_CAS'
+              }:
                   continue
               refs.append(value)
           for value in [
-              'claim:CLAIM-CONVERGENCE-TERMINALIZATION-024:RELEASED',
-              'lease:coordination/execution-lease:TOKEN24:RELEASED_CAS',
-              'claim:CLAIM-CONVERGENCE-TERMINALIZATION-025:ACTIVE',
-              'lease:coordination/execution-lease:TOKEN25:ACTIVE_CAS',
-              'repair:TERMINAL_LINEAGE_BRANCH_PROVENANCE'
+              'claim:CLAIM-CONVERGENCE-TERMINALIZATION-025:RELEASED',
+              'lease:coordination/execution-lease:TOKEN25:RELEASED_CAS',
+              'lease-release-commit:742472a28bd593f7ff45096e3f3f92bee2d4fd37',
+              'lease-release-blob:651adb78753c2dd37f49459654d33e3e421e0424',
+              'qualification:repo-guard-4464:PASS',
+              'repair:TERMINAL_LINEAGE_BRANCH_PROVENANCE:PROVEN'
           ]:
               if value not in refs:
                   refs.append(value)
           data['source_refs']=refs
-          graph=data.setdefault('graph',{})
-          nodes=graph.setdefault('nodes',[])
-          by_id={n.get('id'):n for n in nodes}
-          for node_id,state in [
-              ('C:CLAIM-CONVERGENCE-TERMINALIZATION-024','RELEASED_TOKEN_24_KEEP'),
-              ('L:GLOBAL-EXECUTION-LEASE-024','RELEASED_CAS'),
-          ]:
-              if node_id in by_id:
-                  by_id[node_id]['state']=state
-          for node in [
-              {'id':'C:CLAIM-CONVERGENCE-TERMINALIZATION-025','state':'ACTIVE_TOKEN_25','type':'Claim'},
-              {'id':'L:GLOBAL-EXECUTION-LEASE-025','state':'ACTIVE_CAS','type':'ExecutionLease'},
-          ]:
-              if node['id'] not in by_id:
-                  nodes.append(node); by_id[node['id']]=node
-          for node in nodes:
-              if node.get('id')=='ISSUE:54':
-                  node['state']='TOKEN25_TERMINAL_LINEAGE_GUARD_REPAIR_ACTIVE'
-              elif node.get('id')=='PR:464':
-                  node['state']='TOKEN25_ACTIVE_REPAIR'
-          edges=graph.setdefault('edges',[])
-          for edge in [
-              {'from':'C:CLAIM-CONVERGENCE-TERMINALIZATION-024','to':'C:CLAIM-CONVERGENCE-TERMINALIZATION-025','type':'PREDECESSOR_OF'},
-              {'from':'L:GLOBAL-EXECUTION-LEASE-025','to':'C:CLAIM-CONVERGENCE-TERMINALIZATION-025','type':'SERIALIZES_WRITER'},
-              {'from':'C:CLAIM-CONVERGENCE-TERMINALIZATION-025','to':'ISSUE:54','type':'REPAIRS'}
-          ]:
-              if edge not in edges:
-                  edges.append(edge)
-          path.write_text(json.dumps(data,ensure_ascii=False,sort_keys=True,separators=(',',':'))+'\n')
-          PY
-
-      - name: Bind NEXT to token25 active claim
-        run: |
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          path=Path('docs/state/NEXT.json')
-          data=json.loads(path.read_text())
-          data['generated_at']='2026-09-15T08:26:40Z'
-          data['active_claim']={
-            'authority_ceiling':'CONVERGENCE_ORCHESTRATION_AND_LEASE_REPAIR_ONLY_NO_DOMAIN_OR_OUTBOUND_AUTHORITY',
-            'branch':'convergence/terminalization-parity-token23-20260913',
-            'claim_id':'CLAIM-CONVERGENCE-TERMINALIZATION-025',
-            'fencing_token':25,
-            'session_id':'SES-20260915T082640Z-CONVERGENCE-025'
-          }
-          data['convergence_route']='CONVERGENCE_TERMINAL_LINEAGE_GUARD_TOKEN25_ACTIVE'
-          data['successor_execution_allowed']=False
-          data['exact_dependency']='Token25 is the sole live convergence writer for terminal-lineage guard repair after token24 terminalization parity physically passed.'
-          data['hard_blockers']=[
-            'TOKEN25_TERMINAL_LINEAGE_GUARD_NOT_YET_QUALIFIED',
-            'EXPLICIT_OWNER_MERGE_INSTRUCTION_REQUIRED_FOR_PR_464',
-            'RECONCILE_REQUIRED_1403_NOT_ZERO',
-            'GOAL_DRAIN_BLOCKS_B12_AUTOMATIC_EXECUTION',
-            'OUTBOUND_CLOSED'
+          data['liveness_findings']=[
+              'Token24 completed two-surface terminalization and token25 was immediately admitted without TTL waiting.',
+              'Token25 exact-tree repo-guard 4464 passed the branch-aware lineage repair plus every existing coordination/recovery/unit/canary gate.',
+              'Claim25 RELEASED at 2026-09-15T08:34:06Z before external lease release; COMPLETE was intentionally withheld during the fail-closed gap.',
+              'External lease25 was CAS-released at 2026-09-15T08:35:19Z and read back active_lease=null, last_lease token25 RELEASED, watermark25.',
+              'Heartbeat25 COMPLETE is valid only after that external readback. Domain authority remains E4/690 and OUTBOUND CLOSED.'
+          ]
+          data['blockers']=[
+              'One final exact-head zero-writer repository gauntlet must pass on terminal token25 projections.',
+              'Explicit owner merge instruction is required before PR #464 promotion.',
+              'The global execution-lease/CAS contract remains candidate-only until an explicitly authorized merge.',
+              'CRM_UNIVERSE_COMPLETE remains false because RECONCILE_REQUIRED=1403; B12 remains blocked.',
+              'OUTBOUND remains CLOSED and send_allowed=0.'
           ]
           data['next_safe_actions']=[
-            'Run exact-head token25 active-state gauntlet.',
-            'Terminalize token25 through claim release -> CAS lease release -> readback -> COMPLETE.',
-            'Run final zero-writer gauntlet with inherited-other-branch lineage regression fixed.',
-            'Await explicit owner merge instruction; do not start B12 or outbound.'
+              'Require zero active claims/sessions with fencing high-watermark25 and external active_lease=null.',
+              'Run final exact-head terminal-state repository gauntlet.',
+              'Re-read live main for relevant-scope drift after final CI.',
+              'Await explicit owner merge instruction for PR #464; do not start B12 or outbound.'
           ]
-          path.write_text(json.dumps(data,ensure_ascii=False,indent=2,sort_keys=True)+'\n')
+          verified=data.setdefault('verified_work',[])
+          for fact in [
+              'Token25 exact-tree active-state repo-guard 4464 / workflow 34947621820 passed every declared gate.',
+              'Branch-aware terminal lineage regression selects the unique current-branch owner only after explicit succession collapse while preserving same-branch/no-match ambiguity.',
+              'External token25 release commit 742472a28bd593f7ff45096e3f3f92bee2d4fd37 read back active_lease=null, last_lease token25 RELEASED and watermark25.'
+          ]:
+              if fact not in verified:
+                  verified.append(fact)
+          data['unverified_work']=[
+              'Terminal Runtime Graph/V2/Context Survival projections must be resealed from claim25 RELEASED + heartbeat COMPLETE.',
+              'Final PR-wide material lineage guard must select claim25 over inherited claim21 provenance.',
+              'One final exact-head zero-writer gauntlet must pass.',
+              'Fresh-main relevant-scope drift must be checked after final CI.',
+              'Promotion/merge remains an explicit owner action.'
+          ]
+          graph=data.setdefault('graph',{})
+          for node in graph.get('nodes',[]):
+              if node.get('id')=='C:CLAIM-CONVERGENCE-TERMINALIZATION-025':
+                  node['state']='RELEASED_TOKEN_25_KEEP'
+              elif node.get('id')=='L:GLOBAL-EXECUTION-LEASE-025':
+                  node['state']='RELEASED_CAS'
+              elif node.get('id')=='PR:464':
+                  node['state']='TOKEN25_TERMINAL_RESEALED_AWAITING_FINAL_GAUNTLET'
+              elif node.get('id')=='ISSUE:54':
+                  node['state']='TERMINALIZATION_AND_LINEAGE_PARITY_PROVEN_IN_CANDIDATE'
+          path.write_text(json.dumps(data,ensure_ascii=False,sort_keys=True,separators=(',',':'))+'\n')
+
+          path=Path('docs/state/NEXT.json')
+          root=json.loads(path.read_text())
+          root['generated_at']='2026-09-15T08:36:03Z'
+          root['active_claim']=None
+          root['execution_mode']='RECOVERY_RECONCILE'
+          root['selected_route']='CURRENT_UNRESOLVED_1403_ENTITY_RESOLUTION'
+          root['next_route']='CURRENT_UNRESOLVED_1403_ENTITY_RESOLUTION'
+          root['convergence_route']='CONVERGENCE_TOKEN25_RELEASED_AWAITING_FINAL_ZERO_WRITER_GAUNTLET'
+          root['successor_execution_allowed']=False
+          root['exact_dependency']='Claim25 and its external CAS lease are both terminal RELEASED; no successor writer is authorized while the convergence candidate awaits final zero-writer qualification and explicit owner merge instruction.'
+          root['hard_blockers']=[
+              'FINAL_ZERO_WRITER_GAUNTLET_REQUIRED_FOR_PR_464',
+              'EXPLICIT_OWNER_MERGE_INSTRUCTION_REQUIRED_FOR_PR_464',
+              'GLOBAL_EXECUTION_LEASE_NOT_CANONICAL_UNTIL_EXPLICITLY_AUTHORIZED_MERGE',
+              'RECONCILE_REQUIRED_1403_NOT_ZERO',
+              'GOAL_DRAIN_BLOCKS_B12_AUTOMATIC_EXECUTION',
+              'OUTBOUND_CLOSED'
+          ]
+          root['next_safe_actions']=[
+              'Verify terminal projections show zero active writers and fencing high-watermark25.',
+              'Run final exact-head terminal-state gauntlet.',
+              'Re-read live main for relevant-scope drift.',
+              'Await explicit owner merge instruction; do not start B12 or outbound.'
+          ]
+          root.setdefault('safety',{}).update({'authority_advanced':False,'h_id_allocations':0,'canonical_id_reservations':0,'crm_universe_complete':False,'outbound':'CLOSED','send_allowed':0,'irreversible_external_actions':0})
+          path.write_text(json.dumps(root,ensure_ascii=False,sort_keys=True,indent=2)+'\n')
+
+          for pointer in [Path('docs/state/NEXT_CONVERGENCE_ONLY_2026-09-12.json'),Path('docs/state/v2/NEXT_CONVERGENCE_ONLY_2026-09-12.json')]:
+              p=json.loads(pointer.read_text())
+              p['claim_id']=claim
+              p['claim_state']='RELEASED'
+              p['fencing_token']=25
+              p['session_id']=session
+              p['status']='TOKEN25_TERMINAL_RESEALED_AWAITING_FINAL_GAUNTLET'
+              p['blockers']=[
+                  'Final exact-head zero-writer gauntlet is required before PR #464 can be considered technically qualified.',
+                  'Explicit owner merge instruction is required before PR #464 promotion.',
+                  'CRM_UNIVERSE_COMPLETE remains FALSE because RECONCILE_REQUIRED=1403.',
+                  'No successor writer or outbound action is authorized.'
+              ]
+              p['next_safe_actions']=[
+                  'Run final exact-head zero-writer gauntlet.',
+                  'Re-read live main for relevant-scope drift.',
+                  'Await explicit owner merge instruction; do not start B12.'
+              ]
+              p['qualification']={'decision':'KEEP','active_state_repo_guard_run_number':4464,'active_state_workflow_run_id':34947621820,'active_state_result':'PASS','external_lease_release':'PASS','lineage_guard_repair':'PASS','final_terminal_gauntlet':'PENDING'}
+              pointer.write_text(json.dumps(p,ensure_ascii=False,sort_keys=True,separators=(',',':'))+'\n')
+
+          state=Path('STATE.md').read_text()
+          first_end=state.index('\n\n## Authority')
+          state='# STATE — LIVE HANDOFF POINTER\n\nLatest reconciled GitHub frontier: **main `'+main+'`**. B11 is merged and SWISS-OS remains in **`CONVERGENCE_ONLY`**. Draft PR **#464** is the single convergence candidate. Token25 repaired inherited terminal-lineage ambiguity, passed full active-state qualification, and is now **terminal KEEP / RELEASED** on both Git claim and external CAS lease surfaces. No successor writer is authorized.\n'+state[first_end:]
+          start=state.index('## Global writer serialization')
+          end=state.index('## Convergence progress')
+          replacement='''## Global writer serialization — terminalization + lineage parity proven\n\nThe duplicate-token18 collision is protected by the candidate GitHub blob-SHA CAS lease. The later orphan-lease defect was exercised through token24 two-surface terminalization. Token25 then repaired the final PR-wide lineage ambiguity without weakening same-branch fail-closed behavior.\n\nToken25 lifecycle:\n\n```text\nclaim          CLAIM-CONVERGENCE-TERMINALIZATION-025\nsession        SES-20260915T082640Z-CONVERGENCE-025\nfencing token  25\nstate          RELEASED\niteration      ITER-convergence-terminal-lineage-token25 = KEEP\nactive qualify repo-guard 4464 / workflow 34947621820 = PASS\nlease release  commit 742472a28bd593f7ff45096e3f3f92bee2d4fd37\nlease readback active_lease=null / last_lease=token25 RELEASED / watermark=25\n```\n\nCOMPLETE was withheld until external release readback. The material lineage guard now ignores inherited terminal provenance from another branch only when exactly one terminal owner belongs to the current PR branch; same-branch and no-match ambiguity remain fail-closed.\n\n'''
+          state=state[:start]+replacement+state[end:]
+          start=state.index('## NEXT')
+          state=state[:start]+'''## NEXT\n\nCurrent control state is **terminal convergence candidate awaiting final zero-writer gauntlet and explicit owner merge instruction**.\n\n```text\nreseal Runtime Graph + V2/Context Survival to zero active writers / watermark25\n→ final exact-head terminal-state gauntlet\n→ re-read live main for drift\n→ await explicit owner merge instruction for PR #464\n```\n\nDo not open B12, Semantic V4 or another feature wave. Do not merge PR #464 without explicit owner instruction. Keep `OUTBOUND=CLOSED` / `send_allowed=0`.\n\n**VERIFY LIVE TRUTH BEFORE EXECUTION.**\n'''
+          Path('STATE.md').write_text(state)
           PY
 
-      - name: Rebuild Runtime Graph
+      - name: Materialize terminal Runtime Graph
         run: |
           set -euo pipefail
           AS_OF=$(python - <<'PY'
@@ -190,49 +207,84 @@ jobs:
           PY
           )
           python scripts/rebuild_agent_runtime_graph.py --as-of "$AS_OF" --output docs/state/agent-runtime/runtime-graph.json
+          python scripts/rebuild_agent_runtime_graph.py --check
 
-      - name: Rebuild V2 coordination and Context Survival
+      - name: Materialize terminal V2 coordination and Context Survival
         run: |
           set -euo pipefail
-          rm -rf /tmp/v2-token25
-          python scripts/rebuild_v2_coordination.py --config docs/refactor-v2/coordination_current_config.json --output-dir /tmp/v2-token25
-          cp /tmp/v2-token25/active-claims.json docs/state/v2/active-claims.json
-          cp /tmp/v2-token25/project-state.json docs/state/v2/project-state.json
-          cp /tmp/v2-token25/context-pack.json docs/state/v2/context-pack.json
-          cp /tmp/v2-token25/graph-snapshot.json docs/state/v2/graph-snapshot.json
-          cp /tmp/v2-token25/CONTEXT_SURVIVAL.json docs/continuity/CONTEXT_SURVIVAL.json
+          rm -rf /tmp/v2-token25-terminal /tmp/v2-token25-terminal-check
+          python scripts/rebuild_v2_coordination.py --config docs/refactor-v2/coordination_current_config.json --output-dir /tmp/v2-token25-terminal
+          cp /tmp/v2-token25-terminal/active-claims.json docs/state/v2/active-claims.json
+          cp /tmp/v2-token25-terminal/project-state.json docs/state/v2/project-state.json
+          cp /tmp/v2-token25-terminal/context-pack.json docs/state/v2/context-pack.json
+          cp /tmp/v2-token25-terminal/graph-snapshot.json docs/state/v2/graph-snapshot.json
+          cp /tmp/v2-token25-terminal/CONTEXT_SURVIVAL.json docs/continuity/CONTEXT_SURVIVAL.json
+          python scripts/rebuild_v2_coordination.py --config docs/refactor-v2/coordination_current_config.json --output-dir /tmp/v2-token25-terminal-check --check
 
-      - name: Assert token25 derived state
+      - name: Assert zero-writer terminal state
         run: |
           python - <<'PY'
-          import json
+          import json,re
           from pathlib import Path
+          root=json.loads(Path('docs/state/NEXT.json').read_text())
+          control=json.loads(Path('docs/state/NEXT_CONVERGENCE_ONLY_2026-09-12.json').read_text())
           active=json.loads(Path('docs/state/v2/active-claims.json').read_text())
+          project=json.loads(Path('docs/state/v2/project-state.json').read_text())
           runtime=json.loads(Path('docs/state/agent-runtime/runtime-graph.json').read_text())
-          nxt=json.loads(Path('docs/state/NEXT.json').read_text())
-          assert [c['claim_id'] for c in active['claims']]==['CLAIM-CONVERGENCE-TERMINALIZATION-025']
+          state=Path('STATE.md').read_text()
+          assert active['claims']==[]
           assert active['collisions']==[]
           assert active['fencing_high_watermark']==25
-          assert [s['session_id'] for s in runtime['active_sessions']]==['SES-20260915T082640Z-CONVERGENCE-025']
-          assert nxt['active_claim']['claim_id']=='CLAIM-CONVERGENCE-TERMINALIZATION-025'
-          assert nxt['active_claim']['fencing_token']==25
+          assert project['active_claim_ids']==[]
+          assert runtime['active_sessions']==[]
+          assert root['active_claim'] is None
+          assert root['next_route']=='CURRENT_UNRESOLVED_1403_ENTITY_RESOLUTION'
+          assert root['successor_execution_allowed'] is False
+          assert control['claim_id']=='CLAIM-CONVERGENCE-TERMINALIZATION-025'
+          assert control['claim_state']=='RELEASED'
+          assert control['fencing_token']==25
+          assert control['backlog']['execution_allowed'] is False
+          assert re.search(r'ECV verified frontier\s+1438 / 1438',state)
+          assert re.search(r'lower49 typed SRR materialized\s+47 / 47',state)
+          assert re.search(r'RAGR evidence-classified\s+34 / 34',state)
           PY
 
-      - name: Run lineage and lease regression suite
+      - name: Prove immediate token26 successor admission without mutation
+        run: |
+          python - <<'PY'
+          from datetime import datetime, timezone
+          from swiss_os.execution_lease import LeaseAdmissionKind, LeaseRequest, evaluate_lease
+          request=LeaseRequest(
+              project_id='SWITZERLAND_JOB_OS',
+              owner_agent_id='AGENT-ADMISSION-PROBE-026',
+              run_id='RUN-ADMISSION-PROBE-026',
+              session_id='SES-ADMISSION-PROBE-026',
+              wave_id='WAVE-ADMISSION-PROBE-026',
+              parent_main_sha='3c902a791be0e8df1db564034e211ea90c41f1b3',
+              authority_epoch='HS_ENTITY_EPOCH_2026-08-25_E4',
+              fencing_token=26,
+          )
+          result=evaluate_lease(None,request,datetime.now(timezone.utc),canonical_parent_sha=request.parent_main_sha,canonical_authority_epoch=request.authority_epoch,fencing_high_watermark=25)
+          assert result.kind is LeaseAdmissionKind.ACQUIRE_ALLOWED
+          assert result.writer_allowed is True
+          print('token26 admission: ACQUIRE_ALLOWED (no lease committed)')
+          PY
+
+      - name: Run bounded lease and lineage regression suite
         run: |
           python -m unittest \
-            tests.test_material_mutation_lineage \
             tests.test_execution_lease \
             tests.test_github_execution_lease \
             tests.test_execution_lease_live_guard \
+            tests.test_material_mutation_lineage \
             -v
 
-      - name: Re-run live lease guard against rebuilt state
+      - name: Re-run zero-claim live lease guard after rebuild
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: python scripts/execution_lease_live_guard.py --receipt /tmp/execution-lease-token25-rebuilt.json
+        run: python scripts/execution_lease_live_guard.py --receipt /tmp/execution-lease-token25-zero-writer.json
 
-      - name: Validate full token25 material lineage scope
+      - name: Validate terminal material lineage scope
         run: |
           set -euo pipefail
           git fetch --no-tags origin main:refs/remotes/origin/main
@@ -244,12 +296,15 @@ jobs:
           export GRAPH_V2_CHANGED_PATHS="$CHANGED"
           python scripts/material_mutation_lineage_guard.py
 
-      - name: Commit token25 coordination projections
+      - name: Commit exact terminal projections
         run: |
           set -euo pipefail
           git add \
+            STATE.md \
             docs/refactor-v2/coordination_current_config.json \
             docs/state/NEXT.json \
+            docs/state/NEXT_CONVERGENCE_ONLY_2026-09-12.json \
+            docs/state/v2/NEXT_CONVERGENCE_ONLY_2026-09-12.json \
             docs/state/agent-runtime/runtime-graph.json \
             docs/state/v2/active-claims.json \
             docs/state/v2/project-state.json \
@@ -257,10 +312,10 @@ jobs:
             docs/state/v2/graph-snapshot.json \
             docs/continuity/CONTEXT_SURVIVAL.json
           if git diff --cached --quiet; then
-            echo 'Token25 projections already materialized.'
+            echo 'Token25 terminal projections already canonical.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m 'coordination: materialize token25 lineage-guard repair state'
+          git commit -m 'coordination: reseal token25 zero-writer terminal state'
           git push origin HEAD:convergence/terminalization-parity-token23-20260913

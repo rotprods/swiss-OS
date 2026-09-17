@@ -1,27 +1,24 @@
-name: convergence-token32-active-projections
+name: convergence-token32-terminal-projections
 
 on:
   push:
     branches: [convergence/postmerge-recovery-token32-20260917]
     paths:
       - '.github/workflows/convergence-runtime-graph-materialize.yml'
-      - 'docs/state/v2/claims/CLAIM-CONVERGENCE-POSTMERGE-031.json'
       - 'docs/state/v2/claims/CLAIM-CONVERGENCE-POSTMERGE-032.json'
-      - 'docs/state/v2/events/EVT-20260917T113830Z-CONVERGENCE-TOKEN32-ACQUIRED.json'
-      - 'docs/state/v2/events/EVT-20260917T114000Z-CONVERGENCE-TOKEN31-SUPERSEDED-BY32.json'
-      - 'docs/state/v2/events/EVT-20260917T114100Z-CONVERGENCE-TOKEN32-WORK-STARTED.json'
-      - 'docs/state/agent-runtime/heartbeats/HB-AGENT-GPT56SOL-CONVERGENCE-031-SUPERSEDED-BY32.json'
-      - 'docs/state/agent-runtime/heartbeats/HB-AGENT-GPT56SOL-SWARM-036-*.json'
+      - 'docs/state/v2/events/EVT-20260917T115600Z-CONVERGENCE-TOKEN32-CLAIM-RELEASED.json'
+      - 'docs/state/agent-runtime/heartbeats/HB-AGENT-GPT56SOL-SWARM-036-COMPLETE.json'
+      - 'docs/state/agent-runtime/iterations/ITER-convergence-postmerge-recovery-token32.json'
 
 permissions:
   contents: write
 
 concurrency:
-  group: convergence-token32-active-projections
+  group: convergence-token32-terminal-projections
   cancel-in-progress: false
 
 jobs:
-  materialize:
+  terminalize:
     runs-on: ubuntu-latest
     env:
       PYTHONPATH: src
@@ -32,42 +29,47 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
-      - name: Require live token32 lease parity
+      - name: Require zero-claim plus released external lease parity
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: python scripts/execution_lease_live_guard.py
-      - name: Refresh coordination config for token32 takeover
+        run: python scripts/execution_lease_live_guard.py --receipt /tmp/execution-lease-token32-terminal.json
+      - name: Finalize token32 convergence semantics
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
 
+          main='d684852a8560adf5473dce1e621fc5c83c1a42a6'
+          claim='CLAIM-CONVERGENCE-POSTMERGE-032'
+          complete_hb='docs/state/agent-runtime/heartbeats/HB-AGENT-GPT56SOL-SWARM-036-COMPLETE.json'
+          active_hb='docs/state/agent-runtime/heartbeats/HB-AGENT-GPT56SOL-SWARM-036-114100.json'
+          iteration='docs/state/agent-runtime/iterations/ITER-convergence-postmerge-recovery-token32.json'
+
           p=Path('docs/refactor-v2/coordination_current_config.json')
           d=json.loads(p.read_text())
-          d['base_main_sha']='d684852a8560adf5473dce1e621fc5c83c1a42a6'
+          d['base_main_sha']=main
           d['branch']='convergence/postmerge-recovery-token32-20260917'
-          d['generated_at']='2026-09-17T11:54:00Z'
-          d['state']='CONVERGENCE_TOKEN32_ACTIVE_STALE_WRITER_RECOVERY'
+          d['generated_at']='2026-09-17T11:58:00Z'
+          d['state']='CONVERGENCE_TOKEN32_RELEASED_AWAITING_FINAL_ZERO_WRITER_GAUNTLET'
           d['open_prs']=[466,471,472]
           d['blockers']=[
-            'PR #472 must pass the full exact-head repository gauntlet before token32 terminalization.',
-            'Token32 COMPLETE is forbidden until claim terminalization and external lease release/readback both succeed.',
-            'PR #471 is stale predecessor provenance only and must not be treated as live writer authority.',
-            'Post-merge main must pass repo-guard before issue #54 can close.',
-            'GitHub main protection/rulesets remain an external platform blocker tracked by #441.',
+            'One final exact-head zero-writer repository gauntlet must pass on terminal token32 projections.',
+            'PR #472 promotion remains blocked by the existing owner/platform authority gate.',
+            'GitHub main protection/rulesets are not yet platform-enforced as required by #441.',
             'CRM_UNIVERSE_COMPLETE remains false at RECONCILE_REQUIRED=1403; B12 and OUTBOUND remain blocked.'
           ]
           d['next_safe_actions']=[
-            'Materialize token32 active Runtime Graph/V2/Context Survival projections deterministically.',
-            'Run the full exact-head PR #472 gauntlet and repair only evidenced blockers.',
-            'Persist a truthful token32 iteration receipt, terminalize claim32, then CAS-release lease32 and require readback before COMPLETE.',
-            'Run final zero-writer exact-head gauntlet and stop at any owner/human promotion gate rather than self-authorizing merge.'
+            'Require zero active claims and zero active runtime sessions with fencing high-watermark32.',
+            'Run the final exact-head terminal-state repository gauntlet.',
+            'Re-read live main for relevant-scope drift after final CI.',
+            'Stop at the owner/platform promotion gate; do not self-authorize merge or outbound.'
           ]
           d['liveness_findings']=[
-            'Token28 is terminal SUPERSEDED and its latest lifecycle heartbeat is normalized to objective_id plus pr_number.',
-            'Token31 expired at the fixed global lease slot and its latest ACTIVE heartbeat exceeded the 1800-second TTL; it is superseded by token32 without reviving session031.',
-            'Token32 acquired fencing token32 by exact CAS against global watermark31 from canonical main d684852a and is the sole live recovery writer.',
-            'Operational authority remains E4/690, H-0691 unallocated, terminal mappings 658, RECONCILE_REQUIRED=1403 and OUTBOUND CLOSED.'
+            'Token31 was recovered death-safely after lease expiry plus heartbeat staleness; it remains terminal SUPERSEDED.',
+            'Token32 exact-head active-state repo-guard 35218123802 passed every declared gate.',
+            'Claim32 RELEASED at 2026-09-17T11:56:00Z before external lease release.',
+            'External lease32 was CAS-released at commit a80ce20da1c8ee04afc80e2c289baf95d528ccac and read back active_lease=null, last_lease token32 RELEASED, watermark32.',
+            'Heartbeat32 COMPLETE was published only after external release readback. Domain authority remains E4/690 and OUTBOUND CLOSED.'
           ]
 
           refs=[]
@@ -75,20 +77,20 @@ jobs:
               if not isinstance(v,str):
                   continue
               if v in {
-                'claim:CLAIM-CONVERGENCE-POSTMERGE-031:ACTIVE',
-                'lease:coordination/execution-lease:TOKEN31:ACTIVE_CAS',
-                'pr:471:POSTMERGE_RECOVERY_CANDIDATE'
+                'claim:CLAIM-CONVERGENCE-POSTMERGE-032:ACTIVE',
+                'lease:coordination/execution-lease:TOKEN32:ACTIVE_CAS'
               }:
                   continue
               refs.append(v)
           refs += [
-            'main:d684852a8560adf5473dce1e621fc5c83c1a42a6',
-            'claim:CLAIM-CONVERGENCE-POSTMERGE-028:SUPERSEDED',
+            'main:'+main,
             'claim:CLAIM-CONVERGENCE-POSTMERGE-031:SUPERSEDED',
-            'claim:CLAIM-CONVERGENCE-POSTMERGE-032:ACTIVE',
-            'lease:coordination/execution-lease:TOKEN32:ACTIVE_CAS',
-            'recovery:TOKEN31_STALE_TO_TOKEN32',
-            'pr:472:POSTMERGE_RECOVERY_CANDIDATE'
+            'claim:CLAIM-CONVERGENCE-POSTMERGE-032:RELEASED',
+            'lease:coordination/execution-lease:TOKEN32:RELEASED_CAS',
+            'lease-release-commit:a80ce20da1c8ee04afc80e2c289baf95d528ccac',
+            'lease-release-blob:2018e55d78ad3c23063d565f41d9bd73ae94bf36',
+            'qualification:repo-guard-35218123802:PASS',
+            'pr:472:TERMINAL_RECOVERY_CANDIDATE'
           ]
           d['source_refs']=list(dict.fromkeys(refs))
 
@@ -96,66 +98,48 @@ jobs:
               vals=d.get(key,[])
               if not isinstance(vals,list):
                   vals=[]
-              for v in [
-                'docs/state/v2/claims/CLAIM-CONVERGENCE-POSTMERGE-031.json',
-                'docs/state/v2/claims/CLAIM-CONVERGENCE-POSTMERGE-032.json',
-                'docs/state/v2/events/EVT-20260917T113830Z-CONVERGENCE-TOKEN32-ACQUIRED.json',
-                'docs/state/v2/events/EVT-20260917T114000Z-CONVERGENCE-TOKEN31-SUPERSEDED-BY32.json',
-                'docs/state/v2/events/EVT-20260917T114100Z-CONVERGENCE-TOKEN32-WORK-STARTED.json',
-                'docs/state/agent-runtime/heartbeats/HB-AGENT-GPT56SOL-CONVERGENCE-031-SUPERSEDED-BY32.json',
-                'docs/state/agent-runtime/heartbeats/HB-AGENT-GPT56SOL-SWARM-036-114100.json'
-              ]:
-                  if v not in vals:
+              vals=[complete_hb if v==active_hb else v for v in vals]
+              for v in [complete_hb,iteration,'docs/state/v2/events/EVT-20260917T115600Z-CONVERGENCE-TOKEN32-CLAIM-RELEASED.json']:
+                  if v not in vals and (key!='survival_paths' or v==complete_hb):
                       vals.append(v)
-              d[key]=vals
+              d[key]=list(dict.fromkeys(vals))
 
           g=d.setdefault('graph',{})
-          nodes=g.setdefault('nodes',[])
-          by={n.get('id'):n for n in nodes if isinstance(n,dict)}
-          if 'C:CLAIM-CONVERGENCE-POSTMERGE-031' in by:
-              by['C:CLAIM-CONVERGENCE-POSTMERGE-031']['state']='SUPERSEDED_STALE_WRITER'
-          if 'L:GLOBAL-EXECUTION-LEASE-031' in by:
-              by['L:GLOBAL-EXECUTION-LEASE-031']['state']='EXPIRED_SUPERSEDED'
-          for node in [
-            {'id':'C:CLAIM-CONVERGENCE-POSTMERGE-032','state':'ACTIVE_TOKEN_32_POSTMERGE_RECOVERY','type':'Claim'},
-            {'id':'L:GLOBAL-EXECUTION-LEASE-032','state':'ACTIVE_CAS','type':'ExecutionLease'},
-            {'id':'PR:472','state':'ACTIVE_POSTMERGE_RECOVERY_CANDIDATE','type':'PullRequest'}
-          ]:
-              if node['id'] not in by:
-                  nodes.append(node)
-
-          edges=g.setdefault('edges',[])
-          existing={(e.get('from'),e.get('to'),e.get('type')) for e in edges if isinstance(e,dict)}
-          for e in [
-            {'from':'C:CLAIM-CONVERGENCE-POSTMERGE-031','to':'C:CLAIM-CONVERGENCE-POSTMERGE-032','type':'PREDECESSOR_OF'},
-            {'from':'L:GLOBAL-EXECUTION-LEASE-032','to':'C:CLAIM-CONVERGENCE-POSTMERGE-032','type':'SERIALIZES_WRITER'},
-            {'from':'C:CLAIM-CONVERGENCE-POSTMERGE-032','to':'PR:472','type':'EXECUTES_ON'},
-            {'from':'C:CLAIM-CONVERGENCE-POSTMERGE-032','to':'ISSUE:54','type':'REPAIRS'},
-            {'from':'A:E4-690','to':'PR:472','type':'AUTHORITY_CEILING'},
-            {'from':'MODE:CONVERGENCE_ONLY','to':'PR:472','type':'CONSTRAINS'},
-            {'from':'PR:472','to':'G:G-0001','type':'SERVES'}
-          ]:
-              k=(e['from'],e['to'],e['type'])
-              if k not in existing:
-                  edges.append(e)
-                  existing.add(k)
+          for node in g.get('nodes',[]):
+              if node.get('id')=='C:CLAIM-CONVERGENCE-POSTMERGE-032':
+                  node['state']='RELEASED_TOKEN_32_KEEP'
+              elif node.get('id')=='L:GLOBAL-EXECUTION-LEASE-032':
+                  node['state']='RELEASED_CAS'
+              elif node.get('id')=='PR:472':
+                  node['state']='TOKEN32_TERMINAL_RESEALED_AWAITING_FINAL_GAUNTLET'
           p.write_text(json.dumps(d,ensure_ascii=False,sort_keys=True,separators=(',',':'))+'\n')
-          PY
-      - name: Point NEXT at token32 without changing domain frontier
-        run: |
-          python - <<'PY'
-          import json
-          from pathlib import Path
+
           p=Path('docs/state/NEXT.json')
-          d=json.loads(p.read_text())
-          claim=json.loads(Path('docs/state/v2/claims/CLAIM-CONVERGENCE-POSTMERGE-032.json').read_text())
-          d['generated_at']='2026-09-17T11:54:00Z'
-          d['active_claim']=claim
-          d['execution_mode']='RECOVERY_RECONCILE'
-          d['successor_execution_allowed']=False
-          p.write_text(json.dumps(d,ensure_ascii=False,sort_keys=True,indent=2)+'\n')
+          n=json.loads(p.read_text())
+          n['generated_at']='2026-09-17T11:58:00Z'
+          n['active_claim']=None
+          n['execution_mode']='RECOVERY_RECONCILE'
+          n['successor_execution_allowed']=False
+          n['convergence_route']='CONVERGENCE_TOKEN32_RELEASED_AWAITING_FINAL_ZERO_WRITER_GAUNTLET'
+          n['exact_dependency']='Claim32 and its external CAS lease are both terminal RELEASED; no successor writer is authorized while PR472 awaits final zero-writer qualification and the existing owner/platform promotion gate.'
+          n['hard_blockers']=[
+            'FINAL_ZERO_WRITER_GAUNTLET_REQUIRED_FOR_PR_472',
+            'OWNER_PLATFORM_PROMOTION_GATE_REQUIRED_FOR_PR_472',
+            'PLATFORM_ENFORCEMENT_REQUIRED_NOT_YET_ENFORCED_ISSUE_441',
+            'RECONCILE_REQUIRED_1403_NOT_ZERO',
+            'GOAL_DRAIN_BLOCKS_B12_AUTOMATIC_EXECUTION',
+            'OUTBOUND_CLOSED'
+          ]
+          n['next_safe_actions']=[
+            'Verify terminal projections show zero active writers and fencing high-watermark32.',
+            'Run final exact-head terminal-state gauntlet.',
+            'Re-read live main for relevant-scope drift.',
+            'Stop at owner/platform promotion gate; do not start outbound.'
+          ]
+          n.setdefault('safety',{}).update({'authority_advanced':False,'h_id_allocations':0,'canonical_id_reservations':0,'crm_universe_complete':False,'outbound':'CLOSED','send_allowed':0,'irreversible_external_actions':0})
+          p.write_text(json.dumps(n,ensure_ascii=False,sort_keys=True,indent=2)+'\n')
           PY
-      - name: Materialize active Runtime Graph
+      - name: Materialize terminal Runtime Graph
         run: |
           AS_OF=$(python - <<'PY'
           import json
@@ -171,42 +155,42 @@ jobs:
           )
           python scripts/rebuild_agent_runtime_graph.py --as-of "$AS_OF" --output docs/state/agent-runtime/runtime-graph.json
           python scripts/rebuild_agent_runtime_graph.py --check
-      - name: Materialize active V2 coordination and Context Survival
+      - name: Materialize terminal V2 coordination and Context Survival
         run: |
-          rm -rf /tmp/v2-active /tmp/v2-active-check
-          python scripts/rebuild_v2_coordination.py --config docs/refactor-v2/coordination_current_config.json --output-dir /tmp/v2-active
-          cp /tmp/v2-active/active-claims.json docs/state/v2/active-claims.json
-          cp /tmp/v2-active/project-state.json docs/state/v2/project-state.json
-          cp /tmp/v2-active/context-pack.json docs/state/v2/context-pack.json
-          cp /tmp/v2-active/graph-snapshot.json docs/state/v2/graph-snapshot.json
-          cp /tmp/v2-active/CONTEXT_SURVIVAL.json docs/continuity/CONTEXT_SURVIVAL.json
-          python scripts/rebuild_v2_coordination.py --config docs/refactor-v2/coordination_current_config.json --output-dir /tmp/v2-active-check --check
-      - name: Assert active token32 and hard locks
+          rm -rf /tmp/v2-token32-terminal /tmp/v2-token32-terminal-check
+          python scripts/rebuild_v2_coordination.py --config docs/refactor-v2/coordination_current_config.json --output-dir /tmp/v2-token32-terminal
+          cp /tmp/v2-token32-terminal/active-claims.json docs/state/v2/active-claims.json
+          cp /tmp/v2-token32-terminal/project-state.json docs/state/v2/project-state.json
+          cp /tmp/v2-token32-terminal/context-pack.json docs/state/v2/context-pack.json
+          cp /tmp/v2-token32-terminal/graph-snapshot.json docs/state/v2/graph-snapshot.json
+          cp /tmp/v2-token32-terminal/CONTEXT_SURVIVAL.json docs/continuity/CONTEXT_SURVIVAL.json
+          python scripts/rebuild_v2_coordination.py --config docs/refactor-v2/coordination_current_config.json --output-dir /tmp/v2-token32-terminal-check --check
+      - name: Assert zero-writer terminal state
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
-          a=json.loads(Path('docs/state/v2/active-claims.json').read_text())
-          r=json.loads(Path('docs/state/agent-runtime/runtime-graph.json').read_text())
           n=json.loads(Path('docs/state/NEXT.json').read_text())
-          assert [c['claim_id'] for c in a['claims']]==['CLAIM-CONVERGENCE-POSTMERGE-032']
+          a=json.loads(Path('docs/state/v2/active-claims.json').read_text())
+          p=json.loads(Path('docs/state/v2/project-state.json').read_text())
+          r=json.loads(Path('docs/state/agent-runtime/runtime-graph.json').read_text())
+          assert a['claims']==[]
           assert a['collisions']==[]
-          assert a['fencing_high_watermark']>=32
-          assert len(r['active_sessions'])==1
-          assert r['active_sessions'][0]['session_id']=='SES-20260917T113300Z-SWARM-036'
-          assert n['active_claim']['claim_id']=='CLAIM-CONVERGENCE-POSTMERGE-032'
-          assert n['active_claim']['fencing_token']==32
-          assert n['active_claim']['authority_ceiling']==a['claims'][0]['authority_ceiling']
+          assert a['fencing_high_watermark']==32
+          assert p['active_claim_ids']==[]
+          assert r['active_sessions']==[]
+          assert n['active_claim'] is None
+          assert n['successor_execution_allowed'] is False
           assert n['safety']['authority_advanced'] is False
           assert n['safety']['h_id_allocations']==0
           assert n['safety']['outbound']=='CLOSED'
           assert n['safety']['send_allowed']==0
           PY
-      - name: Commit exact active projections
+      - name: Commit exact terminal projections
         run: |
           git add docs/refactor-v2/coordination_current_config.json docs/state/NEXT.json docs/state/agent-runtime/runtime-graph.json docs/state/v2/active-claims.json docs/state/v2/project-state.json docs/state/v2/context-pack.json docs/state/v2/graph-snapshot.json docs/continuity/CONTEXT_SURVIVAL.json
           if git diff --cached --quiet; then exit 0; fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m 'coordination: materialize token32 active recovery state'
+          git commit -m 'coordination: materialize token32 terminal zero-writer state'
           git push origin HEAD:convergence/postmerge-recovery-token32-20260917

@@ -1,9 +1,5 @@
 {
-  "active_claim": {
-    "authority_ceiling": "CONVERGENCE_ORCHESTRATION_AND_LEASE_REPAIR_ONLY_NO_DOMAIN_OR_OUTBOUND_AUTHORITY",
-    "claim_id": "CLAIM-CONVERGENCE-POSTMERGE-028",
-    "fencing_token": 28
-  },
+  "active_claim": "CLAIM-CONVERGENCE-POSTMERGE-032",
   "artifacts": [
     "docs/state/CRM_CURRENT_SOURCE_MAPPING_PROJECTION_33339392661.json",
     "docs/state/CRM_CURRENT_GONTEN_ECV_SRR_LINEAGE_33339392661.json",
@@ -74,7 +70,7 @@
   },
   "exact_dependency": "Token28 is the sole active convergence writer, bound to current main 38d52d60 and E4. Complete PR #466 qualification, then terminalize claim28 and externally release lease28 before COMPLETE. B12 and OUTBOUND remain blocked.",
   "execution_mode": "RECOVERY_RECONCILE",
-  "generated_at": "2026-09-15T15:15:59Z",
+  "generated_at": "2026-09-17T11:45:00Z",
   "goal_id": "G-0500",
   "graph_impact": "META",
   "hard_blockers": [

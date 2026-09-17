@@ -188,7 +188,7 @@ jobs:
           a=json.loads(Path('docs/state/v2/active-claims.json').read_text())
           r=json.loads(Path('docs/state/agent-runtime/runtime-graph.json').read_text())
           n=json.loads(Path('docs/state/NEXT.json').read_text())
-          assert a['claims']==['CLAIM-CONVERGENCE-POSTMERGE-032']
+          assert [c['claim_id'] for c in a['claims']]==['CLAIM-CONVERGENCE-POSTMERGE-032']
           assert a['collisions']==[]
           assert a['fencing_high_watermark']>=32
           assert len(r['active_sessions'])==1

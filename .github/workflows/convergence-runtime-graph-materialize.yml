@@ -46,7 +46,7 @@ jobs:
           d=json.loads(p.read_text())
           d['base_main_sha']='d684852a8560adf5473dce1e621fc5c83c1a42a6'
           d['branch']='convergence/postmerge-recovery-token32-20260917'
-          d['generated_at']='2026-09-17T11:45:00Z'
+          d['generated_at']='2026-09-17T11:54:00Z'
           d['state']='CONVERGENCE_TOKEN32_ACTIVE_STALE_WRITER_RECOVERY'
           d['open_prs']=[466,471,472]
           d['blockers']=[
@@ -148,8 +148,9 @@ jobs:
           from pathlib import Path
           p=Path('docs/state/NEXT.json')
           d=json.loads(p.read_text())
-          d['generated_at']='2026-09-17T11:45:00Z'
-          d['active_claim']='CLAIM-CONVERGENCE-POSTMERGE-032'
+          claim=json.loads(Path('docs/state/v2/claims/CLAIM-CONVERGENCE-POSTMERGE-032.json').read_text())
+          d['generated_at']='2026-09-17T11:54:00Z'
+          d['active_claim']=claim
           d['execution_mode']='RECOVERY_RECONCILE'
           d['successor_execution_allowed']=False
           p.write_text(json.dumps(d,ensure_ascii=False,sort_keys=True,indent=2)+'\n')
@@ -193,7 +194,9 @@ jobs:
           assert a['fencing_high_watermark']>=32
           assert len(r['active_sessions'])==1
           assert r['active_sessions'][0]['session_id']=='SES-20260917T113300Z-SWARM-036'
-          assert n['active_claim']=='CLAIM-CONVERGENCE-POSTMERGE-032'
+          assert n['active_claim']['claim_id']=='CLAIM-CONVERGENCE-POSTMERGE-032'
+          assert n['active_claim']['fencing_token']==32
+          assert n['active_claim']['authority_ceiling']==a['claims'][0]['authority_ceiling']
           assert n['safety']['authority_advanced'] is False
           assert n['safety']['h_id_allocations']==0
           assert n['safety']['outbound']=='CLOSED'

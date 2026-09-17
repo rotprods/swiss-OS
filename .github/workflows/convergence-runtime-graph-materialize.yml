@@ -1,20 +1,23 @@
-name: convergence-token31-active-projections
+name: convergence-token32-active-projections
 
 on:
   push:
-    branches: [convergence/postmerge-recovery-token31-20260916]
+    branches: [convergence/postmerge-recovery-token32-20260917]
     paths:
       - '.github/workflows/convergence-runtime-graph-materialize.yml'
       - 'docs/state/v2/claims/CLAIM-CONVERGENCE-POSTMERGE-031.json'
-      - 'docs/state/v2/events/EVT-20260916T112600Z-CONVERGENCE-TOKEN31-ACQUIRED.json'
-      - 'docs/state/v2/events/EVT-20260916T112900Z-CONVERGENCE-TOKEN28-SUPERSEDED-BY31.json'
-      - 'docs/state/agent-runtime/heartbeats/HB-AGENT-GPT56SOL-CONVERGENCE-031-*.json'
+      - 'docs/state/v2/claims/CLAIM-CONVERGENCE-POSTMERGE-032.json'
+      - 'docs/state/v2/events/EVT-20260917T113830Z-CONVERGENCE-TOKEN32-ACQUIRED.json'
+      - 'docs/state/v2/events/EVT-20260917T114000Z-CONVERGENCE-TOKEN31-SUPERSEDED-BY32.json'
+      - 'docs/state/v2/events/EVT-20260917T114100Z-CONVERGENCE-TOKEN32-WORK-STARTED.json'
+      - 'docs/state/agent-runtime/heartbeats/HB-AGENT-GPT56SOL-CONVERGENCE-031-SUPERSEDED-BY32.json'
+      - 'docs/state/agent-runtime/heartbeats/HB-AGENT-GPT56SOL-SWARM-036-*.json'
 
 permissions:
   contents: write
 
 concurrency:
-  group: convergence-token31-active-projections
+  group: convergence-token32-active-projections
   cancel-in-progress: false
 
 jobs:
@@ -29,104 +32,124 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
-      - name: Require live token31 lease parity
+      - name: Require live token32 lease parity
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python scripts/execution_lease_live_guard.py
-      - name: Refresh coordination config for token31 takeover
+      - name: Refresh coordination config for token32 takeover
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
+
           p=Path('docs/refactor-v2/coordination_current_config.json')
           d=json.loads(p.read_text())
           d['base_main_sha']='d684852a8560adf5473dce1e621fc5c83c1a42a6'
-          d['branch']='convergence/postmerge-recovery-token31-20260916'
-          d['generated_at']='2026-09-16T11:45:00Z'
-          d['state']='CONVERGENCE_TOKEN31_ACTIVE_STALE_WRITER_RECOVERY'
-          d['open_prs']=[471]
+          d['branch']='convergence/postmerge-recovery-token32-20260917'
+          d['generated_at']='2026-09-17T11:45:00Z'
+          d['state']='CONVERGENCE_TOKEN32_ACTIVE_STALE_WRITER_RECOVERY'
+          d['open_prs']=[466,471,472]
           d['blockers']=[
-            'PR #471 must pass the full exact-head repository gauntlet before token31 terminalization.',
-            'Token31 COMPLETE is forbidden until claim terminalization and external lease release/readback both succeed.',
+            'PR #472 must pass the full exact-head repository gauntlet before token32 terminalization.',
+            'Token32 COMPLETE is forbidden until claim terminalization and external lease release/readback both succeed.',
+            'PR #471 is stale predecessor provenance only and must not be treated as live writer authority.',
             'Post-merge main must pass repo-guard before issue #54 can close.',
             'GitHub main protection/rulesets remain an external platform blocker tracked by #441.',
             'CRM_UNIVERSE_COMPLETE remains false at RECONCILE_REQUIRED=1403; B12 and OUTBOUND remain blocked.'
           ]
           d['next_safe_actions']=[
-            'Materialize token31 active Runtime Graph/V2/Context Survival projections deterministically.',
-            'Run the full exact-head PR #471 gauntlet and repair only evidenced blockers.',
-            'Persist a truthful token31 iteration receipt, terminalize claim31, then CAS-release lease31 and require readback before COMPLETE.',
-            'Run final zero-writer exact-head gauntlet, merge only expected head, then require post-merge main green.'
+            'Materialize token32 active Runtime Graph/V2/Context Survival projections deterministically.',
+            'Run the full exact-head PR #472 gauntlet and repair only evidenced blockers.',
+            'Persist a truthful token32 iteration receipt, terminalize claim32, then CAS-release lease32 and require readback before COMPLETE.',
+            'Run final zero-writer exact-head gauntlet and stop at any owner/human promotion gate rather than self-authorizing merge.'
           ]
           d['liveness_findings']=[
-            'Token28 was document-active but operationally stale and is superseded by token31 without reviving session028.',
-            'Token29 acquired and released the global lease without material work because claim bootstrap was unavailable.',
-            'Token30 acquired correctly but released fail-closed after accidental non-material main drift changed its canonical parent.',
-            'Token31 is the sole live recovery writer bound to fresh main d684852a and E4 with external CAS lease31.',
+            'Token28 is terminal SUPERSEDED and its latest lifecycle heartbeat is normalized to objective_id plus pr_number.',
+            'Token31 expired at the fixed global lease slot and its latest ACTIVE heartbeat exceeded the 1800-second TTL; it is superseded by token32 without reviving session031.',
+            'Token32 acquired fencing token32 by exact CAS against global watermark31 from canonical main d684852a and is the sole live recovery writer.',
             'Operational authority remains E4/690, H-0691 unallocated, terminal mappings 658, RECONCILE_REQUIRED=1403 and OUTBOUND CLOSED.'
           ]
+
           refs=[]
           for v in d.get('source_refs',[]):
-              if v=='claim:CLAIM-CONVERGENCE-POSTMERGE-028:ACTIVE':
+              if not isinstance(v,str):
                   continue
-              if v=='lease:coordination/execution-lease:TOKEN28:ACTIVE_CAS':
-                  continue
-              if v=='pr:466:POSTMERGE_RECOVERY_CANDIDATE':
+              if v in {
+                'claim:CLAIM-CONVERGENCE-POSTMERGE-031:ACTIVE',
+                'lease:coordination/execution-lease:TOKEN31:ACTIVE_CAS',
+                'pr:471:POSTMERGE_RECOVERY_CANDIDATE'
+              }:
                   continue
               refs.append(v)
           refs += [
             'main:d684852a8560adf5473dce1e621fc5c83c1a42a6',
             'claim:CLAIM-CONVERGENCE-POSTMERGE-028:SUPERSEDED',
-            'claim:CLAIM-CONVERGENCE-POSTMERGE-031:ACTIVE',
-            'lease:coordination/execution-lease:TOKEN31:ACTIVE_CAS',
-            'recovery:TOKEN28_STALE_TO_TOKEN31',
-            'pr:471:POSTMERGE_RECOVERY_CANDIDATE'
+            'claim:CLAIM-CONVERGENCE-POSTMERGE-031:SUPERSEDED',
+            'claim:CLAIM-CONVERGENCE-POSTMERGE-032:ACTIVE',
+            'lease:coordination/execution-lease:TOKEN32:ACTIVE_CAS',
+            'recovery:TOKEN31_STALE_TO_TOKEN32',
+            'pr:472:POSTMERGE_RECOVERY_CANDIDATE'
           ]
           d['source_refs']=list(dict.fromkeys(refs))
+
           for key in ('relevant_paths','state_refs','survival_paths'):
               vals=d.get(key,[])
-              if not isinstance(vals,list): continue
+              if not isinstance(vals,list):
+                  vals=[]
               for v in [
                 'docs/state/v2/claims/CLAIM-CONVERGENCE-POSTMERGE-031.json',
-                'docs/state/v2/events/EVT-20260916T112600Z-CONVERGENCE-TOKEN31-ACQUIRED.json',
-                'docs/state/v2/events/EVT-20260916T112900Z-CONVERGENCE-TOKEN28-SUPERSEDED-BY31.json',
-                'docs/state/agent-runtime/heartbeats/HB-AGENT-GPT56SOL-CONVERGENCE-031-112600.json'
+                'docs/state/v2/claims/CLAIM-CONVERGENCE-POSTMERGE-032.json',
+                'docs/state/v2/events/EVT-20260917T113830Z-CONVERGENCE-TOKEN32-ACQUIRED.json',
+                'docs/state/v2/events/EVT-20260917T114000Z-CONVERGENCE-TOKEN31-SUPERSEDED-BY32.json',
+                'docs/state/v2/events/EVT-20260917T114100Z-CONVERGENCE-TOKEN32-WORK-STARTED.json',
+                'docs/state/agent-runtime/heartbeats/HB-AGENT-GPT56SOL-CONVERGENCE-031-SUPERSEDED-BY32.json',
+                'docs/state/agent-runtime/heartbeats/HB-AGENT-GPT56SOL-SWARM-036-114100.json'
               ]:
-                  if v not in vals: vals.append(v)
+                  if v not in vals:
+                      vals.append(v)
               d[key]=vals
+
           g=d.setdefault('graph',{})
           nodes=g.setdefault('nodes',[])
-          by={n.get('id'):n for n in nodes}
-          if 'C:CLAIM-CONVERGENCE-POSTMERGE-028' in by: by['C:CLAIM-CONVERGENCE-POSTMERGE-028']['state']='SUPERSEDED_STALE_WRITER'
+          by={n.get('id'):n for n in nodes if isinstance(n,dict)}
+          if 'C:CLAIM-CONVERGENCE-POSTMERGE-031' in by:
+              by['C:CLAIM-CONVERGENCE-POSTMERGE-031']['state']='SUPERSEDED_STALE_WRITER'
+          if 'L:GLOBAL-EXECUTION-LEASE-031' in by:
+              by['L:GLOBAL-EXECUTION-LEASE-031']['state']='EXPIRED_SUPERSEDED'
           for node in [
-            {'id':'C:CLAIM-CONVERGENCE-POSTMERGE-031','state':'ACTIVE_TOKEN_31_POSTMERGE_RECOVERY','type':'Claim'},
-            {'id':'L:GLOBAL-EXECUTION-LEASE-031','state':'ACTIVE_CAS','type':'ExecutionLease'},
-            {'id':'PR:471','state':'ACTIVE_POSTMERGE_RECOVERY_CANDIDATE','type':'PullRequest'}
+            {'id':'C:CLAIM-CONVERGENCE-POSTMERGE-032','state':'ACTIVE_TOKEN_32_POSTMERGE_RECOVERY','type':'Claim'},
+            {'id':'L:GLOBAL-EXECUTION-LEASE-032','state':'ACTIVE_CAS','type':'ExecutionLease'},
+            {'id':'PR:472','state':'ACTIVE_POSTMERGE_RECOVERY_CANDIDATE','type':'PullRequest'}
           ]:
-              if node['id'] not in by: nodes.append(node)
+              if node['id'] not in by:
+                  nodes.append(node)
+
           edges=g.setdefault('edges',[])
-          existing={(e.get('from'),e.get('to'),e.get('type')) for e in edges}
+          existing={(e.get('from'),e.get('to'),e.get('type')) for e in edges if isinstance(e,dict)}
           for e in [
-            {'from':'C:CLAIM-CONVERGENCE-POSTMERGE-028','to':'C:CLAIM-CONVERGENCE-POSTMERGE-031','type':'PREDECESSOR_OF'},
-            {'from':'L:GLOBAL-EXECUTION-LEASE-031','to':'C:CLAIM-CONVERGENCE-POSTMERGE-031','type':'SERIALIZES_WRITER'},
-            {'from':'C:CLAIM-CONVERGENCE-POSTMERGE-031','to':'PR:471','type':'EXECUTES_ON'},
-            {'from':'C:CLAIM-CONVERGENCE-POSTMERGE-031','to':'ISSUE:54','type':'REPAIRS'},
-            {'from':'A:E4-690','to':'PR:471','type':'AUTHORITY_CEILING'},
-            {'from':'MODE:CONVERGENCE_ONLY','to':'PR:471','type':'CONSTRAINS'},
-            {'from':'PR:471','to':'G:G-0001','type':'SERVES'}
+            {'from':'C:CLAIM-CONVERGENCE-POSTMERGE-031','to':'C:CLAIM-CONVERGENCE-POSTMERGE-032','type':'PREDECESSOR_OF'},
+            {'from':'L:GLOBAL-EXECUTION-LEASE-032','to':'C:CLAIM-CONVERGENCE-POSTMERGE-032','type':'SERIALIZES_WRITER'},
+            {'from':'C:CLAIM-CONVERGENCE-POSTMERGE-032','to':'PR:472','type':'EXECUTES_ON'},
+            {'from':'C:CLAIM-CONVERGENCE-POSTMERGE-032','to':'ISSUE:54','type':'REPAIRS'},
+            {'from':'A:E4-690','to':'PR:472','type':'AUTHORITY_CEILING'},
+            {'from':'MODE:CONVERGENCE_ONLY','to':'PR:472','type':'CONSTRAINS'},
+            {'from':'PR:472','to':'G:G-0001','type':'SERVES'}
           ]:
               k=(e['from'],e['to'],e['type'])
-              if k not in existing: edges.append(e); existing.add(k)
+              if k not in existing:
+                  edges.append(e)
+                  existing.add(k)
           p.write_text(json.dumps(d,ensure_ascii=False,sort_keys=True,separators=(',',':'))+'\n')
           PY
-      - name: Point NEXT at token31 without changing domain frontier
+      - name: Point NEXT at token32 without changing domain frontier
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
           p=Path('docs/state/NEXT.json')
           d=json.loads(p.read_text())
-          d['active_claim']='CLAIM-CONVERGENCE-POSTMERGE-031'
+          d['generated_at']='2026-09-17T11:45:00Z'
+          d['active_claim']='CLAIM-CONVERGENCE-POSTMERGE-032'
           d['execution_mode']='RECOVERY_RECONCILE'
           d['successor_execution_allowed']=False
           p.write_text(json.dumps(d,ensure_ascii=False,sort_keys=True,indent=2)+'\n')
@@ -138,8 +161,10 @@ jobs:
           from pathlib import Path
           vals=[]
           for p in Path('docs/state/agent-runtime/heartbeats').glob('*.json'):
-              d=json.loads(p.read_text()); v=d.get('observed_at')
-              if isinstance(v,str) and v: vals.append(v)
+              d=json.loads(p.read_text())
+              v=d.get('observed_at')
+              if isinstance(v,str) and v:
+                  vals.append(v)
           print(max(vals))
           PY
           )
@@ -147,7 +172,7 @@ jobs:
           python scripts/rebuild_agent_runtime_graph.py --check
       - name: Materialize active V2 coordination and Context Survival
         run: |
-          rm -rf /tmp/v2-active
+          rm -rf /tmp/v2-active /tmp/v2-active-check
           python scripts/rebuild_v2_coordination.py --config docs/refactor-v2/coordination_current_config.json --output-dir /tmp/v2-active
           cp /tmp/v2-active/active-claims.json docs/state/v2/active-claims.json
           cp /tmp/v2-active/project-state.json docs/state/v2/project-state.json
@@ -155,7 +180,7 @@ jobs:
           cp /tmp/v2-active/graph-snapshot.json docs/state/v2/graph-snapshot.json
           cp /tmp/v2-active/CONTEXT_SURVIVAL.json docs/continuity/CONTEXT_SURVIVAL.json
           python scripts/rebuild_v2_coordination.py --config docs/refactor-v2/coordination_current_config.json --output-dir /tmp/v2-active-check --check
-      - name: Assert active token31 and hard locks
+      - name: Assert active token32 and hard locks
         run: |
           python - <<'PY'
           import json
@@ -163,11 +188,12 @@ jobs:
           a=json.loads(Path('docs/state/v2/active-claims.json').read_text())
           r=json.loads(Path('docs/state/agent-runtime/runtime-graph.json').read_text())
           n=json.loads(Path('docs/state/NEXT.json').read_text())
-          assert a['claims']==['CLAIM-CONVERGENCE-POSTMERGE-031']
+          assert a['claims']==['CLAIM-CONVERGENCE-POSTMERGE-032']
           assert a['collisions']==[]
-          assert a['fencing_high_watermark']>=31
+          assert a['fencing_high_watermark']>=32
           assert len(r['active_sessions'])==1
-          assert n['active_claim']=='CLAIM-CONVERGENCE-POSTMERGE-031'
+          assert r['active_sessions'][0]['session_id']=='SES-20260917T113300Z-SWARM-036'
+          assert n['active_claim']=='CLAIM-CONVERGENCE-POSTMERGE-032'
           assert n['safety']['authority_advanced'] is False
           assert n['safety']['h_id_allocations']==0
           assert n['safety']['outbound']=='CLOSED'
@@ -179,5 +205,5 @@ jobs:
           if git diff --cached --quiet; then exit 0; fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m 'coordination: materialize token31 active recovery state'
-          git push origin HEAD:convergence/postmerge-recovery-token31-20260916
+          git commit -m 'coordination: materialize token32 active recovery state'
+          git push origin HEAD:convergence/postmerge-recovery-token32-20260917

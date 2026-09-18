@@ -155,7 +155,7 @@
   "next_route": "CURRENT_UNRESOLVED_1403_ENTITY_RESOLUTION",
   "next_safe_actions": [
     "Materialize token33 active projections and verify one live writer with fencing high-watermark33.",
-    "Open and qualify one bounded canonical reseal PR.",
+    "Qualify bounded canonical reseal PR473.",
     "Terminalize token33 claim then release/read back the external lease before COMPLETE.",
     "Run final zero-writer exact-head and post-merge exact-main qualification; do not start CRM or outbound."
   ],

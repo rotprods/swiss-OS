@@ -1,24 +1,21 @@
-name: convergence-token33-active-postmerge-reseal
+name: convergence-token33-terminal-postmerge-reseal
 
 on:
   push:
     branches: [convergence/postmerge-canonical-reseal-token33-20260918]
     paths:
-      - '.github/workflows/convergence-runtime-graph-materialize.yml'
-      - 'docs/state/v2/claims/CLAIM-CONVERGENCE-POSTMERGE-033.json'
-      - 'docs/state/v2/events/EVT-20260918T111200Z-CONVERGENCE-TOKEN33-ACQUIRED.json'
-      - 'docs/state/v2/events/EVT-20260918T111300Z-CONVERGENCE-TOKEN33-WORK-STARTED.json'
-      - 'docs/state/agent-runtime/heartbeats/HB-AGENT-GPT56SOL-SWARM-037-*.json'
+      - 'docs/state/agent-runtime/heartbeats/HB-AGENT-GPT56SOL-SWARM-037-COMPLETE.json'
+      - 'docs/reports/convergence/TOKEN33_TERMINAL_RELEASE_READBACK_2026-09-18.json'
 
 permissions:
   contents: write
 
 concurrency:
-  group: convergence-token33-active-postmerge-reseal
+  group: convergence-token33-terminal-postmerge-reseal
   cancel-in-progress: false
 
 jobs:
-  materialize:
+  terminalize:
     runs-on: ubuntu-latest
     env:
       PYTHONPATH: src
@@ -29,46 +26,48 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
-      - name: Require live token33 lease parity
+      - name: Require zero-claim plus released external lease parity
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: python scripts/execution_lease_live_guard.py
-      - name: Reseal canonical post-merge coordination semantics
+        run: python scripts/execution_lease_live_guard.py --receipt /tmp/execution-lease-token33-terminal.json
+      - name: Finalize token33 canonical reseal semantics
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
 
           main='012ddfc4953eaed39f8b75a61a71ee5aaffdcc02'
-          branch='convergence/postmerge-canonical-reseal-token33-20260918'
-          claim_path='docs/state/v2/claims/CLAIM-CONVERGENCE-POSTMERGE-033.json'
-          acquired_event='docs/state/v2/events/EVT-20260918T111200Z-CONVERGENCE-TOKEN33-ACQUIRED.json'
-          work_event='docs/state/v2/events/EVT-20260918T111300Z-CONVERGENCE-TOKEN33-WORK-STARTED.json'
-          heartbeat='docs/state/agent-runtime/heartbeats/HB-AGENT-GPT56SOL-SWARM-037-111300.json'
+          active_hb='docs/state/agent-runtime/heartbeats/HB-AGENT-GPT56SOL-SWARM-037-111300.json'
+          complete_hb='docs/state/agent-runtime/heartbeats/HB-AGENT-GPT56SOL-SWARM-037-COMPLETE.json'
+          iteration='docs/state/agent-runtime/iterations/ITER-convergence-postmerge-canonical-reseal-token33.json'
+          release_event='docs/state/v2/events/EVT-20260918T112100Z-CONVERGENCE-TOKEN33-CLAIM-RELEASED.json'
+          report='docs/reports/convergence/TOKEN33_TERMINAL_RELEASE_READBACK_2026-09-18.json'
+          evidence=json.loads(Path(report).read_text())
 
           p=Path('docs/refactor-v2/coordination_current_config.json')
           d=json.loads(p.read_text())
           d['base_main_sha']=main
-          d['branch']=branch
-          d['generated_at']='2026-09-18T11:13:00Z'
-          d['state']='CONVERGENCE_TOKEN33_ACTIVE_POSTMERGE_CANONICAL_RESEAL'
-          d['open_prs']=[473]
+          d['branch']='convergence/postmerge-canonical-reseal-token33-20260918'
+          d['generated_at']=evidence['recorded_at']
+          d['state']='CONVERGENCE_TOKEN33_TERMINAL_CANONICAL_RESEAL_ZERO_WRITER'
+          d['open_prs']=[]
           d['blockers']=[
-            'Token33 exact-head repository qualification is required before terminalization.',
-            'Token33 COMPLETE is forbidden until claim terminalization and external lease release/readback both succeed.',
             'GitHub main protection/rulesets remain an external platform blocker tracked by #441.',
-            'CRM_UNIVERSE_COMPLETE remains false at RECONCILE_REQUIRED=1403; B12 and OUTBOUND remain blocked.'
+            'CRM_UNIVERSE_COMPLETE remains false at RECONCILE_REQUIRED=1403.',
+            'A separately eligible domain claim is required before CRM entity-resolution work may resume.',
+            'OUTBOUND remains CLOSED and send_allowed=0.'
           ]
           d['next_safe_actions']=[
-            'Materialize token33 active Runtime Graph/V2/Context Survival projections from canonical post-merge main.',
-            'Run the full exact-head repository gauntlet on PR473.',
-            'Persist KEEP/BLOCKED evidence, terminalize claim33, CAS-release lease33 and require release readback before COMPLETE.',
-            'Run final zero-writer exact-head gauntlet, promote only the expected qualified head, then require exact-main repo-guard.'
+            'Verify zero active claims and zero active runtime sessions with fencing high-watermark33.',
+            'Require an exact-head terminal-state repository gauntlet before any promotion.',
+            'If this exact tree is not yet canonical main, only owner-authorized expected-head promotion may place it on main.',
+            'Whenever this tree becomes canonical main, require exact-main repo-guard before leaving convergence; do not start CRM or outbound under token33.'
           ]
           d['liveness_findings']=[
-            'PR472 merged to canonical main 012ddfc4953eaed39f8b75a61a71ee5aaffdcc02 and exact-main repo-guard 35338109700 passed.',
-            'Token32 claim and external lease are terminal RELEASED with watermark32 and zero writers.',
-            'Token33 acquired the global writer slot by blob-SHA CAS from zero-writer state and is bound to current canonical main.',
+            'Token33 active exact-head repo-guard 35339005790 passed every declared gate.',
+            'Claim33 RELEASED before external lease release; COMPLETE was intentionally withheld during the two-surface gap.',
+            'External lease33 was CAS-released and read back active_lease=null, last_lease token33 RELEASED, watermark33.',
+            'Heartbeat33 COMPLETE was published only after external release readback.',
             'Operational authority remains E4/690, H-0691 unallocated, terminal mappings 658, RECONCILE_REQUIRED=1403 and OUTBOUND CLOSED.'
           ]
 
@@ -77,19 +76,19 @@ jobs:
               if not isinstance(v,str):
                   continue
               if v in {
-                'claim:CLAIM-CONVERGENCE-POSTMERGE-033:RELEASED',
-                'lease:coordination/execution-lease:TOKEN33:RELEASED_CAS'
+                'claim:CLAIM-CONVERGENCE-POSTMERGE-033:ACTIVE',
+                'lease:coordination/execution-lease:TOKEN33:ACTIVE_CAS'
               }:
                   continue
               refs.append(v)
           refs += [
             'main:'+main,
-            'claim:CLAIM-CONVERGENCE-POSTMERGE-032:RELEASED',
-            'lease:coordination/execution-lease:TOKEN32:RELEASED_CAS',
-            'qualification:repo-guard-35338109700:PASS',
-            'claim:CLAIM-CONVERGENCE-POSTMERGE-033:ACTIVE',
-            'lease:coordination/execution-lease:TOKEN33:ACTIVE_CAS',
-            'repair:POSTMERGE_CANONICAL_RESEAL'
+            'claim:CLAIM-CONVERGENCE-POSTMERGE-033:RELEASED',
+            'lease:coordination/execution-lease:TOKEN33:RELEASED_CAS',
+            'lease-release-commit:'+evidence['external_lease_release']['commit'],
+            'lease-release-blob:'+evidence['external_lease_release']['blob'],
+            'qualification:repo-guard-35339005790:PASS',
+            'pr:473:TOKEN33_TERMINAL_CANONICAL_RESEAL'
           ]
           d['source_refs']=list(dict.fromkeys(refs))
 
@@ -97,63 +96,47 @@ jobs:
               vals=d.get(key,[])
               if not isinstance(vals,list):
                   vals=[]
-              for v in [claim_path,acquired_event,work_event,heartbeat]:
-                  if v not in vals:
+              vals=[complete_hb if v==active_hb else v for v in vals]
+              for v in [complete_hb,iteration,release_event,report]:
+                  if v not in vals and (key!='survival_paths' or v==complete_hb):
                       vals.append(v)
-              d[key]=vals
+              d[key]=list(dict.fromkeys(vals))
 
           g=d.setdefault('graph',{})
+          for node in g.get('nodes',[]):
+              if node.get('id')=='C:CLAIM-CONVERGENCE-POSTMERGE-033':
+                  node['state']='RELEASED_TOKEN_33_KEEP'
+              elif node.get('id')=='L:GLOBAL-EXECUTION-LEASE-033':
+                  node['state']='RELEASED_CAS'
+              elif node.get('id')=='PR:473':
+                  node['state']='TOKEN33_TERMINAL_CANONICAL_RESEAL'
           nodes=g.setdefault('nodes',[])
-          by={n.get('id'):n for n in nodes if isinstance(n,dict)}
-          for node in [
-            {'id':'C:CLAIM-CONVERGENCE-POSTMERGE-033','state':'ACTIVE_TOKEN_33_POSTMERGE_CANONICAL_RESEAL','type':'Claim'},
-            {'id':'L:GLOBAL-EXECUTION-LEASE-033','state':'ACTIVE_CAS','type':'ExecutionLease'},
-            {'id':'B:convergence/postmerge-canonical-reseal-token33-20260918','state':'ACTIVE_RESEAL_BRANCH','type':'Branch'}
-          ]:
-              if node['id'] not in by:
-                  nodes.append(node)
-          edges=g.setdefault('edges',[])
-          existing={(e.get('from'),e.get('to'),e.get('type')) for e in edges if isinstance(e,dict)}
-          for e in [
-            {'from':'C:CLAIM-CONVERGENCE-POSTMERGE-032','to':'C:CLAIM-CONVERGENCE-POSTMERGE-033','type':'PREDECESSOR_OF'},
-            {'from':'L:GLOBAL-EXECUTION-LEASE-033','to':'C:CLAIM-CONVERGENCE-POSTMERGE-033','type':'SERIALIZES_WRITER'},
-            {'from':'C:CLAIM-CONVERGENCE-POSTMERGE-033','to':'B:convergence/postmerge-canonical-reseal-token33-20260918','type':'EXECUTES_ON'},
-            {'from':'C:CLAIM-CONVERGENCE-POSTMERGE-033','to':'G:G-0001','type':'SERVES'}
-          ]:
-              k=(e['from'],e['to'],e['type'])
-              if k not in existing:
-                  edges.append(e)
-                  existing.add(k)
+          if not any(n.get('id')=='PR:473' for n in nodes if isinstance(n,dict)):
+              nodes.append({'id':'PR:473','state':'TOKEN33_TERMINAL_CANONICAL_RESEAL','type':'PullRequest'})
           p.write_text(json.dumps(d,ensure_ascii=False,sort_keys=True,separators=(',',':'))+'\n')
 
           p=Path('docs/state/NEXT.json')
           n=json.loads(p.read_text())
-          claim=json.loads(Path(claim_path).read_text())
-          n['generated_at']='2026-09-18T11:13:00Z'
-          n['active_claim']=claim
+          n['generated_at']=evidence['recorded_at']
+          n['active_claim']=None
           n['execution_mode']='RECOVERY_RECONCILE'
           n['successor_execution_allowed']=False
-          n['convergence_route']='CONVERGENCE_TOKEN33_ACTIVE_POSTMERGE_CANONICAL_RESEAL'
-          n['exact_dependency']='Token33 owns the bounded orchestration writer slot solely to reseal canonical post-merge truth; no domain or outbound authority is granted.'
+          n['convergence_route']='CONVERGENCE_TOKEN33_TERMINAL_CANONICAL_RESEAL_ZERO_WRITER'
+          n['exact_dependency']='Token33 is terminal on both Git and external lease surfaces. This exact tree must remain zero-writer; any future CRM or outbound work requires a separately eligible claim and authority.'
           n['hard_blockers']=[
-            'TOKEN33_EXACT_HEAD_QUALIFICATION_REQUIRED',
-            'TOKEN33_TERMINALIZATION_AND_LEASE_RELEASE_REQUIRED',
             'PLATFORM_ENFORCEMENT_REQUIRED_NOT_YET_ENFORCED_ISSUE_441',
             'RECONCILE_REQUIRED_1403_NOT_ZERO',
+            'SEPARATE_DOMAIN_CLAIM_REQUIRED_BEFORE_CRM_ENTITY_RESOLUTION',
             'GOAL_DRAIN_BLOCKS_B12_AUTOMATIC_EXECUTION',
             'OUTBOUND_CLOSED'
           ]
           n['next_safe_actions']=[
-            'Materialize token33 active projections and verify one live writer with fencing high-watermark33.',
-            'Qualify bounded canonical reseal PR473.',
-            'Terminalize token33 claim then release/read back the external lease before COMPLETE.',
-            'Run final zero-writer exact-head and post-merge exact-main qualification; do not start CRM or outbound.'
+            'Verify terminal projections show zero active writers and fencing high-watermark33.',
+            'Require exact-head terminal repo-guard before expected-head promotion.',
+            'After this exact tree becomes canonical main, require exact-main repo-guard.',
+            'Exit this convergence authority ceiling; CRM, H-ID, applications and outbound remain unauthorized.'
           ]
           n['parent_git_sha']=main
-          req=n.get('required_inputs',[])
-          req=[x for x in req if not (isinstance(x,str) and x.startswith('GitHub current main '))]
-          req.insert(0,'GitHub current main '+main+' or ancestry-safe descendant with no relevant-scope drift')
-          n['required_inputs']=req
           n.setdefault('safety',{}).update({
             'authority_advanced':False,
             'h_id_allocations':0,
@@ -165,7 +148,7 @@ jobs:
           })
           p.write_text(json.dumps(n,ensure_ascii=False,sort_keys=True,indent=2)+'\n')
           PY
-      - name: Materialize active Runtime Graph
+      - name: Materialize terminal Runtime Graph
         run: |
           AS_OF=$(python - <<'PY'
           import json
@@ -181,41 +164,43 @@ jobs:
           )
           python scripts/rebuild_agent_runtime_graph.py --as-of "$AS_OF" --output docs/state/agent-runtime/runtime-graph.json
           python scripts/rebuild_agent_runtime_graph.py --check
-      - name: Materialize active V2 coordination and Context Survival
+      - name: Materialize terminal V2 coordination and Context Survival
         run: |
-          rm -rf /tmp/v2-token33-active /tmp/v2-token33-active-check
-          python scripts/rebuild_v2_coordination.py --config docs/refactor-v2/coordination_current_config.json --output-dir /tmp/v2-token33-active
-          cp /tmp/v2-token33-active/active-claims.json docs/state/v2/active-claims.json
-          cp /tmp/v2-token33-active/project-state.json docs/state/v2/project-state.json
-          cp /tmp/v2-token33-active/context-pack.json docs/state/v2/context-pack.json
-          cp /tmp/v2-token33-active/graph-snapshot.json docs/state/v2/graph-snapshot.json
-          cp /tmp/v2-token33-active/CONTEXT_SURVIVAL.json docs/continuity/CONTEXT_SURVIVAL.json
-          python scripts/rebuild_v2_coordination.py --config docs/refactor-v2/coordination_current_config.json --output-dir /tmp/v2-token33-active-check --check
-      - name: Assert active token33 and hard locks
+          rm -rf /tmp/v2-token33-terminal /tmp/v2-token33-terminal-check
+          python scripts/rebuild_v2_coordination.py --config docs/refactor-v2/coordination_current_config.json --output-dir /tmp/v2-token33-terminal
+          cp /tmp/v2-token33-terminal/active-claims.json docs/state/v2/active-claims.json
+          cp /tmp/v2-token33-terminal/project-state.json docs/state/v2/project-state.json
+          cp /tmp/v2-token33-terminal/context-pack.json docs/state/v2/context-pack.json
+          cp /tmp/v2-token33-terminal/graph-snapshot.json docs/state/v2/graph-snapshot.json
+          cp /tmp/v2-token33-terminal/CONTEXT_SURVIVAL.json docs/continuity/CONTEXT_SURVIVAL.json
+          python scripts/rebuild_v2_coordination.py --config docs/refactor-v2/coordination_current_config.json --output-dir /tmp/v2-token33-terminal-check --check
+      - name: Assert zero-writer terminal state
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
-          a=json.loads(Path('docs/state/v2/active-claims.json').read_text())
-          r=json.loads(Path('docs/state/agent-runtime/runtime-graph.json').read_text())
           n=json.loads(Path('docs/state/NEXT.json').read_text())
-          assert [c['claim_id'] for c in a['claims']]==['CLAIM-CONVERGENCE-POSTMERGE-033']
+          a=json.loads(Path('docs/state/v2/active-claims.json').read_text())
+          p=json.loads(Path('docs/state/v2/project-state.json').read_text())
+          r=json.loads(Path('docs/state/agent-runtime/runtime-graph.json').read_text())
+          assert a['claims']==[]
           assert a['collisions']==[]
-          assert a['fencing_high_watermark']>=33
-          assert len(r['active_sessions'])==1
-          assert r['active_sessions'][0]['session_id']=='SES-20260918T111200Z-SWARM-037'
-          assert n['active_claim']['claim_id']=='CLAIM-CONVERGENCE-POSTMERGE-033'
-          assert n['active_claim']['fencing_token']==33
+          assert a['fencing_high_watermark']==33
+          assert p['active_claim_ids']==[]
+          assert r['active_sessions']==[]
+          assert n['active_claim'] is None
+          assert n['successor_execution_allowed'] is False
           assert n['safety']['authority_advanced'] is False
           assert n['safety']['h_id_allocations']==0
           assert n['safety']['outbound']=='CLOSED'
           assert n['safety']['send_allowed']==0
           PY
-      - name: Commit exact active projections
+      - name: Commit terminal projections and remove one-shot workflow
         run: |
           git add docs/refactor-v2/coordination_current_config.json docs/state/NEXT.json docs/state/agent-runtime/runtime-graph.json docs/state/v2/active-claims.json docs/state/v2/project-state.json docs/state/v2/context-pack.json docs/state/v2/graph-snapshot.json docs/continuity/CONTEXT_SURVIVAL.json
+          git rm .github/workflows/convergence-runtime-graph-materialize.yml
           if git diff --cached --quiet; then exit 0; fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m 'coordination: materialize token33 active postmerge reseal state'
+          git commit -m 'coordination: seal token33 zero-writer canonical state'
           git push origin HEAD:convergence/postmerge-canonical-reseal-token33-20260918

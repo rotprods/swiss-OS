@@ -52,7 +52,7 @@ jobs:
           d['branch']=branch
           d['generated_at']='2026-09-18T11:13:00Z'
           d['state']='CONVERGENCE_TOKEN33_ACTIVE_POSTMERGE_CANONICAL_RESEAL'
-          d['open_prs']=[]
+          d['open_prs']=[473]
           d['blockers']=[
             'Token33 exact-head repository qualification is required before terminalization.',
             'Token33 COMPLETE is forbidden until claim terminalization and external lease release/readback both succeed.',
@@ -61,7 +61,7 @@ jobs:
           ]
           d['next_safe_actions']=[
             'Materialize token33 active Runtime Graph/V2/Context Survival projections from canonical post-merge main.',
-            'Open one bounded post-merge reseal PR and run the full exact-head repository gauntlet.',
+            'Run the full exact-head repository gauntlet on PR473.',
             'Persist KEEP/BLOCKED evidence, terminalize claim33, CAS-release lease33 and require release readback before COMPLETE.',
             'Run final zero-writer exact-head gauntlet, promote only the expected qualified head, then require exact-main repo-guard.'
           ]
@@ -145,7 +145,7 @@ jobs:
           ]
           n['next_safe_actions']=[
             'Materialize token33 active projections and verify one live writer with fencing high-watermark33.',
-            'Open and qualify one bounded canonical reseal PR.',
+            'Qualify bounded canonical reseal PR473.',
             'Terminalize token33 claim then release/read back the external lease before COMPLETE.',
             'Run final zero-writer exact-head and post-merge exact-main qualification; do not start CRM or outbound.'
           ]

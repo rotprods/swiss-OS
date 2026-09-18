@@ -1,26 +1,24 @@
-name: convergence-projections-materialize
+name: convergence-token32-terminal-projections
 
 on:
   push:
-    branches: [convergence/main-singularity]
+    branches: [convergence/postmerge-recovery-token32-20260917]
     paths:
       - '.github/workflows/convergence-runtime-graph-materialize.yml'
-      - 'docs/state/v2/claims/CLAIM-CONVERGENCE-LEASE-020.json'
-      - 'docs/state/v2/events/EVT-20260912T203018Z-CONVERGENCE-TOKEN20-CLAIM-RELEASED.json'
-      - 'docs/state/agent-runtime/heartbeats/HB-AGENT-GPT56SOL-CONVERGENCE-020-COMPLETE.json'
-      - 'docs/state/agent-runtime/iterations/ITER-convergence-main-singularity-token20.json'
-      - 'docs/state/NEXT_CONVERGENCE_ONLY_2026-09-12.json'
-      - 'STATE.md'
+      - 'docs/state/v2/claims/CLAIM-CONVERGENCE-POSTMERGE-032.json'
+      - 'docs/state/v2/events/EVT-20260917T115600Z-CONVERGENCE-TOKEN32-CLAIM-RELEASED.json'
+      - 'docs/state/agent-runtime/heartbeats/HB-AGENT-GPT56SOL-SWARM-036-COMPLETE.json'
+      - 'docs/state/agent-runtime/iterations/ITER-convergence-postmerge-recovery-token32.json'
 
 permissions:
   contents: write
 
 concurrency:
-  group: convergence-projections-materialize
+  group: convergence-token32-terminal-projections
   cancel-in-progress: false
 
 jobs:
-  materialize:
+  terminalize:
     runs-on: ubuntu-latest
     env:
       PYTHONPATH: src
@@ -31,182 +29,168 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
-      - name: Require terminal lease/claim consistency
+      - name: Require zero-claim plus released external lease parity
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: python scripts/execution_lease_live_guard.py
-      - name: Finalize convergence coordination semantics
+        run: python scripts/execution_lease_live_guard.py --receipt /tmp/execution-lease-token32-terminal.json
+      - name: Finalize token32 convergence semantics
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
-          path=Path('docs/refactor-v2/coordination_current_config.json')
-          data=json.loads(path.read_text())
-          data['generated_at']='2026-09-12T20:30:18Z'
-          data['state']='CONVERGENCE_QUALIFIED_TOKEN20_RELEASED_AWAITING_EXPLICIT_MERGE'
-          data['latest_domain_next']='docs/state/NEXT_CONVERGENCE_ONLY_2026-09-12.json'
-          old_hb='docs/state/agent-runtime/heartbeats/HB-AGENT-GPT56SOL-CONVERGENCE-020-202408.json'
-          complete_hb='docs/state/agent-runtime/heartbeats/HB-AGENT-GPT56SOL-CONVERGENCE-020-COMPLETE.json'
-          for key in ('state_refs','relevant_paths','survival_paths'):
-              values=data.get(key,[])
-              if isinstance(values,list):
-                  values=[complete_hb if v==old_hb else v for v in values]
-                  data[key]=list(dict.fromkeys(values))
-          refs=[]
-          for value in data.get('source_refs',[]):
-              if value=='claim:CLAIM-CONVERGENCE-LEASE-020:ACTIVE':
-                  value='claim:CLAIM-CONVERGENCE-LEASE-020:RELEASED'
-              elif value=='lease:coordination/execution-lease:TOKEN20:CAS':
-                  value='lease:coordination/execution-lease:TOKEN20:RELEASED_CAS'
-              refs.append(value)
-          data['source_refs']=refs
-          data['blockers']=[
-            'Explicit owner merge instruction is required before PR #463 may be promoted.',
-            'The global execution-lease/CAS contract remains candidate-only until merge into canonical main.',
-            'CRM_UNIVERSE_COMPLETE remains false because RECONCILE_REQUIRED=1403; convergence does not authorize B12 execution or authority promotion.',
-            'OUTBOUND remains CLOSED and send_allowed=0; no convergence result grants send authority.'
+
+          main='d684852a8560adf5473dce1e621fc5c83c1a42a6'
+          claim='CLAIM-CONVERGENCE-POSTMERGE-032'
+          complete_hb='docs/state/agent-runtime/heartbeats/HB-AGENT-GPT56SOL-SWARM-036-COMPLETE.json'
+          active_hb='docs/state/agent-runtime/heartbeats/HB-AGENT-GPT56SOL-SWARM-036-114100.json'
+          iteration='docs/state/agent-runtime/iterations/ITER-convergence-postmerge-recovery-token32.json'
+
+          p=Path('docs/refactor-v2/coordination_current_config.json')
+          d=json.loads(p.read_text())
+          d['base_main_sha']=main
+          d['branch']='convergence/postmerge-recovery-token32-20260917'
+          d['generated_at']='2026-09-17T11:58:00Z'
+          d['state']='CONVERGENCE_TOKEN32_RELEASED_AWAITING_FINAL_ZERO_WRITER_GAUNTLET'
+          d['open_prs']=[466,471,472]
+          d['blockers']=[
+            'One final exact-head zero-writer repository gauntlet must pass on terminal token32 projections.',
+            'PR #472 promotion remains blocked by the existing owner/platform authority gate.',
+            'GitHub main protection/rulesets are not yet platform-enforced as required by #441.',
+            'CRM_UNIVERSE_COMPLETE remains false at RECONCILE_REQUIRED=1403; B12 and OUTBOUND remain blocked.'
           ]
-          data['next_safe_actions']=[
-            'Require terminal Runtime Graph/V2/Context Survival projections to show zero active writers and fencing high-watermark 20.',
-            'Run one final exact-head terminal-state repository gauntlet.',
+          d['next_safe_actions']=[
+            'Require zero active claims and zero active runtime sessions with fencing high-watermark32.',
+            'Run the final exact-head terminal-state repository gauntlet.',
             'Re-read live main for relevant-scope drift after final CI.',
-            'Await explicit owner merge instruction for PR #463; do not open B12 or another feature wave.'
+            'Stop at the owner/platform promotion gate; do not self-authorize merge or outbound.'
           ]
-          verified=data.setdefault('verified_work',[])
-          final='Exact-head active-state qualification workflow 34717191274 / repo-guard 4440 passed every gate, 620/620 unit tests and manifest canary before token20 terminalization.'
-          if final not in verified:
-              verified.append(final)
-          data['unverified_work']=[
-            'Terminal Runtime Graph/V2/Context Survival projections must be regenerated from token20 RELEASED + COMPLETE heartbeat and prove zero active writers.',
-            'One final exact-head terminal-state gauntlet must pass.',
-            'Fresh-main relevant-scope drift must be checked after final CI.',
-            'Promotion/merge remains an explicit owner action and is not implied by KEEP or CI green.'
+          d['liveness_findings']=[
+            'Token31 was recovered death-safely after lease expiry plus heartbeat staleness; it remains terminal SUPERSEDED.',
+            'Token32 exact-head active-state repo-guard 35218123802 passed every declared gate.',
+            'Claim32 RELEASED at 2026-09-17T11:56:00Z before external lease release.',
+            'External lease32 was CAS-released at commit a80ce20da1c8ee04afc80e2c289baf95d528ccac and read back active_lease=null, last_lease token32 RELEASED, watermark32.',
+            'Heartbeat32 COMPLETE was published only after external release readback. Domain authority remains E4/690 and OUTBOUND CLOSED.'
           ]
-          data['liveness_findings']=[
-            'Token20 bounded convergence claim is terminal RELEASED with iteration KEEP and heartbeat COMPLETE at 2026-09-12T20:30:18Z.',
-            'Terminal coordination must project zero active claims with fencing high-watermark 20.',
-            'The external CAS lease is released as part of the same closure transaction; no successor writer is authorized.',
-            'B12 remains backlog-only and no CRM successor writer is active.',
-            'Operational authority remains E4/690 with H-0691 unallocated, terminal mappings 658, RECONCILE_REQUIRED=1403 and outbound CLOSED.'
+
+          refs=[]
+          for v in d.get('source_refs',[]):
+              if not isinstance(v,str):
+                  continue
+              if v in {
+                'claim:CLAIM-CONVERGENCE-POSTMERGE-032:ACTIVE',
+                'lease:coordination/execution-lease:TOKEN32:ACTIVE_CAS'
+              }:
+                  continue
+              refs.append(v)
+          refs += [
+            'main:'+main,
+            'claim:CLAIM-CONVERGENCE-POSTMERGE-031:SUPERSEDED',
+            'claim:CLAIM-CONVERGENCE-POSTMERGE-032:RELEASED',
+            'lease:coordination/execution-lease:TOKEN32:RELEASED_CAS',
+            'lease-release-commit:a80ce20da1c8ee04afc80e2c289baf95d528ccac',
+            'lease-release-blob:2018e55d78ad3c23063d565f41d9bd73ae94bf36',
+            'qualification:repo-guard-35218123802:PASS',
+            'pr:472:TERMINAL_RECOVERY_CANDIDATE'
           ]
-          graph=data.get('graph',{})
-          for node in graph.get('nodes',[]):
-              if node.get('id')=='C:CLAIM-CONVERGENCE-LEASE-020':
-                  node['state']='RELEASED_TOKEN_20_KEEP'
-              elif node.get('id')=='L:GLOBAL-EXECUTION-LEASE-020':
+          d['source_refs']=list(dict.fromkeys(refs))
+
+          for key in ('relevant_paths','state_refs','survival_paths'):
+              vals=d.get(key,[])
+              if not isinstance(vals,list):
+                  vals=[]
+              vals=[complete_hb if v==active_hb else v for v in vals]
+              for v in [complete_hb,iteration,'docs/state/v2/events/EVT-20260917T115600Z-CONVERGENCE-TOKEN32-CLAIM-RELEASED.json']:
+                  if v not in vals and (key!='survival_paths' or v==complete_hb):
+                      vals.append(v)
+              d[key]=list(dict.fromkeys(vals))
+
+          g=d.setdefault('graph',{})
+          for node in g.get('nodes',[]):
+              if node.get('id')=='C:CLAIM-CONVERGENCE-POSTMERGE-032':
+                  node['state']='RELEASED_TOKEN_32_KEEP'
+              elif node.get('id')=='L:GLOBAL-EXECUTION-LEASE-032':
                   node['state']='RELEASED_CAS'
-              elif node.get('id')=='PR:463':
-                  node['state']='QUALIFIED_AWAITING_EXPLICIT_MERGE'
-              elif node.get('id')=='ISSUE:54':
-                  node['state']='QUALIFIED_IN_CANDIDATE_NOT_CANONICAL'
-          path.write_text(json.dumps(data,ensure_ascii=False,sort_keys=True,separators=(',',':'))+'\n')
-          PY
-      - name: Finalize root domain pointer without authorizing successor execution
-        run: |
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          path=Path('docs/state/NEXT.json')
-          data=json.loads(path.read_text())
-          data['generated_at']='2026-09-12T20:30:18Z'
-          data['active_claim']=None
-          data['execution_mode']='RECOVERY_RECONCILE'
-          data['selected_route']='CURRENT_UNRESOLVED_1403_ENTITY_RESOLUTION'
-          data['next_route']='CURRENT_UNRESOLVED_1403_ENTITY_RESOLUTION'
-          data['convergence_route']='CONVERGENCE_QUALIFIED_AWAITING_EXPLICIT_MERGE'
-          data['successor_execution_allowed']=False
-          data['exact_dependency']='CRM domain remains unresolved at 1403 records, but no successor batch is authorized while the qualified convergence candidate awaits explicit owner merge instruction.'
-          data['hard_blockers']=[
-            'EXPLICIT_OWNER_MERGE_INSTRUCTION_REQUIRED_FOR_PR_463',
-            'GLOBAL_EXECUTION_LEASE_NOT_CANONICAL_UNTIL_EXPLICITLY_AUTHORIZED_MERGE',
+              elif node.get('id')=='PR:472':
+                  node['state']='TOKEN32_TERMINAL_RESEALED_AWAITING_FINAL_GAUNTLET'
+          p.write_text(json.dumps(d,ensure_ascii=False,sort_keys=True,separators=(',',':'))+'\n')
+
+          p=Path('docs/state/NEXT.json')
+          n=json.loads(p.read_text())
+          n['generated_at']='2026-09-17T11:58:00Z'
+          n['active_claim']=None
+          n['execution_mode']='RECOVERY_RECONCILE'
+          n['successor_execution_allowed']=False
+          n['convergence_route']='CONVERGENCE_TOKEN32_RELEASED_AWAITING_FINAL_ZERO_WRITER_GAUNTLET'
+          n['exact_dependency']='Claim32 and its external CAS lease are both terminal RELEASED; no successor writer is authorized while PR472 awaits final zero-writer qualification and the existing owner/platform promotion gate.'
+          n['hard_blockers']=[
+            'FINAL_ZERO_WRITER_GAUNTLET_REQUIRED_FOR_PR_472',
+            'OWNER_PLATFORM_PROMOTION_GATE_REQUIRED_FOR_PR_472',
+            'PLATFORM_ENFORCEMENT_REQUIRED_NOT_YET_ENFORCED_ISSUE_441',
             'RECONCILE_REQUIRED_1403_NOT_ZERO',
             'GOAL_DRAIN_BLOCKS_B12_AUTOMATIC_EXECUTION',
             'OUTBOUND_CLOSED'
           ]
-          data['next_safe_actions']=[
-            'Verify terminal projections show zero active writers and fencing high-watermark 20.',
+          n['next_safe_actions']=[
+            'Verify terminal projections show zero active writers and fencing high-watermark32.',
             'Run final exact-head terminal-state gauntlet.',
             'Re-read live main for relevant-scope drift.',
-            'Await explicit owner merge instruction; do not start B12 or another feature wave.'
+            'Stop at owner/platform promotion gate; do not start outbound.'
           ]
-          safety=data.setdefault('safety',{})
-          safety.update({'authority_advanced':False,'h_id_allocations':0,'canonical_id_reservations':0,'crm_universe_complete':False,'outbound':'CLOSED','send_allowed':0,'irreversible_external_actions':0})
-          path.write_text(json.dumps(data,ensure_ascii=False,sort_keys=True,indent=2)+'\n')
+          n.setdefault('safety',{}).update({'authority_advanced':False,'h_id_allocations':0,'canonical_id_reservations':0,'crm_universe_complete':False,'outbound':'CLOSED','send_allowed':0,'irreversible_external_actions':0})
+          p.write_text(json.dumps(n,ensure_ascii=False,sort_keys=True,indent=2)+'\n')
           PY
       - name: Materialize terminal Runtime Graph
         run: |
-          set -euo pipefail
           AS_OF=$(python - <<'PY'
           import json
           from pathlib import Path
-          values=[]
-          for path in Path('docs/state/agent-runtime/heartbeats').glob('*.json'):
-              data=json.loads(path.read_text())
-              value=data.get('observed_at')
-              if isinstance(value,str) and value:
-                  values.append(value)
-          print(max(values) if values else '1970-01-01T00:00:00Z')
+          vals=[]
+          for p in Path('docs/state/agent-runtime/heartbeats').glob('*.json'):
+              d=json.loads(p.read_text())
+              v=d.get('observed_at')
+              if isinstance(v,str) and v:
+                  vals.append(v)
+          print(max(vals))
           PY
           )
           python scripts/rebuild_agent_runtime_graph.py --as-of "$AS_OF" --output docs/state/agent-runtime/runtime-graph.json
           python scripts/rebuild_agent_runtime_graph.py --check
       - name: Materialize terminal V2 coordination and Context Survival
         run: |
-          set -euo pipefail
-          rm -rf /tmp/v2-terminal
-          python scripts/rebuild_v2_coordination.py \
-            --config docs/refactor-v2/coordination_current_config.json \
-            --output-dir /tmp/v2-terminal
-          cp /tmp/v2-terminal/active-claims.json docs/state/v2/active-claims.json
-          cp /tmp/v2-terminal/project-state.json docs/state/v2/project-state.json
-          cp /tmp/v2-terminal/context-pack.json docs/state/v2/context-pack.json
-          cp /tmp/v2-terminal/graph-snapshot.json docs/state/v2/graph-snapshot.json
-          cp /tmp/v2-terminal/CONTEXT_SURVIVAL.json docs/continuity/CONTEXT_SURVIVAL.json
-          python scripts/rebuild_v2_coordination.py \
-            --config docs/refactor-v2/coordination_current_config.json \
-            --output-dir /tmp/v2-terminal-check \
-            --check
+          rm -rf /tmp/v2-token32-terminal /tmp/v2-token32-terminal-check
+          python scripts/rebuild_v2_coordination.py --config docs/refactor-v2/coordination_current_config.json --output-dir /tmp/v2-token32-terminal
+          cp /tmp/v2-token32-terminal/active-claims.json docs/state/v2/active-claims.json
+          cp /tmp/v2-token32-terminal/project-state.json docs/state/v2/project-state.json
+          cp /tmp/v2-token32-terminal/context-pack.json docs/state/v2/context-pack.json
+          cp /tmp/v2-token32-terminal/graph-snapshot.json docs/state/v2/graph-snapshot.json
+          cp /tmp/v2-token32-terminal/CONTEXT_SURVIVAL.json docs/continuity/CONTEXT_SURVIVAL.json
+          python scripts/rebuild_v2_coordination.py --config docs/refactor-v2/coordination_current_config.json --output-dir /tmp/v2-token32-terminal-check --check
       - name: Assert zero-writer terminal state
         run: |
           python - <<'PY'
-          import json,re
+          import json
           from pathlib import Path
-          root=json.loads(Path('docs/state/NEXT.json').read_text())
-          control=json.loads(Path('docs/state/NEXT_CONVERGENCE_ONLY_2026-09-12.json').read_text())
-          active=json.loads(Path('docs/state/v2/active-claims.json').read_text())
-          project=json.loads(Path('docs/state/v2/project-state.json').read_text())
-          runtime=json.loads(Path('docs/state/agent-runtime/runtime-graph.json').read_text())
-          state=Path('STATE.md').read_text()
-          assert active['claims']==[]
-          assert active['collisions']==[]
-          assert active['fencing_high_watermark']==20
-          assert project['active_claim_ids']==[]
-          assert runtime['active_sessions']==[]
-          assert root['active_claim'] is None
-          assert root['next_route']=='CURRENT_UNRESOLVED_1403_ENTITY_RESOLUTION'
-          assert root['successor_execution_allowed'] is False
-          assert control['claim_state']=='RELEASED'
-          assert control['backlog']['execution_allowed'] is False
-          assert re.search(r'lower49 typed SRR materialized\s+47 / 47',state)
-          assert re.search(r'RAGR evidence-classified\s+34 / 34',state)
+          n=json.loads(Path('docs/state/NEXT.json').read_text())
+          a=json.loads(Path('docs/state/v2/active-claims.json').read_text())
+          p=json.loads(Path('docs/state/v2/project-state.json').read_text())
+          r=json.loads(Path('docs/state/agent-runtime/runtime-graph.json').read_text())
+          assert a['claims']==[]
+          assert a['collisions']==[]
+          assert a['fencing_high_watermark']==32
+          assert p['active_claim_ids']==[]
+          assert r['active_sessions']==[]
+          assert n['active_claim'] is None
+          assert n['successor_execution_allowed'] is False
+          assert n['safety']['authority_advanced'] is False
+          assert n['safety']['h_id_allocations']==0
+          assert n['safety']['outbound']=='CLOSED'
+          assert n['safety']['send_allowed']==0
           PY
       - name: Commit exact terminal projections
         run: |
-          set -euo pipefail
-          git add \
-            docs/refactor-v2/coordination_current_config.json \
-            docs/state/NEXT.json \
-            docs/state/agent-runtime/runtime-graph.json \
-            docs/state/v2/active-claims.json \
-            docs/state/v2/project-state.json \
-            docs/state/v2/context-pack.json \
-            docs/state/v2/graph-snapshot.json \
-            docs/continuity/CONTEXT_SURVIVAL.json
-          if git diff --cached --quiet; then
-            echo 'Terminal convergence projections already canonical.'
-            exit 0
-          fi
+          git add docs/refactor-v2/coordination_current_config.json docs/state/NEXT.json docs/state/agent-runtime/runtime-graph.json docs/state/v2/active-claims.json docs/state/v2/project-state.json docs/state/v2/context-pack.json docs/state/v2/graph-snapshot.json docs/continuity/CONTEXT_SURVIVAL.json
+          if git diff --cached --quiet; then exit 0; fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m 'coordination: materialize zero-writer terminal convergence state'
-          git push origin HEAD:convergence/main-singularity
+          git commit -m 'coordination: materialize token32 terminal zero-writer state'
+          git push origin HEAD:convergence/postmerge-recovery-token32-20260917

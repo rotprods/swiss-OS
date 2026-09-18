@@ -38,7 +38,7 @@
     "web_current_first_party_research"
   ],
   "checkpoint_id": "CRM_UNIVERSE_COMPLETE",
-  "convergence_route": "CONVERGENCE_TOKEN25_RELEASED_AWAITING_FINAL_ZERO_WRITER_GAUNTLET",
+  "convergence_route": "CONVERGENCE_TOKEN32_RELEASED_AWAITING_FINAL_ZERO_WRITER_GAUNTLET",
   "cycle_id": "META-20260831-CRM-CURRENT-ENTITY-RESOLUTION",
   "done_when": [
     "The current 2061-record coherent source universe is fully partitioned into evidence-backed terminal mappings or explicitly typed non-authority dispositions.",
@@ -68,15 +68,15 @@
     "remaining_never_verified": 0,
     "remaining_unverified": 0
   },
-  "exact_dependency": "Claim25 and its external CAS lease are both terminal RELEASED; no successor writer is authorized while the convergence candidate awaits final zero-writer qualification and explicit owner merge instruction.",
+  "exact_dependency": "Claim32 and its external CAS lease are both terminal RELEASED; no successor writer is authorized while PR472 awaits final zero-writer qualification and the existing owner/platform promotion gate.",
   "execution_mode": "RECOVERY_RECONCILE",
-  "generated_at": "2026-09-15T08:36:03Z",
+  "generated_at": "2026-09-17T11:58:00Z",
   "goal_id": "G-0500",
   "graph_impact": "META",
   "hard_blockers": [
-    "FINAL_ZERO_WRITER_GAUNTLET_REQUIRED_FOR_PR_464",
-    "EXPLICIT_OWNER_MERGE_INSTRUCTION_REQUIRED_FOR_PR_464",
-    "GLOBAL_EXECUTION_LEASE_NOT_CANONICAL_UNTIL_EXPLICITLY_AUTHORIZED_MERGE",
+    "FINAL_ZERO_WRITER_GAUNTLET_REQUIRED_FOR_PR_472",
+    "OWNER_PLATFORM_PROMOTION_GATE_REQUIRED_FOR_PR_472",
+    "PLATFORM_ENFORCEMENT_REQUIRED_NOT_YET_ENFORCED_ISSUE_441",
     "RECONCILE_REQUIRED_1403_NOT_ZERO",
     "GOAL_DRAIN_BLOCKS_B12_AUTOMATIC_EXECUTION",
     "OUTBOUND_CLOSED"
@@ -92,13 +92,13 @@
   },
   "next_route": "CURRENT_UNRESOLVED_1403_ENTITY_RESOLUTION",
   "next_safe_actions": [
-    "Verify terminal projections show zero active writers and fencing high-watermark25.",
+    "Verify terminal projections show zero active writers and fencing high-watermark32.",
     "Run final exact-head terminal-state gauntlet.",
     "Re-read live main for relevant-scope drift.",
-    "Await explicit owner merge instruction; do not start B12 or outbound."
+    "Stop at owner/platform promotion gate; do not start outbound."
   ],
   "outbound_allowed": false,
-  "parent_git_sha": "3c902a791be0e8df1db564034e211ea90c41f1b3",
+  "parent_git_sha": "38d52d60f109f373741ce95021a60b03ea69dffc",
   "parent_sha_semantics": "Resume only if current main is this SHA or an ancestry-safe descendant with no relevant-scope drift and the E4 authority tuple is unchanged.",
   "project": "SWITZERLAND_JOB_OS",
   "recovery_route": [

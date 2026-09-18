@@ -114,49 +114,78 @@ def raw_terminal_claims_from_change(paths: list[str]) -> list[dict[str, Any]]:
         cid = str(claim.get("claim_id", ""))
         if not cid or states.get(cid) not in TERMINAL_CLAIM_STATES:
             continue
-        claim_path = f"docs/state/v2/claims/{cid}.json"
-        if claim_path not in changed:
+        if f"docs/state/v2/claims/{cid}.json" not in changed:
             continue
-        has_terminal_event = False
         for event_path in changed:
             if not event_path.startswith("docs/state/v2/events/") or not event_path.endswith(".json"):
                 continue
             payload = load_json(ROOT / event_path)
-            if payload.get("event_type") not in {"CLAIM_RELEASED", "CLAIM_SUPERSEDED"}:
-                continue
             causation = payload.get("causation", [])
-            if isinstance(causation, list) and f"claim:{cid}" in causation:
-                has_terminal_event = True
+            if (
+                payload.get("event_type") in {"CLAIM_RELEASED", "CLAIM_SUPERSEDED"}
+                and isinstance(causation, list)
+                and f"claim:{cid}" in causation
+            ):
+                result.append(claim)
                 break
-        if has_terminal_event:
-            result.append(claim)
     return result
+
+
+def _strictly_newer_token(predecessor: dict[str, Any], successor: dict[str, Any]) -> bool:
+    p_token = predecessor.get("fencing_token")
+    s_token = successor.get("fencing_token")
+    if isinstance(p_token, bool) or isinstance(s_token, bool):
+        return False
+    return isinstance(p_token, int) and isinstance(s_token, int) and s_token > p_token
 
 
 def _same_terminal_lineage(predecessor: dict[str, Any], successor: dict[str, Any]) -> bool:
     for key in ("project_id", "workstream_id", "objective_id", "branch"):
         if str(predecessor.get(key, "")) != str(successor.get(key, "")):
             return False
-    p_token = predecessor.get("fencing_token")
-    s_token = successor.get("fencing_token")
-    if isinstance(p_token, bool) or isinstance(s_token, bool):
+    return _strictly_newer_token(predecessor, successor)
+
+
+def _explicit_cross_context_successor(
+    predecessor: dict[str, Any],
+    successor: dict[str, Any],
+    acquisition_event: dict[str, Any],
+) -> bool:
+    """Allow cross-context succession only from durable, mutually consistent evidence."""
+    if predecessor.get("state") not in TERMINAL_CLAIM_STATES or successor.get("state") not in TERMINAL_CLAIM_STATES:
         return False
-    if not isinstance(p_token, int) or not isinstance(s_token, int):
+    if not _strictly_newer_token(predecessor, successor):
         return False
-    return s_token > p_token
+    for key in ("project_id", "objective_id", "authority_ceiling"):
+        if str(predecessor.get(key, "")) != str(successor.get(key, "")):
+            return False
+    predecessor_id = str(predecessor.get("claim_id", ""))
+    successor_id = str(successor.get("claim_id", ""))
+    if not predecessor_id or not successor_id:
+        return False
+    preconditions = successor.get("preconditions")
+    if not isinstance(preconditions, dict):
+        return False
+    if preconditions.get("predecessor_claim") != predecessor_id:
+        return False
+    if preconditions.get("predecessor_claim_state") != predecessor.get("state"):
+        return False
+    if acquisition_event.get("event_type") != "CLAIM_ACQUIRED":
+        return False
+    causation = acquisition_event.get("causation", [])
+    if not isinstance(causation, list):
+        return False
+    return f"claim:{successor_id}" in causation and f"predecessor:{predecessor_id}" in causation
 
 
 def collapse_terminal_successions(
     claims: list[dict[str, Any]], acquisition_events: list[dict[str, Any]]
 ) -> list[dict[str, Any]]:
-    """Collapse only explicit, monotonic predecessor->successor chains.
-
-    Unrelated terminal claims remain separate and therefore fail closed in validate().
-    """
+    """Collapse only proven monotonic predecessor->successor chains."""
     by_id = {str(c.get("claim_id", "")): c for c in claims if c.get("claim_id")}
     edges: set[tuple[str, str]] = set()
 
-    def add_edge(predecessor_id: str, successor_id: str) -> None:
+    def add_same_lineage_edge(predecessor_id: str, successor_id: str) -> None:
         predecessor = by_id.get(predecessor_id)
         successor = by_id.get(successor_id)
         if predecessor and successor and _same_terminal_lineage(predecessor, successor):
@@ -166,7 +195,7 @@ def collapse_terminal_successions(
         cid = str(claim.get("claim_id", ""))
         successor_id = claim.get("superseded_by")
         if cid and isinstance(successor_id, str) and successor_id:
-            add_edge(cid, successor_id)
+            add_same_lineage_edge(cid, successor_id)
 
     for event in acquisition_events:
         if event.get("event_type") != "CLAIM_ACQUIRED":
@@ -174,11 +203,7 @@ def collapse_terminal_successions(
         causation = event.get("causation", [])
         if not isinstance(causation, list):
             continue
-        successor_ids = [
-            x.split(":", 1)[1]
-            for x in causation
-            if isinstance(x, str) and x.startswith("claim:")
-        ]
+        successor_ids = [x.split(":", 1)[1] for x in causation if isinstance(x, str) and x.startswith("claim:")]
         predecessor_ids = [
             x.split(":", 1)[1]
             for x in causation
@@ -186,7 +211,12 @@ def collapse_terminal_successions(
         ]
         for predecessor_id in predecessor_ids:
             for successor_id in successor_ids:
-                add_edge(predecessor_id, successor_id)
+                predecessor = by_id.get(predecessor_id)
+                successor = by_id.get(successor_id)
+                if not predecessor or not successor:
+                    continue
+                if _same_terminal_lineage(predecessor, successor) or _explicit_cross_context_successor(predecessor, successor, event):
+                    edges.add((predecessor_id, successor_id))
 
     replaced = {predecessor for predecessor, _successor in edges}
     return sorted(
@@ -195,19 +225,9 @@ def collapse_terminal_successions(
     )
 
 
-def prefer_current_branch_terminal_claims(
-    claims: list[dict[str, Any]], branch: str
-) -> list[dict[str, Any]]:
-    """Resolve inherited terminal provenance without weakening same-branch ambiguity.
-
-    A long-lived PR may carry terminal claim files from a predecessor branch. After
-    explicit succession chains are collapsed, exactly one terminal claim owned by
-    the current branch is the effective owner for this PR. Multiple current-branch
-    terminal candidates remain ambiguous and fail closed. If no candidate belongs
-    to the current branch, preserve the original set so cleanup/recovery branches
-    are not silently rebound.
-    """
-    if len(claims) <= 1 or not branch:
+def prefer_current_branch_terminal_claims(claims: list[dict[str, Any]], branch: str) -> list[dict[str, Any]]:
+    """PR-only fallback after causal collapse; never used to rebind ownership on main."""
+    if len(claims) <= 1 or not branch or branch == "main":
         return claims
     current = [claim for claim in claims if str(claim.get("branch", "")) == branch]
     if len(current) == 1:

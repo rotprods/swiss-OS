@@ -1,67 +1,5 @@
 {
-  "active_claim": {
-    "agent_id": "AGENT-GPT56SOL-SWARM-037",
-    "authority_ceiling": "CONVERGENCE_ORCHESTRATION_AND_LEASE_REPAIR_ONLY_NO_DOMAIN_OR_OUTBOUND_AUTHORITY",
-    "base_sha": "012ddfc4953eaed39f8b75a61a71ee5aaffdcc02",
-    "branch": "convergence/postmerge-canonical-reseal-token33-20260918",
-    "claim_id": "CLAIM-CONVERGENCE-POSTMERGE-033",
-    "claimed_at": "2026-09-18T11:12:00Z",
-    "correlation_id": "CORR-20260918T111200Z-SWARM-037",
-    "excluded_scopes": [
-      "HOTELS_AUTHORITY_MUTATION",
-      "CRM_ENTITY_RESOLUTION_DECISION",
-      "H_ID_ALLOCATION",
-      "CANONICAL_ID_RESERVATION",
-      "TERMINAL_SOURCE_MAPPING_MUTATION",
-      "CANDIDATE_PRIVATE_TRUTH_MUTATION",
-      "APPLICATION_SUBMISSION",
-      "OUTBOUND_EXECUTION",
-      "GMAIL_MUTATION"
-    ],
-    "fencing_token": 33,
-    "idempotency_key": "SWITZERLAND_JOB_OS|WS-CONVERGENCE-POSTMERGE-CANONICAL-RESEAL|TOKEN33",
-    "objective_id": "OBJ-SWISS-MAIN-SINGULARITY",
-    "preconditions": {
-      "active_canonical": 690,
-      "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
-      "convergence_mode": "CONVERGENCE_ONLY",
-      "global_lease_id": "LEASE-1371b877370d6af03225",
-      "global_lease_watermark_before_acquire": 32,
-      "main_sha": "012ddfc4953eaed39f8b75a61a71ee5aaffdcc02",
-      "next_h_id": "H-0691_UNALLOCATED",
-      "outbound": "CLOSED",
-      "postmerge_repo_guard_run": 35338109700,
-      "postmerge_repo_guard_state": "SUCCESS",
-      "predecessor_claim": "CLAIM-CONVERGENCE-POSTMERGE-032",
-      "predecessor_claim_state": "RELEASED",
-      "predecessor_lease_id": "LEASE-75aa97c33a1f828f86e1",
-      "predecessor_lease_state": "RELEASED",
-      "reconcile_required": 1403,
-      "send_allowed": 0,
-      "terminal_mappings": 658
-    },
-    "project_id": "SWITZERLAND_JOB_OS",
-    "resource_scopes": [
-      "docs/refactor-v2/coordination_current_config.json",
-      "docs/continuity/CONTEXT_SURVIVAL.json",
-      "docs/state/NEXT.json",
-      "docs/state/v2/**",
-      "docs/state/agent-runtime/**",
-      "docs/reports/convergence/**",
-      ".github/workflows/convergence-runtime-graph-materialize.yml"
-    ],
-    "schema_version": "COS-V2-CLAIM-1.0",
-    "semantic_scopes": [
-      "CONVERGENCE_ONLY",
-      "POSTMERGE_CANONICAL_RESEAL",
-      "PROJECTION_RECONCILIATION",
-      "ZERO_WRITER_POSTMERGE_RECOVERY",
-      "LIVENESS_REPAIR"
-    ],
-    "session_id": "SES-20260918T111200Z-SWARM-037",
-    "state": "ACTIVE",
-    "workstream_id": "WS-CONVERGENCE-POSTMERGE-CANONICAL-RESEAL"
-  },
+  "active_claim": null,
   "artifacts": [
     "docs/state/CRM_CURRENT_SOURCE_MAPPING_PROJECTION_33339392661.json",
     "docs/state/CRM_CURRENT_GONTEN_ECV_SRR_LINEAGE_33339392661.json",
@@ -100,7 +38,7 @@
     "web_current_first_party_research"
   ],
   "checkpoint_id": "CRM_UNIVERSE_COMPLETE",
-  "convergence_route": "CONVERGENCE_TOKEN33_ACTIVE_POSTMERGE_CANONICAL_RESEAL",
+  "convergence_route": "CONVERGENCE_TOKEN33_TERMINAL_CANONICAL_RESEAL_ZERO_WRITER",
   "cycle_id": "META-20260831-CRM-CURRENT-ENTITY-RESOLUTION",
   "done_when": [
     "The current 2061-record coherent source universe is fully partitioned into evidence-backed terminal mappings or explicitly typed non-authority dispositions.",
@@ -130,16 +68,15 @@
     "remaining_never_verified": 0,
     "remaining_unverified": 0
   },
-  "exact_dependency": "Token33 owns the bounded orchestration writer slot solely to reseal canonical post-merge truth; no domain or outbound authority is granted.",
+  "exact_dependency": "Token33 is terminal on both Git and external lease surfaces. This exact tree must remain zero-writer; any future CRM or outbound work requires a separately eligible claim and authority.",
   "execution_mode": "RECOVERY_RECONCILE",
-  "generated_at": "2026-09-18T11:13:00Z",
+  "generated_at": "2026-09-18T11:22:00Z",
   "goal_id": "G-0500",
   "graph_impact": "META",
   "hard_blockers": [
-    "TOKEN33_EXACT_HEAD_QUALIFICATION_REQUIRED",
-    "TOKEN33_TERMINALIZATION_AND_LEASE_RELEASE_REQUIRED",
     "PLATFORM_ENFORCEMENT_REQUIRED_NOT_YET_ENFORCED_ISSUE_441",
     "RECONCILE_REQUIRED_1403_NOT_ZERO",
+    "SEPARATE_DOMAIN_CLAIM_REQUIRED_BEFORE_CRM_ENTITY_RESOLUTION",
     "GOAL_DRAIN_BLOCKS_B12_AUTOMATIC_EXECUTION",
     "OUTBOUND_CLOSED"
   ],
@@ -154,10 +91,10 @@
   },
   "next_route": "CURRENT_UNRESOLVED_1403_ENTITY_RESOLUTION",
   "next_safe_actions": [
-    "Materialize token33 active projections and verify one live writer with fencing high-watermark33.",
-    "Qualify bounded canonical reseal PR473.",
-    "Terminalize token33 claim then release/read back the external lease before COMPLETE.",
-    "Run final zero-writer exact-head and post-merge exact-main qualification; do not start CRM or outbound."
+    "Verify terminal projections show zero active writers and fencing high-watermark33.",
+    "Require exact-head terminal repo-guard before expected-head promotion.",
+    "After this exact tree becomes canonical main, require exact-main repo-guard.",
+    "Exit this convergence authority ceiling; CRM, H-ID, applications and outbound remain unauthorized."
   ],
   "outbound_allowed": false,
   "parent_git_sha": "012ddfc4953eaed39f8b75a61a71ee5aaffdcc02",

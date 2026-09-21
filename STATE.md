@@ -88,3 +88,9 @@ Do not return to generic infrastructure work while live vacancy/candidate packet
 ## Authority / canary semantics
 
 This file is the mutable live-state pointer. It is not an independent **authoritative** source for CRM or candidate-private truth; authority remains with the declared source planes and exact claim/lease contracts. CI, historical artifacts and any **canary** result are evidence or validation surfaces and never silently advance operational authority.
+## Machine-readable continuity frontier
+
+ECV verified frontier 1438 / 1438
+ECV remaining never verified 0
+OUTBOUND                        CLOSED
+send_allowed                      0

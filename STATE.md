@@ -85,3 +85,6 @@ Candidate private authority records Spanish/EU nationality. Public-safe rule: ne
 ## Stop rule
 
 Do not return to generic infrastructure work while live vacancy/candidate packet work can directly reduce distance to G-0001. CRM reconciliation remains a separate future domain-authority workstream; outbound remains independently locked.
+## Authority / canary semantics
+
+This file is the mutable live-state pointer. It is not an independent **authoritative** source for CRM or candidate-private truth; authority remains with the declared source planes and exact claim/lease contracts. CI, historical artifacts and any **canary** result are evidence or validation surfaces and never silently advance operational authority.

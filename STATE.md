@@ -1,98 +1,96 @@
 # STATE — LIVE HANDOFF POINTER
 
-Latest reconciled GitHub frontier: **main `3c902a791be0e8df1db564034e211ea90c41f1b3`**. B11 is merged and SWISS-OS remains in **`CONVERGENCE_ONLY`**. Draft PR **#464** is the single convergence candidate. Token25 repaired inherited terminal-lineage ambiguity, passed full active-state qualification, and is now **terminal KEEP / RELEASED** on both Git claim and external CAS lease surfaces. No successor writer is authorized.
+Canonical main at wave admission: `98882fa96a1a87a43580e839d9aba292d9028d14`.
 
+## North Star
 
-## Authority — unchanged / locked
+G-0001 remains the only terminal mission: secure Roberto a real, truthful, verifiable and viable Swiss job offer before relocation. Infrastructure is support, not success.
+
+## Current writer
+
+Token34 is terminal: claim RELEASED, external lease RELEASED, heartbeat COMPLETE. No active writer is authorized by this wave.
+
+## Domain authority — unchanged
 
 ```text
-physical HOTELS rows            690
-active canonical                690
-persisted H-ID alias edges        0
-next physical ID                H-0691 UNALLOCATED
-terminal source mappings         658
-RECONCILE_REQUIRED              1403
-CRM_UNIVERSE_COMPLETE           FALSE
+authority epoch              HS_ENTITY_EPOCH_2026-08-25_E4
+physical HOTELS rows         690
+active canonical             690
+next physical ID             H-0691 UNALLOCATED
+terminal source mappings     658
+RECONCILE_REQUIRED           1403
+CRM_UNIVERSE_COMPLETE        FALSE
+OUTBOUND                     CLOSED
+send_allowed                 0
+```
+
+Token34 may not mutate CRM entity-resolution decisions, H-IDs, canonical reservations, terminal source mappings, candidate-private truth without evidence, Gmail, application submission or outbound.
+
+## Candidate readiness recovered from private authority
+
+- `CV_ENTRY_V2` is APPROVED_ASSET_V2 for ENTRY / PORTAL.
+- `CV_HYBRID_V2` is approved for HYBRID but supplemental portfolio/case-study gates remain.
+- ENTRY candidate wording is governed by the private Candidate Canon reconciliation packet dated 2026-09-12.
+- No private contact values or Drive identifiers belong in public GitHub state.
+
+## Real-job frontier — 2026-09-21
+
+Durable public-safe registry:
+`docs/state/employment/LIVE_OPPORTUNITY_FRONTIER_2026-09-21.json`
+
+Private NO-SEND packets compiled:
+1. Mandarin Oriental Savoy Zurich — Housekeeping Attendant JR-05896.
+2. Lenkerhof gourmet spa resort — Allrounder Housekeeping.
+3. The Alpina Gstaad — Junior Housekeeping Attendant, winter 2026/27.
+4. juhui Flumserberg — Housekeeping, Jan–Mar 2027.
+
+Secondary verified target:
+- Hotel Waldhaus Sils — Room Attendant, winter 2026/27.
+
+These are application-preparation artifacts only. `PACKET_COMPILED != SEND_AUTHORIZED`.
+
+## Current factual gates
+
+- Mandarin Zurich: vacancy explicitly requires very good English; current candidate authority says English B1 self-assessed. Do not upgrade the claim.
+- Lenkerhof: accepts good German OR English and advertises staff accommodation, but asks for housekeeping experience that is not currently verified.
+- The Alpina: junior/training pathway plus accommodation; very good English and split-shift/high-season demands require explicit self-verification.
+- juhui Flumserberg: strong entry/accommodation signal, but first-party vacancy/PDF and exact language conditions require revalidation.
+- Waldhaus Sils: first-party live vacancy, but first room-cleaning experience is requested.
+
+## Work-right truth
+
+Candidate private authority records Spanish/EU nationality. Public-safe rule: never claim that a Swiss permit is already held. SEM states that EU/EFTA employment uses the applicable employment-contract plus notification/residence-registration process depending on contract duration.
+
+## NEXT — after token34
+
+1. Materialize active Runtime Graph / V2 / Context Survival projections for token34.
+2. Open one bounded PR containing only public-safe employment state and coordination truth.
+3. Run exact-head full repo-guard.
+4. Persist KEEP/BLOCKED iteration evidence.
+5. Terminalize Git claim34.
+6. CAS-release and read back external lease34 before COMPLETE.
+7. Reseal zero-writer state and remove any token34 one-shot workflow.
+8. Exact-head final gauntlet → expected-head merge → exact-main guard.
+9. Exit token34 authority. Do not send applications under this claim.
+
+## Stop rule
+
+Do not return to generic infrastructure work while live vacancy/candidate packet work can directly reduce distance to G-0001. CRM reconciliation remains a separate future domain-authority workstream; outbound remains independently locked.
+## Authority / canary semantics
+
+This file is the mutable live-state pointer. It is not an independent **authoritative** source for CRM or candidate-private truth; authority remains with the declared source planes and exact claim/lease contracts. CI, historical artifacts and any **canary** result are evidence or validation surfaces and never silently advance operational authority.
+## Machine-readable continuity frontier
+
+ECV verified frontier 1438 / 1438
+ECV remaining never verified 0
 OUTBOUND                        CLOSED
 send_allowed                      0
-```
+lower49 typed SRR materialized 47 / 47
+RAGR evidence-classified 34 / 34
+cumulative NEW_CANONICAL preauthority 214
+## Token34 result
 
-Authority epoch remains `HS_ENTITY_EPOCH_2026-08-25_E4`; materialized authority SHA remains `70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6`. Convergence/CI/research/semantic indexes are non-authoritative and may not allocate or reserve H-IDs, terminalize source mappings, mutate candidate-private truth or execute outbound actions.
-
-## Historical monotonic evidence frontiers — machine-readable compatibility
-
-```text
-ECV verified frontier                           1438 / 1438
-ECV remaining never verified                    0
-lower49 typed SRR materialized                   47 / 47
-RAGR evidence-classified                         34 / 34
-```
-
-These are completed evidence frontiers only. They do **not** imply `CRM_UNIVERSE_COMPLETE` while `RECONCILE_REQUIRED=1403`.
-
-## B11 — merged PREAUTH evidence, no authority mutation
-
-```text
-NEW_CANONICAL_PREAUTH                         6
-NEW_ACCOMMODATION_PREAUTH_EGR_REQUIRED       4
-terminal mapping delta                       0
-H-ID allocations / reservations              0 / 0
-current <0.35 reviewed cumulative           110
-cumulative NEW_CANONICAL preauthority       214
-zero-same-city lane remaining               375
-historical <0.35 tail remaining            1179
-```
-
-B12 positions 111–120 remain **backlog/provenance only** in `docs/state/NEXT_CURRENT_UNRESOLVED_LT350_B11.json`. GOAL-DRAIN forbids automatic execution of B12 while convergence mode is active.
-
-## Dual-plane NEXT semantics
-
-`docs/state/NEXT.json` remains the domain-monotonic pointer and preserves `CURRENT_UNRESOLVED_1403_ENTITY_RESOLUTION` because that domain backlog is real.
-
-`docs/state/NEXT_CONVERGENCE_ONLY_2026-09-12.json` is the execution/control pointer. It is now `QUALIFIED_AWAITING_EXPLICIT_MERGE`, retains `route=CONVERGENCE_ONLY`, and keeps B12 `execution_allowed=false`.
-
-## Global writer serialization — terminalization + lineage parity proven
-
-The duplicate-token18 collision is protected by the candidate GitHub blob-SHA CAS lease. The later orphan-lease defect was exercised through token24 two-surface terminalization. Token25 then repaired the final PR-wide lineage ambiguity without weakening same-branch fail-closed behavior.
-
-Token25 lifecycle:
-
-```text
-claim          CLAIM-CONVERGENCE-TERMINALIZATION-025
-session        SES-20260915T082640Z-CONVERGENCE-025
-fencing token  25
-state          RELEASED
-iteration      ITER-convergence-terminal-lineage-token25 = KEEP
-active qualify repo-guard 4464 / workflow 34947621820 = PASS
-lease release  commit 742472a28bd593f7ff45096e3f3f92bee2d4fd37
-lease readback active_lease=null / last_lease=token25 RELEASED / watermark=25
-```
-
-COMPLETE was withheld until external release readback. The material lineage guard now ignores inherited terminal provenance from another branch only when exactly one terminal owner belongs to the current PR branch; same-branch and no-match ambiguity remain fail-closed.
-
-## Convergence progress
-
-- historical semantic PRs #438/#455/#460 are EVIDENCE_ONLY / DONOR_PORT / SALVAGE_REBASE;
-- stale CRM #451 is SUPERSEDED;
-- research/candidate/policy donors are classified with loss-proof;
-- duplicate convergence PR #462 is closed DONOR_PORT into #463;
-- execution-stop rules are harvested;
-- Runtime Graph, V2 rebuild/contracts, Context Survival, death drill, CWP lineage and durable handoff pass;
-- dual-plane NEXT compatibility preserves historical monotonic contracts while B12 remains execution-blocked;
-- full active-state gauntlet 4440 passed every gate including 620/620 tests and manifest canary;
-- protected metrics remained zero: authority mutations, H-ID allocations and outbound actions.
-
-## NEXT
-
-Current control state is **terminal convergence candidate awaiting final zero-writer gauntlet and explicit owner merge instruction**.
-
-```text
-reseal Runtime Graph + V2/Context Survival to zero active writers / watermark25
-→ final exact-head terminal-state gauntlet
-→ re-read live main for drift
-→ await explicit owner merge instruction for PR #464
-```
-
-Do not open B12, Semantic V4 or another feature wave. Do not merge PR #464 without explicit owner instruction. Keep `OUTBOUND=CLOSED` / `send_allowed=0`.
-
-**VERIFY LIVE TRUTH BEFORE EXECUTION.**
+- Four private vacancy-specific application packets are PACKET_COMPILED_NO_SEND.
+- Public-safe opportunity frontier is durable in docs/state/employment/LIVE_OPPORTUNITY_FRONTIER_2026-09-21.json.
+- No application/email/portal/DM was submitted. OUTBOUND remains CLOSED and send_allowed remains 0.
+- Any future send requires a separate eligible claim and governing authorization; token34 cannot be revived.

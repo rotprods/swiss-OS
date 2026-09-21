@@ -1,0 +1,54 @@
+{
+  "schema_version": "SWISS-OS-EMPLOYMENT-EVIDENCE-1.0",
+  "purpose": "FINAL_ZERO_WRITER_EXACT_HEAD_CHECKPOINT",
+  "project_id": "SWITZERLAND_JOB_OS",
+  "recorded_at": "2026-09-21T13:16:00Z",
+  "pr_number": 475,
+  "branch": "employment/live-vacancy-packets-token34-20260921",
+  "canonical_parent_main": "98882fa96a1a87a43580e839d9aba292d9028d14",
+  "terminal_projection_head": "0acc9429e69400f7bc0842c6353aa1992216f11d",
+  "claim": {
+    "id": "CLAIM-EMPLOYMENT-LIVE-VACANCY-034",
+    "state": "RELEASED",
+    "fencing_token": 34
+  },
+  "external_lease": {
+    "active_lease": null,
+    "last_lease_id": "LEASE-587c9202be3784453693",
+    "last_lease_state": "RELEASED",
+    "mutation_allowed": false,
+    "fencing_high_watermark": 34,
+    "generation": 36,
+    "readback_blob": "99c3109ed4a18fe0cf72c9d2d466dc0522872d5d"
+  },
+  "projections": {
+    "active_claims": [],
+    "collisions": [],
+    "active_runtime_sessions": [],
+    "next_active_claim": null,
+    "successor_execution_allowed": false,
+    "execution_mode": "EMPLOYMENT_ACQUISITION_NO_SEND_TERMINAL"
+  },
+  "employment_output": {
+    "verified_live_targets": 5,
+    "private_no_send_packets": 4,
+    "application_submissions": 0,
+    "outbound_actions": 0,
+    "public_frontier": "docs/state/employment/LIVE_OPPORTUNITY_FRONTIER_2026-09-21.json"
+  },
+  "authority": {
+    "crm_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+    "active_canonical": 690,
+    "next_h_id": "H-0691_UNALLOCATED",
+    "terminal_mappings": 658,
+    "reconcile_required": 1403,
+    "outbound": "CLOSED",
+    "send_allowed": 0
+  },
+  "incident": {
+    "id": "INC-20260921-TOKEN34-LEASE-RENEWAL-SERIALIZATION",
+    "status": "CONTAINED_AND_REPAIRED",
+    "material_work_after_corrupt_readback_before_repair": false
+  },
+  "qualification_required": "Run repo-guard on the exact commit containing this evidence. This checkpoint grants no application-submission or outbound authority."
+}

@@ -68,17 +68,18 @@
     "remaining_never_verified": 0,
     "remaining_unverified": 0
   },
-  "exact_dependency": "Token33 is terminal on both Git and external lease surfaces. This exact tree must remain zero-writer; any future CRM or outbound work requires a separately eligible claim and authority.",
-  "execution_mode": "RECOVERY_RECONCILE",
-  "generated_at": "2026-09-18T11:22:00Z",
+  "exact_dependency": "Token34 is terminal on both Git and external lease surfaces. Four private application packets remain NO-SEND; submission/outbound requires a separate eligible authority path.",
+  "execution_mode": "EMPLOYMENT_ACQUISITION_NO_SEND_TERMINAL",
+  "generated_at": "2026-09-21T13:14:00Z",
   "goal_id": "G-0500",
   "graph_impact": "META",
   "hard_blockers": [
-    "PLATFORM_ENFORCEMENT_REQUIRED_NOT_YET_ENFORCED_ISSUE_441",
-    "RECONCILE_REQUIRED_1403_NOT_ZERO",
-    "SEPARATE_DOMAIN_CLAIM_REQUIRED_BEFORE_CRM_ENTITY_RESOLUTION",
-    "GOAL_DRAIN_BLOCKS_B12_AUTOMATIC_EXECUTION",
-    "OUTBOUND_CLOSED"
+    "APPLICATION_SUBMISSION_NOT_AUTHORIZED",
+    "OUTBOUND_CLOSED",
+    "CRM_UNIVERSE_COMPLETE_FALSE_RECONCILE_REQUIRED_1403",
+    "MANDARIN_AND_ALPINA_ENGLISH_SELF_VERIFICATION_REQUIRED",
+    "LENKERHOF_HOUSEKEEPING_EXPERIENCE_GAP",
+    "JUHUI_FIRST_PARTY_REVALIDATION_REQUIRED"
   ],
   "mapping_frontier": {
     "full_terminal_pairs_sha256": "3e5be19a0132602ca377df36986e287291c7551a5009f9fde6b24c1315ff8de4",
@@ -91,13 +92,13 @@
   },
   "next_route": "CURRENT_UNRESOLVED_1403_ENTITY_RESOLUTION",
   "next_safe_actions": [
-    "Verify terminal projections show zero active writers and fencing high-watermark33.",
-    "Require exact-head terminal repo-guard before expected-head promotion.",
-    "After this exact tree becomes canonical main, require exact-main repo-guard.",
-    "Exit this convergence authority ceiling; CRM, H-ID, applications and outbound remain unauthorized."
+    "Verify terminal projections show zero active writers and fencing high-watermark34.",
+    "Require final exact-head repo-guard and exact-main repo-guard after promotion.",
+    "Preserve the live opportunity frontier and private NO-SEND packets.",
+    "Do not send applications, email, DM, WhatsApp or portal submissions under token34."
   ],
   "outbound_allowed": false,
-  "parent_git_sha": "012ddfc4953eaed39f8b75a61a71ee5aaffdcc02",
+  "parent_git_sha": "98882fa96a1a87a43580e839d9aba292d9028d14",
   "parent_sha_semantics": "Resume only if current main is this SHA or an ancestry-safe descendant with no relevant-scope drift and the E4 authority tuple is unchanged.",
   "project": "SWITZERLAND_JOB_OS",
   "recovery_route": [
@@ -112,7 +113,7 @@
     "Keep OUTBOUND=CLOSED and send_allowed=0."
   ],
   "required_inputs": [
-    "GitHub current main 012ddfc4953eaed39f8b75a61a71ee5aaffdcc02 or ancestry-safe descendant with no relevant-scope drift",
+    "GitHub current main 98882fa96a1a87a43580e839d9aba292d9028d14 or ancestry-safe descendant with no relevant-scope drift",
     "authority E4 / SHA 70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
     "Drive HOTELS_MASTER/HOTELS_V2",
     "current source run 33339392661 / artifact 9740219406",

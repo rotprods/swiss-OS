@@ -55,7 +55,7 @@ jobs:
           d['branch']=branch
           d['generated_at']='2026-09-21T13:00:00Z'
           d['state']='EMPLOYMENT_TOKEN34_ACTIVE_LIVE_VACANCY_PACKETS_NO_SEND'
-          d['open_prs']=[]
+          d['open_prs']=[475]
           d['blockers']=[
             'Token34 may compile and verify application packets but APPLICATION_SUBMISSION and OUTBOUND_EXECUTION are excluded.',
             'CRM_UNIVERSE_COMPLETE remains false at RECONCILE_REQUIRED=1403; send_allowed remains 0.',

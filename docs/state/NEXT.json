@@ -1,63 +1,5 @@
 {
-  "active_claim": {
-    "agent_id": "AGENT-GPT56SOL-SWARM-038",
-    "authority_ceiling": "G0600_G0800_OPPORTUNITY_INTELLIGENCE_CANDIDATE_READINESS_PACKET_COMPILATION_NO_SEND",
-    "base_sha": "98882fa96a1a87a43580e839d9aba292d9028d14",
-    "branch": "employment/live-vacancy-packets-token34-20260921",
-    "claim_id": "CLAIM-EMPLOYMENT-LIVE-VACANCY-034",
-    "claimed_at": "2026-09-21T12:45:00Z",
-    "correlation_id": "CORR-20260921T124500Z-SWARM-038",
-    "excluded_scopes": [
-      "CRM_ENTITY_RESOLUTION_DECISION",
-      "HOTELS_AUTHORITY_MUTATION",
-      "H_ID_ALLOCATION",
-      "CANONICAL_ID_RESERVATION",
-      "TERMINAL_SOURCE_MAPPING_MUTATION",
-      "APPLICATION_SUBMISSION",
-      "OUTBOUND_EXECUTION",
-      "GMAIL_MUTATION",
-      "CANDIDATE_PRIVATE_TRUTH_UNEVIDENCED_MUTATION"
-    ],
-    "fencing_token": 34,
-    "idempotency_key": "SWITZERLAND_JOB_OS|WS-LIVE-VACANCY-PACKETS|TOKEN34",
-    "objective_id": "OBJ-SWISS-REAL-JOB-ACQUISITION",
-    "preconditions": {
-      "active_canonical": 690,
-      "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
-      "crm_universe_complete": false,
-      "global_lease_id": "LEASE-587c9202be3784453693",
-      "global_lease_watermark_before_acquire": 33,
-      "main_sha": "98882fa96a1a87a43580e839d9aba292d9028d14",
-      "next_h_id": "H-0691_UNALLOCATED",
-      "outbound": "CLOSED",
-      "send_allowed": 0
-    },
-    "project_id": "SWITZERLAND_JOB_OS",
-    "resource_scopes": [
-      "STATE.md",
-      "docs/state/employment/**",
-      "docs/reports/employment/**",
-      "docs/state/v2/**",
-      "docs/state/agent-runtime/**",
-      "docs/refactor-v2/coordination_current_config.json",
-      "docs/continuity/CONTEXT_SURVIVAL.json",
-      ".github/workflows/employment-token34-materialize.yml",
-      "docs/state/NEXT.json"
-    ],
-    "schema_version": "COS-V2-CLAIM-1.0",
-    "semantic_scopes": [
-      "G-0600",
-      "G-0800",
-      "LIVE_VACANCY_DISCOVERY",
-      "VACANCY_VERIFICATION",
-      "CANDIDATE_READINESS",
-      "APPLICATION_PACKET_COMPILATION_NO_SEND",
-      "NORTH_STAR_REAL_JOB_PROGRESS"
-    ],
-    "session_id": "SES-20260921T124500Z-SWARM-038",
-    "state": "ACTIVE",
-    "workstream_id": "WS-LIVE-VACANCY-PACKETS"
-  },
+  "active_claim": null,
   "artifacts": [
     "docs/state/CRM_CURRENT_SOURCE_MAPPING_PROJECTION_33339392661.json",
     "docs/state/CRM_CURRENT_GONTEN_ECV_SRR_LINEAGE_33339392661.json",
@@ -126,14 +68,14 @@
     "remaining_never_verified": 0,
     "remaining_unverified": 0
   },
-  "exact_dependency": "Token34 owns only G-0600/G-0800 live-vacancy, candidate-readiness and application-packet compilation authority. CRM/H-ID/application submission/outbound remain excluded.",
-  "execution_mode": "EMPLOYMENT_ACQUISITION_NO_SEND",
-  "generated_at": "2026-09-21T13:00:00Z",
+  "exact_dependency": "Token34 is terminal on both Git and external lease surfaces. Four private application packets remain NO-SEND; submission/outbound requires a separate eligible authority path.",
+  "execution_mode": "EMPLOYMENT_ACQUISITION_NO_SEND_TERMINAL",
+  "generated_at": "2026-09-21T13:14:00Z",
   "goal_id": "G-0500",
   "graph_impact": "META",
   "hard_blockers": [
-    "APPLICATION_SUBMISSION_EXCLUDED_FROM_TOKEN34",
-    "OUTBOUND_EXECUTION_EXCLUDED_FROM_TOKEN34",
+    "APPLICATION_SUBMISSION_NOT_AUTHORIZED",
+    "OUTBOUND_CLOSED",
     "CRM_UNIVERSE_COMPLETE_FALSE_RECONCILE_REQUIRED_1403",
     "MANDARIN_AND_ALPINA_ENGLISH_SELF_VERIFICATION_REQUIRED",
     "LENKERHOF_HOUSEKEEPING_EXPERIENCE_GAP",
@@ -150,10 +92,10 @@
   },
   "next_route": "CURRENT_UNRESOLVED_1403_ENTITY_RESOLUTION",
   "next_safe_actions": [
-    "Qualify the public-safe live opportunity frontier and token34 active projections.",
-    "Preserve four private PACKET_COMPILED_NO_SEND artifacts and their truthful gates.",
-    "Terminalize token34 to zero-writer after exact-head qualification.",
-    "Do not send any application, email, DM, WhatsApp or portal submission under token34."
+    "Verify terminal projections show zero active writers and fencing high-watermark34.",
+    "Require final exact-head repo-guard and exact-main repo-guard after promotion.",
+    "Preserve the live opportunity frontier and private NO-SEND packets.",
+    "Do not send applications, email, DM, WhatsApp or portal submissions under token34."
   ],
   "outbound_allowed": false,
   "parent_git_sha": "98882fa96a1a87a43580e839d9aba292d9028d14",

@@ -8,16 +8,7 @@ G-0001 remains the only terminal mission: secure Roberto a real, truthful, verif
 
 ## Current writer
 
-```text
-claim          CLAIM-EMPLOYMENT-LIVE-VACANCY-034
-session        SES-20260921T124500Z-SWARM-038
-fencing token  34
-branch         employment/live-vacancy-packets-token34-20260921
-scope          G-0600 / G-0800 vacancy intelligence + candidate readiness + packet compilation
-authority      NO-SEND / no CRM authority / no H-ID authority
-```
-
-Global lease token34 is ACTIVE and parent-bound to canonical main. A transient renewal serialization defect was detected by immediate readback and repaired by exact-blob CAS before further material branch mutation; durable evidence is in `docs/reports/employment/TOKEN34_LEASE_RENEWAL_SERIALIZATION_INCIDENT_2026-09-21.json`.
+Token34 is terminal: claim RELEASED, external lease RELEASED, heartbeat COMPLETE. No active writer is authorized by this wave.
 
 ## Domain authority — unchanged
 
@@ -70,7 +61,7 @@ These are application-preparation artifacts only. `PACKET_COMPILED != SEND_AUTHO
 
 Candidate private authority records Spanish/EU nationality. Public-safe rule: never claim that a Swiss permit is already held. SEM states that EU/EFTA employment uses the applicable employment-contract plus notification/residence-registration process depending on contract duration.
 
-## NEXT — token34
+## NEXT — after token34
 
 1. Materialize active Runtime Graph / V2 / Context Survival projections for token34.
 2. Open one bounded PR containing only public-safe employment state and coordination truth.
@@ -97,4 +88,9 @@ send_allowed                      0
 lower49 typed SRR materialized 47 / 47
 RAGR evidence-classified 34 / 34
 cumulative NEW_CANONICAL preauthority 214
+## Token34 result
 
+- Four private vacancy-specific application packets are PACKET_COMPILED_NO_SEND.
+- Public-safe opportunity frontier is durable in docs/state/employment/LIVE_OPPORTUNITY_FRONTIER_2026-09-21.json.
+- No application/email/portal/DM was submitted. OUTBOUND remains CLOSED and send_allowed remains 0.
+- Any future send requires a separate eligible claim and governing authorization; token34 cannot be revived.

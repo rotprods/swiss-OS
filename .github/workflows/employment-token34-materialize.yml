@@ -42,7 +42,7 @@ jobs:
           active_hb='docs/state/agent-runtime/heartbeats/HB-AGENT-GPT56SOL-SWARM-038-124600.json'
           complete_hb='docs/state/agent-runtime/heartbeats/HB-AGENT-GPT56SOL-SWARM-038-COMPLETE.json'
           iteration='docs/state/agent-runtime/iterations/ITER-employment-live-vacancy-token34.json'
-          release_event='docs/state/v2/events/EVT-20260921T132000Z-EMPLOYMENT-TOKEN34-CLAIM-RELEASED.json'
+          release_event='docs/state/v2/events/EVT-20260921T131200Z-EMPLOYMENT-TOKEN34-CLAIM-RELEASED.json'
           report='docs/reports/employment/TOKEN34_TERMINAL_RELEASE_READBACK_2026-09-21.json'
           frontier='docs/state/employment/LIVE_OPPORTUNITY_FRONTIER_2026-09-21.json'
           evidence=json.loads(Path(report).read_text())

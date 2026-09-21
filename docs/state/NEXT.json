@@ -1,5 +1,62 @@
 {
-  "active_claim": null,
+  "active_claim": {
+    "agent_id": "AGENT-GPT56SOL-SWARM-038",
+    "authority_ceiling": "G0600_G0800_OPPORTUNITY_INTELLIGENCE_CANDIDATE_READINESS_PACKET_COMPILATION_NO_SEND",
+    "base_sha": "98882fa96a1a87a43580e839d9aba292d9028d14",
+    "branch": "employment/live-vacancy-packets-token34-20260921",
+    "claim_id": "CLAIM-EMPLOYMENT-LIVE-VACANCY-034",
+    "claimed_at": "2026-09-21T12:45:00Z",
+    "correlation_id": "CORR-20260921T124500Z-SWARM-038",
+    "excluded_scopes": [
+      "CRM_ENTITY_RESOLUTION_DECISION",
+      "HOTELS_AUTHORITY_MUTATION",
+      "H_ID_ALLOCATION",
+      "CANONICAL_ID_RESERVATION",
+      "TERMINAL_SOURCE_MAPPING_MUTATION",
+      "APPLICATION_SUBMISSION",
+      "OUTBOUND_EXECUTION",
+      "GMAIL_MUTATION",
+      "CANDIDATE_PRIVATE_TRUTH_UNEVIDENCED_MUTATION"
+    ],
+    "fencing_token": 34,
+    "idempotency_key": "SWITZERLAND_JOB_OS|WS-LIVE-VACANCY-PACKETS|TOKEN34",
+    "objective_id": "OBJ-SWISS-REAL-JOB-ACQUISITION",
+    "preconditions": {
+      "active_canonical": 690,
+      "authority_epoch": "HS_ENTITY_EPOCH_2026-08-25_E4",
+      "crm_universe_complete": false,
+      "global_lease_id": "LEASE-587c9202be3784453693",
+      "global_lease_watermark_before_acquire": 33,
+      "main_sha": "98882fa96a1a87a43580e839d9aba292d9028d14",
+      "next_h_id": "H-0691_UNALLOCATED",
+      "outbound": "CLOSED",
+      "send_allowed": 0
+    },
+    "project_id": "SWITZERLAND_JOB_OS",
+    "resource_scopes": [
+      "STATE.md",
+      "docs/state/employment/**",
+      "docs/reports/employment/**",
+      "docs/state/v2/**",
+      "docs/state/agent-runtime/**",
+      "docs/refactor-v2/coordination_current_config.json",
+      "docs/continuity/CONTEXT_SURVIVAL.json",
+      ".github/workflows/employment-token34-materialize.yml"
+    ],
+    "schema_version": "COS-V2-CLAIM-1.0",
+    "semantic_scopes": [
+      "G-0600",
+      "G-0800",
+      "LIVE_VACANCY_DISCOVERY",
+      "VACANCY_VERIFICATION",
+      "CANDIDATE_READINESS",
+      "APPLICATION_PACKET_COMPILATION_NO_SEND",
+      "NORTH_STAR_REAL_JOB_PROGRESS"
+    ],
+    "session_id": "SES-20260921T124500Z-SWARM-038",
+    "state": "ACTIVE",
+    "workstream_id": "WS-LIVE-VACANCY-PACKETS"
+  },
   "artifacts": [
     "docs/state/CRM_CURRENT_SOURCE_MAPPING_PROJECTION_33339392661.json",
     "docs/state/CRM_CURRENT_GONTEN_ECV_SRR_LINEAGE_33339392661.json",
@@ -68,17 +125,18 @@
     "remaining_never_verified": 0,
     "remaining_unverified": 0
   },
-  "exact_dependency": "Token33 is terminal on both Git and external lease surfaces. This exact tree must remain zero-writer; any future CRM or outbound work requires a separately eligible claim and authority.",
-  "execution_mode": "RECOVERY_RECONCILE",
-  "generated_at": "2026-09-18T11:22:00Z",
+  "exact_dependency": "Token34 owns only G-0600/G-0800 live-vacancy, candidate-readiness and application-packet compilation authority. CRM/H-ID/application submission/outbound remain excluded.",
+  "execution_mode": "EMPLOYMENT_ACQUISITION_NO_SEND",
+  "generated_at": "2026-09-21T13:00:00Z",
   "goal_id": "G-0500",
   "graph_impact": "META",
   "hard_blockers": [
-    "PLATFORM_ENFORCEMENT_REQUIRED_NOT_YET_ENFORCED_ISSUE_441",
-    "RECONCILE_REQUIRED_1403_NOT_ZERO",
-    "SEPARATE_DOMAIN_CLAIM_REQUIRED_BEFORE_CRM_ENTITY_RESOLUTION",
-    "GOAL_DRAIN_BLOCKS_B12_AUTOMATIC_EXECUTION",
-    "OUTBOUND_CLOSED"
+    "APPLICATION_SUBMISSION_EXCLUDED_FROM_TOKEN34",
+    "OUTBOUND_EXECUTION_EXCLUDED_FROM_TOKEN34",
+    "CRM_UNIVERSE_COMPLETE_FALSE_RECONCILE_REQUIRED_1403",
+    "MANDARIN_AND_ALPINA_ENGLISH_SELF_VERIFICATION_REQUIRED",
+    "LENKERHOF_HOUSEKEEPING_EXPERIENCE_GAP",
+    "JUHUI_FIRST_PARTY_REVALIDATION_REQUIRED"
   ],
   "mapping_frontier": {
     "full_terminal_pairs_sha256": "3e5be19a0132602ca377df36986e287291c7551a5009f9fde6b24c1315ff8de4",
@@ -91,13 +149,13 @@
   },
   "next_route": "CURRENT_UNRESOLVED_1403_ENTITY_RESOLUTION",
   "next_safe_actions": [
-    "Verify terminal projections show zero active writers and fencing high-watermark33.",
-    "Require exact-head terminal repo-guard before expected-head promotion.",
-    "After this exact tree becomes canonical main, require exact-main repo-guard.",
-    "Exit this convergence authority ceiling; CRM, H-ID, applications and outbound remain unauthorized."
+    "Qualify the public-safe live opportunity frontier and token34 active projections.",
+    "Preserve four private PACKET_COMPILED_NO_SEND artifacts and their truthful gates.",
+    "Terminalize token34 to zero-writer after exact-head qualification.",
+    "Do not send any application, email, DM, WhatsApp or portal submission under token34."
   ],
   "outbound_allowed": false,
-  "parent_git_sha": "012ddfc4953eaed39f8b75a61a71ee5aaffdcc02",
+  "parent_git_sha": "98882fa96a1a87a43580e839d9aba292d9028d14",
   "parent_sha_semantics": "Resume only if current main is this SHA or an ancestry-safe descendant with no relevant-scope drift and the E4 authority tuple is unchanged.",
   "project": "SWITZERLAND_JOB_OS",
   "recovery_route": [
@@ -112,7 +170,7 @@
     "Keep OUTBOUND=CLOSED and send_allowed=0."
   ],
   "required_inputs": [
-    "GitHub current main 012ddfc4953eaed39f8b75a61a71ee5aaffdcc02 or ancestry-safe descendant with no relevant-scope drift",
+    "GitHub current main 98882fa96a1a87a43580e839d9aba292d9028d14 or ancestry-safe descendant with no relevant-scope drift",
     "authority E4 / SHA 70307f4aea05f8625a3c9c64947d5791535b9d245ce1c278920394c998d94cc6",
     "Drive HOTELS_MASTER/HOTELS_V2",
     "current source run 33339392661 / artifact 9740219406",

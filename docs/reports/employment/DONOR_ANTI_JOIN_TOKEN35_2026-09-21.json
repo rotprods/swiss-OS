@@ -1,0 +1,74 @@
+{
+  "schema_version": "EMPLOYMENT-DONOR-ANTI-JOIN-1.0",
+  "generated_at": "2026-09-21T13:30:00Z",
+  "donor_branch": "research/employment-market-wave-001",
+  "target_main_sha": "87eabd5955cd252fee8aa8a4cd5b016ee8f1a324",
+  "method": "PHYSICAL_FILE_AND_SEMANTIC_ANTI_JOIN_NO_WHOLESALE_PORT",
+  "artifacts": [
+    {
+      "path": "docs/reports/SOURCE_REGISTRY_CANDIDATES_V3_2026-09-07.json",
+      "disposition": "SALVAGE_REBASE_CURRENT_ACCESS_POLICY",
+      "reason": "Main has generic source architecture but no physical SourceFamily/SourceSurface registry. Donor source buckets mix physical surfaces, discovery programs and guidance; access policy is stale.",
+      "destination": [
+        "src/swiss_os/employment_source_registry.py",
+        "docs/state/employment/SOURCE_REGISTRY_V1_2026-09-21.json"
+      ]
+    },
+    {
+      "path": "docs/reports/VACANCY_V3_DRAFT_2026-09-07.json",
+      "disposition": "SALVAGE_REBASE_ADDITIVE_V3",
+      "reason": "Main V2 opportunities conflate observed vacancy identity with candidate-relative opportunity. Salvage fields/invariants into an additive schema, preserving V2.",
+      "destination": [
+        "src/swiss_os/employment_market_schema_v3.sql"
+      ]
+    },
+    {
+      "path": "docs/reports/NICHE_TAXONOMY_V1_2026-09-07.json",
+      "disposition": "DEFER_VERSIONED_SEED",
+      "reason": "The 32-niche donor taxonomy remains useful, but token35 does not need to rewrite the existing NicheContract or silently promote unreviewed niche IDs."
+    },
+    {
+      "path": "docs/reports/EMPLOYMENT_IMPLEMENTATION_BACKLOG_2026-09-07.md",
+      "disposition": "HARVEST_SEQUENCE_ONLY",
+      "reason": "Keep A10→A60 dependency ordering; do not port stale task state."
+    },
+    {
+      "path": "docs/reports/EMPLOYMENT_GRAPH_20D_INTEGRATION_2026-09-07.md",
+      "disposition": "DEFER",
+      "reason": "Graph expansion is downstream of stable source/vacancy identity semantics."
+    },
+    {
+      "path": "docs/reports/CANDIDATE_ASSET_GAP_MATRIX_2026-09-07.md",
+      "disposition": "DEFER_EXISTING_PRIVATE_AUTHORITY",
+      "reason": "Candidate assets were independently recovered and used by token34; token35 has no Candidate Truth authority."
+    },
+    {
+      "path": "docs/reports/EMPLOYMENT_MARKET_WAVE_001_2026-09-07.md",
+      "disposition": "PROVENANCE_ONLY",
+      "reason": "Historical research summary remains provenance, not current market truth."
+    }
+  ],
+  "current_truth_corrections": [
+    {
+      "subject": "JobCloud family",
+      "donor_state": "QUALIFY_ADAPTER_OR_SOURCE",
+      "current_state": "MANUAL_OR_SEARCH_DISCOVERY_ONLY_UNLESS_OFFICIAL_TOOL_LATER_AUTHORIZED",
+      "evidence": "https://www.jobs.ch/en/terms/",
+      "basis": "Current JobCloud terms prohibit crawlers, scrapers, data-mining, automated access, automation, scripts and bots except officially provided tools."
+    },
+    {
+      "subject": "Job-Room Jobs API",
+      "donor_state": "OFFICIAL_SOURCE_AMBIGUOUS_API_ROLE",
+      "current_state": "PUBLICATION_API_NOT_READ_INVENTORY",
+      "evidence": "https://www.arbeit.swiss/en/employers/faq-on-the-job-registration-requirement",
+      "basis": "SECO describes the API as a channel for businesses to publish jobs subject to registration requirements."
+    }
+  ],
+  "safety": {
+    "authority_advanced": false,
+    "h_id_allocations": 0,
+    "canonical_id_reservations": 0,
+    "outbound": "CLOSED",
+    "send_allowed": 0
+  }
+}

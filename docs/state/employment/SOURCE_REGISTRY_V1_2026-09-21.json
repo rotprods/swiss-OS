@@ -1,0 +1,429 @@
+{
+  "schema_version": "EMPLOYMENT-SOURCE-REGISTRY-1.0",
+  "generated_at": "2026-09-21T13:30:00Z",
+  "authority_effect": "NONE",
+  "claim_national_completeness": false,
+  "outbound": "CLOSED",
+  "send_allowed": 0,
+  "source_families": [
+    {
+      "source_family_id": "FAM-SECO-JOBROOM",
+      "name": "SECO / Job-Room",
+      "provider": "Swiss Confederation / SECO"
+    },
+    {
+      "source_family_id": "FAM-JOBCLOUD",
+      "name": "JobCloud Switzerland",
+      "provider": "JobCloud AG"
+    },
+    {
+      "source_family_id": "FAM-MIGROS",
+      "name": "Migros Group Careers",
+      "provider": "Migros Group"
+    },
+    {
+      "source_family_id": "FAM-SBB",
+      "name": "SBB Careers",
+      "provider": "SBB CFF FFS"
+    },
+    {
+      "source_family_id": "FAM-SWISSPORT",
+      "name": "Swissport Careers",
+      "provider": "Swissport International"
+    },
+    {
+      "source_family_id": "FAM-SWATCHGROUP",
+      "name": "Swatch Group Careers",
+      "provider": "The Swatch Group"
+    }
+  ],
+  "source_surfaces": [
+    {
+      "source_id": "SRC-001",
+      "source_family_id": "FAM-SECO-JOBROOM",
+      "name": "Job-Room public job search",
+      "canonical_url": "https://www.job-room.ch/",
+      "surface_type": "OFFICIAL_PUBLIC_INVENTORY",
+      "scope": "SWITZERLAND_NATIONAL_MULTI_SECTOR_PUBLIC_SEARCH",
+      "languages": [
+        "DE",
+        "FR",
+        "IT",
+        "EN"
+      ],
+      "niche_ids": [],
+      "inventory_role": true,
+      "automation_policy": "UNKNOWN_REQUIRES_REVIEW",
+      "capture_modes": [
+        "MANUAL_WEB",
+        "SEARCH_ENGINE_DISCOVERY"
+      ],
+      "canonicality": "PRIMARY_PUBLIC_RECORD",
+      "api_role": "NONE",
+      "observed_at": "2026-09-21T13:00:00Z",
+      "evidence_refs": [
+        "https://www.job-room.ch/"
+      ]
+    },
+    {
+      "source_id": "SRC-002",
+      "source_family_id": "FAM-SECO-JOBROOM",
+      "name": "arbeit.swiss employment guidance",
+      "canonical_url": "https://www.arbeit.swiss/en/",
+      "surface_type": "GUIDANCE_SURFACE",
+      "scope": "SWITZERLAND_EMPLOYMENT_POLICY_AND_GUIDANCE",
+      "languages": [
+        "DE",
+        "FR",
+        "IT",
+        "EN"
+      ],
+      "niche_ids": [],
+      "inventory_role": false,
+      "automation_policy": "UNKNOWN_REQUIRES_REVIEW",
+      "capture_modes": [
+        "MANUAL_WEB",
+        "SEARCH_ENGINE_DISCOVERY"
+      ],
+      "canonicality": "POLICY_GUIDANCE",
+      "api_role": "NONE",
+      "observed_at": "2026-09-21T13:00:00Z",
+      "evidence_refs": [
+        "https://www.arbeit.swiss/en/"
+      ]
+    },
+    {
+      "source_id": "SRC-026",
+      "source_family_id": "FAM-SECO-JOBROOM",
+      "name": "Job-Room Jobs API publication channel",
+      "canonical_url": "https://www.arbeit.swiss/en/employers/faq-on-the-job-registration-requirement",
+      "surface_type": "PUBLICATION_API",
+      "scope": "EMPLOYER_JOB_PUBLICATION_AND_MANAGEMENT",
+      "languages": [
+        "DE",
+        "FR",
+        "IT",
+        "EN"
+      ],
+      "niche_ids": [],
+      "inventory_role": false,
+      "automation_policy": "UNKNOWN_REQUIRES_REVIEW",
+      "capture_modes": [
+        "BLOCKED"
+      ],
+      "canonicality": "PUBLICATION_ONLY",
+      "api_role": "PUBLICATION_ONLY",
+      "observed_at": "2026-09-21T13:00:00Z",
+      "evidence_refs": [
+        "https://www.arbeit.swiss/en/employers/faq-on-the-job-registration-requirement"
+      ]
+    },
+    {
+      "source_id": "SRC-003",
+      "source_family_id": "FAM-JOBCLOUD",
+      "name": "jobs.ch",
+      "canonical_url": "https://www.jobs.ch/",
+      "surface_type": "NATIONAL_JOB_BOARD",
+      "scope": "SWITZERLAND_MULTI_SECTOR",
+      "languages": [
+        "DE",
+        "FR",
+        "EN"
+      ],
+      "niche_ids": [],
+      "inventory_role": true,
+      "automation_policy": "PROHIBITED",
+      "capture_modes": [
+        "MANUAL_WEB",
+        "SEARCH_ENGINE_DISCOVERY"
+      ],
+      "canonicality": "DISCOVERY",
+      "api_role": "NONE",
+      "observed_at": "2026-09-21T13:00:00Z",
+      "evidence_refs": [
+        "https://www.jobs.ch/en/terms/"
+      ]
+    },
+    {
+      "source_id": "SRC-004",
+      "source_family_id": "FAM-JOBCLOUD",
+      "name": "jobup.ch",
+      "canonical_url": "https://www.jobup.ch/",
+      "surface_type": "NATIONAL_JOB_BOARD",
+      "scope": "SWITZERLAND_ROMANDY_MULTI_SECTOR",
+      "languages": [
+        "FR",
+        "EN",
+        "DE"
+      ],
+      "niche_ids": [],
+      "inventory_role": true,
+      "automation_policy": "PROHIBITED",
+      "capture_modes": [
+        "MANUAL_WEB",
+        "SEARCH_ENGINE_DISCOVERY"
+      ],
+      "canonicality": "DISCOVERY",
+      "api_role": "NONE",
+      "observed_at": "2026-09-21T13:00:00Z",
+      "evidence_refs": [
+        "https://www.jobs.ch/en/terms/"
+      ]
+    },
+    {
+      "source_id": "SRC-005",
+      "source_family_id": "FAM-JOBCLOUD",
+      "name": "JobScout24 Switzerland",
+      "canonical_url": "https://www.jobscout24.ch/",
+      "surface_type": "NATIONAL_JOB_BOARD",
+      "scope": "SWITZERLAND_MULTI_SECTOR",
+      "languages": [
+        "DE",
+        "FR",
+        "IT"
+      ],
+      "niche_ids": [],
+      "inventory_role": true,
+      "automation_policy": "PROHIBITED",
+      "capture_modes": [
+        "MANUAL_WEB",
+        "SEARCH_ENGINE_DISCOVERY"
+      ],
+      "canonicality": "DISCOVERY",
+      "api_role": "NONE",
+      "observed_at": "2026-09-21T13:00:00Z",
+      "evidence_refs": [
+        "https://www.jobs.ch/en/terms/"
+      ]
+    },
+    {
+      "source_id": "SRC-027",
+      "source_family_id": "FAM-MIGROS",
+      "name": "Migros Group jobs",
+      "canonical_url": "https://migros-gruppe.jobs/",
+      "surface_type": "EMPLOYER_FIRST_PARTY",
+      "scope": "SWITZERLAND_CROSS_NICHE_EMPLOYER_INVENTORY",
+      "languages": [
+        "DE",
+        "FR",
+        "IT"
+      ],
+      "niche_ids": [],
+      "inventory_role": true,
+      "automation_policy": "UNKNOWN_REQUIRES_REVIEW",
+      "capture_modes": [
+        "MANUAL_WEB",
+        "SEARCH_ENGINE_DISCOVERY"
+      ],
+      "canonicality": "PRIMARY_EMPLOYER",
+      "api_role": "NONE",
+      "observed_at": "2026-09-21T13:00:00Z",
+      "evidence_refs": [
+        "https://migros-gruppe.jobs/fr"
+      ]
+    },
+    {
+      "source_id": "SRC-028",
+      "source_family_id": "FAM-SBB",
+      "name": "SBB open positions",
+      "canonical_url": "https://jobs.sbb.ch/",
+      "surface_type": "EMPLOYER_FIRST_PARTY",
+      "scope": "SWITZERLAND_RAIL_TRANSPORT_TECH_OPERATIONS",
+      "languages": [
+        "DE",
+        "FR",
+        "IT"
+      ],
+      "niche_ids": [],
+      "inventory_role": true,
+      "automation_policy": "UNKNOWN_REQUIRES_REVIEW",
+      "capture_modes": [
+        "MANUAL_WEB",
+        "SEARCH_ENGINE_DISCOVERY"
+      ],
+      "canonicality": "PRIMARY_EMPLOYER",
+      "api_role": "NONE",
+      "observed_at": "2026-09-21T13:00:00Z",
+      "evidence_refs": [
+        "https://jobs.sbb.ch/"
+      ]
+    },
+    {
+      "source_id": "SRC-029",
+      "source_family_id": "FAM-SWISSPORT",
+      "name": "Swissport careers",
+      "canonical_url": "https://careers.swissport.com/",
+      "surface_type": "EMPLOYER_FIRST_PARTY",
+      "scope": "SWITZERLAND_AVIATION_GROUND_CARGO_PASSENGER_HOSPITALITY",
+      "languages": [
+        "EN"
+      ],
+      "niche_ids": [],
+      "inventory_role": true,
+      "automation_policy": "UNKNOWN_REQUIRES_REVIEW",
+      "capture_modes": [
+        "MANUAL_WEB",
+        "SEARCH_ENGINE_DISCOVERY"
+      ],
+      "canonicality": "PRIMARY_EMPLOYER",
+      "api_role": "NONE",
+      "observed_at": "2026-09-21T13:00:00Z",
+      "evidence_refs": [
+        "https://careers.swissport.com/"
+      ]
+    },
+    {
+      "source_id": "SRC-031",
+      "source_family_id": "FAM-SWATCHGROUP",
+      "name": "Swatch Group careers",
+      "canonical_url": "https://careers.swatchgroup.com/",
+      "surface_type": "EMPLOYER_FIRST_PARTY",
+      "scope": "SWITZERLAND_WATCHMAKING_LUXURY_CORPORATE_TECH",
+      "languages": [
+        "DE",
+        "FR",
+        "EN"
+      ],
+      "niche_ids": [],
+      "inventory_role": true,
+      "automation_policy": "UNKNOWN_REQUIRES_REVIEW",
+      "capture_modes": [
+        "MANUAL_WEB",
+        "SEARCH_ENGINE_DISCOVERY"
+      ],
+      "canonicality": "PRIMARY_EMPLOYER",
+      "api_role": "NONE",
+      "observed_at": "2026-09-21T13:00:00Z",
+      "evidence_refs": [
+        "https://careers.swatchgroup.com/"
+      ]
+    }
+  ],
+  "discovery_programs": [
+    {
+      "program_id": "DP-001",
+      "name": "Cantonal public employers",
+      "purpose": "DISCOVERY_ONLY",
+      "seed_surface_ids": [
+        "SRC-001"
+      ]
+    },
+    {
+      "program_id": "DP-002",
+      "name": "Municipal public employers",
+      "purpose": "DISCOVERY_ONLY",
+      "seed_surface_ids": [
+        "SRC-001"
+      ]
+    },
+    {
+      "program_id": "DP-003",
+      "name": "University and research employers",
+      "purpose": "DISCOVERY_ONLY",
+      "seed_surface_ids": []
+    },
+    {
+      "program_id": "DP-004",
+      "name": "Hospital and clinic employers",
+      "purpose": "DISCOVERY_ONLY",
+      "seed_surface_ids": []
+    },
+    {
+      "program_id": "DP-005",
+      "name": "Rail and transit employers",
+      "purpose": "DISCOVERY_ONLY",
+      "seed_surface_ids": [
+        "SRC-028"
+      ]
+    },
+    {
+      "program_id": "DP-006",
+      "name": "Airport and aviation employers",
+      "purpose": "DISCOVERY_ONLY",
+      "seed_surface_ids": [
+        "SRC-029"
+      ]
+    },
+    {
+      "program_id": "DP-007",
+      "name": "Staffing agencies",
+      "purpose": "DISCOVERY_ONLY",
+      "seed_surface_ids": []
+    },
+    {
+      "program_id": "DP-008",
+      "name": "Construction and trades employers",
+      "purpose": "DISCOVERY_ONLY",
+      "seed_surface_ids": []
+    },
+    {
+      "program_id": "DP-009",
+      "name": "Logistics and transport employers",
+      "purpose": "DISCOVERY_ONLY",
+      "seed_surface_ids": [
+        "SRC-027",
+        "SRC-028",
+        "SRC-029"
+      ]
+    },
+    {
+      "program_id": "DP-010",
+      "name": "Media and creative employers",
+      "purpose": "DISCOVERY_ONLY",
+      "seed_surface_ids": []
+    },
+    {
+      "program_id": "DP-011",
+      "name": "Software AI and automation employers",
+      "purpose": "DISCOVERY_ONLY",
+      "seed_surface_ids": [
+        "SRC-027"
+      ]
+    },
+    {
+      "program_id": "DP-012",
+      "name": "Watchmaking and luxury employers",
+      "purpose": "DISCOVERY_ONLY",
+      "seed_surface_ids": [
+        "SRC-031"
+      ]
+    },
+    {
+      "program_id": "DP-013",
+      "name": "Pharma and biotech employers",
+      "purpose": "DISCOVERY_ONLY",
+      "seed_surface_ids": []
+    },
+    {
+      "program_id": "DP-014",
+      "name": "Retail chain employers",
+      "purpose": "DISCOVERY_ONLY",
+      "seed_surface_ids": [
+        "SRC-027"
+      ]
+    }
+  ],
+  "guidance_surfaces": [
+    {
+      "guidance_id": "GS-001",
+      "source_id": "SRC-002",
+      "topics": [
+        "WORK_RIGHTS",
+        "JOB_SEARCH_GUIDANCE",
+        "EURES",
+        "UNEMPLOYMENT_INSURANCE"
+      ]
+    }
+  ],
+  "invariants": [
+    "SourceFamily != SourceSurface != DiscoveryProgram != GuidanceSurface",
+    "SourceSurface != VacancySourceRecord != NormalizedVacancyCandidate != CanonicalVacancy != Opportunity",
+    "PUBLICLY_VIEWABLE does not imply AUTOMATION_AUTHORIZED",
+    "JobCloud automated scraping/access is prohibited under the currently observed JobCloud job-seeker terms",
+    "Job-Room Jobs API is a business publication channel and is not modeled as a national vacancy-read feed",
+    "blocked or manual-only sources remain represented",
+    "aggregate source count does not prove national completeness",
+    "employer-first-party verification outranks discovery/secondary surfaces for send-critical facts",
+    "no source surface authorizes outbound"
+  ]
+}

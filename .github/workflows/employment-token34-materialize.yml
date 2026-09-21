@@ -1,0 +1,225 @@
+name: employment-token34-active-projections
+
+on:
+  push:
+    branches: [employment/live-vacancy-packets-token34-20260921]
+    paths:
+      - '.github/workflows/employment-token34-materialize.yml'
+      - 'STATE.md'
+      - 'docs/state/employment/LIVE_OPPORTUNITY_FRONTIER_2026-09-21.json'
+      - 'docs/state/v2/claims/CLAIM-EMPLOYMENT-LIVE-VACANCY-034.json'
+      - 'docs/state/v2/events/EVT-20260921T124500Z-EMPLOYMENT-TOKEN34-ACQUIRED.json'
+      - 'docs/state/v2/events/EVT-20260921T124600Z-EMPLOYMENT-TOKEN34-WORK-STARTED.json'
+      - 'docs/state/agent-runtime/heartbeats/HB-AGENT-GPT56SOL-SWARM-038-124600.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: employment-token34-active-projections
+  cancel-in-progress: false
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Require live token34 lease parity
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python scripts/execution_lease_live_guard.py --receipt /tmp/execution-lease-token34-active.json
+      - name: Refresh coordination config for direct employment wave
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          main='98882fa96a1a87a43580e839d9aba292d9028d14'
+          branch='employment/live-vacancy-packets-token34-20260921'
+          claim='docs/state/v2/claims/CLAIM-EMPLOYMENT-LIVE-VACANCY-034.json'
+          acquired='docs/state/v2/events/EVT-20260921T124500Z-EMPLOYMENT-TOKEN34-ACQUIRED.json'
+          started='docs/state/v2/events/EVT-20260921T124600Z-EMPLOYMENT-TOKEN34-WORK-STARTED.json'
+          heartbeat='docs/state/agent-runtime/heartbeats/HB-AGENT-GPT56SOL-SWARM-038-124600.json'
+          frontier='docs/state/employment/LIVE_OPPORTUNITY_FRONTIER_2026-09-21.json'
+
+          p=Path('docs/refactor-v2/coordination_current_config.json')
+          d=json.loads(p.read_text())
+          d['base_main_sha']=main
+          d['branch']=branch
+          d['generated_at']='2026-09-21T13:00:00Z'
+          d['state']='EMPLOYMENT_TOKEN34_ACTIVE_LIVE_VACANCY_PACKETS_NO_SEND'
+          d['open_prs']=[]
+          d['blockers']=[
+            'Token34 may compile and verify application packets but APPLICATION_SUBMISSION and OUTBOUND_EXECUTION are excluded.',
+            'CRM_UNIVERSE_COMPLETE remains false at RECONCILE_REQUIRED=1403; send_allowed remains 0.',
+            'Mandarin Oriental and The Alpina require stronger English wording than the currently authorized B1 self-assessment; no language upgrade is permitted without user truth.',
+            'Lenkerhof requests housekeeping experience that is not currently verified.',
+            'juhui Flumserberg requires first-party or employer-controlled vacancy revalidation before any send gate.'
+          ]
+          d['next_safe_actions']=[
+            'Materialize token34 active Runtime Graph/V2/Context Survival projections.',
+            'Open one bounded employment PR carrying public-safe opportunity state only.',
+            'Run exact-head repository gauntlet and repair only evidenced blockers.',
+            'Terminalize token34 plus external lease release/readback and return to zero-writer.',
+            'Do not submit applications or mutate Gmail under token34.'
+          ]
+          d['liveness_findings']=[
+            'Token33 convergence recovery is terminal on canonical main 98882fa96a1a87a43580e839d9aba292d9028d14 with exact-main repo-guard PASS.',
+            'Token34 acquired the global writer slot from zero-writer watermark33 and is parent-bound to canonical main.',
+            'Four private vacancy-specific packets are compiled NO-SEND and one additional first-party vacancy is retained as second-line evidence.',
+            'Candidate ENTRY asset is privately approved; public GitHub stores only the asset digest and public-safe readiness state.',
+            'Operational authority remains E4/690, H-0691 unallocated, terminal mappings 658, RECONCILE_REQUIRED=1403 and OUTBOUND CLOSED.'
+          ]
+
+          refs=[v for v in d.get('source_refs',[]) if isinstance(v,str)]
+          refs += [
+            'main:'+main,
+            'claim:CLAIM-EMPLOYMENT-LIVE-VACANCY-034:ACTIVE',
+            'lease:coordination/execution-lease:TOKEN34:ACTIVE_CAS',
+            'goal:G-0001:DIRECT_JOB_PROGRESS',
+            'goal:G-0600:CANDIDATE_READINESS',
+            'goal:G-0800:APPLICATION_PACKET_NO_SEND',
+            'employment-frontier:LIVE_OPPORTUNITY_FRONTIER_2026-09-21'
+          ]
+          d['source_refs']=list(dict.fromkeys(refs))
+
+          for key in ('relevant_paths','state_refs','survival_paths'):
+              vals=d.get(key,[])
+              if not isinstance(vals,list):
+                  vals=[]
+              for v in [claim,acquired,started,heartbeat,frontier,'STATE.md']:
+                  if v not in vals:
+                      vals.append(v)
+              d[key]=vals
+
+          g=d.setdefault('graph',{})
+          nodes=g.setdefault('nodes',[])
+          by={n.get('id'):n for n in nodes if isinstance(n,dict)}
+          new_nodes=[
+            {'id':'C:CLAIM-EMPLOYMENT-LIVE-VACANCY-034','state':'ACTIVE_TOKEN_34_EMPLOYMENT_NO_SEND','type':'Claim'},
+            {'id':'L:GLOBAL-EXECUTION-LEASE-034','state':'ACTIVE_CAS','type':'ExecutionLease'},
+            {'id':'W:WS-LIVE-VACANCY-PACKETS','state':'ACTIVE','type':'Workstream'},
+            {'id':'O:OBJ-SWISS-REAL-JOB-ACQUISITION','state':'ACTIVE','type':'Objective'}
+          ]
+          for node in new_nodes:
+              if node['id'] not in by:
+                  nodes.append(node)
+
+          edges=g.setdefault('edges',[])
+          existing={(e.get('from'),e.get('to'),e.get('type')) for e in edges if isinstance(e,dict)}
+          new_edges=[
+            {'from':'L:GLOBAL-EXECUTION-LEASE-034','to':'C:CLAIM-EMPLOYMENT-LIVE-VACANCY-034','type':'SERIALIZES_WRITER'},
+            {'from':'C:CLAIM-EMPLOYMENT-LIVE-VACANCY-034','to':'W:WS-LIVE-VACANCY-PACKETS','type':'CLAIMS'},
+            {'from':'W:WS-LIVE-VACANCY-PACKETS','to':'O:OBJ-SWISS-REAL-JOB-ACQUISITION','type':'IMPLEMENTS'},
+            {'from':'O:OBJ-SWISS-REAL-JOB-ACQUISITION','to':'G:G-0001','type':'CONTRIBUTES_TO'}
+          ]
+          for e in new_edges:
+              k=(e['from'],e['to'],e['type'])
+              if k not in existing:
+                  edges.append(e)
+                  existing.add(k)
+
+          p.write_text(json.dumps(d,ensure_ascii=False,sort_keys=True,separators=(',',':'))+'\n')
+
+          p=Path('docs/state/NEXT.json')
+          n=json.loads(p.read_text())
+          claim_obj=json.loads(Path(claim).read_text())
+          n['generated_at']='2026-09-21T13:00:00Z'
+          n['active_claim']=claim_obj
+          n['execution_mode']='EMPLOYMENT_ACQUISITION_NO_SEND'
+          n['successor_execution_allowed']=False
+          n['exact_dependency']='Token34 owns only G-0600/G-0800 live-vacancy, candidate-readiness and application-packet compilation authority. CRM/H-ID/application submission/outbound remain excluded.'
+          n['hard_blockers']=[
+            'APPLICATION_SUBMISSION_EXCLUDED_FROM_TOKEN34',
+            'OUTBOUND_EXECUTION_EXCLUDED_FROM_TOKEN34',
+            'CRM_UNIVERSE_COMPLETE_FALSE_RECONCILE_REQUIRED_1403',
+            'MANDARIN_AND_ALPINA_ENGLISH_SELF_VERIFICATION_REQUIRED',
+            'LENKERHOF_HOUSEKEEPING_EXPERIENCE_GAP',
+            'JUHUI_FIRST_PARTY_REVALIDATION_REQUIRED'
+          ]
+          n['next_safe_actions']=[
+            'Qualify the public-safe live opportunity frontier and token34 active projections.',
+            'Preserve four private PACKET_COMPILED_NO_SEND artifacts and their truthful gates.',
+            'Terminalize token34 to zero-writer after exact-head qualification.',
+            'Do not send any application, email, DM, WhatsApp or portal submission under token34.'
+          ]
+          n['parent_git_sha']=main
+          req=n.get('required_inputs',[])
+          req=[x for x in req if not (isinstance(x,str) and x.startswith('GitHub current main '))]
+          req.insert(0,'GitHub current main '+main+' or ancestry-safe descendant with no relevant-scope drift')
+          n['required_inputs']=req
+          n.setdefault('safety',{}).update({
+            'authority_advanced':False,
+            'h_id_allocations':0,
+            'canonical_id_reservations':0,
+            'crm_universe_complete':False,
+            'outbound':'CLOSED',
+            'send_allowed':0,
+            'irreversible_external_actions':0
+          })
+          p.write_text(json.dumps(n,ensure_ascii=False,sort_keys=True,indent=2)+'\n')
+          PY
+      - name: Materialize active Runtime Graph
+        run: |
+          AS_OF=$(python - <<'PY'
+          import json
+          from pathlib import Path
+          vals=[]
+          for p in Path('docs/state/agent-runtime/heartbeats').glob('*.json'):
+              d=json.loads(p.read_text())
+              v=d.get('observed_at')
+              if isinstance(v,str) and v:
+                  vals.append(v)
+          print(max(vals))
+          PY
+          )
+          python scripts/rebuild_agent_runtime_graph.py --as-of "$AS_OF" --output docs/state/agent-runtime/runtime-graph.json
+          python scripts/rebuild_agent_runtime_graph.py --check
+      - name: Materialize active V2 coordination and Context Survival
+        run: |
+          rm -rf /tmp/v2-token34-active /tmp/v2-token34-active-check
+          python scripts/rebuild_v2_coordination.py --config docs/refactor-v2/coordination_current_config.json --output-dir /tmp/v2-token34-active
+          cp /tmp/v2-token34-active/active-claims.json docs/state/v2/active-claims.json
+          cp /tmp/v2-token34-active/project-state.json docs/state/v2/project-state.json
+          cp /tmp/v2-token34-active/context-pack.json docs/state/v2/context-pack.json
+          cp /tmp/v2-token34-active/graph-snapshot.json docs/state/v2/graph-snapshot.json
+          cp /tmp/v2-token34-active/CONTEXT_SURVIVAL.json docs/continuity/CONTEXT_SURVIVAL.json
+          python scripts/rebuild_v2_coordination.py --config docs/refactor-v2/coordination_current_config.json --output-dir /tmp/v2-token34-active-check --check
+      - name: Assert active token34 and hard locks
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          a=json.loads(Path('docs/state/v2/active-claims.json').read_text())
+          r=json.loads(Path('docs/state/agent-runtime/runtime-graph.json').read_text())
+          n=json.loads(Path('docs/state/NEXT.json').read_text())
+          f=json.loads(Path('docs/state/employment/LIVE_OPPORTUNITY_FRONTIER_2026-09-21.json').read_text())
+          assert [c['claim_id'] for c in a['claims']]==['CLAIM-EMPLOYMENT-LIVE-VACANCY-034']
+          assert a['collisions']==[]
+          assert a['fencing_high_watermark']>=34
+          assert len(r['active_sessions'])==1
+          assert r['active_sessions'][0]['session_id']=='SES-20260921T124500Z-SWARM-038'
+          assert n['active_claim']['claim_id']=='CLAIM-EMPLOYMENT-LIVE-VACANCY-034'
+          assert n['execution_mode']=='EMPLOYMENT_ACQUISITION_NO_SEND'
+          assert n['safety']['authority_advanced'] is False
+          assert n['safety']['h_id_allocations']==0
+          assert n['safety']['outbound']=='CLOSED'
+          assert n['safety']['send_allowed']==0
+          assert f['send_allowed']==0 and f['outbound']=='CLOSED'
+          assert sum(1 for x in f['opportunities'] if x['packet_state'].startswith('PACKET_COMPILED_NO_SEND'))>=4
+          PY
+      - name: Commit exact active projections
+        run: |
+          git add docs/refactor-v2/coordination_current_config.json docs/state/NEXT.json docs/state/agent-runtime/runtime-graph.json docs/state/v2/active-claims.json docs/state/v2/project-state.json docs/state/v2/context-pack.json docs/state/v2/graph-snapshot.json docs/continuity/CONTEXT_SURVIVAL.json
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'employment: materialize token34 active no-send state'
+          git push origin HEAD:employment/live-vacancy-packets-token34-20260921

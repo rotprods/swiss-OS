@@ -1,0 +1,165 @@
+{
+  "schema_version": "SWISS-OS-LIVE-OPPORTUNITY-FRONTIER-1.0",
+  "project_id": "SWITZERLAND_JOB_OS",
+  "goal_ids": [
+    "G-0001",
+    "G-0600",
+    "G-0800"
+  ],
+  "generated_at": "2026-09-21T12:55:00Z",
+  "state": "LIVE_VACANCIES_VERIFIED_PACKETS_COMPILED_NO_SEND",
+  "outbound": "CLOSED",
+  "send_allowed": 0,
+  "authority_effect": "NONE_ON_CRM_OR_H_ID",
+  "candidate_asset_public_safe": {
+    "entry_cv_state": "APPROVED_ASSET_V2",
+    "entry_cv_digest_sha256": "057fa1b632bdac12291e6e40345a0d298bfedad7c03d05d5f5c30c416f6f5aab",
+    "private_candidate_truth_reverify_required_before_send": true
+  },
+  "work_right_basis": {
+    "candidate_class": "EU_EFTA_NATIONAL_PRIVATE_AUTHORITY",
+    "public_safe_rule": "Do not claim an existing Swiss permit. EU/EFTA employment requires an employment agreement plus the applicable Swiss notification/residence registration process.",
+    "sem_sources": [
+      "https://www.sem.admin.ch/sem/en/home/themen/fza_schweiz-eu-efta/eu-efta_buerger_schweiz/faq.html",
+      "https://www.sem.admin.ch/sem/en/home/overview-arbeit.html",
+      "https://www.sem.admin.ch/sem/en/home/themen/fza_schweiz-eu-efta/meldeverfahren.html"
+    ]
+  },
+  "opportunities": [
+    {
+      "opportunity_id": "OPP-20260921-MO-ZRH-JR05896",
+      "employer": "Mandarin Oriental Savoy, Zurich",
+      "role": "Housekeeping Attendant (M/F/D)",
+      "location": "Zurich",
+      "employment": "FULL_TIME_PERMANENT",
+      "source_tier": "FIRST_PARTY",
+      "source_url": "https://careers.mandarinoriental.com/jobs/housekeeping-attendant-m-f-d-zurich-zurich-switzerland-923ffb25-54de-498f-9ffe-4e6091523244",
+      "source_observed_at": "2026-09-21",
+      "vacancy_id": "JR-05896",
+      "packet_state": "PACKET_COMPILED_NO_SEND",
+      "private_packet_ref": "PRIVATE_DRIVE_PACKET_AVAILABLE",
+      "fit_state": "MATERIAL_LANGUAGE_GATE",
+      "positive_signals": [
+        "permanent",
+        "full_time",
+        "no explicit prior housekeeping experience in captured requirements",
+        "EU/EFTA employment route compatible after contract"
+      ],
+      "blockers": [
+        "very_good_english_required",
+        "candidate_english_currently_self_assessed_B1",
+        "housing_not_stated"
+      ],
+      "next_gate": "truthful English readiness decision before any submission"
+    },
+    {
+      "opportunity_id": "OPP-20260921-LENKERHOF-HK",
+      "employer": "Lenkerhof gourmet spa resort",
+      "role": "Allrounder Housekeeping (m/f/d)",
+      "location": "Lenk",
+      "employment": "100_PERCENT",
+      "source_tier": "HIGH_AUTHORITY_CURRENT_JOB_BOARD_PLUS_EMPLOYER_CAREERS",
+      "source_url": "https://www.jobs.ch/en/vacancies/detail/7bbc9e7a-4a97-464a-b83a-80b0e60ec9c8/",
+      "employer_careers_url": "https://www.lenkerhof.ch/en/career/vacancies/",
+      "source_observed_at": "2026-09-21",
+      "packet_state": "PACKET_COMPILED_NO_SEND",
+      "private_packet_ref": "PRIVATE_DRIVE_PACKET_AVAILABLE",
+      "fit_state": "HIGH_VALUE_WITH_EXPERIENCE_GAP",
+      "positive_signals": [
+        "100_percent",
+        "German_OR_English",
+        "staff_accommodation_advertised",
+        "start_mid_October_or_by_arrangement"
+      ],
+      "blockers": [
+        "housekeeping_experience_requested_but_not_verified",
+        "English practical readiness must be self-verified",
+        "staff accommodation terms not yet confirmed"
+      ],
+      "next_gate": "accept experience-gap risk and confirm language/housing terms before submission"
+    },
+    {
+      "opportunity_id": "OPP-20260921-ALPINA-JUNIOR-HK",
+      "employer": "The Alpina Gstaad / Grand Hotel Alpina GmbH",
+      "role": "Junior Housekeeping Attendant (m/f/d)",
+      "location": "Gstaad",
+      "employment": "WINTER_SEASON_2026_2027",
+      "source_tier": "CURRENT_MAJOR_JOB_BOARD",
+      "source_url": "https://www.jobs.ch/en/vacancies/detail/e94bc04a-7c4d-4252-a6a9-e43d37d10007/",
+      "source_observed_at": "2026-09-21",
+      "packet_state": "PACKET_COMPILED_NO_SEND",
+      "private_packet_ref": "PRIVATE_DRIVE_PACKET_AVAILABLE",
+      "fit_state": "HIGH_VALUE_WITH_LANGUAGE_AND_SCHEDULE_GATES",
+      "positive_signals": [
+        "junior_housekeeping",
+        "training_path",
+        "43_5_hours_week",
+        "accommodation_offered",
+        "three_meals_per_day",
+        "team_experience_advantage_not_strict_requirement"
+      ],
+      "blockers": [
+        "very_good_english_required",
+        "split_shifts",
+        "high_season_overtime",
+        "physical_demands"
+      ],
+      "next_gate": "self-verify English and schedule/physical readiness before submission"
+    },
+    {
+      "opportunity_id": "OPP-20260921-JUHUI-FLUMSERBERG",
+      "employer": "juhui Ferien AG",
+      "role": "Housekeeping m/w für juhui Flumserberg",
+      "location": "Flumserberg / Heidiland",
+      "employment": "WINTER_SEASON_2027-01-09_TO_2027-03-21",
+      "source_tier": "CURRENT_SPECIALIST_JOB_BOARD_REVERIFY_FIRST_PARTY",
+      "source_url": "https://hoteljob-schweiz.de/housekeeping-m-w-fuer-juhui-flumserberg-jobs-stellen-1306232.html",
+      "source_observed_at": "2026-09-21",
+      "packet_state": "PACKET_COMPILED_NO_SEND_SOURCE_REVERIFY",
+      "private_packet_ref": "PRIVATE_DRIVE_PACKET_AVAILABLE",
+      "fit_state": "HIGH_POTENTIAL_ENTRY_ROUTE",
+      "positive_signals": [
+        "qualification_angelernt",
+        "staff_accommodation_available",
+        "defined_winter_contract"
+      ],
+      "blockers": [
+        "first_party_vacancy_or_PDF_must_be_reverified",
+        "exact_language_requirements_not_yet_captured",
+        "accommodation_terms_unknown",
+        "short_term_notification_or_permit_process_must_be_resolved_from_exact_contract"
+      ],
+      "next_gate": "first-party/employer-controlled vacancy revalidation"
+    },
+    {
+      "opportunity_id": "OPP-20260921-WALDHAUS-SILS-HK",
+      "employer": "Hotel Waldhaus Sils",
+      "role": "Housekeeping Mitarbeiter:in / Room Attendant (a)",
+      "location": "Sils im Engadin",
+      "employment": "WINTER_SEASON_2026_2027_FULL_OR_PART_TIME",
+      "source_tier": "FIRST_PARTY",
+      "source_url": "https://waldhaus-sils.career.softgarden.de/jobs/67473467/HOUSEKEEPING-MITARBEITER-IN-ROOM-ATTENDANT-a-/",
+      "source_observed_at": "2026-09-21",
+      "packet_state": "VERIFIED_BACKLOG_NO_PACKET_YET",
+      "fit_state": "SECOND_LINE_EXPERIENCE_GAP",
+      "positive_signals": [
+        "first_party",
+        "winter_season",
+        "full_or_part_time",
+        "entry_level_label_in_listing"
+      ],
+      "blockers": [
+        "first_room_cleaning_experience_requested",
+        "candidate_housekeeping_experience_not_verified"
+      ],
+      "next_gate": "keep as secondary target unless experience gate is relaxed by employer"
+    }
+  ],
+  "definition_of_done_for_wave": [
+    "At least four current vacancies have target-bound private NO-SEND packets.",
+    "Public-safe opportunity frontier persists exact vacancy evidence without private contact data.",
+    "Candidate claims remain within approved private authority and approved ENTRY asset.",
+    "No application, email, portal submit, DM or outbound mutation occurs.",
+    "Token34 exact-head qualification and two-surface terminalization complete before promotion."
+  ]
+}

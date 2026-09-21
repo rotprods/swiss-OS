@@ -1,6 +1,6 @@
 # STATE — LIVE HANDOFF POINTER
 
-Canonical main at wave admission: `98882fa96a1a87a43580e839d9aba292d9028d14`.
+Canonical main at wave admission: `87eabd5955cd252fee8aa8a4cd5b016ee8f1a324`.
 
 ## North Star
 
@@ -8,7 +8,7 @@ G-0001 remains the only terminal mission: secure Roberto a real, truthful, verif
 
 ## Current writer
 
-Token34 is terminal: claim RELEASED, external lease RELEASED, heartbeat COMPLETE. No active writer is authorized by this wave.
+Token35 is ACTIVE under `CLAIM-EMPLOYMENT-SOURCE-VACANCY-035`, global lease `LEASE-75adadf3603160b0de81`, fencing token 35. Scope is strictly A10 Source Registry + A30 Vacancy Semantics / donor anti-join. It has no CRM/H-ID/Candidate Truth/application submission/outbound authority.
 
 ## Domain authority — unchanged
 
@@ -24,7 +24,7 @@ OUTBOUND                     CLOSED
 send_allowed                 0
 ```
 
-Token34 may not mutate CRM entity-resolution decisions, H-IDs, canonical reservations, terminal source mappings, candidate-private truth without evidence, Gmail, application submission or outbound.
+Token35 may not mutate CRM entity-resolution decisions, H-IDs, canonical reservations, terminal source mappings, candidate-private truth, live application packets, Gmail, application submission or outbound. A20 automated capture scale is excluded; this wave may only type source access policy and prepare safe interfaces.
 
 ## Candidate readiness recovered from private authority
 
@@ -61,17 +61,18 @@ These are application-preparation artifacts only. `PACKET_COMPILED != SEND_AUTHO
 
 Candidate private authority records Spanish/EU nationality. Public-safe rule: never claim that a Swiss permit is already held. SEM states that EU/EFTA employment uses the applicable employment-contract plus notification/residence-registration process depending on contract duration.
 
-## NEXT — after token34
+## NEXT — token35 A10/A30
 
-1. Materialize active Runtime Graph / V2 / Context Survival projections for token34.
-2. Open one bounded PR containing only public-safe employment state and coordination truth.
-3. Run exact-head full repo-guard.
-4. Persist KEEP/BLOCKED iteration evidence.
-5. Terminalize Git claim34.
-6. CAS-release and read back external lease34 before COMPLETE.
-7. Reseal zero-writer state and remove any token34 one-shot workflow.
-8. Exact-head final gauntlet → expected-head merge → exact-main guard.
-9. Exit token34 authority. Do not send applications under this claim.
+1. Materialize token35 active Runtime Graph / V2 / Context Survival projections.
+2. Physically anti-join donor branch `research/employment-market-wave-001`; salvage only missing semantics.
+3. Implement SourceFamily / SourceSurface / DiscoveryProgram / GuidanceSurface as distinct typed contracts.
+4. Persist a current public-safe source registry with explicit access/automation policy; JobCloud automated access remains prohibited under current JobCloud terms.
+5. Add vacancy V3 as an additive compatibility layer: VacancySourceRecord → NormalizedVacancyCandidate → CanonicalVacancy → candidate-relative Opportunity.
+6. Preserve all raw source lineage; similarity never implies identity; absence never implies false.
+7. Add typed requirement and salary assertions; no inferred CEFR and no estimate presented as disclosed salary.
+8. Run schema/source-registry tests plus full exact-head repo-guard.
+9. Persist KEEP/BLOCKED evidence, terminalize claim35, CAS-release lease35, COMPLETE, zero-writer reseal, final exact-head.
+10. OUTBOUND remains CLOSED / send_allowed=0 throughout.
 
 ## Stop rule
 
@@ -94,3 +95,10 @@ cumulative NEW_CANONICAL preauthority 214
 - Public-safe opportunity frontier is durable in docs/state/employment/LIVE_OPPORTUNITY_FRONTIER_2026-09-21.json.
 - No application/email/portal/DM was submitted. OUTBOUND remains CLOSED and send_allowed remains 0.
 - Any future send requires a separate eligible claim and governing authorization; token34 cannot be revived.
+
+## Token35 active scope
+
+- A10: source registry and current source-access truth.
+- A30: vacancy identity/semantics additive V3; no destructive V2 migration.
+- Donor: anti-join only; no wholesale port from the 2026-09-07 research branch.
+- A20 automation, A40 dedup promotion, Candidate Truth and all external actions remain outside this claim.

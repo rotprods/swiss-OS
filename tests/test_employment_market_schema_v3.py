@@ -39,12 +39,12 @@ def seed_two_source_records(db):
         ("SR-2","JOB-42-MIRROR","https://example.test/jobs/42?mirror=1"),
     ):
         db.execute(
-            "INSERT INTO vacancy_source_records_v1 VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            "INSERT INTO vacancy_source_records_v1 VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
             (rid,"SNAP-1","SRC-T",key,url,"Housekeeping Attendant","Hotel Example",
              "Zurich",None,"2026-09-21T00:00:00Z","b"*64,f"fixture://{rid}","PARSED","fixture")
         )
         db.execute(
-            "INSERT INTO normalized_vacancy_candidates_v1 VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",
+            "INSERT INTO normalized_vacancy_candidates_v1 VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)",
             ("NVC-"+rid,rid,"Housekeeping Attendant","Hotel Example","Zurich","ZH","PERMANENT",
              80,100,None,None,"test-v1","NORMALIZED")
         )
@@ -66,7 +66,7 @@ class EmploymentMarketSchemaV3Tests(unittest.TestCase):
     def test_cross_niche_surface_has_one_snapshot_not_per_niche(self):
         db = build_db()
         seed_surface(db)
-        db.execute("INSERT INTO niches VALUES(?,?,?,?)", ("NICHE-002","retail","ACTIVE","cross-niche test"))
+        db.execute("INSERT INTO niches VALUES(?,?,?,?,?,?)", ("NICHE-002","retail","Retail","ACTIVE","TEST-1","2026-09-21T00:00:00Z"))
         db.execute("INSERT INTO source_surface_niches_v1 VALUES(?,?,?)", ("SRC-T","NICHE-001","OBSERVED"))
         db.execute("INSERT INTO source_surface_niches_v1 VALUES(?,?,?)", ("SRC-T","NICHE-002","OBSERVED"))
         self.assertEqual(db.execute(
@@ -170,7 +170,7 @@ class EmploymentMarketSchemaV3Tests(unittest.TestCase):
             ("VAC-1","Employer","Role","2026-09-21T00:00:00Z","2026-09-21T00:00:00Z","LIVE_VERIFIED")
         )
         db.execute(
-            "INSERT INTO opportunities_v3 VALUES(?,?,?,?,?,?,?,?,?,?,?)",
+            "INSERT INTO opportunities_v3 VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",
             ("OPP-1","VAC-1","candidate://canon","ENTRY","READY_NO_SEND","[]","[]","{}",
              "HIGH","2026-09-21T00:00:00Z","CLOSED",0)
         )
@@ -179,7 +179,7 @@ class EmploymentMarketSchemaV3Tests(unittest.TestCase):
         ).fetchone(), ("VAC-1","candidate://canon",0))
         with self.assertRaises(sqlite3.IntegrityError):
             db.execute(
-                "INSERT INTO opportunities_v3 VALUES(?,?,?,?,?,?,?,?,?,?,?)",
+                "INSERT INTO opportunities_v3 VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",
                 ("OPP-2","VAC-1","candidate://other","ENTRY","READY_NO_SEND","[]","[]","{}",
                  "HIGH","2026-09-21T00:00:00Z","CLOSED",1)
             )

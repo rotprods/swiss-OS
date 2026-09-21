@@ -41,7 +41,8 @@
       "docs/state/agent-runtime/**",
       "docs/refactor-v2/coordination_current_config.json",
       "docs/continuity/CONTEXT_SURVIVAL.json",
-      ".github/workflows/employment-token34-materialize.yml"
+      ".github/workflows/employment-token34-materialize.yml",
+      "docs/state/NEXT.json"
     ],
     "schema_version": "COS-V2-CLAIM-1.0",
     "semantic_scopes": [

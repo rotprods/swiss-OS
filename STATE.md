@@ -94,3 +94,7 @@ ECV verified frontier 1438 / 1438
 ECV remaining never verified 0
 OUTBOUND                        CLOSED
 send_allowed                      0
+lower49 typed SRR materialized 47 / 47
+RAGR evidence-classified 34 / 34
+cumulative NEW_CANONICAL preauthority 214
+

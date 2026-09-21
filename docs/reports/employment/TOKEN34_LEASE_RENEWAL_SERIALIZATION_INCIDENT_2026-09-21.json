@@ -1,0 +1,29 @@
+{
+  "schema_version": "SWISS-OS-COORDINATION-INCIDENT-1.0",
+  "incident_id": "INC-20260921-TOKEN34-LEASE-RENEWAL-SERIALIZATION",
+  "occurred_at": "2026-09-21T12:50:00Z",
+  "project_id": "SWITZERLAND_JOB_OS",
+  "fencing_token": 34,
+  "severity": "P0_TRANSIENT_FAIL_CLOSED",
+  "summary": "A renewal write used a JSON replacer that stripped nested lease fields. The invalid projection was detected by immediate readback before any subsequent material branch mutation.",
+  "corrupt_commit": "3c6fc33ea73296d89df8d095ece6cd0706ae2698",
+  "corrupt_blob": "ecb44ccf5f3d9646676b9a64787cfbe128ec75d4",
+  "repair_commit": "e184316ce28659bb1256680b9f0f0871038e4222",
+  "repaired_blob": "1088ec2e5f7f54c86e67657fd7f1639b2ef8e6c8",
+  "repaired_state": {
+    "lease_id": "LEASE-587c9202be3784453693",
+    "state": "ACTIVE",
+    "mutation_allowed": true,
+    "fencing_high_watermark": 34,
+    "generation": 35,
+    "expires_at": "2026-09-21T14:15:00Z",
+    "parent_main_sha": "98882fa96a1a87a43580e839d9aba292d9028d14"
+  },
+  "containment": [
+    "immediate readback",
+    "no material branch write after corrupt renewal",
+    "repair by exact current blob SHA CAS",
+    "preserve fencing token34 and session identity"
+  ],
+  "prevention": "Never use a JSON.stringify property-array replacer for nested lease projections; emit full explicit schema or canonical serializer."
+}
